@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 
-import { AssignmentComponent } from './pages/assignment/assignment.component';
 import { BindingComponent } from './pages/binding/binding.component';
 import { ComponentCommunicationComponent } from './pages/component-communication/component-communication.component';
 import { DirectivesComponent } from './pages/directives/directives.component';
@@ -26,6 +25,5 @@ export const routes: Routes = [
   { path: 'signals', component: SignalsPlaygroundComponent, title: 'Signals Playground' },
   { path: 'rxjs', component: RxjsComponent, title: 'RxJS' },
   { path: 'movies', component: MoviesComponent, title: 'Real Movie API' },
-  { path: 'assignment', component: AssignmentComponent, title: 'Assignment' },
   { path: '**', component: NotFoundComponent, title: 'Not Found' },
 ];

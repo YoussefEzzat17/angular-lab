@@ -107,7 +107,6 @@ export class NavbarComponent implements OnDestroy {
     { path: '/forms', label: 'Forms' },
     { path: '/signals', label: 'Signals' },
     { path: '/rxjs', label: 'RxJS' },
-    { path: '/assignment', label: 'Assignment' },
     { path: '/favorites', label: 'My List', count: 'favorites' as const },
   ];
 
