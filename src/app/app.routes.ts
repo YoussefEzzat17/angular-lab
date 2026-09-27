@@ -11,6 +11,7 @@ import { MoviesComponent } from './pages/movies/movies.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { ProductDetailsComponent } from './pages/product-details/product-details.component';
 import { ProductsComponent } from './pages/products/products.component';
+import { RxjsComponent } from './pages/rxjs/rxjs.component';
 import { SignalsPlaygroundComponent } from './pages/signals-playground/signals-playground.component';
 
 export const routes: Routes = [
@@ -23,6 +24,7 @@ export const routes: Routes = [
   { path: 'directives', component: DirectivesComponent, title: 'Directives' },
   { path: 'forms', component: FormsComponent, title: 'Forms' },
   { path: 'signals', component: SignalsPlaygroundComponent, title: 'Signals Playground' },
+  { path: 'rxjs', component: RxjsComponent, title: 'RxJS' },
   { path: 'movies', component: MoviesComponent, title: 'Real Movie API' },
   { path: 'assignment', component: AssignmentComponent, title: 'Assignment' },
   { path: '**', component: NotFoundComponent, title: 'Not Found' },
