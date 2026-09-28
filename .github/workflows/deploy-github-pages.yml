@@ -27,12 +27,12 @@ jobs:
       - run: npm run build -- --configuration production
       - name: Prepare GitHub Pages
         run: |
-          cp dist/nimbus-shop/browser/index.html dist/nimbus-shop/browser/404.html
-          touch dist/nimbus-shop/browser/.nojekyll
+          cp dist/angular-lab/browser/index.html dist/angular-lab/browser/404.html
+          touch dist/angular-lab/browser/.nojekyll
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/nimbus-shop/browser
+          path: dist/angular-lab/browser
 
   deploy:
     needs: build

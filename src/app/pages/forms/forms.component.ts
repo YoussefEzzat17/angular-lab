@@ -28,9 +28,9 @@ import { NumbersOnlyDirective } from '../../directives/number-only.directive';
   `,
   template: `
     <section class="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
-      <p class="text-sm font-semibold tracking-wide text-violet-400">ANGULAR FORMS</p>
+      <p class="text-sm font-semibold tracking-wide text-gold-400">ANGULAR FORMS</p>
       <h1 class="mt-1 text-3xl font-bold sm:text-4xl">Reactive forms</h1>
-      <p class="mt-3 max-w-3xl text-slate-400">Reactive forms define fields and validation rules in TypeScript, giving you full control over the form model.</p>
+      <p class="mt-3 max-w-3xl text-stone-400">Reactive forms define fields and validation rules in TypeScript, giving you full control over the form model.</p>
 
       <div class="mt-10 flex flex-col gap-8 lg:flex-row">
 
@@ -39,19 +39,19 @@ import { NumbersOnlyDirective } from '../../directives/number-only.directive';
           <form
             [formGroup]="signupForm"
             (ngSubmit)="submit()"
-            class="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 shadow-2xl shadow-black/20 backdrop-blur sm:p-8"
+            class="rounded-3xl border border-stone-800 bg-stone-900/60 p-6 shadow-2xl shadow-black/20 backdrop-blur sm:p-8"
           >
             <div class="flex items-center gap-2">
               <span class="rounded-full bg-amber-400/10 px-3 py-1 text-xs font-bold tracking-wider text-amber-300">REACTIVE FORM</span>
             </div>
             <h2 class="mt-3 text-2xl font-bold text-white">Create a watch profile</h2>
-            <p class="mt-1 text-sm text-slate-400">Tell us a bit about yourself to get personalized picks.</p>
+            <p class="mt-1 text-sm text-stone-400">Tell us a bit about yourself to get personalized picks.</p>
 
-            <p class="mt-8 border-b border-slate-800 pb-2 text-xs font-bold tracking-wider text-slate-500">ACCOUNT</p>
+            <p class="mt-8 border-b border-stone-800 pb-2 text-xs font-bold tracking-wider text-stone-500">ACCOUNT</p>
 
             <div class="mt-6 grid gap-6 sm:grid-cols-2">
               <div>
-                <label for="displayName" class="mb-2 block text-sm font-medium text-slate-200">Display name</label>
+                <label for="displayName" class="mb-2 block text-sm font-medium text-stone-200">Display name</label>
                 <input
                   id="displayName"
                   formControlName="displayName"
@@ -68,7 +68,7 @@ import { NumbersOnlyDirective } from '../../directives/number-only.directive';
               </div>
 
               <div>
-                <label for="email" class="mb-2 block text-sm font-medium text-slate-200">Email</label>
+                <label for="email" class="mb-2 block text-sm font-medium text-stone-200">Email</label>
                 <input
                   id="email"
                   type="email"
@@ -86,7 +86,7 @@ import { NumbersOnlyDirective } from '../../directives/number-only.directive';
               </div>
 
               <div>
-                <label for="password" class="mb-2 block text-sm font-medium text-slate-200">Password</label>
+                <label for="password" class="mb-2 block text-sm font-medium text-stone-200">Password</label>
                 <input
                   id="password"
                   type="password"
@@ -104,7 +104,7 @@ import { NumbersOnlyDirective } from '../../directives/number-only.directive';
               </div>
 
               <div>
-                <label for="confirmPassword" class="mb-2 block text-sm font-medium text-slate-200">Confirm password</label>
+                <label for="confirmPassword" class="mb-2 block text-sm font-medium text-stone-200">Confirm password</label>
                 <input
                   id="confirmPassword"
                   type="password"
@@ -124,11 +124,11 @@ import { NumbersOnlyDirective } from '../../directives/number-only.directive';
               </div>
             </div>
 
-            <p class="mt-10 border-b border-slate-800 pb-2 text-xs font-bold tracking-wider text-slate-500">PREFERENCES</p>
+            <p class="mt-10 border-b border-stone-800 pb-2 text-xs font-bold tracking-wider text-stone-500">PREFERENCES</p>
 
             <div class="mt-6 grid gap-6 sm:grid-cols-2">
               <div>
-                <label for="genre" class="mb-2 block text-sm font-medium text-slate-200">Favorite genre</label>
+                <label for="genre" class="mb-2 block text-sm font-medium text-stone-200">Favorite genre</label>
                 <select
                   id="genre"
                   formControlName="genre"
@@ -150,7 +150,7 @@ import { NumbersOnlyDirective } from '../../directives/number-only.directive';
               </div>
 
               <div>
-                <label for="country" class="mb-2 block text-sm font-medium text-slate-200">Country</label>
+                <label for="country" class="mb-2 block text-sm font-medium text-stone-200">Country</label>
                 <select
                   id="country"
                   formControlName="country"
@@ -172,7 +172,7 @@ import { NumbersOnlyDirective } from '../../directives/number-only.directive';
               </div>
 
               <div>
-                <label for="age" class="mb-2 block text-sm font-medium text-slate-200">Age</label>
+                <label for="age" class="mb-2 block text-sm font-medium text-stone-200">Age</label>
                 <input
                   id="age"
                   type="text"
@@ -193,7 +193,7 @@ import { NumbersOnlyDirective } from '../../directives/number-only.directive';
               </div>
 
               <div>
-                <label for="phone" class="mb-2 block text-sm font-medium text-slate-200">Phone</label>
+                <label for="phone" class="mb-2 block text-sm font-medium text-stone-200">Phone</label>
                 <input
                   id="phone"
                   appNumbersOnly
@@ -214,7 +214,7 @@ import { NumbersOnlyDirective } from '../../directives/number-only.directive';
             </div>
 
             <div class="mt-6">
-              <label for="bio" class="mb-2 block text-sm font-medium text-slate-200">Short bio</label>
+              <label for="bio" class="mb-2 block text-sm font-medium text-stone-200">Short bio</label>
               <textarea
                 id="bio"
                 rows="3"
@@ -232,9 +232,9 @@ import { NumbersOnlyDirective } from '../../directives/number-only.directive';
               }
             </div>
 
-            <label class="mt-6 flex cursor-pointer items-start gap-3 rounded-xl border border-slate-700 bg-slate-800/60 p-4 text-sm">
+            <label class="mt-6 flex cursor-pointer items-start gap-3 rounded-xl border border-stone-700 bg-stone-800/60 p-4 text-sm">
               <input formControlName="terms" type="checkbox" class="mt-0.5 h-5 w-5" />
-              <span class="text-slate-300">I accept the watchlist rules and community guidelines.</span>
+              <span class="text-stone-300">I accept the watchlist rules and community guidelines.</span>
             </label>
             @if (signupForm.get('terms')?.invalid && signupForm.get('terms')?.touched) {
               <small class="error">
@@ -243,10 +243,10 @@ import { NumbersOnlyDirective } from '../../directives/number-only.directive';
             }
 
             <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-              <button type="submit" class="w-full rounded-xl bg-violet-500 px-4 py-3.5 font-semibold text-white hover:bg-violet-400 sm:flex-1">
+              <button type="submit" class="w-full rounded-xl bg-gold-500 px-4 py-3.5 font-semibold text-white hover:bg-gold-400 sm:flex-1">
                 Create profile
               </button>
-              <button type="button" (click)="reset()" class="w-full rounded-xl border border-slate-700 px-4 py-3.5 font-semibold text-slate-300 sm:w-auto">
+              <button type="button" (click)="reset()" class="w-full rounded-xl border border-stone-700 px-4 py-3.5 font-semibold text-stone-300 sm:w-auto">
                 Reset
               </button>
             </div>
@@ -266,16 +266,16 @@ import { NumbersOnlyDirective } from '../../directives/number-only.directive';
           <form
             #contactForm="ngForm"
             (ngSubmit)="submitContact(contactForm)"
-            class="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 shadow-2xl shadow-black/20 backdrop-blur sm:p-8"
+            class="rounded-3xl border border-stone-800 bg-stone-900/60 p-6 shadow-2xl shadow-black/20 backdrop-blur sm:p-8"
           >
             <div class="flex items-center gap-2">
               <span class="rounded-full bg-emerald-400/10 px-3 py-1 text-xs font-bold tracking-wider text-emerald-300">TEMPLATE-DRIVEN FORM</span>
             </div>
             <h2 class="mt-3 text-2xl font-bold text-white">Contact us</h2>
-            <p class="mt-1 text-sm text-slate-400">Template-driven forms use directives like <code>ngModel</code> in the HTML.</p>
+            <p class="mt-1 text-sm text-stone-400">Template-driven forms use directives like <code>ngModel</code> in the HTML.</p>
 
             <div class="mt-6">
-              <label for="contactName" class="mb-2 block text-sm font-medium text-slate-200">Name</label>
+              <label for="contactName" class="mb-2 block text-sm font-medium text-stone-200">Name</label>
               <input
                 id="contactName"
                 name="name"
@@ -295,7 +295,7 @@ import { NumbersOnlyDirective } from '../../directives/number-only.directive';
             </div>
 
             <div class="mt-6">
-              <label for="contactEmail" class="mb-2 block text-sm font-medium text-slate-200">Email</label>
+              <label for="contactEmail" class="mb-2 block text-sm font-medium text-stone-200">Email</label>
               <input
                 id="contactEmail"
                 name="email"
@@ -316,7 +316,7 @@ import { NumbersOnlyDirective } from '../../directives/number-only.directive';
             </div>
 
             <div class="mt-6">
-              <label for="contactMessage" class="mb-2 block text-sm font-medium text-slate-200">Message</label>
+              <label for="contactMessage" class="mb-2 block text-sm font-medium text-stone-200">Message</label>
               <textarea
                 id="contactMessage"
                 name="message"

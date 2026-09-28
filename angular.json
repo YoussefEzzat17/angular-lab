@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "nimbus-shop": {
+    "angular-lab": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:class": {
@@ -82,10 +82,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "nimbus-shop:build:production"
+              "buildTarget": "angular-lab:build:production"
             },
             "development": {
-              "buildTarget": "nimbus-shop:build:development"
+              "buildTarget": "angular-lab:build:development"
             }
           },
           "defaultConfiguration": "development"

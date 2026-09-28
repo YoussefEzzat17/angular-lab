@@ -14,16 +14,16 @@ import { RxjsComponent } from './pages/rxjs/rxjs.component';
 import { SignalsPlaygroundComponent } from './pages/signals-playground/signals-playground.component';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent, title: 'Home' },
-  { path: 'products', component: ProductsComponent, title: 'Browse' },
-  { path: 'products/:id', component: ProductDetailsComponent, title: 'Title Details' },
-  { path: 'favorites', component: FavoritesComponent, title: 'My List' },
-  { path: 'binding', component: BindingComponent, title: 'Binding' },
-  { path: 'communication', component: ComponentCommunicationComponent, title: 'Parent and Child' },
+  { path: '', component: HomeComponent, title: 'Angular Lab' },
+  { path: 'movies', component: MoviesComponent, title: 'Fetch API & HTTP' },
+  { path: 'binding', component: BindingComponent, title: 'Data Binding' },
+  { path: 'communication', component: ComponentCommunicationComponent, title: 'Component Communication' },
   { path: 'directives', component: DirectivesComponent, title: 'Directives' },
-  { path: 'forms', component: FormsComponent, title: 'Forms' },
-  { path: 'signals', component: SignalsPlaygroundComponent, title: 'Signals Playground' },
+  { path: 'forms', component: FormsComponent, title: 'Angular Forms' },
+  { path: 'signals', component: SignalsPlaygroundComponent, title: 'Signals' },
   { path: 'rxjs', component: RxjsComponent, title: 'RxJS' },
-  { path: 'movies', component: MoviesComponent, title: 'Real Movie API' },
+  { path: 'products', component: ProductsComponent, title: 'Demo: Browse' },
+  { path: 'products/:id', component: ProductDetailsComponent, title: 'Title Details' },
+  { path: 'favorites', component: FavoritesComponent, title: 'Demo: My List' },
   { path: '**', component: NotFoundComponent, title: 'Not Found' },
 ];

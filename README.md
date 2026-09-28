@@ -1,4 +1,4 @@
-# NimbusShop
+# Angular Lab
 
 ## Real Movies: Services, HttpClient, Observables, and Signals
 

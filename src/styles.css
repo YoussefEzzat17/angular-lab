@@ -4,17 +4,17 @@
 
 @layer base {
   html { @apply overflow-x-hidden; }
-  body { @apply m-0 bg-slate-950 font-sans text-slate-100; }
+  body { @apply m-0 bg-stone-950 font-sans text-stone-100; }
   button, input { font: inherit; }
 }
 
-/* Pages that reuse the workshop card patterns also inherit the dark cinema theme. */
-.bg-white { background-color: rgb(15 23 42) !important; }
-.bg-slate-50 { background-color: rgb(2 6 23) !important; }
-.ring-slate-200, .border-slate-200 { --tw-ring-color: rgb(51 65 85 / 1) !important; border-color: rgb(51 65 85 / 1) !important; }
-.border-slate-300 { border-color: rgb(71 85 105 / 1) !important; }
-.text-slate-800 { color: rgb(241 245 249) !important; }
-.text-slate-600 { color: rgb(148 163 184) !important; }
-.text-slate-500 { color: rgb(100 116 139) !important; }
-.text-indigo-600, .text-indigo-700 { color: rgb(196 181 253) !important; }
-.bg-indigo-600 { background-color: rgb(139 92 246) !important; }
+/* Pages that reuse the workshop card patterns also inherit the warm, gold-accented theme. */
+.bg-white { background-color: rgb(42 31 22) !important; }
+.bg-stone-50 { background-color: rgb(27 20 16) !important; }
+.ring-stone-200, .border-stone-200 { --tw-ring-color: rgb(58 45 34 / 1) !important; border-color: rgb(58 45 34 / 1) !important; }
+.border-stone-300 { border-color: rgb(74 58 44 / 1) !important; }
+.text-stone-800 { color: rgb(239 228 210) !important; }
+.text-stone-600 { color: rgb(168 153 138) !important; }
+.text-stone-500 { color: rgb(140 125 110) !important; }
+.text-gold-600, .text-gold-700 { color: rgb(219 184 119) !important; }
+.bg-gold-600 { background-color: rgb(150 112 58) !important; }

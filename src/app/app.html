@@ -1,5 +1,8 @@
-<app-navbar />
-<main class="min-h-[calc(100vh-72px)]">
-  <router-outlet></router-outlet>
-</main>
+<div class="flex min-h-screen flex-col">
+  <app-navbar />
+  <main class="flex-1">
+    <router-outlet></router-outlet>
+  </main>
+  <app-footer />
+</div>
 <app-toast />
