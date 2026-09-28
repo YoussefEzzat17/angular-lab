@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { SignalNetworkComponent } from './signal-network.component';
+
 interface Topic {
   path: string;
   icon: string;
@@ -10,7 +12,7 @@ interface Topic {
 
 @Component({
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, SignalNetworkComponent],
   template: `
     <section class="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-20">
       <div
@@ -33,7 +35,9 @@ interface Topic {
             </a>
           </div>
         </div>
-        <div class="rounded-2xl bg-gold-500/10 p-8 text-center text-7xl">🅰️</div>
+        <div class="relative overflow-hidden rounded-2xl border border-gold-500/15 bg-stone-950/60 p-4">
+          <app-signal-network class="block h-[280px] w-full sm:h-[340px]" />
+        </div>
       </div>
 
       <div class="mt-16">
