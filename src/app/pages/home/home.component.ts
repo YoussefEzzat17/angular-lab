@@ -25,8 +25,8 @@ interface Topic {
             edit, not just a slide.
           </p>
           <div class="mt-8 flex flex-wrap gap-3">
-            <a routerLink="/rxjs" class="rounded-xl bg-gold-500 px-5 py-3 font-semibold text-white transition hover:bg-gold-400">
-              Start with RxJS →
+            <a routerLink="/binding" class="rounded-xl bg-gold-500 px-5 py-3 font-semibold text-white transition hover:bg-gold-400">
+              Start with Data Binding →
             </a>
             <a routerLink="/products" class="rounded-xl border border-gold-400/40 px-5 py-3 font-semibold text-gold-200 transition hover:bg-gold-500/10">
               See the demo app

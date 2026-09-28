@@ -1,9 +1,16 @@
-import { Component, HostListener, OnDestroy, effect, inject, signal } from '@angular/core';
+import { Component, effect, HostListener, inject, OnDestroy, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { Subscription, filter } from 'rxjs';
+import { filter, Subscription } from 'rxjs';
 
 import { CartService } from '../services/cart.service';
 import { FavoritesService } from '../services/favorites.service';
+
+interface NavLink {
+  path: string;
+  label: string;
+  icon: string;
+  description: string;
+}
 
 @Component({
   selector: 'app-navbar',
@@ -11,25 +18,88 @@ import { FavoritesService } from '../services/favorites.service';
   template: `
     <header class="sticky top-0 z-40 border-b border-stone-800 bg-stone-950/95 pt-[env(safe-area-inset-top)] backdrop-blur">
       <nav class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:h-[72px] sm:px-6">
-        <a routerLink="/" class="shrink-0 text-lg font-bold tracking-tight text-gold-400 sm:text-xl">
+        <a routerLink="/" class="shrink-0 text-lg font-bold tracking-tight text-gold-400 sm:text-xl" (click)="closeAll()">
           Angular <span class="text-stone-100">Lab</span>
         </a>
 
         <div class="hidden items-center gap-1 text-sm font-medium text-stone-300 lg:flex">
-          @for (link of navLinks; track link.path) {
-            <a
-              [routerLink]="link.path"
-              routerLinkActive="text-gold-400"
-              [routerLinkActiveOptions]="{ exact: link.exact === true }"
-              class="rounded-lg px-2 py-2 hover:text-gold-400"
+          <a
+            routerLink="/"
+            routerLinkActive="text-gold-400"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="rounded-lg px-3 py-2 transition hover:text-gold-400"
+          >
+            Home
+          </a>
+
+          <div class="relative">
+            <button
+              type="button"
+              class="flex items-center gap-1 rounded-lg px-3 py-2 transition hover:text-gold-400"
+              [class.text-gold-400]="topicsOpen() || isTopicActive()"
+              (click)="toggleTopics($event)"
             >
-              {{ link.label }}
-              @if (link.count === 'favorites') {
-                {{ favorites.ids().length }}
-              }
-            </a>
-          }
-          <span class="rounded-full bg-gold-500/15 px-3 py-2 text-gold-300">Watchlist {{ cart.count() }}</span>
+              Topics
+              <svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4 transition" [class.rotate-180]="topicsOpen()" aria-hidden="true">
+                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+              </svg>
+            </button>
+
+            @if (topicsOpen()) {
+              <div
+                class="absolute left-1/2 top-full mt-2 w-[560px] -translate-x-1/2 rounded-2xl border border-stone-800 bg-stone-900 p-3 shadow-2xl shadow-black/50"
+                (click)="$event.stopPropagation()"
+              >
+                <div class="grid grid-cols-2 gap-1">
+                  @for (topic of topics; track topic.path) {
+                    <a
+                      [routerLink]="topic.path"
+                      routerLinkActive="bg-gold-500/10 text-gold-300"
+                      class="flex items-start gap-3 rounded-xl px-3 py-2.5 transition hover:bg-stone-800"
+                      (click)="closeAll()"
+                    >
+                      <span class="mt-0.5 text-lg">{{ topic.icon }}</span>
+                      <span class="min-w-0">
+                        <span class="block font-semibold text-stone-100">{{ topic.label }}</span>
+                        <span class="block truncate text-xs text-stone-500">{{ topic.description }}</span>
+                      </span>
+                    </a>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+
+          <div class="relative">
+            <button
+              type="button"
+              class="flex items-center gap-1 rounded-lg px-3 py-2 transition hover:text-gold-400"
+              [class.text-gold-400]="demoOpen() || isDemoActive()"
+              (click)="toggleDemo($event)"
+            >
+              Demo App
+              <svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4 transition" [class.rotate-180]="demoOpen()" aria-hidden="true">
+                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+              </svg>
+            </button>
+
+            @if (demoOpen()) {
+              <div
+                class="absolute left-1/2 top-full mt-2 w-64 -translate-x-1/2 rounded-2xl border border-stone-800 bg-stone-900 p-2 shadow-2xl shadow-black/50"
+                (click)="$event.stopPropagation()"
+              >
+                <a routerLink="/products" routerLinkActive="bg-gold-500/10 text-gold-300" class="flex items-center justify-between rounded-xl px-3 py-2.5 transition hover:bg-stone-800" (click)="closeAll()">
+                  <span>Browse titles</span>
+                </a>
+                <a routerLink="/favorites" routerLinkActive="bg-gold-500/10 text-gold-300" class="flex items-center justify-between rounded-xl px-3 py-2.5 transition hover:bg-stone-800" (click)="closeAll()">
+                  <span>My List</span>
+                  <span class="rounded-full bg-stone-800 px-2 py-0.5 text-xs text-stone-400">{{ favorites.ids().length }}</span>
+                </a>
+              </div>
+            }
+          </div>
+
+          <span class="ml-2 rounded-full bg-gold-500/15 px-3 py-2 text-gold-300">Watchlist {{ cart.count() }}</span>
         </div>
 
         <div class="flex items-center gap-2 lg:hidden">
@@ -66,25 +136,41 @@ import { FavoritesService } from '../services/favorites.service';
         ></button>
         <div
           id="mobile-nav"
-          class="absolute inset-x-0 top-full z-40 border-b border-stone-800 bg-stone-950 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2 shadow-xl shadow-black/40 lg:hidden"
+          class="absolute inset-x-0 top-full z-40 max-h-[calc(100vh-4rem)] overflow-y-auto border-b border-stone-800 bg-stone-950 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2 shadow-xl shadow-black/40 lg:hidden"
         >
           <div class="mx-auto flex max-w-6xl flex-col gap-1 pb-3 text-base font-medium text-stone-200">
-            @for (link of navLinks; track link.path) {
+            <a
+              routerLink="/"
+              routerLinkActive="bg-gold-500/15 text-gold-300"
+              [routerLinkActiveOptions]="{ exact: true }"
+              class="flex min-h-11 items-center rounded-xl px-3 py-2 hover:bg-stone-800"
+              (click)="closeMenu()"
+            >
+              Home
+            </a>
+
+            <p class="mt-3 px-3 text-xs font-bold uppercase tracking-wider text-gold-400">Topics</p>
+            @for (topic of topics; track topic.path) {
               <a
-                [routerLink]="link.path"
+                [routerLink]="topic.path"
                 routerLinkActive="bg-gold-500/15 text-gold-300"
-                [routerLinkActiveOptions]="{ exact: link.exact === true }"
-                class="flex min-h-11 items-center rounded-xl px-3 py-2 hover:bg-stone-800"
+                class="flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 hover:bg-stone-800"
                 (click)="closeMenu()"
               >
-                {{ link.label }}
-                @if (link.count === 'favorites') {
-                  <span class="ml-2 rounded-full bg-gold-500/15 px-2 py-0.5 text-sm text-gold-300">
-                    {{ favorites.ids().length }}
-                  </span>
-                }
+                <span>{{ topic.icon }}</span>
+                {{ topic.label }}
               </a>
             }
+
+            <p class="mt-3 px-3 text-xs font-bold uppercase tracking-wider text-gold-400">Demo App</p>
+            <a routerLink="/products" routerLinkActive="bg-gold-500/15 text-gold-300" class="flex min-h-11 items-center rounded-xl px-3 py-2 hover:bg-stone-800" (click)="closeMenu()">
+              Browse titles
+            </a>
+            <a routerLink="/favorites" routerLinkActive="bg-gold-500/15 text-gold-300" class="flex min-h-11 items-center justify-between rounded-xl px-3 py-2 hover:bg-stone-800" (click)="closeMenu()">
+              My List
+              <span class="rounded-full bg-stone-800 px-2 py-0.5 text-sm text-stone-400">{{ favorites.ids().length }}</span>
+            </a>
+
             <p class="mt-3 border-t border-stone-800 px-3 pt-3 text-sm text-stone-400">Watchlist · {{ cart.count() }} titles</p>
           </div>
         </div>
@@ -96,19 +182,21 @@ export class NavbarComponent implements OnDestroy {
   readonly cart = inject(CartService);
   readonly favorites = inject(FavoritesService);
   readonly menuOpen = signal(false);
+  readonly topicsOpen = signal(false);
+  readonly demoOpen = signal(false);
 
-  readonly navLinks = [
-    { path: '/', label: 'Home', exact: true },
-    { path: '/movies', label: 'Fetch API & HTTP' },
-    { path: '/binding', label: 'Data Binding' },
-    { path: '/communication', label: 'Component Communication' },
-    { path: '/directives', label: 'Directives' },
-    { path: '/forms', label: 'Angular Forms' },
-    { path: '/signals', label: 'Signals' },
-    { path: '/rxjs', label: 'RxJS' },
-    { path: '/products', label: 'Demo: Browse' },
-    { path: '/favorites', label: 'Demo: My List', count: 'favorites' as const },
+  readonly topics: NavLink[] = [
+    { path: '/binding', label: 'Data Binding', icon: '🔗', description: 'Interpolation, property & event binding' },
+    { path: '/communication', label: 'Component Communication', icon: '↔️', description: '@Input() and @Output()' },
+    { path: '/directives', label: 'Directives', icon: '⚙️', description: 'Structural & attribute directives' },
+    { path: '/forms', label: 'Angular Forms', icon: '📝', description: 'Template-driven & reactive forms' },
+    { path: '/signals', label: 'Signals', icon: '📡', description: 'signal(), computed(), effect()' },
+    { path: '/movies', label: 'Fetch API & HTTP', icon: '🌐', description: 'HttpClient and services' },
+    { path: '/rxjs', label: 'RxJS', icon: '🌊', description: 'Observables, operators, async pipe' },
   ];
+
+  private readonly topicPaths = new Set(this.topics.map((topic) => topic.path));
+  private readonly demoPaths = new Set(['/products', '/favorites']);
 
   private readonly router = inject(Router);
   private readonly navSub: Subscription;
@@ -116,11 +204,32 @@ export class NavbarComponent implements OnDestroy {
   constructor() {
     this.navSub = this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
-      .subscribe(() => this.closeMenu());
+      .subscribe(() => this.closeAll());
 
     effect(() => {
       document.body.style.overflow = this.menuOpen() ? 'hidden' : '';
     });
+  }
+
+  isTopicActive(): boolean {
+    return this.topicPaths.has(this.router.url.split('?')[0]);
+  }
+
+  isDemoActive(): boolean {
+    const url = this.router.url.split('?')[0];
+    return this.demoPaths.has(url) || url.startsWith('/products/');
+  }
+
+  toggleTopics(event: Event): void {
+    event.stopPropagation();
+    this.demoOpen.set(false);
+    this.topicsOpen.update((open) => !open);
+  }
+
+  toggleDemo(event: Event): void {
+    event.stopPropagation();
+    this.topicsOpen.set(false);
+    this.demoOpen.update((open) => !open);
   }
 
   toggleMenu(): void {
@@ -131,9 +240,21 @@ export class NavbarComponent implements OnDestroy {
     this.menuOpen.set(false);
   }
 
+  closeAll(): void {
+    this.menuOpen.set(false);
+    this.topicsOpen.set(false);
+    this.demoOpen.set(false);
+  }
+
+  @HostListener('document:click')
+  onDocumentClick(): void {
+    this.topicsOpen.set(false);
+    this.demoOpen.set(false);
+  }
+
   @HostListener('document:keydown.escape')
   onEscape(): void {
-    this.closeMenu();
+    this.closeAll();
   }
 
   @HostListener('window:resize')
