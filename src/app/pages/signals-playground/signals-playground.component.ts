@@ -1,9 +1,11 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, computed, effect, signal } from '@angular/core';
 
+import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
+
 @Component({
   standalone: true,
-  imports: [CurrencyPipe],
+  imports: [CurrencyPipe, FlowDiagramComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <p class="text-sm font-semibold text-gold-400">HANDS-ON WORKSHOP</p>
@@ -21,6 +23,7 @@ import { Component, computed, effect, signal } from '@angular/core';
           <p class="mt-2 text-sm text-stone-400">
             <code class="text-gold-300">signal()</code> creates reactive state. Read a signal by calling it with <code class="text-gold-300">()</code>.
           </p>
+          <app-flow-diagram class="mt-4 block" from="signal(50)" to="price()" direction="right" />
           <div class="mt-5 space-y-2 rounded-xl bg-stone-800 p-4">
             <p>Product: <strong>{{ productName() }}</strong></p>
             <p>Price: <strong>{{ price() | currency }}</strong></p>
@@ -40,6 +43,7 @@ import { Component, computed, effect, signal } from '@angular/core';
           <p class="mt-2 text-sm text-stone-400">
             <code class="text-gold-300">set()</code> replaces the current value with a new value.
           </p>
+          <app-flow-diagram class="mt-4 block" from="(click)" to="productName.set()" direction="right" />
           <button (click)="changeProduct()" class="mt-5 rounded-xl bg-gold-500 px-4 py-2.5 font-semibold text-white hover:bg-gold-400">
             Change Protein to Creatine
           </button>
@@ -52,6 +56,7 @@ import { Component, computed, effect, signal } from '@angular/core';
           <p class="mt-2 text-sm text-stone-400">
             <code class="text-gold-300">update()</code> calculates a new value from the current value. The quantity never goes below 1.
           </p>
+          <app-flow-diagram class="mt-4 block" from="(click)" to="quantity.update()" direction="right" />
           <div class="mt-5 flex items-center gap-4"><button (click)="decreaseQuantity()" class="grid h-10 w-10 place-items-center rounded-xl border border-stone-600 text-xl hover:bg-stone-800">−</button><strong class="text-2xl">{{ quantity() }}</strong><button (click)="increaseQuantity()" class="grid h-10 w-10 place-items-center rounded-xl bg-gold-500 text-xl hover:bg-gold-400">+</button></div>
           <p class="mt-4 text-xs text-stone-500"><code class="text-gold-300">set(5)</code> chooses a value. <code class="text-gold-300">update(value =&gt; value + 1)</code> uses the old value.</p>
         </article>
@@ -82,6 +87,7 @@ subtotal changes → discount changes → finalPrice changes</pre>
         <p class="text-xs font-bold tracking-wider text-gold-300">6 · EFFECT()</p>
         <h2 class="mt-2 text-xl font-bold">Run a side effect</h2>
         <p class="mt-2 text-sm text-stone-400"><code class="text-gold-300">effect()</code> runs side effects when the Signals it reads change. Open the browser console and change quantity to see <code class="text-gold-300">Cart changed:</code>.</p>
+        <app-flow-diagram class="mt-4 block" from="finalPrice() changes" to="effect() re-runs" direction="right" />
         <p class="mt-4 text-sm text-stone-300"><strong>Remember:</strong> <code class="text-gold-300">computed()</code> derives data for the UI; <code class="text-gold-300">effect()</code> performs a side effect such as logging.</p>
       </article>
     </section>

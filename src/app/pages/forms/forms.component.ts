@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { NumbersOnlyDirective } from '../../directives/number-only.directive';
+import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
 
 @Component({
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, NumbersOnlyDirective] ,
+  imports: [ReactiveFormsModule, FormsModule, NumbersOnlyDirective, FlowDiagramComponent],
   styles: `
     .field {
       width: 100%;
@@ -28,9 +29,14 @@ import { NumbersOnlyDirective } from '../../directives/number-only.directive';
   `,
   template: `
     <section class="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
-      <p class="text-sm font-semibold tracking-wide text-gold-400">ANGULAR FORMS</p>
-      <h1 class="mt-1 text-3xl font-bold sm:text-4xl">Reactive forms</h1>
-      <p class="mt-3 max-w-3xl text-stone-400">Reactive forms define fields and validation rules in TypeScript, giving you full control over the form model.</p>
+      <p class="text-sm font-semibold tracking-wide text-gold-400">HANDS-ON WORKSHOP</p>
+      <h1 class="mt-1 text-3xl font-bold sm:text-4xl">Angular Forms</h1>
+      <p class="mt-3 max-w-3xl text-stone-400">
+        Angular gives you two ways to build a form, and the difference is <strong class="text-stone-200">where the source of truth lives</strong>.
+        Reactive forms define every field and validator in TypeScript first, then the template just binds to it — best for complex,
+        dynamic, or heavily-tested forms. Template-driven forms let the HTML and <code class="text-gold-300">ngModel</code> drive
+        everything, and Angular builds the model for you behind the scenes — best for a short, simple form like a contact box.
+      </p>
 
       <div class="mt-10 flex flex-col gap-8 lg:flex-row">
 
@@ -46,6 +52,8 @@ import { NumbersOnlyDirective } from '../../directives/number-only.directive';
             </div>
             <h2 class="mt-3 text-2xl font-bold text-white">Create a watch profile</h2>
             <p class="mt-1 text-sm text-stone-400">Tell us a bit about yourself to get personalized picks.</p>
+            <app-flow-diagram class="mt-4 block" from="FormGroup (TS)" to="formControlName" direction="right" />
+            <p class="mt-2 text-xs text-stone-500">The model is defined here, in the class — the template only reflects it.</p>
 
             <p class="mt-8 border-b border-stone-800 pb-2 text-xs font-bold tracking-wider text-stone-500">ACCOUNT</p>
 
@@ -177,7 +185,7 @@ import { NumbersOnlyDirective } from '../../directives/number-only.directive';
                   id="age"
                   type="text"
                   inputmode="numeric"
-                  RawanDirective
+                  appNumbersOnly
                   formControlName="age"
                   placeholder="18"
                   class="field"
@@ -198,7 +206,6 @@ import { NumbersOnlyDirective } from '../../directives/number-only.directive';
                   id="phone"
                   appNumbersOnly
                   type="tel"
-                  appNumberOnly
                   formControlName="phone"
                   placeholder="01012345678"
                   class="field"
@@ -273,6 +280,8 @@ import { NumbersOnlyDirective } from '../../directives/number-only.directive';
             </div>
             <h2 class="mt-3 text-2xl font-bold text-white">Contact us</h2>
             <p class="mt-1 text-sm text-stone-400">Template-driven forms use directives like <code>ngModel</code> in the HTML.</p>
+            <app-flow-diagram class="mt-4 block" from="[(ngModel)] (HTML)" to="NgForm model" direction="right" />
+            <p class="mt-2 text-xs text-stone-500">The model is built for you here, from the template — Angular infers it from ngModel and #ngForm.</p>
 
             <div class="mt-6">
               <label for="contactName" class="mb-2 block text-sm font-medium text-stone-200">Name</label>

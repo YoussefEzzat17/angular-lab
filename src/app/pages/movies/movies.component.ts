@@ -2,9 +2,11 @@ import { Component, computed, inject, signal } from '@angular/core';
 
 import { Movie } from '../../core/models/movie.model';
 import { MovieService } from '../../core/services/movie.service';
+import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
 
 @Component({
   standalone: true,
+  imports: [FlowDiagramComponent],
   template: `
     <section class="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
       <p class="text-sm font-semibold text-gold-400">HANDS-ON WORKSHOP</p>
@@ -67,7 +69,16 @@ import { MovieService } from '../../core/services/movie.service';
 
       <aside class="mt-10 rounded-2xl border border-gold-400/20 bg-gold-950/30 p-6 text-sm text-stone-300">
         <h2 class="font-bold text-gold-200">Follow the data flow</h2>
-        <p class="mt-2">Movie page → MovieService → HttpClient → public API → Observable.subscribe() → signal.set() → computed() → movie cards.</p>
+        <p class="mt-2">This component never calls the API directly — a service does, and hands back an Observable of values.</p>
+        <div class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-3">
+          <app-flow-diagram from="MovieService" to="HttpClient.get()" direction="right" />
+          <app-flow-diagram from="public API" to="Observable" direction="right" />
+          <app-flow-diagram from=".subscribe()" to="signal.set()" direction="right" />
+        </div>
+        <p class="mt-4 text-xs text-stone-400">
+          <code class="text-gold-300">signal.set()</code> triggers <code class="text-gold-300">computed()</code> to recalculate
+          <code class="text-gold-300">filteredMovies()</code>, and Angular re-renders only the cards that actually changed.
+        </p>
       </aside>
     </section>
   `,
