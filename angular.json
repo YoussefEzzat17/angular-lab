@@ -55,7 +55,7 @@
           },
           "configurations": {
             "production": {
-              "baseHref": "/angular-movie-app/",
+              "baseHref": "/angular-lab/",
               "budgets": [
                 {
                   "type": "initial",
