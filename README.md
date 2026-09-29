@@ -2,7 +2,7 @@
 
 A hands-on playground for learning Angular — every core concept as a real, editable page, not a slide.
 
-**Live app:** https://youssefezzat17.github.io/angular-movie-app/
+**Live app:** https://youssefezzat17.github.io/angular-lab/
 
 ## What's here
 
