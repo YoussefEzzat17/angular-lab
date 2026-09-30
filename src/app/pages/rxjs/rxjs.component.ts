@@ -30,9 +30,24 @@ import {
         <a
           href="/pdfs/rxjs-cheat-sheet.pdf"
           download="rxjs-cheat-sheet.pdf"
-          class="inline-flex shrink-0 items-center gap-2 rounded-lg border border-gold-400/40 bg-gold-500/10 px-4 py-2 text-sm font-semibold text-gold-300 hover:bg-gold-500/20"
+          class="group inline-flex shrink-0 items-center gap-2.5 rounded-full border border-gold-400/40 bg-gold-500/10 py-2 pl-3 pr-4 text-sm font-semibold text-gold-300 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-gold-400 hover:bg-gold-500/20 hover:shadow-lg hover:shadow-gold-500/20 active:translate-y-0 active:scale-95"
         >
-          ⬇ Download PDF Guide
+          <span class="flex h-6 w-6 items-center justify-center rounded-full bg-gold-500/20 transition-colors group-hover:bg-gold-500/30">
+            <svg
+              class="h-3.5 w-3.5 text-gold-300 transition-transform duration-200 group-hover:translate-y-0.5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M12 3v12" />
+              <path d="M7 10l5 5 5-5" />
+              <path d="M5 21h14" />
+            </svg>
+          </span>
+          Download PDF Guide
         </a>
       </div>
       <p class="mt-3 max-w-3xl text-stone-400">
