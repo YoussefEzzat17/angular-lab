@@ -86,6 +86,18 @@ export class HomeComponent {
       description: 'Interpolation, property binding, event binding and two-way binding, side by side.',
     },
     {
+      path: '/pipes',
+      icon: '🧪',
+      title: 'Pipes',
+      description: 'Format dates, prices and text right in the template with | pipeName.',
+    },
+    {
+      path: '/routing',
+      icon: '🧭',
+      title: 'Routing',
+      description: 'Routes, router-outlet, routerLink and reading route parameters.',
+    },
+    {
       path: '/communication',
       icon: '↔️',
       title: 'Component Communication',
@@ -120,6 +132,18 @@ export class HomeComponent {
       icon: '🌊',
       title: 'RxJS',
       description: 'Observables, operators like switchMap and debounceTime, and the async pipe.',
+    },
+    {
+      path: '/lazy-loading',
+      icon: '📦',
+      title: 'Lazy Loading',
+      description: 'loadComponent and smaller initial bundles for a faster first load.',
+    },
+    {
+      path: '/interceptor',
+      icon: '🛡️',
+      title: 'HttpInterceptor',
+      description: 'One checkpoint that every outgoing request and incoming response passes through.',
     },
   ];
 }

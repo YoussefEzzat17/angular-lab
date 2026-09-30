@@ -47,10 +47,10 @@ interface NavLink {
 
             @if (topicsOpen()) {
               <div
-                class="absolute left-1/2 top-full mt-2 w-[560px] -translate-x-1/2 rounded-2xl border border-stone-800 bg-stone-900 p-3 shadow-2xl shadow-black/50"
+                class="absolute left-1/2 top-full mt-2 w-[800px] max-w-[calc(100vw-2rem)] -translate-x-1/2 rounded-2xl border border-stone-800 bg-stone-900 p-3 shadow-2xl shadow-black/50"
                 (click)="$event.stopPropagation()"
               >
-                <div class="grid grid-cols-2 gap-1">
+                <div class="grid grid-cols-3 gap-1">
                   @for (topic of topics; track topic.path) {
                     <a
                       [routerLink]="topic.path"
