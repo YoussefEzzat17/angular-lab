@@ -193,6 +193,8 @@ export class NavbarComponent implements OnDestroy {
     { path: '/signals', label: 'Signals', icon: '📡', description: 'signal(), computed(), effect()' },
     { path: '/movies', label: 'Fetch API & HTTP', icon: '🌐', description: 'HttpClient and services' },
     { path: '/rxjs', label: 'RxJS', icon: '🌊', description: 'Observables, operators, async pipe' },
+    { path: '/lazy-loading', label: 'Lazy Loading', icon: '📦', description: 'loadComponent and smaller bundles' },
+    { path: '/interceptor', label: 'HttpInterceptor', icon: '🛡️', description: 'One checkpoint for every HTTP call' },
   ];
 
   private readonly topicPaths = new Set(this.topics.map((topic) => topic.path));

@@ -6,6 +6,8 @@ import { DirectivesComponent } from './pages/directives/directives.component';
 import { FavoritesComponent } from './pages/favorites/favorites.component';
 import { FormsComponent } from './pages/forms/forms.component';
 import { HomeComponent } from './pages/home/home.component';
+import { InterceptorComponent } from './pages/interceptor/interceptor.component';
+import { LazyLoadingComponent } from './pages/lazy-loading/lazy-loading.component';
 import { MoviesComponent } from './pages/movies/movies.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { ProductDetailsComponent } from './pages/product-details/product-details.component';
@@ -22,6 +24,8 @@ export const routes: Routes = [
   { path: 'forms', component: FormsComponent, title: 'Angular Forms' },
   { path: 'signals', component: SignalsPlaygroundComponent, title: 'Signals' },
   { path: 'rxjs', component: RxjsComponent, title: 'RxJS' },
+  { path: 'lazy-loading', component: LazyLoadingComponent, title: 'Lazy Loading' },
+  { path: 'interceptor', component: InterceptorComponent, title: 'HttpInterceptor' },
   { path: 'products', component: ProductsComponent, title: 'Demo: Browse' },
   { path: 'products/:id', component: ProductDetailsComponent, title: 'Title Details' },
   { path: 'favorites', component: FavoritesComponent, title: 'Demo: My List' },
