@@ -187,6 +187,8 @@ export class NavbarComponent implements OnDestroy {
 
   readonly topics: NavLink[] = [
     { path: '/binding', label: 'Data Binding', icon: '🔗', description: 'Interpolation, property & event binding' },
+    { path: '/pipes', label: 'Pipes', icon: '🧪', description: 'Format dates, prices & text in the template' },
+    { path: '/routing', label: 'Routing', icon: '🧭', description: 'Routes, router-outlet & route params' },
     { path: '/communication', label: 'Component Communication', icon: '↔️', description: '@Input() and @Output()' },
     { path: '/directives', label: 'Directives', icon: '⚙️', description: 'Structural & attribute directives' },
     { path: '/forms', label: 'Angular Forms', icon: '📝', description: 'Template-driven & reactive forms' },
