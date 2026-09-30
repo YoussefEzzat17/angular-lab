@@ -55,13 +55,13 @@ interface PipeOption {
         <p class="text-xs font-bold tracking-wider text-gold-300">1 · The problem</p>
         <h2 class="mt-2 text-xl font-bold">Raw data doesn't always look presentable</h2>
         <div class="mt-4 grid gap-4 sm:grid-cols-2">
-          <div class="rounded-xl bg-stone-800 p-4">
+          <div class="min-w-0 rounded-xl bg-stone-800 p-4">
             <p class="text-xs font-bold text-rose-300">We have</p>
             <pre class="mt-2 text-sm text-stone-300">price = 49.9;
 &lt;p&gt;{{ '{{ price }}' }}&lt;/p&gt;</pre>
             <p class="mt-2 text-xs text-stone-500">renders as: <span class="text-stone-300">49.9</span></p>
           </div>
-          <div class="rounded-xl bg-gold-950/30 p-4">
+          <div class="min-w-0 rounded-xl bg-gold-950/30 p-4">
             <p class="text-xs font-bold text-emerald-300">We want</p>
             <pre class="mt-2 text-sm text-gold-100">price = 49.9;
 &lt;p&gt;{{ '{{ price | currency }}' }}&lt;/p&gt;</pre>

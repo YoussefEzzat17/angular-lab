@@ -62,7 +62,7 @@ interface RouteChunk {
         <p class="text-xs font-bold tracking-wider text-gold-300">2 · One-line change, real payoff</p>
         <h2 class="mt-2 text-xl font-bold">Eager imports vs. loadComponent</h2>
         <div class="mt-5 grid gap-4 sm:grid-cols-2">
-          <div class="rounded-xl bg-stone-800 p-4">
+          <div class="min-w-0 rounded-xl bg-stone-800 p-4">
             <p class="text-xs font-bold text-rose-300">❌ Before — every component is in the main bundle</p>
             <pre class="mt-2 overflow-x-auto text-[11px] leading-relaxed text-stone-300">import &#123; Products &#125; from './exercises/product-card/product-card';
 import &#123; Checkout &#125; from './exercises/checkout/checkout';
@@ -72,7 +72,7 @@ export const routes: Routes = [
   &#123; path: 'checkout', component: Checkout &#125;,
 ];</pre>
           </div>
-          <div class="rounded-xl bg-gold-950/30 p-4">
+          <div class="min-w-0 rounded-xl bg-gold-950/30 p-4">
             <p class="text-xs font-bold text-emerald-300">✅ After — code loads only when the route is visited</p>
             <pre class="mt-2 overflow-x-auto text-[11px] leading-relaxed text-gold-100">export const routes: Routes = [
   &#123; path: 'products', loadComponent: () =&gt;

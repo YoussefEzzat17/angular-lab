@@ -93,14 +93,14 @@ interface MockRoute {
         <p class="text-xs font-bold tracking-wider text-gold-300">3 · Declarative vs. programmatic navigation</p>
         <h2 class="mt-2 text-xl font-bold">routerLink vs. the Router service</h2>
         <div class="mt-5 grid gap-4 sm:grid-cols-2">
-          <div class="rounded-xl bg-stone-800 p-4">
+          <div class="min-w-0 rounded-xl bg-stone-800 p-4">
             <p class="text-xs font-bold text-gold-300">Declarative — routerLink</p>
             <pre class="mt-2 overflow-x-auto text-[11px] leading-relaxed text-stone-300">&lt;a routerLink="/products"&gt;
   Products
 &lt;/a&gt;</pre>
             <p class="mt-2 text-xs text-stone-500">Best for menus, nav bars, and plain links the user clicks.</p>
           </div>
-          <div class="rounded-xl bg-gold-950/30 p-4">
+          <div class="min-w-0 rounded-xl bg-gold-950/30 p-4">
             <p class="text-xs font-bold text-emerald-300">Programmatic — Router service</p>
             <pre class="mt-2 overflow-x-auto text-[11px] leading-relaxed text-gold-100">constructor(private router: Router) &#123;&#125;
 

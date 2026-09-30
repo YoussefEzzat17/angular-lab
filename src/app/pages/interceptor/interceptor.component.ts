@@ -119,13 +119,13 @@ type Stage = 'idle' | 'built' | 'cloned' | 'sent' | 'response' | 'handled';
         </div>
 
         <div class="mt-5 grid gap-4 sm:grid-cols-2">
-          <div class="rounded-xl bg-stone-900 p-4" [class.opacity-40]="stage() === 'idle'">
+          <div class="min-w-0 rounded-xl bg-stone-900 p-4" [class.opacity-40]="stage() === 'idle'">
             <p class="text-xs font-bold text-rose-300">① Original request — built by the component</p>
             <pre class="mt-2 overflow-x-auto rounded-lg bg-stone-950 p-3 text-[11px] text-stone-300">GET /api/users
 Host: api.example.com</pre>
             <p class="mt-2 text-xs text-stone-500">No <code class="text-gold-300">Authorization</code> header — the component never has to think about the token.</p>
           </div>
-          <div class="rounded-xl bg-gold-950/30 p-4" [class.opacity-40]="stage() === 'idle' || stage() === 'built'">
+          <div class="min-w-0 rounded-xl bg-gold-950/30 p-4" [class.opacity-40]="stage() === 'idle' || stage() === 'built'">
             <p class="text-xs font-bold text-emerald-300">② Cloned request — after the interceptor</p>
             <pre class="mt-2 overflow-x-auto rounded-lg bg-stone-950 p-3 text-[11px] text-gold-100">GET /api/users
 Host: api.example.com

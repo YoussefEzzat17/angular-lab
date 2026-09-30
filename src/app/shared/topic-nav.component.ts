@@ -37,7 +37,7 @@ import { ProgressService } from '../core/services/progress.service';
       @if (previous()) {
         <a
           [routerLink]="previous()!.path"
-          class="group flex flex-1 items-center gap-3 rounded-2xl border border-stone-800 bg-stone-900 p-4 transition hover:border-gold-400/50 hover:bg-stone-800"
+          class="group flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-stone-800 bg-stone-900 p-4 transition hover:border-gold-400/50 hover:bg-stone-800"
         >
           <span class="text-gold-400 transition group-hover:-translate-x-1">←</span>
           <span class="min-w-0">
@@ -52,7 +52,7 @@ import { ProgressService } from '../core/services/progress.service';
       @if (next()) {
         <a
           [routerLink]="next()!.path"
-          class="group flex flex-1 items-center justify-end gap-3 rounded-2xl border border-stone-800 bg-stone-900 p-4 text-right transition hover:border-gold-400/50 hover:bg-stone-800"
+          class="group flex min-w-0 flex-1 items-center justify-end gap-3 rounded-2xl border border-stone-800 bg-stone-900 p-4 text-right transition hover:border-gold-400/50 hover:bg-stone-800"
         >
           <span class="min-w-0">
             <span class="block text-xs text-stone-500">Next</span>

@@ -68,7 +68,7 @@ import {
           <span class="text-gold-300">Callback Hell</span>: every event needs its own condition, you have to cancel the old one manually, and there's no unified way to combine, filter, or delay these events.
         </p>
         <div class="mt-5 grid gap-4 sm:grid-cols-2">
-          <div class="rounded-xl bg-stone-800 p-4">
+          <div class="min-w-0 rounded-xl bg-stone-800 p-4">
             <p class="text-xs font-bold text-rose-300">❌ Without RxJS</p>
             <pre class="mt-2 overflow-x-auto text-[11px] leading-relaxed text-stone-300">input.addEventListener('input', () =&gt; &#123;
   clearTimeout(timer);
@@ -81,7 +81,7 @@ import {
   &#125;, 400);
 &#125;);</pre>
           </div>
-          <div class="rounded-xl bg-gold-950/30 p-4">
+          <div class="min-w-0 rounded-xl bg-gold-950/30 p-4">
             <p class="text-xs font-bold text-emerald-300">✅ With RxJS</p>
             <pre class="mt-2 overflow-x-auto text-[11px] leading-relaxed text-gold-100">searchTerm$.pipe(
   debounceTime(400),
@@ -247,7 +247,7 @@ ngOnDestroy() &#123;
           the element appears, and unsubscribes automatically when it's removed — so a memory leak isn't even possible.
         </p>
         <div class="mt-5 grid gap-4 sm:grid-cols-2">
-          <div class="rounded-xl bg-stone-900 p-4">
+          <div class="min-w-0 rounded-xl bg-stone-900 p-4">
             <p class="text-xs font-bold text-rose-300">❌ The manual way</p>
             <pre class="mt-2 overflow-x-auto text-[11px] leading-relaxed text-stone-300">movies$: Observable&lt;Movie[]&gt;;
 movies: Movie[] = [];
@@ -263,7 +263,7 @@ ngOnDestroy() &#123;
   this.sub.unsubscribe(); // easy to forget!
 &#125;</pre>
           </div>
-          <div class="rounded-xl bg-[rgb(var(--panel-success-bg))] p-4">
+          <div class="min-w-0 rounded-xl bg-[rgb(var(--panel-success-bg))] p-4">
             <p class="text-xs font-bold text-emerald-300">✅ With async pipe</p>
             <pre class="mt-2 overflow-x-auto text-[11px] leading-relaxed text-emerald-300">movies$ = this.api.getMovies();
 
