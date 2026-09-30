@@ -2,19 +2,167 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  color-scheme: dark;
+
+  /* stone — warm neutral scale. Dark values match the site's original look exactly. */
+  --stone-50: 250 250 249;
+  --stone-100: 245 245 244;
+  --stone-200: 231 229 228;
+  --stone-300: 214 211 209;
+  --stone-400: 168 162 158;
+  --stone-500: 140 125 110;
+  --stone-600: 168 153 138;
+  --stone-700: 68 64 60;
+  --stone-750: 55 51 48;
+  --stone-800: 41 37 36;
+  --stone-900: 28 25 23;
+  --stone-930: 18 16 15;
+  --stone-950: 12 10 9;
+
+  /* gold — the brand accent. */
+  --gold-50: 250 246 236;
+  --gold-100: 243 233 208;
+  --gold-200: 232 211 166;
+  --gold-300: 219 184 119;
+  --gold-400: 201 162 99;
+  --gold-500: 181 138 74;
+  --gold-600: 150 112 58;
+  --gold-700: 120 89 47;
+  --gold-800: 92 69 38;
+  --gold-900: 58 42 28;
+  --gold-950: 36 26 18;
+
+  /* Legacy one-off overrides kept for the two demo cards (Favorites, Product Details) that were
+     originally authored as light cards on a light page, before the rest of the app went dark. */
+  --card-surface: 42 31 22;
+  --card-ring-soft: 58 45 34;
+  --card-ring-strong: 74 58 44;
+  --legacy-gold-text: 219 184 119;
+
+  /* Status accents (errors/numbers) tuned separately per theme for contrast. The "rose" accent
+     is actually a warm burgundy/wine tone, on-brand with the gold/stone palette rather than a
+     generic pink-red. */
+  --status-rose: 224 148 158;
+  --status-rose-strong: 199 107 122;
+  --status-emerald: 110 231 183;
+  --status-emerald-strong: 52 211 153;
+  --status-amber: 252 211 77;
+
+  /* Success/danger callout panels (RxJS memory-leak/async-pipe boxes, the recap box, the
+     component-communication message box, ...). Background + heading only — body text inside
+     just uses the normal stone-* tokens, which already adapt correctly. The "danger" panel is a
+     deep burgundy with a gold heading — the site's own brand accent, not a generic red alert. */
+  --panel-success-bg: 2 44 34;
+  --panel-success-heading: 110 231 183;
+  --panel-danger-bg: 59 20 27;
+  --panel-danger-heading: 219 184 119;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --stone-50: 20 16 13;
+  --stone-100: 36 29 24;
+  --stone-200: 51 42 35;
+  --stone-300: 74 62 52;
+  --stone-400: 107 93 79;
+  --stone-500: 139 122 104;
+  --stone-600: 168 153 138;
+  --stone-700: 214 204 190;
+  --stone-750: 225 216 202;
+  --stone-800: 235 227 213;
+  --stone-900: 250 246 239;
+  --stone-930: 252 248 242;
+  --stone-950: 253 250 244;
+
+  --gold-50: 54 39 25;
+  --gold-100: 74 54 34;
+  --gold-200: 97 72 42;
+  --gold-300: 124 92 50;
+  --gold-400: 150 112 58;
+  --gold-500: 181 138 74;
+  --gold-600: 201 162 99;
+  --gold-700: 219 184 119;
+  --gold-800: 232 211 166;
+  --gold-900: 243 233 208;
+  --gold-950: 250 246 236;
+
+  --card-surface: 255 255 255;
+  --card-ring-soft: 231 229 228;
+  --card-ring-strong: 214 211 209;
+  --legacy-gold-text: 97 72 42;
+
+  --status-rose: 122 26 38;
+  --status-rose-strong: 90 18 28;
+  --status-emerald: 4 120 87;
+  --status-emerald-strong: 6 95 70;
+  --status-amber: 146 64 14;
+
+  --panel-success-bg: 236 253 245;
+  --panel-success-heading: 6 95 70;
+  --panel-danger-bg: 250 237 237;
+  --panel-danger-heading: 107 26 38;
+}
+
 @layer base {
   html { @apply overflow-x-hidden; }
-  body { @apply m-0 bg-stone-950 font-sans text-stone-100; }
+  body { @apply m-0 bg-stone-950 font-sans text-stone-100 transition-colors duration-200; }
   button, input { font: inherit; }
 }
 
+/* Opt a subtree out of light mode — for the handful of deliberately-dark decorative panels
+   (e.g. the home hero) that should stay dark regardless of the site theme. Every stone- and gold-
+   utility inside just keeps resolving to its usual dark value. */
+.theme-dark-scope {
+  --stone-50: 250 250 249;
+  --stone-100: 245 245 244;
+  --stone-200: 231 229 228;
+  --stone-300: 214 211 209;
+  --stone-400: 168 162 158;
+  --stone-500: 140 125 110;
+  --stone-600: 168 153 138;
+  --stone-700: 68 64 60;
+  --stone-750: 55 51 48;
+  --stone-800: 41 37 36;
+  --stone-900: 28 25 23;
+  --stone-930: 18 16 15;
+  --stone-950: 12 10 9;
+  --gold-50: 250 246 236;
+  --gold-100: 243 233 208;
+  --gold-200: 232 211 166;
+  --gold-300: 219 184 119;
+  --gold-400: 201 162 99;
+  --gold-500: 181 138 74;
+  --gold-600: 150 112 58;
+  --gold-700: 120 89 47;
+  --gold-800: 92 69 38;
+  --gold-900: 58 42 28;
+  --gold-950: 36 26 18;
+  --card-surface: 42 31 22;
+  --card-ring-soft: 58 45 34;
+  --card-ring-strong: 74 58 44;
+  --legacy-gold-text: 219 184 119;
+  --status-rose: 224 148 158;
+  --status-rose-strong: 199 107 122;
+  --status-emerald: 110 231 183;
+  --status-emerald-strong: 52 211 153;
+  --status-amber: 252 211 77;
+  --panel-success-bg: 2 44 34;
+  --panel-success-heading: 110 231 183;
+  --panel-danger-bg: 59 20 27;
+  --panel-danger-heading: 219 184 119;
+}
+
 /* Pages that reuse the workshop card patterns also inherit the warm, gold-accented theme. */
-.bg-white { background-color: rgb(42 31 22) !important; }
-.bg-stone-50 { background-color: rgb(27 20 16) !important; }
-.ring-stone-200, .border-stone-200 { --tw-ring-color: rgb(58 45 34 / 1) !important; border-color: rgb(58 45 34 / 1) !important; }
-.border-stone-300 { border-color: rgb(74 58 44 / 1) !important; }
-.text-stone-800 { color: rgb(239 228 210) !important; }
-.text-stone-600 { color: rgb(168 153 138) !important; }
-.text-stone-500 { color: rgb(140 125 110) !important; }
-.text-gold-600, .text-gold-700 { color: rgb(219 184 119) !important; }
-.bg-gold-600 { background-color: rgb(150 112 58) !important; }
+.bg-white { background-color: rgb(var(--card-surface)) !important; }
+.bg-stone-50 { background-color: rgb(var(--card-surface)) !important; }
+.ring-stone-200, .border-stone-200 { --tw-ring-color: rgb(var(--card-ring-soft) / 1) !important; border-color: rgb(var(--card-ring-soft) / 1) !important; }
+.border-stone-300 { border-color: rgb(var(--card-ring-strong) / 1) !important; }
+.text-stone-800 { color: rgb(var(--stone-100)) !important; }
+.text-gold-600, .text-gold-700 { color: rgb(var(--legacy-gold-text)) !important; }
+
+/* Status accents: bright pastels read fine on a dark card, but need to darken for contrast on a light one. */
+.text-rose-300, .text-rose-400 { color: rgb(var(--status-rose)) !important; }
+.text-emerald-300, .text-emerald-400 { color: rgb(var(--status-emerald)) !important; }
+.text-amber-200 { color: rgb(var(--status-amber)) !important; }

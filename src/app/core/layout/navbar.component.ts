@@ -2,15 +2,12 @@ import { Component, effect, HostListener, inject, OnDestroy, signal } from '@ang
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 
+import { TOPICS } from '../data/topics';
 import { CartService } from '../services/cart.service';
 import { FavoritesService } from '../services/favorites.service';
-
-interface NavLink {
-  path: string;
-  label: string;
-  icon: string;
-  description: string;
-}
+import { ProgressService } from '../services/progress.service';
+import { SearchPaletteService } from '../services/search-palette.service';
+import { ThemeService } from '../services/theme.service';
 
 @Component({
   selector: 'app-navbar',
@@ -60,7 +57,12 @@ interface NavLink {
                     >
                       <span class="mt-0.5 text-lg">{{ topic.icon }}</span>
                       <span class="min-w-0">
-                        <span class="block font-semibold text-stone-100">{{ topic.label }}</span>
+                        <span class="flex items-center gap-1.5">
+                          <span class="block truncate font-semibold text-stone-100">{{ topic.title }}</span>
+                          @if (progress.isCompleted(topic.path)) {
+                            <span class="shrink-0 text-xs text-emerald-400">✓</span>
+                          }
+                        </span>
                         <span class="block truncate text-xs text-stone-500">{{ topic.description }}</span>
                       </span>
                     </a>
@@ -99,10 +101,70 @@ interface NavLink {
             }
           </div>
 
-          <span class="ml-2 rounded-full bg-gold-500/15 px-3 py-2 text-gold-300">Watchlist {{ cart.count() }}</span>
+          <a
+            routerLink="/feedback"
+            routerLinkActive="text-gold-400"
+            class="rounded-lg px-3 py-2 transition hover:text-gold-400"
+          >
+            Feedback
+          </a>
+
+          <button
+            type="button"
+            (click)="searchPalette.toggle()"
+            class="ml-2 flex items-center gap-2 rounded-lg border border-stone-800 px-3 py-2 text-stone-400 transition hover:border-stone-700 hover:text-gold-300"
+          >
+            <svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4" aria-hidden="true">
+              <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" />
+            </svg>
+            <kbd class="rounded border border-stone-700 px-1.5 py-0.5 text-[10px] text-stone-500">⌘K</kbd>
+          </button>
+          <button
+            type="button"
+            (click)="theme.toggle()"
+            class="flex h-[38px] w-[38px] items-center justify-center rounded-lg border border-stone-800 text-stone-400 transition hover:border-stone-700 hover:text-gold-300"
+            [attr.aria-label]="theme.theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+          >
+            @if (theme.theme() === 'dark') {
+              <svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4" aria-hidden="true">
+                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+              </svg>
+            } @else {
+              <svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4" aria-hidden="true">
+                <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 9a1 1 0 100 2h1a1 1 0 100-2h-1zM2 9a1 1 0 100 2h1a1 1 0 100-2H2zm2.05-5.536a1 1 0 011.414 0l.707.707A1 1 0 004.757 5.88l-.707-.707a1 1 0 010-1.414zm0 12.02a1 1 0 010-1.414l.707-.707a1 1 0 111.414 1.414l-.707.707a1 1 0 01-1.414 0zM10 16a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1z" />
+              </svg>
+            }
+          </button>
+          <span class="rounded-full bg-gold-500/15 px-3 py-2 text-gold-300">Watchlist {{ cart.count() }}</span>
         </div>
 
         <div class="flex items-center gap-2 lg:hidden">
+          <button
+            type="button"
+            (click)="searchPalette.toggle()"
+            class="grid h-11 w-11 place-items-center rounded-xl text-stone-300 transition hover:bg-stone-800"
+            aria-label="Search topics"
+          >
+            <svg viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5" aria-hidden="true">
+              <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            (click)="theme.toggle()"
+            class="grid h-11 w-11 place-items-center rounded-xl text-stone-300 transition hover:bg-stone-800"
+            [attr.aria-label]="theme.theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+          >
+            @if (theme.theme() === 'dark') {
+              <svg viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5" aria-hidden="true">
+                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+              </svg>
+            } @else {
+              <svg viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5" aria-hidden="true">
+                <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 9a1 1 0 100 2h1a1 1 0 100-2h-1zM2 9a1 1 0 100 2h1a1 1 0 100-2H2zm2.05-5.536a1 1 0 011.414 0l.707.707A1 1 0 004.757 5.88l-.707-.707a1 1 0 010-1.414zm0 12.02a1 1 0 010-1.414l.707-.707a1 1 0 111.414 1.414l-.707.707a1 1 0 01-1.414 0zM10 16a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1z" />
+              </svg>
+            }
+          </button>
           <span class="rounded-full bg-gold-500/15 px-3 py-2 text-sm font-medium text-gold-300" aria-label="Watchlist {{ cart.count() }}">
             {{ cart.count() }}
           </span>
@@ -154,11 +216,16 @@ interface NavLink {
               <a
                 [routerLink]="topic.path"
                 routerLinkActive="bg-gold-500/15 text-gold-300"
-                class="flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 hover:bg-stone-800"
+                class="flex min-h-11 items-center justify-between gap-2 rounded-xl px-3 py-2 hover:bg-stone-800"
                 (click)="closeMenu()"
               >
-                <span>{{ topic.icon }}</span>
-                {{ topic.label }}
+                <span class="flex items-center gap-2">
+                  <span>{{ topic.icon }}</span>
+                  {{ topic.title }}
+                </span>
+                @if (progress.isCompleted(topic.path)) {
+                  <span class="text-xs text-emerald-400">✓</span>
+                }
               </a>
             }
 
@@ -171,6 +238,15 @@ interface NavLink {
               <span class="rounded-full bg-stone-800 px-2 py-0.5 text-sm text-stone-400">{{ favorites.ids().length }}</span>
             </a>
 
+            <a
+              routerLink="/feedback"
+              routerLinkActive="bg-gold-500/15 text-gold-300"
+              class="mt-3 flex min-h-11 items-center rounded-xl border-t border-stone-800 px-3 py-2 pt-5 hover:bg-stone-800"
+              (click)="closeMenu()"
+            >
+              Feedback
+            </a>
+
             <p class="mt-3 border-t border-stone-800 px-3 pt-3 text-sm text-stone-400">Watchlist · {{ cart.count() }} titles</p>
           </div>
         </div>
@@ -181,23 +257,14 @@ interface NavLink {
 export class NavbarComponent implements OnDestroy {
   readonly cart = inject(CartService);
   readonly favorites = inject(FavoritesService);
+  readonly progress = inject(ProgressService);
+  readonly searchPalette = inject(SearchPaletteService);
+  readonly theme = inject(ThemeService);
   readonly menuOpen = signal(false);
   readonly topicsOpen = signal(false);
   readonly demoOpen = signal(false);
 
-  readonly topics: NavLink[] = [
-    { path: '/binding', label: 'Data Binding', icon: '🔗', description: 'Interpolation, property & event binding' },
-    { path: '/pipes', label: 'Pipes', icon: '🧪', description: 'Format dates, prices & text in the template' },
-    { path: '/routing', label: 'Routing', icon: '🧭', description: 'Routes, router-outlet & route params' },
-    { path: '/communication', label: 'Component Communication', icon: '↔️', description: '@Input() and @Output()' },
-    { path: '/directives', label: 'Directives', icon: '⚙️', description: 'Structural & attribute directives' },
-    { path: '/forms', label: 'Angular Forms', icon: '📝', description: 'Template-driven & reactive forms' },
-    { path: '/signals', label: 'Signals', icon: '📡', description: 'signal(), computed(), effect()' },
-    { path: '/movies', label: 'Fetch API & HTTP', icon: '🌐', description: 'HttpClient and services' },
-    { path: '/rxjs', label: 'RxJS', icon: '🌊', description: 'Observables, operators, async pipe' },
-    { path: '/lazy-loading', label: 'Lazy Loading', icon: '📦', description: 'loadComponent and smaller bundles' },
-    { path: '/interceptor', label: 'HttpInterceptor', icon: '🛡️', description: 'One checkpoint for every HTTP call' },
-  ];
+  readonly topics = TOPICS;
 
   private readonly topicPaths = new Set(this.topics.map((topic) => topic.path));
   private readonly demoPaths = new Set(['/products', '/favorites']);

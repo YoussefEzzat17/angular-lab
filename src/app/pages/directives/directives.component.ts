@@ -4,11 +4,14 @@ import { FormsModule } from '@angular/forms';
 
 import { HighlightDirective } from '../../directives/highlight.directive';
 import { NumbersOnlyDirective } from '../../directives/numbers-only.directive';
+import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
+import { RecapComponent, RecapItem } from '../../shared/recap.component';
+import { TopicNavComponent } from '../../shared/topic-nav.component';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule, HighlightDirective, NumbersOnlyDirective, FlowDiagramComponent],
+  imports: [CommonModule, FormsModule, HighlightDirective, NumbersOnlyDirective, FlowDiagramComponent, CodeBlockDirective, RecapComponent, TopicNavComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <div class="flex flex-wrap items-start justify-between gap-4">
@@ -151,6 +154,9 @@ export class NumbersOnlyDirective &#123;
           </div>
         </article>
       </div>
+
+      <app-recap [items]="recapItems" />
+      <app-topic-nav />
     </section>
   `,
 })
@@ -166,4 +172,19 @@ export class DirectivesComponent {
     this.blockedCount.update((count) => count + 1);
     this.lastBlocked.set(char);
   }
+
+  readonly recapItems: RecapItem[] = [
+    {
+      question: "What's the key difference between a structural and an attribute directive?",
+      answer: 'Structural directives (*ngIf, *ngFor, @if, @for) add or remove elements from the DOM; attribute directives (ngClass, appHighlight) change an existing element without adding or removing it.',
+    },
+    {
+      question: 'Why does appNumbersOnly need to handle the paste event separately from keydown?',
+      answer: "Pasting text doesn't fire one keydown event per character, so keydown alone wouldn't catch non-digit characters coming from a paste.",
+    },
+    {
+      question: 'When should you write a custom directive instead of duplicating logic in each component?',
+      answer: 'When the exact same small DOM behavior (hover highlight, input filtering) is needed on multiple, unrelated elements.',
+    },
+  ];
 }

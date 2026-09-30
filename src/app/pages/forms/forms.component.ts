@@ -3,28 +3,33 @@ import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Valid
 
 import { NumbersOnlyDirective } from '../../directives/number-only.directive';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
+import { RecapComponent, RecapItem } from '../../shared/recap.component';
+import { TopicNavComponent } from '../../shared/topic-nav.component';
 
 @Component({
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, NumbersOnlyDirective, FlowDiagramComponent],
+  imports: [ReactiveFormsModule, FormsModule, NumbersOnlyDirective, FlowDiagramComponent, RecapComponent, TopicNavComponent],
   styles: `
     .field {
       width: 100%;
       border-radius: 0.75rem;
-      border: 1px solid #475569;
-      background: #1e293b;
+      border: 1px solid rgb(var(--card-ring-strong));
+      background: rgb(var(--card-surface));
       padding: 0.875rem 1rem;
-      color: white;
+      color: rgb(var(--stone-100));
       outline: none;
     }
+    .field::placeholder {
+      color: rgb(var(--stone-500));
+    }
     .field.invalid {
-      border-color: #fb7185;
+      border-color: rgb(var(--status-rose-strong));
     }
     .error {
       display: block;
       margin-top: 0.5rem;
       font-size: 0.875rem;
-      color: #fda4af;
+      color: rgb(var(--status-rose-strong));
     }
   `,
   template: `
@@ -70,12 +75,12 @@ import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
           <form
             [formGroup]="signupForm"
             (ngSubmit)="submit()"
-            class="rounded-3xl border border-stone-800 bg-stone-900/60 p-6 shadow-2xl shadow-black/20 backdrop-blur sm:p-8"
+            class="rounded-3xl border border-stone-800 bg-stone-900 p-6 shadow-2xl shadow-black/20 sm:p-8"
           >
             <div class="flex items-center gap-2">
               <span class="rounded-full bg-amber-400/10 px-3 py-1 text-xs font-bold tracking-wider text-amber-300">REACTIVE FORM</span>
             </div>
-            <h2 class="mt-3 text-2xl font-bold text-white">Create a watch profile</h2>
+            <h2 class="mt-3 text-2xl font-bold text-stone-100">Create a watch profile</h2>
             <p class="mt-1 text-sm text-stone-400">Tell us a bit about yourself to get personalized picks.</p>
             <app-flow-diagram class="mt-4 block" from="FormGroup (TS)" to="formControlName" direction="right" />
             <p class="mt-2 text-xs text-stone-500">The model is defined here, in the class — the template only reflects it.</p>
@@ -298,12 +303,12 @@ import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
           <form
             #contactForm="ngForm"
             (ngSubmit)="submitContact(contactForm)"
-            class="rounded-3xl border border-stone-800 bg-stone-900/60 p-6 shadow-2xl shadow-black/20 backdrop-blur sm:p-8"
+            class="rounded-3xl border border-stone-800 bg-stone-900 p-6 shadow-2xl shadow-black/20 sm:p-8"
           >
             <div class="flex items-center gap-2">
               <span class="rounded-full bg-emerald-400/10 px-3 py-1 text-xs font-bold tracking-wider text-emerald-300">TEMPLATE-DRIVEN FORM</span>
             </div>
-            <h2 class="mt-3 text-2xl font-bold text-white">Contact us</h2>
+            <h2 class="mt-3 text-2xl font-bold text-stone-100">Contact us</h2>
             <p class="mt-1 text-sm text-stone-400">Template-driven forms use directives like <code>ngModel</code> in the HTML.</p>
             <app-flow-diagram class="mt-4 block" from="[(ngModel)] (HTML)" to="NgForm model" direction="right" />
             <p class="mt-2 text-xs text-stone-500">The model is built for you here, from the template — Angular infers it from ngModel and #ngForm.</p>
@@ -380,10 +385,28 @@ import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
           </form>
         </div>
       </div>
+
+      <app-recap [items]="recapItems" />
+      <app-topic-nav />
     </section>
   `,
 })
 export class FormsComponent {
+  readonly recapItems: RecapItem[] = [
+    {
+      question: 'In Template-Driven forms, what does #nameField="ngModel" give you access to?',
+      answer: 'The control\'s validation state (valid, invalid, touched, dirty) directly in the template, without touching the component class.',
+    },
+    {
+      question: 'Why check control.invalid && control.touched instead of just control.invalid?',
+      answer: "So the error doesn't show the instant the form loads — only after the user has actually interacted with that field.",
+    },
+    {
+      question: "What's the main reason to choose Reactive forms over Template-Driven for a complex form?",
+      answer: 'The whole form is a plain object in the TypeScript class, which makes it much easier to unit test and to change validation rules dynamically.',
+    },
+  ];
+
   success = false;
   contactSuccess = false;
 

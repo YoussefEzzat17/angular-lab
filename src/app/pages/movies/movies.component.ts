@@ -3,10 +3,12 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { Movie } from '../../core/models/movie.model';
 import { MovieService } from '../../core/services/movie.service';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
+import { RecapComponent, RecapItem } from '../../shared/recap.component';
+import { TopicNavComponent } from '../../shared/topic-nav.component';
 
 @Component({
   standalone: true,
-  imports: [FlowDiagramComponent],
+  imports: [FlowDiagramComponent, RecapComponent, TopicNavComponent],
   template: `
     <section class="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
       <div class="flex flex-wrap items-start justify-between gap-4">
@@ -58,9 +60,9 @@ import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
           Loading films from the API…
         </div>
       } @else if (error()) {
-        <div class="mt-8 rounded-2xl border border-rose-400/30 bg-rose-950/30 p-6">
-          <p class="font-bold text-rose-300">The movie request did not complete.</p>
-          <p class="mt-1 text-sm text-rose-100">{{ error() }}</p>
+        <div class="mt-8 rounded-2xl border border-[rgb(var(--panel-danger-heading))]/30 bg-[rgb(var(--panel-danger-bg))] p-6">
+          <p class="font-bold text-[rgb(var(--panel-danger-heading))]">The movie request did not complete.</p>
+          <p class="mt-1 text-sm text-stone-300">{{ error() }}</p>
           <button (click)="loadMovies()" class="mt-4 rounded-xl bg-gold-500 px-4 py-2 font-semibold text-white hover:bg-gold-400">
             Try again
           </button>
@@ -105,6 +107,9 @@ import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
           <code class="text-gold-300">filteredMovies()</code>, and Angular re-renders only the cards that actually changed.
         </p>
       </aside>
+
+      <app-recap [items]="recapItems" />
+      <app-topic-nav />
     </section>
   `,
 })
@@ -147,4 +152,19 @@ export class MoviesComponent {
     const input = event.target as HTMLInputElement;
     this.searchTerm.set(input.value);
   }
+
+  readonly recapItems: RecapItem[] = [
+    {
+      question: "Why does a Service's method usually return the Observable from http.get() instead of subscribing itself?",
+      answer: 'So the caller controls when the request actually runs and can unsubscribe/cancel it — the Service just hands back the "recipe".',
+    },
+    {
+      question: "What does providedIn: 'root' give you?",
+      answer: 'A singleton — the Service is created once and that same instance is shared by every component that injects it.',
+    },
+    {
+      question: 'Why use an interceptor instead of adding the auth header manually inside every Service method?',
+      answer: 'One place handles it for every request automatically, instead of repeating (and risking forgetting) the same code everywhere.',
+    },
+  ];
 }

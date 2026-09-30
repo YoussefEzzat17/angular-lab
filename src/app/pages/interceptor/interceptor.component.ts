@@ -1,9 +1,14 @@
 import { Component, OnDestroy, signal } from '@angular/core';
 
+import { CodeBlockDirective } from '../../shared/code-block.directive';
+import { RecapComponent, RecapItem } from '../../shared/recap.component';
+import { TopicNavComponent } from '../../shared/topic-nav.component';
+
 type Stage = 'idle' | 'built' | 'cloned' | 'sent' | 'response' | 'handled';
 
 @Component({
   standalone: true,
+  imports: [CodeBlockDirective, RecapComponent, TopicNavComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <div class="flex flex-wrap items-start justify-between gap-4">
@@ -265,6 +270,9 @@ Authorization: Bearer {{ tokenPreview() }}</pre>
           </table>
         </div>
       </article>
+
+      <app-recap [items]="recapItems" />
+      <app-topic-nav />
     </section>
   `,
 })
@@ -341,4 +349,19 @@ export class InterceptorComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.timers.forEach((timer) => clearTimeout(timer));
   }
+
+  readonly recapItems: RecapItem[] = [
+    {
+      question: 'Why does the interceptor call req.clone() instead of modifying req directly?',
+      answer: "HttpRequest objects are immutable in Angular — you can't edit one in place, only create a modified copy.",
+    },
+    {
+      question: 'What does calling next(clonedRequest) actually do?',
+      answer: 'It continues the request through the pipeline with your modified version — forgetting to pass the clone (using next(req) instead) sends the unmodified request.',
+    },
+    {
+      question: 'Besides attaching auth tokens, name two other things interceptors are commonly used for.',
+      answer: 'Logging every request/response, or centralized error handling — e.g. catching a 401 and redirecting to /login.',
+    },
+  ];
 }

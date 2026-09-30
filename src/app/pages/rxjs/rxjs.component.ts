@@ -1,6 +1,10 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, OnDestroy, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+
+import { CodeBlockDirective } from '../../shared/code-block.directive';
+import { RecapComponent, RecapItem } from '../../shared/recap.component';
+import { TopicNavComponent } from '../../shared/topic-nav.component';
 import {
   Observable,
   Subject,
@@ -19,7 +23,7 @@ import {
 
 @Component({
   standalone: true,
-  imports: [FormsModule, AsyncPipe],
+  imports: [FormsModule, AsyncPipe, CodeBlockDirective, RecapComponent, TopicNavComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <div class="flex flex-wrap items-start justify-between gap-4">
@@ -184,14 +188,14 @@ take(3):         20───40───60|  (completes after 3 values)</pre>
       </article>
 
       <!-- 5 · SUBSCRIBE & MEMORY LEAK -->
-      <article class="mt-5 rounded-2xl border border-rose-500/30 bg-rose-950/10 p-6">
+      <article class="mt-5 rounded-2xl border border-[rgb(var(--panel-danger-heading))]/30 bg-[rgb(var(--panel-danger-bg))] p-6">
         <p class="text-xs font-bold tracking-wider text-rose-300">5 · subscribe() and the memory leak problem</p>
         <h2 class="mt-2 text-xl font-bold">A subscription you forget to close keeps running forever</h2>
         <p class="mt-2 text-sm text-stone-400">
           When you call <code class="text-rose-300">.subscribe()</code> on an Observable that's still live (like interval or Router events), that subscription stays
           "alive" in memory even after the component is destroyed. The result: memory builds up, and sometimes code keeps running against an element that no longer exists.
         </p>
-        <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-rose-200">Open page   ──▶  subscribe()  ──▶  ✅ running
+        <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-rose-300">Open page   ──▶  subscribe()  ──▶  ✅ running
 Close page  ──▶  nobody unsubscribed ──▶  ⚠️ still running in memory!
 Open it again ──▶  subscribe() again ──▶  ⚠️⚠️ now 2 copies running together
 ...and so on: memory leak</pre>
@@ -234,7 +238,7 @@ ngOnDestroy() &#123;
       </article>
 
       <!-- 6 · ASYNC PIPE -->
-      <article class="mt-5 rounded-2xl border border-emerald-500/30 bg-emerald-950/10 p-6">
+      <article class="mt-5 rounded-2xl border border-emerald-500/30 bg-[rgb(var(--panel-success-bg))] p-6">
         <p class="text-xs font-bold tracking-wider text-emerald-300">6 · async pipe — the cleaner fix</p>
         <h2 class="mt-2 text-xl font-bold">Let Angular subscribe/unsubscribe on your behalf</h2>
         <p class="mt-2 text-sm text-stone-400">
@@ -259,9 +263,9 @@ ngOnDestroy() &#123;
   this.sub.unsubscribe(); // easy to forget!
 &#125;</pre>
           </div>
-          <div class="rounded-xl bg-emerald-950/30 p-4">
+          <div class="rounded-xl bg-[rgb(var(--panel-success-bg))] p-4">
             <p class="text-xs font-bold text-emerald-300">✅ With async pipe</p>
-            <pre class="mt-2 overflow-x-auto text-[11px] leading-relaxed text-emerald-100">movies$ = this.api.getMovies();
+            <pre class="mt-2 overflow-x-auto text-[11px] leading-relaxed text-emerald-300">movies$ = this.api.getMovies();
 
 // in the template, that's it:
 &#64;for (m of movies$ | async; track m.id) &#123;
@@ -305,6 +309,9 @@ ngOnDestroy() &#123;
           </table>
         </div>
       </article>
+
+      <app-recap [items]="recapItems" />
+      <app-topic-nav />
     </section>
   `,
 })
@@ -413,4 +420,19 @@ export class RxjsComponent implements OnDestroy {
     this.searchSub.unsubscribe();
     this.cleanupLeaks();
   }
+
+  readonly recapItems: RecapItem[] = [
+    {
+      question: 'Why does switchMap cancel the previous request instead of letting it finish?',
+      answer: "So a stale response (from an earlier keystroke) can't arrive after a newer one and overwrite it with outdated data.",
+    },
+    {
+      question: 'What problem does debounceTime(400) solve in a search box?',
+      answer: 'It waits for a pause in typing before firing a request, instead of sending one API call per keystroke.',
+    },
+    {
+      question: 'Why prefer the async pipe over manually calling .subscribe() in ngOnInit?',
+      answer: "Angular subscribes and unsubscribes automatically as the element appears and is destroyed — a memory leak isn't even possible.",
+    },
+  ];
 }

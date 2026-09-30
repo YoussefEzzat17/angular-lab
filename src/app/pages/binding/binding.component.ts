@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
+import { RecapComponent, RecapItem } from '../../shared/recap.component';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
+import { TopicNavComponent } from '../../shared/topic-nav.component';
 
 @Component({
   standalone: true,
-  imports: [FormsModule, FlowDiagramComponent],
+  imports: [FormsModule, FlowDiagramComponent, RecapComponent, TopicNavComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <div class="flex flex-wrap items-start justify-between gap-4">
@@ -146,6 +148,9 @@ import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
           Use event binding and confirm all live UI values reset.
         </p>
       </div>
+
+      <app-recap [items]="recapItems" />
+      <app-topic-nav />
     </section>
   `,
 })
@@ -160,4 +165,19 @@ export class BindingComponent {
     // Student task: change the number and test the button again.
     this.stars += 1;
   }
+
+  readonly recapItems: RecapItem[] = [
+    {
+      question: 'If data flows from the component out to the template, which binding do you use?',
+      answer: 'Interpolation {{ }} or property binding [ ] — both display a value, they just target different places (text vs. an element property).',
+    },
+    {
+      question: "What's different about [(ngModel)] compared to [ ] and ( ) used separately?",
+      answer: "It's both combined — it reads the value in and writes user changes back, keeping the component and the input in sync automatically.",
+    },
+    {
+      question: 'Why use [src] instead of src="{{ imageUrl }}"?',
+      answer: '[src] reads imageUrl as an actual JavaScript value (property binding) — the idiomatic, safer way to bind non-text values like images or booleans.',
+    },
+  ];
 }

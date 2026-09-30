@@ -1,11 +1,14 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, computed, effect, signal } from '@angular/core';
 
+import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
+import { RecapComponent, RecapItem } from '../../shared/recap.component';
+import { TopicNavComponent } from '../../shared/topic-nav.component';
 
 @Component({
   standalone: true,
-  imports: [CurrencyPipe, FlowDiagramComponent],
+  imports: [CurrencyPipe, FlowDiagramComponent, CodeBlockDirective, RecapComponent, TopicNavComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <div class="flex flex-wrap items-start justify-between gap-4">
@@ -72,7 +75,7 @@ import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
           <button (click)="changeProduct()" class="mt-5 rounded-xl bg-gold-500 px-4 py-2.5 font-semibold text-white hover:bg-gold-400">
             Change Protein to Creatine
           </button>
-          <p class="mt-4 rounded-xl bg-stone-800 p-4 text-stone-300">Current product: <strong class="text-white">{{ productName() }}</strong></p>
+          <p class="mt-4 rounded-xl bg-stone-800 p-4 text-stone-300">Current product: <strong class="text-stone-100">{{ productName() }}</strong></p>
         </article>
 
         <article class="rounded-2xl border border-stone-800 bg-stone-900 p-6">
@@ -115,6 +118,9 @@ subtotal changes → discount changes → finalPrice changes</pre>
         <app-flow-diagram class="mt-4 block" from="finalPrice() changes" to="effect() re-runs" direction="right" />
         <p class="mt-4 text-sm text-stone-300"><strong>Remember:</strong> <code class="text-gold-300">computed()</code> derives data for the UI; <code class="text-gold-300">effect()</code> performs a side effect such as logging.</p>
       </article>
+
+      <app-recap [items]="recapItems" />
+      <app-topic-nav />
     </section>
   `,
 })
@@ -155,4 +161,19 @@ export class SignalsPlaygroundComponent {
   decreasePrice(): void {
     this.price.update((value) => Math.max(5, value - 5));
   }
+
+  readonly recapItems: RecapItem[] = [
+    {
+      question: 'Why do we write count() in the template instead of count?',
+      answer: 'count is the Signal itself (a function reference); count() reads its current value — and calling it registers the template as a dependent so it updates automatically.',
+    },
+    {
+      question: 'When should you reach for computed() instead of recalculating a value manually everywhere it\'s needed?',
+      answer: "Whenever a value is 100% derived from other Signals — computed() tracks the dependency and recalculates itself, so you can't forget to update one spot.",
+    },
+    {
+      question: "What's the difference between effect() and computed()?",
+      answer: 'computed() returns a derived value you read elsewhere; effect() runs a side effect (logging, localStorage) and returns nothing usable — never use effect() to derive state.',
+    },
+  ];
 }

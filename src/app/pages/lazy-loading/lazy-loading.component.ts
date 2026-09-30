@@ -1,5 +1,9 @@
 import { Component, signal } from '@angular/core';
 
+import { CodeBlockDirective } from '../../shared/code-block.directive';
+import { RecapComponent, RecapItem } from '../../shared/recap.component';
+import { TopicNavComponent } from '../../shared/topic-nav.component';
+
 interface RouteChunk {
   path: string;
   label: string;
@@ -8,6 +12,7 @@ interface RouteChunk {
 
 @Component({
   standalone: true,
+  imports: [CodeBlockDirective, RecapComponent, TopicNavComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <div class="flex flex-wrap items-start justify-between gap-4">
@@ -170,6 +175,9 @@ export const routes: Routes = [
           </div>
         </div>
       </article>
+
+      <app-recap [items]="recapItems" />
+      <app-topic-nav />
     </section>
   `,
 })
@@ -215,4 +223,19 @@ export class LazyLoadingComponent {
     const max = this.shellKb + this.totalChunkKb;
     return Math.round((this.initialBundleKb() / max) * 100);
   }
+
+  readonly recapItems: RecapItem[] = [
+    {
+      question: "What's the one-line change that turns an eager route into a lazy one?",
+      answer: "component: X becomes loadComponent: () => import('./path').then(m => m.X).",
+    },
+    {
+      question: 'Why does a resolver remove the need for a manual loading spinner in the component?',
+      answer: 'The Router waits for the resolver to fetch the data before activating the route, so the component starts with the data already in hand.',
+    },
+    {
+      question: "What can a guard's CanActivateFn return, and what does each mean?",
+      answer: 'true (allow), false (block), or a UrlTree (redirect) — returning a UrlTree avoids a flash of the blocked page before redirecting.',
+    },
+  ];
 }

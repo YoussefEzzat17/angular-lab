@@ -1,14 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { TOPICS } from '../../core/data/topics';
+import { ProgressService } from '../../core/services/progress.service';
+import { ThemeService } from '../../core/services/theme.service';
 import { SignalNetworkComponent } from './signal-network.component';
-
-interface Topic {
-  path: string;
-  icon: string;
-  title: string;
-  description: string;
-}
 
 @Component({
   standalone: true,
@@ -16,7 +12,7 @@ interface Topic {
   template: `
     <section class="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-20">
       <div
-        class="grid items-center gap-8 overflow-hidden rounded-3xl bg-gradient-to-br from-gold-950 via-stone-900 to-stone-950 px-5 py-10 text-white ring-1 ring-gold-500/30 sm:gap-10 sm:px-12 sm:py-12 lg:grid-cols-2"
+        class="grid items-center gap-8 overflow-hidden rounded-3xl bg-gradient-to-br from-gold-950 via-stone-900 to-stone-950 px-5 py-10 text-stone-100 ring-1 ring-gold-500/30 sm:gap-10 sm:px-12 sm:py-12 lg:grid-cols-2"
       >
         <div>
           <p class="mb-3 text-sm font-semibold uppercase tracking-[.2em] text-gold-300">Angular Lab</p>
@@ -27,15 +23,30 @@ interface Topic {
             edit, not just a slide.
           </p>
           <div class="mt-8 flex flex-wrap gap-3">
-            <a routerLink="/binding" class="rounded-xl bg-gold-500 px-5 py-3 font-semibold text-white transition hover:bg-gold-400">
-              Start with Data Binding →
+            <a [routerLink]="continuePath()" class="rounded-xl bg-gold-500 px-5 py-3 font-semibold text-white transition hover:bg-gold-400">
+              {{ progress.completedCount() === 0 ? 'Start with Data Binding →' : 'Continue learning →' }}
             </a>
             <a routerLink="/products" class="rounded-xl border border-gold-400/40 px-5 py-3 font-semibold text-gold-200 transition hover:bg-gold-500/10">
               See the demo app
             </a>
           </div>
+
+          <div class="mt-8 max-w-sm">
+            <div class="flex items-center justify-between text-xs text-stone-400">
+              <span>Your progress</span>
+              <span class="font-semibold text-gold-300">{{ progress.completedCount() }}/{{ progress.totalCount }} topics</span>
+            </div>
+            <div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-stone-800/80">
+              <div class="h-full rounded-full bg-gold-500 transition-all duration-500" [style.width.%]="progress.percent()"></div>
+            </div>
+          </div>
         </div>
-        <div class="relative overflow-hidden rounded-2xl border border-gold-500/15 bg-stone-950/60 p-4">
+        <div
+          [class]="
+            'theme-dark-scope relative overflow-hidden rounded-2xl border border-gold-500/15 bg-gradient-to-br p-4 ' +
+            (theme.theme() === 'dark' ? 'from-gold-950 via-stone-930 to-stone-950' : 'from-gold-800 via-stone-750 to-stone-800')
+          "
+        >
           <app-signal-network class="block h-[280px] w-full sm:h-[340px]" />
         </div>
       </div>
@@ -49,12 +60,17 @@ interface Topic {
           @for (topic of topics; track topic.path) {
             <a
               [routerLink]="topic.path"
-              class="group flex flex-col gap-3 rounded-2xl border border-stone-800 bg-stone-900 p-6 transition hover:border-gold-400/50 hover:bg-stone-800"
+              class="group relative flex flex-col gap-3 rounded-2xl border border-stone-800 bg-stone-900 p-6 transition hover:border-gold-400/50 hover:bg-stone-800"
             >
+              @if (progress.isCompleted(topic.path)) {
+                <span class="absolute right-4 top-4 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500/15 text-xs font-bold text-emerald-400">✓</span>
+              } @else if (progress.isVisited(topic.path)) {
+                <span class="absolute right-4 top-4 h-2 w-2 rounded-full bg-stone-600" title="Visited, not marked complete"></span>
+              }
               <span class="text-3xl">{{ topic.icon }}</span>
               <span class="flex items-center justify-between text-lg font-bold text-stone-100">
                 {{ topic.title }}
-                <span class="text-gold-400 transition group-hover:transtone-x-1">→</span>
+                <span class="text-gold-400 transition group-hover:translate-x-1">→</span>
               </span>
               <p class="text-sm text-stone-400">{{ topic.description }}</p>
             </a>
@@ -78,72 +94,12 @@ interface Topic {
   `,
 })
 export class HomeComponent {
-  readonly topics: Topic[] = [
-    {
-      path: '/binding',
-      icon: '🔗',
-      title: 'Data Binding',
-      description: 'Interpolation, property binding, event binding and two-way binding, side by side.',
-    },
-    {
-      path: '/pipes',
-      icon: '🧪',
-      title: 'Pipes',
-      description: 'Format dates, prices and text right in the template with | pipeName.',
-    },
-    {
-      path: '/routing',
-      icon: '🧭',
-      title: 'Routing',
-      description: 'Routes, router-outlet, routerLink and reading route parameters.',
-    },
-    {
-      path: '/communication',
-      icon: '↔️',
-      title: 'Component Communication',
-      description: '@Input() and @Output() — how a parent and child component talk to each other.',
-    },
-    {
-      path: '/directives',
-      icon: '⚙️',
-      title: 'Directives',
-      description: 'Give plain HTML extra behavior with structural and attribute directives.',
-    },
-    {
-      path: '/forms',
-      icon: '📝',
-      title: 'Angular Forms',
-      description: 'Template-driven and reactive forms, with validation, side by side.',
-    },
-    {
-      path: '/signals',
-      icon: '📡',
-      title: 'Signals',
-      description: 'signal(), computed() and effect() — Angular\'s modern reactive state.',
-    },
-    {
-      path: '/movies',
-      icon: '🌐',
-      title: 'Fetch API & HTTP',
-      description: 'HttpClient and services, fetching real data from a public API.',
-    },
-    {
-      path: '/rxjs',
-      icon: '🌊',
-      title: 'RxJS',
-      description: 'Observables, operators like switchMap and debounceTime, and the async pipe.',
-    },
-    {
-      path: '/lazy-loading',
-      icon: '📦',
-      title: 'Lazy Loading',
-      description: 'loadComponent and smaller initial bundles for a faster first load.',
-    },
-    {
-      path: '/interceptor',
-      icon: '🛡️',
-      title: 'HttpInterceptor',
-      description: 'One checkpoint that every outgoing request and incoming response passes through.',
-    },
-  ];
+  readonly progress = inject(ProgressService);
+  readonly theme = inject(ThemeService);
+  readonly topics = TOPICS;
+
+  continuePath(): string {
+    const firstIncomplete = this.topics.find((topic) => !this.progress.isCompleted(topic.path));
+    return firstIncomplete ? firstIncomplete.path : this.topics[0].path;
+  }
 }

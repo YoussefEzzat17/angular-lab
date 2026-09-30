@@ -2,6 +2,10 @@ import { CurrencyPipe, DatePipe, LowerCasePipe, PercentPipe, UpperCasePipe } fro
 import { Component, Pipe, PipeTransform, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
+import { CodeBlockDirective } from '../../shared/code-block.directive';
+import { RecapComponent, RecapItem } from '../../shared/recap.component';
+import { TopicNavComponent } from '../../shared/topic-nav.component';
+
 @Pipe({ name: 'truncate', standalone: true })
 class TruncatePipe implements PipeTransform {
   transform(value: string, limit = 20): string {
@@ -19,7 +23,7 @@ interface PipeOption {
 
 @Component({
   standalone: true,
-  imports: [FormsModule, CurrencyPipe, DatePipe, UpperCasePipe, LowerCasePipe, PercentPipe, TruncatePipe],
+  imports: [FormsModule, CurrencyPipe, DatePipe, UpperCasePipe, LowerCasePipe, PercentPipe, TruncatePipe, CodeBlockDirective, RecapComponent, TopicNavComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <div class="flex flex-wrap items-start justify-between gap-4">
@@ -191,6 +195,9 @@ export class TruncatePipe implements PipeTransform &#123;
           </table>
         </div>
       </article>
+
+      <app-recap [items]="recapItems" />
+      <app-topic-nav />
     </section>
   `,
 })
@@ -227,5 +234,20 @@ export class PipesComponent {
     { op: 'uppercase', use: '{{ name | uppercase }}', result: 'AHMED' },
     { op: 'lowercase', use: '{{ email | lowercase }}', result: 'ahmed@site.com' },
     { op: 'json', use: '{{ obj | json }}', result: '{ "a": 1 } — handy for debugging' },
+  ];
+
+  readonly recapItems: RecapItem[] = [
+    {
+      question: "What does a pipe change — the template's rendered output, or the component's stored value?",
+      answer: 'Only what\'s rendered in the template — the underlying value in the component stays exactly as it was.',
+    },
+    {
+      question: 'When would you write a custom pipe instead of formatting in the component class?',
+      answer: 'When the same transform is needed in multiple templates — a pipe keeps the logic reusable and out of every component.',
+    },
+    {
+      question: 'What method does every custom pipe need to implement?',
+      answer: 'transform() — it receives the input value (and any pipe arguments) and returns the formatted result.',
+    },
   ];
 }

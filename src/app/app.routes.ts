@@ -4,6 +4,7 @@ import { BindingComponent } from './pages/binding/binding.component';
 import { ComponentCommunicationComponent } from './pages/component-communication/component-communication.component';
 import { DirectivesComponent } from './pages/directives/directives.component';
 import { FavoritesComponent } from './pages/favorites/favorites.component';
+import { FeedbackComponent } from './pages/feedback/feedback.component';
 import { FormsComponent } from './pages/forms/forms.component';
 import { HomeComponent } from './pages/home/home.component';
 import { InterceptorComponent } from './pages/interceptor/interceptor.component';
@@ -33,5 +34,6 @@ export const routes: Routes = [
   { path: 'products', component: ProductsComponent, title: 'Demo: Browse' },
   { path: 'products/:id', component: ProductDetailsComponent, title: 'Title Details' },
   { path: 'favorites', component: FavoritesComponent, title: 'Demo: My List' },
+  { path: 'feedback', component: FeedbackComponent, title: 'Feedback' },
   { path: '**', component: NotFoundComponent, title: 'Not Found' },
 ];

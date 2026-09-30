@@ -1,6 +1,10 @@
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
+import { CodeBlockDirective } from '../../shared/code-block.directive';
+import { RecapComponent, RecapItem } from '../../shared/recap.component';
+import { TopicNavComponent } from '../../shared/topic-nav.component';
+
 interface MockRoute {
   path: string;
   label: string;
@@ -9,7 +13,7 @@ interface MockRoute {
 
 @Component({
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CodeBlockDirective, RecapComponent, TopicNavComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <div class="flex flex-wrap items-start justify-between gap-4">
@@ -143,6 +147,9 @@ goToLogin() &#123;
           </div>
         }
       </article>
+
+      <app-recap [items]="recapItems" />
+      <app-topic-nav />
     </section>
   `,
 })
@@ -184,4 +191,19 @@ export class RoutingComponent {
   visitProduct(): void {
     this.visitedProductId.set(this.productId());
   }
+
+  readonly recapItems: RecapItem[] = [
+    {
+      question: 'What decides which component renders inside <router-outlet>?',
+      answer: 'The Router — it matches the current URL against the routes array, top to bottom, and renders the first match into the outlet.',
+    },
+    {
+      question: 'When would you use Router.navigate() instead of routerLink?',
+      answer: 'When navigation needs to happen after some logic runs first — like redirecting once a form submits successfully.',
+    },
+    {
+      question: "What does the colon in path: 'products/:id' mean?",
+      answer: 'It marks a dynamic segment — one route definition matches /products/12, /products/45, or any id, and ActivatedRoute lets the component read which one activated it.',
+    },
+  ];
 }
