@@ -22,8 +22,19 @@ import {
   imports: [FormsModule, AsyncPipe],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <p class="text-sm font-semibold text-gold-400">HANDS-ON WORKSHOP</p>
-      <h1 class="mt-1 text-3xl font-bold sm:text-4xl">RxJS from Scratch</h1>
+      <div class="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <p class="text-sm font-semibold text-gold-400">HANDS-ON WORKSHOP</p>
+          <h1 class="mt-1 text-3xl font-bold sm:text-4xl">RxJS from Scratch</h1>
+        </div>
+        <a
+          href="/pdfs/rxjs-cheat-sheet.pdf"
+          download="rxjs-cheat-sheet.pdf"
+          class="inline-flex shrink-0 items-center gap-2 rounded-lg border border-gold-400/40 bg-gold-500/10 px-4 py-2 text-sm font-semibold text-gold-300 hover:bg-gold-500/20"
+        >
+          ⬇ Download PDF Guide
+        </a>
+      </div>
       <p class="mt-3 max-w-3xl text-stone-400">
         RxJS is a library that helps you deal with anything that happens "over time" — a click, typing in an input, an API response — as one
         <strong class="text-gold-300">data stream</strong> you can filter, transform and control, instead of handling each as a separate event.
