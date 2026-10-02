@@ -134,6 +134,12 @@ const COOLDOWN_SECONDS = 10;
           }
         </button>
       </form>
+
+      <p class="mt-6 text-center text-sm text-stone-500">
+        Your message goes straight to
+        <a href="https://youssef-ezzat.vercel.app/" target="_blank" rel="noopener noreferrer" class="font-semibold text-gold-300 underline-offset-4 hover:underline">Youssef</a>,
+        who reads every one.
+      </p>
     </section>
   `,
 })
