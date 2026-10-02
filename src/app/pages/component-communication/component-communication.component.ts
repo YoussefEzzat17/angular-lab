@@ -13,7 +13,7 @@ import { TopicNavComponent } from '../../shared/topic-nav.component';
   imports: [TitlePreviewComponent, FlowArrowComponent, FlowDiagramComponent, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <app-page-header title="Component Communication" pdf="component-communication.pdf">
+      <app-page-header title="Component Communication" illustration="communication" pdf="component-communication.pdf">
         Components are meant to be small and self-contained, so they need a clean way to talk to each other.
         <code class="text-gold-300">&#64;Input()</code> lets a parent pass data down; <code class="text-gold-300">&#64;Output()</code>
         lets a child send an event back up. Below: the parent gives the child a movie title, and the child sends an event back when you

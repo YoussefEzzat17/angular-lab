@@ -13,7 +13,7 @@ type Stage = 'idle' | 'built' | 'cloned' | 'sent' | 'response' | 'handled';
   imports: [CodeBlockDirective, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <app-page-header title="HttpInterceptor" pdf="http-interceptor.pdf">
+      <app-page-header title="HttpInterceptor" illustration="interceptor" pdf="http-interceptor.pdf">
         An <code class="text-gold-300">HttpInterceptor</code> is <strong class="text-gold-300">one function standing in the middle</strong> —
         every request your app sends passes through it on the way out, and every response passes through it on the way back, before your component ever sees it.
       </app-page-header>

@@ -35,7 +35,7 @@ import { TopicNavComponent } from '../../shared/topic-nav.component';
   `,
   template: `
     <section class="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
-      <app-page-header title="Angular Forms" pdf="angular-forms.pdf">
+      <app-page-header title="Angular Forms" illustration="forms" pdf="angular-forms.pdf">
         Angular gives you two ways to build a form, and the difference is <strong class="text-stone-200">where the source of truth lives</strong>.
         Reactive forms define every field and validator in TypeScript first, then the template just binds to it — best for complex,
         dynamic, or heavily-tested forms. Template-driven forms let the HTML and <code class="text-gold-300">ngModel</code> drive

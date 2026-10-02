@@ -16,7 +16,7 @@ import { TopicNavComponent } from '../../shared/topic-nav.component';
   imports: [CommonModule, FormsModule, HighlightDirective, NumbersOnlyDirective, FlowDiagramComponent, CodeBlockDirective, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <app-page-header title="Directives" pdf="directives.pdf">
+      <app-page-header title="Directives" illustration="directives" pdf="directives.pdf">
         A directive is an Angular instruction attached to an element — without the overhead of writing a whole component
         for behavior you want to reuse. There are two flavors: <strong class="text-stone-200">structural</strong>
         directives (prefixed with <code class="text-gold-300">*</code>) add or remove elements from the DOM entirely;

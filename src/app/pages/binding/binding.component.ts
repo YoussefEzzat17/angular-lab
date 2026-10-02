@@ -12,7 +12,7 @@ import { TopicNavComponent } from '../../shared/topic-nav.component';
   imports: [FormsModule, FlowDiagramComponent, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <app-page-header title="Data Binding" pdf="data-binding.pdf">
+      <app-page-header title="Data Binding" illustration="binding" pdf="data-binding.pdf">
         Binding is how a component's TypeScript class and its HTML template stay in sync, without you writing
         <code class="text-gold-300">document.querySelector</code> or manual DOM updates. There are four kinds — interpolation, property
         binding, event binding, and two-way binding — each with a different direction of data flow, shown in the diagram on every card

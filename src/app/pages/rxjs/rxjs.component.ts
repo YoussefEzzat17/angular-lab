@@ -28,7 +28,7 @@ import {
   imports: [FormsModule, AsyncPipe, CodeBlockDirective, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <app-page-header title="RxJS from Scratch" pdf="rxjs-cheat-sheet.pdf">
+      <app-page-header title="RxJS from Scratch" illustration="rxjs" pdf="rxjs-cheat-sheet.pdf">
         RxJS is a library that helps you deal with anything that happens "over time" — a click, typing in an input, an API response — as one
         <strong class="text-gold-300">data stream</strong> you can filter, transform and control, instead of handling each as a separate event.
         Try the examples below, and open the console to see what's happening under the hood.

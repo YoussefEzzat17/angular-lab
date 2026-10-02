@@ -12,7 +12,7 @@ import { TopicNavComponent } from '../../shared/topic-nav.component';
   imports: [FlowDiagramComponent, RecapComponent, TopicNavComponent, PageHeaderComponent],
   template: `
     <section class="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
-      <app-page-header title="Fetch API &amp; HTTP Client" pdf="services-http.pdf">
+      <app-page-header title="Fetch API &amp; HTTP Client" illustration="http" pdf="services-http.pdf">
         Real apps get their data from a server, not a hardcoded array. Angular's <code class="text-gold-300">HttpClient</code> — injected
         into a service, not the component — makes that request and returns an Observable. These films come from a real public API. Type
         below to see property binding, event binding, a signal, and a computed value all working together on live data.

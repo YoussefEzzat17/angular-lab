@@ -13,7 +13,7 @@ import { TopicNavComponent } from '../../shared/topic-nav.component';
   imports: [CurrencyPipe, FlowDiagramComponent, CodeBlockDirective, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <app-page-header title="Signals" pdf="signals.pdf">
+      <app-page-header title="Signals" illustration="signals" pdf="signals.pdf">
         Before Signals, Angular had to check every component on every event to see what changed — reliable, but wasteful. A
         <code class="text-gold-300">signal()</code> is a value that knows exactly who's reading it, so Angular can update only what
         actually depends on it. Change the product and quantity below and watch every dependent value update automatically.

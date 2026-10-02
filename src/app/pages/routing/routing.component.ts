@@ -18,7 +18,7 @@ interface MockRoute {
   imports: [FormsModule, CodeBlockDirective, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <app-page-header title="Routing" pdf="routing.pdf">
+      <app-page-header title="Routing" illustration="routing" pdf="routing.pdf">
         A Single Page Application never actually reloads the browser — Angular's <strong class="text-gold-300">Router</strong> lets one page
         swap components based on the URL, giving you real navigation, bookmarkable links, and a back button that works.
       </app-page-header>

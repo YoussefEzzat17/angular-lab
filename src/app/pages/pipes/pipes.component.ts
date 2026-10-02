@@ -28,7 +28,7 @@ interface PipeOption {
   imports: [FormsModule, CurrencyPipe, DatePipe, UpperCasePipe, LowerCasePipe, PercentPipe, TruncatePipe, CodeBlockDirective, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <app-page-header title="Pipes" pdf="pipes.pdf">
+      <app-page-header title="Pipes" illustration="pipes" pdf="pipes.pdf">
         A pipe transforms a value <strong class="text-gold-300">right inside the template</strong>, using the <code class="text-gold-300">|</code> symbol —
         without touching the actual value stored in your component. Format dates, prices, and text for humans, in one keyword.
       </app-page-header>
