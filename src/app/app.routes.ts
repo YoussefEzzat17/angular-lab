@@ -16,6 +16,7 @@ import { ProductDetailsComponent } from './pages/product-details/product-details
 import { ProductsComponent } from './pages/products/products.component';
 import { RoutingComponent } from './pages/routing/routing.component';
 import { RxjsComponent } from './pages/rxjs/rxjs.component';
+import { WatchlistComponent } from './pages/watchlist/watchlist.component';
 import { SignalsPlaygroundComponent } from './pages/signals-playground/signals-playground.component';
 
 export const routes: Routes = [
@@ -34,6 +35,7 @@ export const routes: Routes = [
   { path: 'products', component: ProductsComponent, title: 'Demo: Browse' },
   { path: 'products/:id', component: ProductDetailsComponent, title: 'Title Details' },
   { path: 'favorites', component: FavoritesComponent, title: 'Demo: My List' },
+  { path: 'watchlist', component: WatchlistComponent, title: 'Demo: Watchlist' },
   { path: 'feedback', component: FeedbackComponent, title: 'Feedback' },
   { path: '**', component: NotFoundComponent, title: 'Not Found' },
 ];

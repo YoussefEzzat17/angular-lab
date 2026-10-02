@@ -25,7 +25,7 @@ import { StockStatusPipe } from '../../pipes/stock-status.pipe';
         <div class="mt-4 flex items-center justify-between"><strong class="text-xl">{{ product.price | currency }}</strong><span class="text-sm text-amber-400">★ {{ product.rating }}</span></div>
         <p class="mt-2 text-xs text-stone-500">Added on {{ product.addedOn | date:'mediumDate' }}</p>
         <div class="mt-4 flex items-center justify-between"><span [class.text-rose-400]="product.stock === 0" [class.text-amber-400]="product.stock > 0 && product.stock < 5" class="text-sm font-semibold text-emerald-400">{{ product.stock | stockStatus }}</span><span class="text-xs text-stone-500">{{ product.stock }} passes left</span></div>
-        <div class="mt-5 flex gap-2"><button (click)="addToCart(product)" [disabled]="product.stock === 0" class="min-h-11 flex-1 rounded-xl bg-gold-500 px-3 py-2.5 text-sm font-semibold text-white transition hover:bg-gold-400 disabled:cursor-not-allowed disabled:bg-stone-700">Add to watchlist</button><button (click)="viewDetails()" class="min-h-11 rounded-xl border border-stone-700 px-3 py-2.5 text-sm font-semibold hover:bg-stone-800">Details</button></div>
+        <div class="mt-5 flex gap-2"><button (click)="addToCart(product)" [disabled]="product.stock === 0" class="min-h-11 flex-1 rounded-xl bg-gold-500 px-3 py-2.5 text-sm font-semibold text-white transition hover:bg-gold-400 disabled:cursor-not-allowed disabled:bg-stone-700">{{ cart.has(product.id) ? 'In watchlist ✓ · Remove' : 'Add to watchlist' }}</button><button (click)="viewDetails()" class="min-h-11 rounded-xl border border-stone-700 px-3 py-2.5 text-sm font-semibold hover:bg-stone-800">Details</button></div>
       </div>
     </article>
   `,
@@ -38,8 +38,10 @@ export class ProductCardComponent {
   private router = inject(Router);
 
   addToCart(product: Product): void {
-    this.cart.add(product);
-    this.toast.show(`${product.name} added to your watchlist`);
+    if (this.cart.has(product.id)) {
+      this.cart.remove(product.id);
+      this.toast.info(`${product.name} removed from your watchlist`);
+    } else if (this.cart.add(product) === 'added') this.toast.show(`${product.name} added to your watchlist`);
   }
 
   toggleFavorite(): void {

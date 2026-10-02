@@ -122,7 +122,7 @@ import { ThemeService } from '../services/theme.service';
           >
             <app-icon [name]="theme.theme() === 'dark' ? 'moon' : 'sun'" class="h-4 w-4" />
           </button>
-          <span class="rounded-full bg-gold-500/15 px-3 py-2 text-gold-300">Watchlist {{ cart.count() }}</span>
+          <a routerLink="/watchlist" class="rounded-full bg-gold-500/15 px-3 py-2 text-gold-300 transition hover:bg-gold-500/25">Watchlist {{ cart.count() }}</a>
         </div>
 
         <div class="flex items-center gap-2 lg:hidden">
@@ -142,9 +142,9 @@ import { ThemeService } from '../services/theme.service';
           >
             <app-icon [name]="theme.theme() === 'dark' ? 'moon' : 'sun'" class="h-5 w-5" />
           </button>
-          <span class="rounded-full bg-gold-500/15 px-3 py-2 text-sm font-medium text-gold-300" aria-label="Watchlist {{ cart.count() }}">
+          <a routerLink="/watchlist" class="rounded-full bg-gold-500/15 px-3 py-2 text-sm font-medium text-gold-300" aria-label="Watchlist, {{ cart.count() }} titles">
             {{ cart.count() }}
-          </span>
+          </a>
           <button
             type="button"
             class="grid h-11 w-11 place-items-center rounded-xl text-stone-100 transition hover:bg-stone-800"
@@ -216,7 +216,7 @@ import { ThemeService } from '../services/theme.service';
               Feedback
             </a>
 
-            <p class="mt-3 border-t border-stone-800 px-3 pt-3 text-sm text-stone-400">Watchlist · {{ cart.count() }} titles</p>
+            <a routerLink="/watchlist" (click)="closeMenu()" class="mt-3 flex min-h-11 items-center border-t border-stone-800 px-3 pt-3 text-sm text-stone-400 hover:text-gold-300">Watchlist · {{ cart.count() }} titles</a>
           </div>
         </div>
       }
