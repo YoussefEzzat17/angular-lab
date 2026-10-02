@@ -3,6 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { TOPICS } from '../../core/data/topics';
 import { FeedbackService } from '../../core/services/feedback.service';
+import { ToastService } from '../../core/services/toast.service';
 import { IconComponent } from '../../shared/icon.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
 
@@ -132,17 +133,6 @@ const COOLDOWN_SECONDS = 10;
             Send Feedback
           }
         </button>
-
-        @if (isSuccess()) {
-          <p class="mt-5 rounded-xl bg-[rgb(var(--panel-success-bg))] p-4 text-center text-sm font-medium text-[rgb(var(--panel-success-heading))]">
-            Thank you! Your feedback landed in my inbox.
-          </p>
-        }
-        @if (isError()) {
-          <p class="mt-5 rounded-xl bg-[rgb(var(--panel-danger-bg))] p-4 text-center text-sm font-medium text-[rgb(var(--panel-danger-heading))]">
-            Something went wrong. Please try again in a bit.
-          </p>
-        }
       </form>
     </section>
   `,
@@ -150,6 +140,7 @@ const COOLDOWN_SECONDS = 10;
 export class FeedbackComponent implements OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly feedback = inject(FeedbackService);
+  private readonly toast = inject(ToastService);
 
   readonly topics = TOPICS;
 
@@ -162,8 +153,6 @@ export class FeedbackComponent implements OnDestroy {
   });
 
   readonly isSubmitting = signal(false);
-  readonly isSuccess = signal(false);
-  readonly isError = signal(false);
   readonly isCooldown = signal(false);
   readonly cooldownRemaining = signal(0);
 
@@ -183,8 +172,6 @@ export class FeedbackComponent implements OnDestroy {
     }
 
     this.isSubmitting.set(true);
-    this.isError.set(false);
-    this.isSuccess.set(false);
 
     const value = this.feedbackForm.getRawValue();
 
@@ -196,13 +183,12 @@ export class FeedbackComponent implements OnDestroy {
         feedback_type: value.feedbackType ?? 'General comment',
         message: value.message ?? '',
       });
-      this.isSuccess.set(true);
+      this.toast.success('Feedback sent', 'Thank you! It landed straight in my inbox.');
       this.feedbackForm.reset({ topic: 'General', feedbackType: 'Suggestion' });
       this.startCooldown();
-      setTimeout(() => this.isSuccess.set(false), 5000);
     } catch (err) {
       console.error('Failed to send feedback:', err);
-      this.isError.set(true);
+      this.toast.error("Couldn't send your feedback", 'Please check your connection and try again in a moment.');
     } finally {
       this.isSubmitting.set(false);
     }

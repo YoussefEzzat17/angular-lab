@@ -1,6 +1,6 @@
 import { Component, input } from '@angular/core';
 
-export type IconName = 'download' | 'search' | 'sun' | 'moon' | 'chevron-down' | 'menu' | 'close';
+export type IconName = 'download' | 'search' | 'sun' | 'moon' | 'chevron-down' | 'menu' | 'close' | 'check' | 'alert' | 'info';
 
 /**
  * Inline SVG icons used across the app. Size and color come from the host: give it `h-4 w-4` and a
@@ -48,6 +48,23 @@ export type IconName = 'download' | 'search' | 'sun' | 'moon' | 'chevron-down' |
       @case ('close') {
         <svg class="h-full w-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      }
+      @case ('check') {
+        <svg class="h-full w-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 13l4 4L19 7" />
+        </svg>
+      }
+      @case ('alert') {
+        <svg class="h-full w-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 8v5M12 16.5h.01" />
+        </svg>
+      }
+      @case ('info') {
+        <svg class="h-full w-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 11v5M12 7.5h.01" />
         </svg>
       }
     }
