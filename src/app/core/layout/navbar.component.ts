@@ -12,6 +12,8 @@ import { ThemeService } from '../services/theme.service';
 
 @Component({
   selector: 'app-navbar',
+  // The host must not be a box of its own: a sticky header can only stick inside its parent, and the host is exactly as tall as the header.
+  host: { class: 'contents' },
   imports: [IconComponent, RouterLink, RouterLinkActive],
   template: `
     <header class="sticky top-0 z-40 border-b border-stone-800 bg-stone-950/95 pt-[env(safe-area-inset-top)] backdrop-blur">
