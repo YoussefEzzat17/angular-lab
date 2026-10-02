@@ -3,6 +3,8 @@ import { Component, Pipe, PipeTransform, computed, signal } from '@angular/core'
 import { FormsModule } from '@angular/forms';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
+import { LessonCardComponent } from '../../shared/lesson-card.component';
+import { PageHeaderComponent } from '../../shared/page-header.component';
 import { RecapComponent, RecapItem } from '../../shared/recap.component';
 import { TopicNavComponent } from '../../shared/topic-nav.component';
 
@@ -23,37 +25,16 @@ interface PipeOption {
 
 @Component({
   standalone: true,
-  imports: [FormsModule, CurrencyPipe, DatePipe, UpperCasePipe, LowerCasePipe, PercentPipe, TruncatePipe, CodeBlockDirective, RecapComponent, TopicNavComponent],
+  imports: [FormsModule, CurrencyPipe, DatePipe, UpperCasePipe, LowerCasePipe, PercentPipe, TruncatePipe, CodeBlockDirective, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <div class="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <p class="text-sm font-semibold text-gold-400">HANDS-ON WORKSHOP</p>
-          <h1 class="mt-1 text-3xl font-bold sm:text-4xl">Pipes</h1>
-        </div>
-        <a
-          href="/pdfs/pipes.pdf"
-          download="pipes.pdf"
-          class="group inline-flex shrink-0 items-center gap-2 rounded-full border border-gold-400/40 bg-gold-500/10 px-4 py-2 text-sm font-semibold text-gold-300 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-gold-400 hover:bg-gold-500/20 hover:shadow-lg hover:shadow-gold-500/20 active:translate-y-0 active:scale-95"
-        >
-          <svg class="h-4 w-4 text-gold-300 transition-transform duration-200 group-hover:translate-y-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-            <polyline points="14 2 14 8 20 8" />
-            <path d="M12 18v-6" />
-            <path d="m9 15 3 3 3-3" />
-          </svg>
-          Download PDF Guide
-        </a>
-      </div>
-      <p class="mt-3 max-w-3xl text-stone-400">
+      <app-page-header title="Pipes" pdf="pipes.pdf">
         A pipe transforms a value <strong class="text-gold-300">right inside the template</strong>, using the <code class="text-gold-300">|</code> symbol —
         without touching the actual value stored in your component. Format dates, prices, and text for humans, in one keyword.
-      </p>
+      </app-page-header>
 
       <!-- 1 · THE PROBLEM -->
-      <article class="mt-10 rounded-2xl border border-stone-800 bg-stone-900 p-6">
-        <p class="text-xs font-bold tracking-wider text-gold-300">1 · The problem</p>
-        <h2 class="mt-2 text-xl font-bold">Raw data doesn't always look presentable</h2>
+      <app-lesson-card class="mt-10" label="1 · The problem" heading="Raw data doesn't always look presentable">
         <div class="mt-4 grid gap-4 sm:grid-cols-2">
           <div class="min-w-0 rounded-xl bg-stone-800 p-4">
             <p class="text-xs font-bold text-rose-300">We have</p>
@@ -68,12 +49,15 @@ interface PipeOption {
             <p class="mt-2 text-xs text-stone-500">renders as: <span class="text-emerald-300">$49.90</span></p>
           </div>
         </div>
-      </article>
+      </app-lesson-card>
 
       <!-- 2 · INTERACTIVE PLAYGROUND -->
-      <article class="mt-5 rounded-2xl border border-gold-400/30 bg-gold-950/20 p-6">
-        <p class="text-xs font-bold tracking-wider text-gold-300">2 · Try it — pick a pipe, watch it transform live</p>
-        <h2 class="mt-2 text-xl font-bold">Same raw value, five different pipes</h2>
+      <app-lesson-card
+        class="mt-5"
+        variant="highlight"
+        label="2 · Try it — pick a pipe, watch it transform live"
+        heading="Same raw value, five different pipes"
+      >
 
         <div class="mt-4 flex flex-wrap gap-2">
           @for (option of pipeOptions; track option.mode) {
@@ -153,12 +137,10 @@ interface PipeOption {
             <p class="mt-3 text-xs text-stone-500">These are Angular's real built-in pipes running live — not a simulation.</p>
           </div>
         </div>
-      </article>
+      </app-lesson-card>
 
       <!-- 3 · CUSTOM PIPE -->
-      <article class="mt-5 rounded-2xl border border-stone-800 bg-stone-900 p-6">
-        <p class="text-xs font-bold tracking-wider text-gold-300">3 · Custom pipes</p>
-        <h2 class="mt-2 text-xl font-bold">When built-in pipes aren't enough</h2>
+      <app-lesson-card class="mt-5" label="3 · Custom pipes" heading="When built-in pipes aren't enough">
         <p class="mt-2 text-sm text-stone-400">A custom pipe is a class with a <code class="text-gold-300">transform()</code> method — reusable anywhere in the app. The truncate pipe above is a real one, defined right in this page:</p>
         <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">&#64;Pipe(&#123; name: 'truncate' &#125;)
 export class TruncatePipe implements PipeTransform &#123;
@@ -168,12 +150,10 @@ export class TruncatePipe implements PipeTransform &#123;
       : value;
   &#125;
 &#125;</pre>
-      </article>
+      </app-lesson-card>
 
       <!-- 4 · CHEAT SHEET -->
-      <article class="mt-5 rounded-2xl border border-stone-800 bg-stone-900 p-6">
-        <p class="text-xs font-bold tracking-wider text-gold-300">4 · Quick cheat sheet</p>
-        <h2 class="mt-2 text-xl font-bold">Built-in pipes you'll use every day</h2>
+      <app-lesson-card class="mt-5" label="4 · Quick cheat sheet" heading="Built-in pipes you'll use every day">
         <div class="mt-4 overflow-x-auto rounded-xl border border-stone-800">
           <table class="w-full text-left text-sm">
             <thead class="bg-stone-800 text-stone-300">
@@ -194,7 +174,7 @@ export class TruncatePipe implements PipeTransform &#123;
             </tbody>
           </table>
         </div>
-      </article>
+      </app-lesson-card>
 
       <app-recap [items]="recapItems" />
       <app-topic-nav />

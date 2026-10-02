@@ -3,12 +3,14 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { TOPICS } from '../../core/data/topics';
 import { FeedbackService } from '../../core/services/feedback.service';
+import { IconComponent } from '../../shared/icon.component';
+import { PageHeaderComponent } from '../../shared/page-header.component';
 
 const COOLDOWN_SECONDS = 10;
 
 @Component({
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [IconComponent, PageHeaderComponent, ReactiveFormsModule],
   styles: `
     .field {
       width: 100%;
@@ -22,6 +24,10 @@ const COOLDOWN_SECONDS = 10;
     .field::placeholder {
       color: rgb(var(--stone-500));
     }
+    select.field {
+      appearance: none;
+      padding-right: 2.75rem;
+    }
     .field.invalid {
       border-color: rgb(var(--status-rose-strong));
     }
@@ -34,12 +40,10 @@ const COOLDOWN_SECONDS = 10;
   `,
   template: `
     <section class="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
-      <p class="text-sm font-semibold tracking-wide text-gold-400">GOT SOMETHING TO SAY?</p>
-      <h1 class="mt-1 text-3xl font-bold sm:text-4xl">Feedback</h1>
-      <p class="mt-3 max-w-2xl text-stone-400">
+      <app-page-header eyebrow="GOT SOMETHING TO SAY?" title="Feedback">
         Found something confusing, spotted a bug, or think a topic is missing? Tell me directly — every message
         lands straight in my inbox.
-      </p>
+      </app-page-header>
 
       <form
         [formGroup]="feedbackForm"
@@ -70,20 +74,26 @@ const COOLDOWN_SECONDS = 10;
         <div class="mt-6 grid gap-6 sm:grid-cols-2">
           <div>
             <label for="topic" class="mb-2 block text-sm font-medium text-stone-200">Which topic?</label>
-            <select id="topic" formControlName="topic" class="field">
-              <option value="General">General / the whole site</option>
-              @for (topic of topics; track topic.path) {
-                <option [value]="topic.title">{{ topic.title }}</option>
-              }
-            </select>
+            <div class="relative">
+              <select id="topic" formControlName="topic" class="field">
+                <option value="General">General / the whole site</option>
+                @for (topic of topics; track topic.path) {
+                  <option [value]="topic.title">{{ topic.title }}</option>
+                }
+              </select>
+              <app-icon name="chevron-down" class="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
+            </div>
           </div>
           <div>
             <label for="type" class="mb-2 block text-sm font-medium text-stone-200">What kind of feedback?</label>
-            <select id="type" formControlName="feedbackType" class="field">
-              <option value="Suggestion">Suggestion / idea</option>
-              <option value="Bug or missing content">Something's wrong or missing</option>
-              <option value="General comment">Just a comment</option>
-            </select>
+            <div class="relative">
+              <select id="type" formControlName="feedbackType" class="field">
+                <option value="Suggestion">Suggestion / idea</option>
+                <option value="Bug or missing content">Something's wrong or missing</option>
+                <option value="General comment">Just a comment</option>
+              </select>
+              <app-icon name="chevron-down" class="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
+            </div>
           </div>
         </div>
 

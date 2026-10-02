@@ -1,54 +1,27 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import { RecapComponent, RecapItem } from '../../shared/recap.component';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
+import { LessonCardComponent } from '../../shared/lesson-card.component';
+import { PageHeaderComponent } from '../../shared/page-header.component';
+import { RecapComponent, RecapItem } from '../../shared/recap.component';
 import { TopicNavComponent } from '../../shared/topic-nav.component';
 
 @Component({
   standalone: true,
-  imports: [FormsModule, FlowDiagramComponent, RecapComponent, TopicNavComponent],
+  imports: [FormsModule, FlowDiagramComponent, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <div class="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <p class="text-sm font-semibold text-gold-400">HANDS-ON WORKSHOP</p>
-          <h1 class="mt-1 text-3xl font-bold sm:text-4xl">Data Binding</h1>
-        </div>
-        <a
-          href="/pdfs/data-binding.pdf"
-          download="data-binding.pdf"
-          class="group inline-flex shrink-0 items-center gap-2 rounded-full border border-gold-400/40 bg-gold-500/10 px-4 py-2 text-sm font-semibold text-gold-300 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-gold-400 hover:bg-gold-500/20 hover:shadow-lg hover:shadow-gold-500/20 active:translate-y-0 active:scale-95"
-        >
-          <svg
-            class="h-4 w-4 text-gold-300 transition-transform duration-200 group-hover:translate-y-0.5"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-            <polyline points="14 2 14 8 20 8" />
-            <path d="M12 18v-6" />
-            <path d="m9 15 3 3 3-3" />
-          </svg>
-          Download PDF Guide
-        </a>
-      </div>
-      <p class="mt-3 max-w-2xl text-stone-400">
+      <app-page-header title="Data Binding" pdf="data-binding.pdf">
         Binding is how a component's TypeScript class and its HTML template stay in sync, without you writing
         <code class="text-gold-300">document.querySelector</code> or manual DOM updates. There are four kinds — interpolation, property
         binding, event binding, and two-way binding — each with a different direction of data flow, shown in the diagram on every card
         below. Edit this component file, save it, and watch the results update in the browser.
-      </p>
+      </app-page-header>
 
       <!-- 01 · INTERPOLATION -->
       <div class="mt-10 grid gap-5 md:grid-cols-2">
-        <article class="rounded-2xl border border-stone-800 bg-stone-900 p-6">
-          <p class="text-xs font-bold tracking-wider text-gold-300">01 · INTERPOLATION</p>
-          <h2 class="mt-2 text-xl font-bold">Show a title</h2>
+        <app-lesson-card label="01 · INTERPOLATION" heading="Show a title">
           <p class="mt-2 text-sm text-stone-400">
             The simplest binding: drop a class property into text with double curly braces. Angular re-renders it
             automatically every time the property changes — no manual DOM update needed.
@@ -62,12 +35,10 @@ import { TopicNavComponent } from '../../shared/topic-nav.component';
             <strong>{{ practiceTitle }}</strong>
           </div>
           <p class="mt-4 text-xs text-stone-500">Hint: {{ '{{ practiceTitle }}' }}</p>
-        </article>
+        </app-lesson-card>
 
         <!-- 02 · PROPERTY BINDING -->
-        <article class="rounded-2xl border border-stone-800 bg-stone-900 p-6">
-          <p class="text-xs font-bold tracking-wider text-gold-300">02 · PROPERTY BINDING</p>
-          <h2 class="mt-2 text-xl font-bold">Control a button</h2>
+        <app-lesson-card label="02 · PROPERTY BINDING" heading="Control a button">
           <p class="mt-2 text-sm text-stone-400">
             Square brackets bind a class property to an actual DOM property (not an HTML attribute), so booleans,
             objects and arrays pass through as real JavaScript values instead of strings.
@@ -92,12 +63,10 @@ import { TopicNavComponent } from '../../shared/topic-nav.component';
           <p class="mt-4 text-xs text-stone-500">
             Hint: <code class="text-gold-300">[disabled]</code>
           </p>
-        </article>
+        </app-lesson-card>
 
         <!-- 03 · EVENT BINDING -->
-        <article class="rounded-2xl border border-stone-800 bg-stone-900 p-6">
-          <p class="text-xs font-bold tracking-wider text-gold-300">03 · EVENT BINDING</p>
-          <h2 class="mt-2 text-xl font-bold">Rate a title</h2>
+        <app-lesson-card label="03 · EVENT BINDING" heading="Rate a title">
           <p class="mt-2 text-sm text-stone-400">
             Parentheses bind a DOM event to a class method. Data now flows the other way — from the template back
             into the class — every time the user interacts with the page.
@@ -115,12 +84,10 @@ import { TopicNavComponent } from '../../shared/topic-nav.component';
           <p class="mt-4 text-xs text-stone-500">
             Hint: <code class="text-gold-300">(click)</code>
           </p>
-        </article>
+        </app-lesson-card>
 
         <!-- 04 · TWO-WAY BINDING -->
-        <article class="rounded-2xl border border-stone-800 bg-stone-900 p-6">
-          <p class="text-xs font-bold tracking-wider text-gold-300">04 · TWO-WAY BINDING</p>
-          <h2 class="mt-2 text-xl font-bold">Write a review</h2>
+        <app-lesson-card label="04 · TWO-WAY BINDING" heading="Write a review">
           <p class="mt-2 text-sm text-stone-400">
             Banana-in-a-box syntax combines property and event binding into one: the input shows the class value,
             and every keystroke writes straight back into it — both directions, at once.
@@ -138,7 +105,7 @@ import { TopicNavComponent } from '../../shared/topic-nav.component';
           <p class="mt-4 text-xs text-stone-500">
             Hint: <code class="text-gold-300">[(ngModel)]</code>
           </p>
-        </article>
+        </app-lesson-card>
       </div>
 
       <div class="mt-8 rounded-2xl border border-gold-400/20 bg-gold-950/30 p-6">

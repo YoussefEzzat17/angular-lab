@@ -3,46 +3,20 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { Movie } from '../../core/models/movie.model';
 import { MovieService } from '../../core/services/movie.service';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
+import { PageHeaderComponent } from '../../shared/page-header.component';
 import { RecapComponent, RecapItem } from '../../shared/recap.component';
 import { TopicNavComponent } from '../../shared/topic-nav.component';
 
 @Component({
   standalone: true,
-  imports: [FlowDiagramComponent, RecapComponent, TopicNavComponent],
+  imports: [FlowDiagramComponent, RecapComponent, TopicNavComponent, PageHeaderComponent],
   template: `
     <section class="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
-      <div class="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <p class="text-sm font-semibold text-gold-400">HANDS-ON WORKSHOP</p>
-          <h1 class="mt-1 text-3xl font-bold sm:text-4xl">Fetch API & HTTP Client</h1>
-        </div>
-        <a
-          href="/pdfs/services-http.pdf"
-          download="services-http.pdf"
-          class="group inline-flex shrink-0 items-center gap-2 rounded-full border border-gold-400/40 bg-gold-500/10 px-4 py-2 text-sm font-semibold text-gold-300 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-gold-400 hover:bg-gold-500/20 hover:shadow-lg hover:shadow-gold-500/20 active:translate-y-0 active:scale-95"
-        >
-          <svg
-            class="h-4 w-4 text-gold-300 transition-transform duration-200 group-hover:translate-y-0.5"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-            <polyline points="14 2 14 8 20 8" />
-            <path d="M12 18v-6" />
-            <path d="m9 15 3 3 3-3" />
-          </svg>
-          Download PDF Guide
-        </a>
-      </div>
-      <p class="mt-3 max-w-3xl text-stone-400">
+      <app-page-header title="Fetch API &amp; HTTP Client" pdf="services-http.pdf">
         Real apps get their data from a server, not a hardcoded array. Angular's <code class="text-gold-300">HttpClient</code> — injected
         into a service, not the component — makes that request and returns an Observable. These films come from a real public API. Type
         below to see property binding, event binding, a signal, and a computed value all working together on live data.
-      </p>
+      </app-page-header>
 
       <label class="mt-8 block max-w-xl" for="movie-search">
         <span class="text-sm font-semibold text-stone-200">Filter loaded movies</span>

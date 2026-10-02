@@ -3,6 +3,8 @@ import { Component, OnDestroy, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
+import { LessonCardComponent } from '../../shared/lesson-card.component';
+import { PageHeaderComponent } from '../../shared/page-header.component';
 import { RecapComponent, RecapItem } from '../../shared/recap.component';
 import { TopicNavComponent } from '../../shared/topic-nav.component';
 import {
@@ -23,46 +25,17 @@ import {
 
 @Component({
   standalone: true,
-  imports: [FormsModule, AsyncPipe, CodeBlockDirective, RecapComponent, TopicNavComponent],
+  imports: [FormsModule, AsyncPipe, CodeBlockDirective, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <div class="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <p class="text-sm font-semibold text-gold-400">HANDS-ON WORKSHOP</p>
-          <h1 class="mt-1 text-3xl font-bold sm:text-4xl">RxJS from Scratch</h1>
-        </div>
-        <a
-          href="/pdfs/rxjs-cheat-sheet.pdf"
-          download="rxjs-cheat-sheet.pdf"
-          class="group inline-flex shrink-0 items-center gap-2 rounded-full border border-gold-400/40 bg-gold-500/10 px-4 py-2 text-sm font-semibold text-gold-300 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-gold-400 hover:bg-gold-500/20 hover:shadow-lg hover:shadow-gold-500/20 active:translate-y-0 active:scale-95"
-        >
-          <svg
-            class="h-4 w-4 text-gold-300 transition-transform duration-200 group-hover:translate-y-0.5"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-            <polyline points="14 2 14 8 20 8" />
-            <path d="M12 18v-6" />
-            <path d="m9 15 3 3 3-3" />
-          </svg>
-          Download PDF Guide
-        </a>
-      </div>
-      <p class="mt-3 max-w-3xl text-stone-400">
+      <app-page-header title="RxJS from Scratch" pdf="rxjs-cheat-sheet.pdf">
         RxJS is a library that helps you deal with anything that happens "over time" — a click, typing in an input, an API response — as one
         <strong class="text-gold-300">data stream</strong> you can filter, transform and control, instead of handling each as a separate event.
         Try the examples below, and open the console to see what's happening under the hood.
-      </p>
+      </app-page-header>
 
       <!-- 1 · WHY RXJS -->
-      <article class="mt-10 rounded-2xl border border-stone-800 bg-stone-900 p-6">
-        <p class="text-xs font-bold tracking-wider text-gold-300">1 · Why does RxJS exist?</p>
-        <h2 class="mt-2 text-xl font-bold">The problem before RxJS</h2>
+      <app-lesson-card class="mt-10" label="1 · Why does RxJS exist?" heading="The problem before RxJS">
         <p class="mt-2 text-sm text-stone-400">
           When you have lots of events happening over time (typing, clicks, API replies), handling them with plain callbacks leads to a problem called
           <span class="text-gold-300">Callback Hell</span>: every event needs its own condition, you have to cancel the old one manually, and there's no unified way to combine, filter, or delay these events.
@@ -94,12 +67,10 @@ import {
         <p class="mt-4 text-sm text-stone-400">
           So RxJS doesn't just make the code shorter — it solves things that are hard to do by hand: cancelling a stale request, delaying a response, combining multiple data sources, and preventing duplicate events.
         </p>
-      </article>
+      </app-lesson-card>
 
       <!-- 2 · OBSERVABLE -->
-      <article class="mt-5 rounded-2xl border border-stone-800 bg-stone-900 p-6">
-        <p class="text-xs font-bold tracking-wider text-gold-300">2 · What is an Observable?</p>
-        <h2 class="mt-2 text-xl font-bold">A factory for values that arrive over time</h2>
+      <app-lesson-card class="mt-5" label="2 · What is an Observable?" heading="A factory for values that arrive over time">
         <p class="mt-2 text-sm text-stone-400">
           An <code class="text-gold-300">Observable</code> is a "promise" of values that will arrive one after another, not a single value like a Promise. Until you call
           <code class="text-gold-300">.subscribe()</code> it does nothing at all — like a Netflix show that doesn't stream until you hit Play.
@@ -133,12 +104,10 @@ import {
           <p class="mt-4 text-sm text-stone-300">Values received: <span class="text-gold-300">{{ tickerValues().join(', ') || '—' }}</span></p>
           <p class="mt-2 text-xs text-stone-500">Click subscribe, let a few numbers come in, then click unsubscribe — notice it stops instantly, just like pausing the show.</p>
         </div>
-      </article>
+      </app-lesson-card>
 
       <!-- 3 · OPERATORS -->
-      <article class="mt-5 rounded-2xl border border-stone-800 bg-stone-900 p-6">
-        <p class="text-xs font-bold tracking-wider text-gold-300">3 · The most common operators</p>
-        <h2 class="mt-2 text-xl font-bold">map and filter — reshape the stream on the way through</h2>
+      <app-lesson-card class="mt-5" label="3 · The most common operators" heading="map and filter — reshape the stream on the way through">
         <p class="mt-2 text-sm text-stone-400">
           Operators are functions that go inside <code class="text-gold-300">.pipe()</code>, and each one takes the value coming from above and produces a new value that flows down — like stations on a factory line.
         </p>
@@ -157,12 +126,15 @@ take(3):         20───40───60|  (completes after 3 values)</pre>
         <div class="mt-4 rounded-xl bg-stone-800 p-4 text-sm text-stone-300">
           Result: <span class="text-gold-300">{{ operatorsResult().join(', ') || '—' }}</span>
         </div>
-      </article>
+      </app-lesson-card>
 
       <!-- 4 · SEARCH: debounce + switchMap -->
-      <article class="mt-5 rounded-2xl border border-gold-400/30 bg-gold-950/20 p-6">
-        <p class="text-xs font-bold tracking-wider text-gold-300">4 · debounceTime + distinctUntilChanged + switchMap</p>
-        <h2 class="mt-2 text-xl font-bold">A real search box that cancels stale requests</h2>
+      <app-lesson-card
+        class="mt-5"
+        variant="highlight"
+        label="4 · debounceTime + distinctUntilChanged + switchMap"
+        heading="A real search box that cancels stale requests"
+      >
         <p class="mt-2 text-sm text-stone-400">
           <code class="text-gold-300">debounceTime(400)</code> waits for 400ms of silence after typing before it sends. <code class="text-gold-300">distinctUntilChanged()</code>
           skips the search if the value hasn't changed. <code class="text-gold-300">switchMap</code> cancels the previous request the instant a new one comes in (critical so the order never gets mixed up).
@@ -185,12 +157,15 @@ take(3):         20───40───60|  (completes after 3 values)</pre>
             <strong class="text-lg text-emerald-300">{{ searchResult() || '—' }}</strong>
           </div>
         </div>
-      </article>
+      </app-lesson-card>
 
       <!-- 5 · SUBSCRIBE & MEMORY LEAK -->
-      <article class="mt-5 rounded-2xl border border-[rgb(var(--panel-danger-heading))]/30 bg-[rgb(var(--panel-danger-bg))] p-6">
-        <p class="text-xs font-bold tracking-wider text-rose-300">5 · subscribe() and the memory leak problem</p>
-        <h2 class="mt-2 text-xl font-bold">A subscription you forget to close keeps running forever</h2>
+      <app-lesson-card
+        class="mt-5"
+        variant="danger"
+        label="5 · subscribe() and the memory leak problem"
+        heading="A subscription you forget to close keeps running forever"
+      >
         <p class="mt-2 text-sm text-stone-400">
           When you call <code class="text-rose-300">.subscribe()</code> on an Observable that's still live (like interval or Router events), that subscription stays
           "alive" in memory even after the component is destroyed. The result: memory builds up, and sometimes code keeps running against an element that no longer exists.
@@ -235,12 +210,15 @@ ngOnInit() &#123;
 ngOnDestroy() &#123;
   this.sub.unsubscribe(); // closes every subscription that was added
 &#125;</pre>
-      </article>
+      </app-lesson-card>
 
       <!-- 6 · ASYNC PIPE -->
-      <article class="mt-5 rounded-2xl border border-emerald-500/30 bg-[rgb(var(--panel-success-bg))] p-6">
-        <p class="text-xs font-bold tracking-wider text-emerald-300">6 · async pipe — the cleaner fix</p>
-        <h2 class="mt-2 text-xl font-bold">Let Angular subscribe/unsubscribe on your behalf</h2>
+      <app-lesson-card
+        class="mt-5"
+        variant="success"
+        label="6 · async pipe — the cleaner fix"
+        heading="Let Angular subscribe/unsubscribe on your behalf"
+      >
         <p class="mt-2 text-sm text-stone-400">
           Instead of calling <code class="text-emerald-300">.subscribe()</code> manually and remembering to call <code class="text-emerald-300">unsubscribe</code> in
           <code class="text-emerald-300">ngOnDestroy</code>, use <code class="text-emerald-300">| async</code> in the template. It subscribes automatically when
@@ -282,12 +260,10 @@ ngOnDestroy() &#123;
           </p>
           <p class="mt-2 text-xs text-stone-500">No subscribe or unsubscribe button here — the pipe handles it on its own for as long as the page is open.</p>
         </div>
-      </article>
+      </app-lesson-card>
 
       <!-- 7 · CHEAT SHEET -->
-      <article class="mt-5 rounded-2xl border border-stone-800 bg-stone-900 p-6">
-        <p class="text-xs font-bold tracking-wider text-gold-300">7 · Quick cheat sheet</p>
-        <h2 class="mt-2 text-xl font-bold">The operators you'll use every day</h2>
+      <app-lesson-card class="mt-5" label="7 · Quick cheat sheet" heading="The operators you'll use every day">
         <div class="mt-4 overflow-x-auto rounded-xl border border-stone-800">
           <table class="w-full text-left text-sm">
             <thead class="bg-stone-800 text-stone-300">
@@ -308,7 +284,7 @@ ngOnDestroy() &#123;
             </tbody>
           </table>
         </div>
-      </article>
+      </app-lesson-card>
 
       <app-recap [items]="recapItems" />
       <app-topic-nav />

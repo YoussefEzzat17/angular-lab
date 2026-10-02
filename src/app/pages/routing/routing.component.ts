@@ -2,6 +2,8 @@ import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
+import { LessonCardComponent } from '../../shared/lesson-card.component';
+import { PageHeaderComponent } from '../../shared/page-header.component';
 import { RecapComponent, RecapItem } from '../../shared/recap.component';
 import { TopicNavComponent } from '../../shared/topic-nav.component';
 
@@ -13,49 +15,35 @@ interface MockRoute {
 
 @Component({
   standalone: true,
-  imports: [FormsModule, CodeBlockDirective, RecapComponent, TopicNavComponent],
+  imports: [FormsModule, CodeBlockDirective, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <div class="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <p class="text-sm font-semibold text-gold-400">HANDS-ON WORKSHOP</p>
-          <h1 class="mt-1 text-3xl font-bold sm:text-4xl">Routing</h1>
-        </div>
-        <a
-          href="/pdfs/routing.pdf"
-          download="routing.pdf"
-          class="group inline-flex shrink-0 items-center gap-2 rounded-full border border-gold-400/40 bg-gold-500/10 px-4 py-2 text-sm font-semibold text-gold-300 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-gold-400 hover:bg-gold-500/20 hover:shadow-lg hover:shadow-gold-500/20 active:translate-y-0 active:scale-95"
-        >
-          <svg class="h-4 w-4 text-gold-300 transition-transform duration-200 group-hover:translate-y-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-            <polyline points="14 2 14 8 20 8" />
-            <path d="M12 18v-6" />
-            <path d="m9 15 3 3 3-3" />
-          </svg>
-          Download PDF Guide
-        </a>
-      </div>
-      <p class="mt-3 max-w-3xl text-stone-400">
+      <app-page-header title="Routing" pdf="routing.pdf">
         A Single Page Application never actually reloads the browser — Angular's <strong class="text-gold-300">Router</strong> lets one page
         swap components based on the URL, giving you real navigation, bookmarkable links, and a back button that works.
-      </p>
+      </app-page-header>
 
       <!-- 1 · ROUTES -->
-      <article class="mt-10 rounded-2xl border border-stone-800 bg-stone-900 p-6">
-        <p class="text-xs font-bold tracking-wider text-gold-300">1 · Routes — mapping URLs to components</p>
-        <h2 class="mt-2 text-xl font-bold">A route is a rule: "when the URL looks like this, show that component"</h2>
+      <app-lesson-card
+        class="mt-10"
+        label="1 · Routes — mapping URLs to components"
+        heading="A route is a rule: &quot;when the URL looks like this, show that component&quot;"
+      >
         <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">export const routes: Routes = [
   &#123; path: 'dashboard', component: DashboardComponent &#125;,
   &#123; path: 'products',  component: ProductsComponent &#125;,
   &#123; path: 'login',     component: LoginComponent &#125;,
 ];</pre>
         <p class="mt-3 text-xs text-stone-500">Angular checks this list top to bottom and renders the first matching component.</p>
-      </article>
+      </app-lesson-card>
 
       <!-- 2 · INTERACTIVE OUTLET DEMO -->
-      <article class="mt-5 rounded-2xl border border-gold-400/30 bg-gold-950/20 p-6">
-        <p class="text-xs font-bold tracking-wider text-gold-300">2 · Try it — a mock &lt;router-outlet&gt;</p>
-        <h2 class="mt-2 text-xl font-bold">Click a nav link, watch only the outlet swap</h2>
+      <app-lesson-card
+        class="mt-5"
+        variant="highlight"
+        label="2 · Try it — a mock &lt;router-outlet&gt;"
+        heading="Click a nav link, watch only the outlet swap"
+      >
         <p class="mt-2 text-sm text-stone-400">
           This is a simulation (it won't actually navigate away from this page) — but it behaves exactly like a real Angular Router: the navbar
           stays put, and only the content inside <code class="text-gold-300">&lt;router-outlet&gt;</code> changes.
@@ -86,12 +74,10 @@ interface MockRoute {
           </div>
         </div>
         <p class="mt-3 text-xs text-stone-500">Navigations so far: {{ navCount() }} — notice the nav bar itself never re-rendered.</p>
-      </article>
+      </app-lesson-card>
 
       <!-- 3 · TWO WAYS TO NAVIGATE -->
-      <article class="mt-5 rounded-2xl border border-stone-800 bg-stone-900 p-6">
-        <p class="text-xs font-bold tracking-wider text-gold-300">3 · Declarative vs. programmatic navigation</p>
-        <h2 class="mt-2 text-xl font-bold">routerLink vs. the Router service</h2>
+      <app-lesson-card class="mt-5" label="3 · Declarative vs. programmatic navigation" heading="routerLink vs. the Router service">
         <div class="mt-5 grid gap-4 sm:grid-cols-2">
           <div class="min-w-0 rounded-xl bg-stone-800 p-4">
             <p class="text-xs font-bold text-gold-300">Declarative — routerLink</p>
@@ -110,11 +96,10 @@ goToLogin() &#123;
             <p class="mt-2 text-xs text-stone-500">Best after logic runs first — e.g. redirect once a form submits.</p>
           </div>
         </div>
-      </article>
+      </app-lesson-card>
 
       <!-- 4 · ROUTE PARAMS -->
-      <article class="mt-5 rounded-2xl border border-gold-400/30 bg-gold-950/20 p-6">
-        <p class="text-xs font-bold tracking-wider text-gold-300">4 · Try it — route parameters</p>
+      <app-lesson-card class="mt-5" variant="highlight" label="4 · Try it — route parameters">
         <h2 class="mt-2 text-xl font-bold">Passing data through the URL with <code>:id</code></h2>
         <p class="mt-2 text-sm text-stone-400">
           Route: <code class="text-gold-300">&#123; path: 'products/:id', component: ProductDetailComponent &#125;</code> — the colon marks a
@@ -146,7 +131,7 @@ goToLogin() &#123;
             <p class="mt-2 text-sm text-stone-300">→ Loaded details for product <strong class="text-gold-300">#{{ visitedProductId() }}</strong>.</p>
           </div>
         }
-      </article>
+      </app-lesson-card>
 
       <app-recap [items]="recapItems" />
       <app-topic-nav />

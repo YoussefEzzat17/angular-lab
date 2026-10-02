@@ -1,6 +1,8 @@
 import { Component, OnDestroy, signal } from '@angular/core';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
+import { LessonCardComponent } from '../../shared/lesson-card.component';
+import { PageHeaderComponent } from '../../shared/page-header.component';
 import { RecapComponent, RecapItem } from '../../shared/recap.component';
 import { TopicNavComponent } from '../../shared/topic-nav.component';
 
@@ -8,45 +10,16 @@ type Stage = 'idle' | 'built' | 'cloned' | 'sent' | 'response' | 'handled';
 
 @Component({
   standalone: true,
-  imports: [CodeBlockDirective, RecapComponent, TopicNavComponent],
+  imports: [CodeBlockDirective, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <div class="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <p class="text-sm font-semibold text-gold-400">HANDS-ON WORKSHOP</p>
-          <h1 class="mt-1 text-3xl font-bold sm:text-4xl">HttpInterceptor</h1>
-        </div>
-        <a
-          href="/pdfs/http-interceptor.pdf"
-          download="http-interceptor.pdf"
-          class="group inline-flex shrink-0 items-center gap-2 rounded-full border border-gold-400/40 bg-gold-500/10 px-4 py-2 text-sm font-semibold text-gold-300 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-gold-400 hover:bg-gold-500/20 hover:shadow-lg hover:shadow-gold-500/20 active:translate-y-0 active:scale-95"
-        >
-          <svg
-            class="h-4 w-4 text-gold-300 transition-transform duration-200 group-hover:translate-y-0.5"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-            <polyline points="14 2 14 8 20 8" />
-            <path d="M12 18v-6" />
-            <path d="m9 15 3 3 3-3" />
-          </svg>
-          Download PDF Guide
-        </a>
-      </div>
-      <p class="mt-3 max-w-3xl text-stone-400">
+      <app-page-header title="HttpInterceptor" pdf="http-interceptor.pdf">
         An <code class="text-gold-300">HttpInterceptor</code> is <strong class="text-gold-300">one function standing in the middle</strong> —
         every request your app sends passes through it on the way out, and every response passes through it on the way back, before your component ever sees it.
-      </p>
+      </app-page-header>
 
       <!-- 1 · STANDING IN THE MIDDLE -->
-      <article class="mt-10 rounded-2xl border border-stone-800 bg-stone-900 p-6">
-        <p class="text-xs font-bold tracking-wider text-gold-300">1 · What is an interceptor?</p>
-        <h2 class="mt-2 text-xl font-bold">One function standing in the middle</h2>
+      <app-lesson-card class="mt-10" label="1 · What is an interceptor?" heading="One function standing in the middle">
         <div class="mt-4 grid gap-4 sm:grid-cols-2">
           <div class="rounded-xl bg-stone-800 p-4">
             <p class="text-xs font-bold text-gold-300">Request — on the way out</p>
@@ -71,12 +44,10 @@ type Stage = 'idle' | 'built' | 'cloned' | 'sent' | 'response' | 'handled';
             <p class="mt-3 text-xs text-stone-500">The response — or the error — passes through it again on the way back.</p>
           </div>
         </div>
-      </article>
+      </app-lesson-card>
 
       <!-- 2 · ANALOGY -->
-      <article class="mt-5 rounded-2xl border border-stone-800 bg-stone-900 p-6">
-        <p class="text-xs font-bold tracking-wider text-gold-300">2 · A simple analogy</p>
-        <h2 class="mt-2 text-xl font-bold">A security guard standing at the door</h2>
+      <app-lesson-card class="mt-5" label="2 · A simple analogy" heading="A security guard standing at the door">
         <p class="mt-2 text-sm text-stone-400">
           Imagine you're walking into a company building. Before you reach your desk, there's a <strong class="text-stone-200">Security Guard</strong> at the door.
         </p>
@@ -96,12 +67,15 @@ type Stage = 'idle' | 'built' | 'cloned' | 'sent' | 'response' | 'handled';
         <p class="mt-3 text-sm text-stone-400">
           The interceptor is exactly that guard — it inspects every HTTP request before it's allowed to reach the backend.
         </p>
-      </article>
+      </app-lesson-card>
 
       <!-- 3 · INTERACTIVE DEMO -->
-      <article class="mt-5 rounded-2xl border border-gold-400/30 bg-gold-950/20 p-6">
-        <p class="text-xs font-bold tracking-wider text-gold-300">3 · Try it — attach a token automatically</p>
-        <h2 class="mt-2 text-xl font-bold">Watch the interceptor add the Authorization header, without any component knowing how</h2>
+      <app-lesson-card
+        class="mt-5"
+        variant="highlight"
+        label="3 · Try it — attach a token automatically"
+        heading="Watch the interceptor add the Authorization header, without any component knowing how"
+      >
 
         <div class="mt-4 flex flex-wrap items-center gap-3">
           <button
@@ -169,12 +143,10 @@ Authorization: Bearer {{ tokenPreview() }}</pre>
             </ul>
           </div>
         }
-      </article>
+      </app-lesson-card>
 
       <!-- 4 · THE CODE -->
-      <article class="mt-5 rounded-2xl border border-stone-800 bg-stone-900 p-6">
-        <p class="text-xs font-bold tracking-wider text-gold-300">4 · The code</p>
-        <h2 class="mt-2 text-xl font-bold">authInterceptor — line by line</h2>
+      <app-lesson-card class="mt-5" label="4 · The code" heading="authInterceptor — line by line">
         <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">export const authInterceptor: HttpInterceptorFn = (req, next) =&gt; &#123;
 
   const token = localStorage.getItem('token');
@@ -195,12 +167,10 @@ Authorization: Bearer {{ tokenPreview() }}</pre>
             <p class="mt-1 text-xs text-stone-400">Means "continue the request through the pipeline" — call it once you're done inspecting or modifying.</p>
           </div>
         </div>
-      </article>
+      </app-lesson-card>
 
       <!-- 5 · WHY CLONE -->
-      <article class="mt-5 rounded-2xl border border-stone-800 bg-stone-900 p-6">
-        <p class="text-xs font-bold tracking-wider text-gold-300">5 · Why clone()?</p>
-        <h2 class="mt-2 text-xl font-bold">HttpRequest objects are immutable</h2>
+      <app-lesson-card class="mt-5" label="5 · Why clone()?" heading="HttpRequest objects are immutable">
         <p class="mt-2 text-sm text-stone-400">
           A common question: "why not just edit <code class="text-gold-300">req</code> directly?" — because in Angular, an
           <code class="text-gold-300">HttpRequest</code> can't be changed in place. Instead, you create a modified <em>copy</em>:
@@ -222,12 +192,10 @@ Authorization: Bearer {{ tokenPreview() }}</pre>
             <p class="mt-1 text-xs text-stone-400">Sends the original, unmodified request — your token never gets attached.</p>
           </div>
         </div>
-      </article>
+      </app-lesson-card>
 
       <!-- 6 · RESPONSE HANDLING -->
-      <article class="mt-5 rounded-2xl border border-stone-800 bg-stone-900 p-6">
-        <p class="text-xs font-bold tracking-wider text-gold-300">6 · Handling the response too</p>
-        <h2 class="mt-2 text-xl font-bold">Not just requests — the response flows through it as well</h2>
+      <app-lesson-card class="mt-5" label="6 · Handling the response too" heading="Not just requests — the response flows through it as well">
         <p class="mt-2 text-sm text-stone-400">
           Imagine the backend replies with <code class="text-rose-300">401 Unauthorized</code> — usually meaning the token is invalid or expired.
           The interceptor sees that status on the way back and reacts, before your component even gets the error:
@@ -245,12 +213,14 @@ Authorization: Bearer {{ tokenPreview() }}</pre>
           Depending on the app's architecture, that reaction could be a token refresh, a forced logout, a redirect to
           <code class="text-gold-300">/login</code>, or a shared error toast — decided in <strong class="text-stone-200">one place</strong>, instead of every component that calls the API.
         </p>
-      </article>
+      </app-lesson-card>
 
       <!-- 7 · NOT JUST AUTH -->
-      <article class="mt-5 rounded-2xl border border-stone-800 bg-stone-900 p-6">
-        <p class="text-xs font-bold tracking-wider text-gold-300">7 · Not just for authentication</p>
-        <h2 class="mt-2 text-xl font-bold">The same "one checkpoint" idea, reused for other things</h2>
+      <app-lesson-card
+        class="mt-5"
+        label="7 · Not just for authentication"
+        heading="The same &quot;one checkpoint&quot; idea, reused for other things"
+      >
         <div class="mt-4 overflow-x-auto rounded-xl border border-stone-800">
           <table class="w-full text-left text-sm">
             <thead class="bg-stone-800 text-stone-300">
@@ -269,7 +239,7 @@ Authorization: Bearer {{ tokenPreview() }}</pre>
             </tbody>
           </table>
         </div>
-      </article>
+      </app-lesson-card>
 
       <app-recap [items]="recapItems" />
       <app-topic-nav />

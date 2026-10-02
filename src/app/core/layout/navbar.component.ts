@@ -7,11 +7,12 @@ import { CartService } from '../services/cart.service';
 import { FavoritesService } from '../services/favorites.service';
 import { ProgressService } from '../services/progress.service';
 import { SearchPaletteService } from '../services/search-palette.service';
+import { IconComponent } from '../../shared/icon.component';
 import { ThemeService } from '../services/theme.service';
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, RouterLinkActive],
+  imports: [IconComponent, RouterLink, RouterLinkActive],
   template: `
     <header class="sticky top-0 z-40 border-b border-stone-800 bg-stone-950/95 pt-[env(safe-area-inset-top)] backdrop-blur">
       <nav class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:h-[72px] sm:px-6">
@@ -37,9 +38,7 @@ import { ThemeService } from '../services/theme.service';
               (click)="toggleTopics($event)"
             >
               Topics
-              <svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4 transition" [class.rotate-180]="topicsOpen()" aria-hidden="true">
-                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
-              </svg>
+              <app-icon name="chevron-down" class="h-4 w-4 transition" [class.rotate-180]="topicsOpen()" />
             </button>
 
             @if (topicsOpen()) {
@@ -80,9 +79,7 @@ import { ThemeService } from '../services/theme.service';
               (click)="toggleDemo($event)"
             >
               Demo App
-              <svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4 transition" [class.rotate-180]="demoOpen()" aria-hidden="true">
-                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
-              </svg>
+              <app-icon name="chevron-down" class="h-4 w-4 transition" [class.rotate-180]="demoOpen()" />
             </button>
 
             @if (demoOpen()) {
@@ -114,9 +111,7 @@ import { ThemeService } from '../services/theme.service';
             (click)="searchPalette.toggle()"
             class="ml-2 flex items-center gap-2 rounded-lg border border-stone-800 px-3 py-2 text-stone-400 transition hover:border-stone-700 hover:text-gold-300"
           >
-            <svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4" aria-hidden="true">
-              <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" />
-            </svg>
+            <app-icon name="search" class="h-4 w-4" />
             <kbd class="rounded border border-stone-700 px-1.5 py-0.5 text-[10px] text-stone-500">⌘K</kbd>
           </button>
           <button
@@ -125,15 +120,7 @@ import { ThemeService } from '../services/theme.service';
             class="flex h-[38px] w-[38px] items-center justify-center rounded-lg border border-stone-800 text-stone-400 transition hover:border-stone-700 hover:text-gold-300"
             [attr.aria-label]="theme.theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
           >
-            @if (theme.theme() === 'dark') {
-              <svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4" aria-hidden="true">
-                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-              </svg>
-            } @else {
-              <svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4" aria-hidden="true">
-                <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 9a1 1 0 100 2h1a1 1 0 100-2h-1zM2 9a1 1 0 100 2h1a1 1 0 100-2H2zm2.05-5.536a1 1 0 011.414 0l.707.707A1 1 0 004.757 5.88l-.707-.707a1 1 0 010-1.414zm0 12.02a1 1 0 010-1.414l.707-.707a1 1 0 111.414 1.414l-.707.707a1 1 0 01-1.414 0zM10 16a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1z" />
-              </svg>
-            }
+            <app-icon [name]="theme.theme() === 'dark' ? 'moon' : 'sun'" class="h-4 w-4" />
           </button>
           <span class="rounded-full bg-gold-500/15 px-3 py-2 text-gold-300">Watchlist {{ cart.count() }}</span>
         </div>
@@ -145,9 +132,7 @@ import { ThemeService } from '../services/theme.service';
             class="grid h-11 w-11 place-items-center rounded-xl text-stone-300 transition hover:bg-stone-800"
             aria-label="Search topics"
           >
-            <svg viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5" aria-hidden="true">
-              <path fill-rule="evenodd" d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z" clip-rule="evenodd" />
-            </svg>
+            <app-icon name="search" class="h-5 w-5" />
           </button>
           <button
             type="button"
@@ -155,15 +140,7 @@ import { ThemeService } from '../services/theme.service';
             class="grid h-11 w-11 place-items-center rounded-xl text-stone-300 transition hover:bg-stone-800"
             [attr.aria-label]="theme.theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
           >
-            @if (theme.theme() === 'dark') {
-              <svg viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5" aria-hidden="true">
-                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-              </svg>
-            } @else {
-              <svg viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5" aria-hidden="true">
-                <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 9a1 1 0 100 2h1a1 1 0 100-2h-1zM2 9a1 1 0 100 2h1a1 1 0 100-2H2zm2.05-5.536a1 1 0 011.414 0l.707.707A1 1 0 004.757 5.88l-.707-.707a1 1 0 010-1.414zm0 12.02a1 1 0 010-1.414l.707-.707a1 1 0 111.414 1.414l-.707.707a1 1 0 01-1.414 0zM10 16a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1z" />
-              </svg>
-            }
+            <app-icon [name]="theme.theme() === 'dark' ? 'moon' : 'sun'" class="h-5 w-5" />
           </button>
           <span class="rounded-full bg-gold-500/15 px-3 py-2 text-sm font-medium text-gold-300" aria-label="Watchlist {{ cart.count() }}">
             {{ cart.count() }}
@@ -176,15 +153,7 @@ import { ThemeService } from '../services/theme.service';
             [attr.aria-label]="menuOpen() ? 'Close menu' : 'Open menu'"
             (click)="toggleMenu()"
           >
-            @if (menuOpen()) {
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-6 w-6" aria-hidden="true">
-                <path stroke-linecap="round" d="M6 6l12 12M18 6L6 18" />
-              </svg>
-            } @else {
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-6 w-6" aria-hidden="true">
-                <path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16" />
-              </svg>
-            }
+            <app-icon [name]="menuOpen() ? 'close' : 'menu'" class="h-6 w-6" />
           </button>
         </div>
       </nav>
