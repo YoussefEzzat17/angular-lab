@@ -8,7 +8,15 @@ import { Component } from '@angular/core';
       <div class="mx-auto flex max-w-6xl flex-col items-center gap-2 px-4 py-8 text-center text-sm text-stone-500 sm:flex-row sm:justify-between sm:px-6">
         <p>Angular Lab — a hands-on playground for learning Angular.</p>
         <p>
-          Made by <span class="font-semibold text-gold-300">Youssef Ezzat</span>
+          Made by
+          <a
+            href="https://youssef-ezzat.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-semibold text-gold-300 underline-offset-4 transition hover:underline"
+            aria-label="Youssef Ezzat — portfolio (opens in a new tab)"
+            >Youssef Ezzat</a
+          >
           <span class="text-stone-600">&nbsp;(YE)</span>
         </p>
       </div>

@@ -137,7 +137,7 @@ Every push to `main` runs `.github/workflows/deploy-github-pages.yml`: it instal
 
 ## Author
 
-Built by **Youssef Ezzat** — [@YoussefEzzat17](https://github.com/YoussefEzzat17).
+Built by **Youssef Ezzat** — [Portfolio](https://youssef-ezzat.vercel.app/) · [GitHub @YoussefEzzat17](https://github.com/YoussefEzzat17).
 
 ## Resources
 
