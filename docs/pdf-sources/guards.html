@@ -1,0 +1,137 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Route Guards — Angular Lab</title><style>
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+html, body { background: #1b130f; }
+.page { width: 210mm; height: 297mm; position: relative; overflow: hidden; background: #1b130f; page-break-after: always; break-after: page; }
+.page:last-child { page-break-after: auto; break-after: auto; }
+.head { margin-bottom: 8px; }
+.inner { position: absolute; left: 14mm; right: 14mm; top: 13mm; bottom: 17mm; }
+.pfoot { position: absolute; left: 14mm; right: 14mm; bottom: 7mm; display: flex; justify-content: space-between; font-size: 7pt; color: #6f6152; }
+body { margin: 0; color: #a8998a; font-family: "Liberation Sans", "Helvetica Neue", Arial, sans-serif; font-size: 9.2pt; line-height: 1.45; }
+.eyebrow { font-size: 7.6pt; letter-spacing: .14em; font-weight: 700; color: #c9a263; text-transform: uppercase; }
+h1 { margin: 4px 0 8px; font-size: 24pt; color: #f3e9d0; line-height: 1.1; }
+.lead { font-size: 10pt; margin: 0 0 12px; max-width: 170mm; }
+.lead b, p b { color: #f3e9d0; }
+.card { background: linear-gradient(180deg, #2a2019, #241a14); border: 1px solid #3d2f23; border-radius: 12px; padding: 11px 14px; margin-bottom: 9px;  break-inside: avoid; }
+.card.tight { padding: 10px 13px; }
+.label { break-after: avoid; font-size: 7pt; letter-spacing: .13em; font-weight: 700; color: #c9a263; text-transform: uppercase; }
+h2 { break-after: avoid; margin: 3px 0 6px; font-size: 12.2pt; color: #f3e9d0; line-height: 1.25; }
+h3 { margin: 10px 0 4px; font-size: 9.8pt; color: #e6d3ad; }
+p { margin: 0 0 7px; }
+p:last-child { margin-bottom: 0; }
+code { font-family: "Liberation Mono", "DejaVu Sans Mono", monospace; font-size: 8.6pt; color: #e6c88f; background: rgba(201,162,99,.12); padding: 0 3px; border-radius: 3px; }
+pre { margin: 6px 0 8px; background: #130d0a; border: 1px solid #3a2c20; border-radius: 8px; padding: 9px 11px; font-family: "Liberation Mono", "DejaVu Sans Mono", monospace; font-size: 7.6pt; line-height: 1.4; color: #d9c7a5; white-space: pre-wrap; word-break: break-word; break-inside: avoid; }
+pre .k { color: #e8a87c; } pre .s { color: #9ccf8f; } pre .c { color: #7d6e5e; font-style: italic; } pre .t { color: #8fb8e8; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.cols > div { background: #1d1510; border: 1px solid #3a2c20; border-radius: 9px; padding: 9px 11px; break-inside: avoid; }
+.cols h3 { margin-top: 0; }
+ul { margin: 4px 0 7px; padding-left: 15px; } li { margin: 2px 0; }
+table { width: 100%; border-collapse: collapse; margin: 6px 0 4px; font-size: 8.6pt; break-inside: avoid; }
+th { text-align: left; color: #c9a263; font-size: 7.4pt; letter-spacing: .08em; text-transform: uppercase; padding: 5px 7px; border-bottom: 1px solid #4a3a2b; }
+td { padding: 5px 7px; border-bottom: 1px solid #2f241a; vertical-align: top; }
+td:first-child { color: #f3e9d0; white-space: nowrap; }
+.callout { border-radius: 9px; padding: 8px 11px; margin: 7px 0; font-size: 9pt; break-inside: avoid; }
+.callout.tip { background: rgba(201,162,99,.10); border: 1px solid rgba(201,162,99,.35); }
+.callout.warn { background: rgba(122,26,38,.22); border: 1px solid rgba(190,80,95,.45); }
+.callout b.t { display: block; font-size: 7.4pt; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 2px; }
+.callout.tip b.t { color: #c9a263; } .callout.warn b.t { color: #e0899a; }
+.flow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
+.box { border: 1px solid #4a3a2b; background: #1d1510; color: #f3e9d0; border-radius: 8px; padding: 5px 9px; font-size: 8.6pt; font-weight: 700; }
+.box.gold { border-color: #c9a263; color: #e6c88f; } .box.ok { border-color: #4f9d7a; color: #8fd3b2; } .box.no { border-color: #b0505f; color: #e0899a; }
+.arrow { color: #c9a263; font-weight: 700; }
+.qa { margin: 0 0 7px; } .qa b { color: #f3e9d0; display: block; } 
+.foot { position: absolute; left: 14mm; right: 14mm; bottom: 7mm; display: flex; justify-content: space-between; font-size: 7pt; color: #6f6152; }
+.num { counter-reset: step; } .step { display: flex; gap: 8px; margin: 5px 0; } .step i { counter-increment: step; flex: none; width: 17px; height: 17px; border-radius: 50%; background: rgba(201,162,99,.18); color: #e6c88f; font-style: normal; font-weight: 700; font-size: 8pt; display: grid; place-items: center; }
+.step i::before { content: counter(step); }
+</style></head><body><div class="head"><div class="eyebrow">Angular Lab · Topic Guide</div><h1>Route Guards</h1><p class="lead">A guard is a function the router runs <b>before</b> opening a page. It decides whether the user may enter, and where to send them if not. This guide covers <b>canActivate</b>, <b>canActivateChild</b>, <b>canDeactivate</b>, <b>canMatch</b> and <b>resolve</b>, how to redirect correctly, and how to test a guard.</p></div><section class="card "><div class="label">1 · WHY GUARDS EXIST</div><h2>Routing says <i>which</i> page; a guard says <i>whether</i></h2><p>Without a guard, anyone who types <code>/admin</code> into the address bar gets the admin page. A <b>route guard</b> is a small function the router calls <b>before</b> it activates a route. Its answer decides what happens next.</p><div class="flow"><span class="box">User clicks a link</span><span class="arrow">→</span><span class="box gold">Router finds the route</span><span class="arrow">→</span><span class="box gold">Guard runs</span><span class="arrow">→</span><span class="box ok">Page opens</span></div><p>If the guard says no, the router can <b>cancel</b> the navigation (the user stays where they were) or <b>redirect</b> to another URL such as a login page.</p><table><tr><th>Typical use</th><th>Guard question</th></tr><tr><td>Login required</td><td>Is the user signed in?</td></tr><tr><td>Roles / permissions</td><td>May this user see the admin area?</td></tr><tr><td>Unsaved changes</td><td>Really leave this form with unsaved edits?</td></tr><tr><td>Feature flags</td><td>Does this route even exist for this user?</td></tr><tr><td>Data first</td><td>Load what the page needs before it shows (resolver)</td></tr></table><div class="callout warn"><b class="t">Important</b>A guard only controls what the <b>browser</b> shows. Anyone can change client-side code, so <b>never</b> treat a guard as real security. The server must check the token on every API call.</div></section><section class="card "><div class="label">2 · THE GUARD IN ONE FUNCTION</div><h2>canActivate: return true, false, or a UrlTree</h2><p>Modern Angular guards are plain <b>functions</b> (<code>CanActivateFn</code>). They run inside an injection context, so <code>inject()</code> works for services and the router.</p><pre><span class="k">export</span> <span class="k">const</span> membersGuard: CanActivateFn = () =&gt; {
+  <span class="k">const</span> auth = <span class="k">inject</span>(AuthService);
+  <span class="k">const</span> router = <span class="k">inject</span>(Router);
+
+  <span class="k">return</span> auth.loggedIn()
+    ? <span class="k">true</span>                                   <span class="c">// let the user in</span>
+    : router.createUrlTree([&#x27;/login&#x27;], {      <span class="c">// redirect instead</span>
+        queryParams: { returnUrl: &#x27;/members&#x27; },
+      });
+};
+
+<span class="c">// app.routes.ts</span>
+{ path: &#x27;members&#x27;, canActivate: [membersGuard], loadComponent: () =&gt; <span class="k">import</span>(&#x27;./members&#x27;) }</pre><table><tr><th>Return value</th><th>What the router does</th></tr><tr><td><code>true</code></td><td>Continues: the page opens.</td></tr><tr><td><code>false</code></td><td>Cancels the navigation. The user stays put (and sees nothing happen).</td></tr><tr><td><code>UrlTree</code></td><td>Cancels this navigation and <b>redirects</b> to that URL as part of the same navigation.</td></tr><tr><td><code>Observable</code> / <code>Promise</code></td><td>Any of the above, delivered later (e.g. after an HTTP check). An Observable must emit and complete (use <code>take(1)</code> or <code>first()</code>).</td></tr></table></section><section class="card "><div class="label">3 · REDIRECT THE RIGHT WAY</div><h2>Return a UrlTree — don't call router.navigate() inside the guard</h2><p>Calling <code>router.navigate()</code> from a guard starts a <b>second</b> navigation while the first is still in progress. Returning a <code>UrlTree</code> lets the router cancel the first one and redirect as one clean step, so history and the back button behave.</p><div class="cols"><div><h3>Avoid</h3><pre><span class="k">if</span> (!auth.loggedIn()) {
+  router.navigate([&#x27;/login&#x27;]);
+  <span class="k">return</span> <span class="k">false</span>;
+}
+<span class="k">return</span> <span class="k">true</span>;</pre></div><div><h3>Prefer</h3><pre><span class="k">return</span> auth.loggedIn()
+  ? <span class="k">true</span>
+  : router.createUrlTree([&#x27;/login&#x27;]);</pre></div></div><div class="callout tip"><b class="t">Tip</b>Angular 18.2+ also has <code>RedirectCommand</code> (<code>new RedirectCommand(urlTree, { skipLocationChange: true })</code>) when you need extra navigation options on the redirect.</div></section><section class="card "><div class="label">4 · THE FIVE KINDS</div><h2>Pick the guard that matches your question</h2><table><tr><th>Guard</th><th>Question it answers</th><th>Typical code</th></tr><tr><td><code>canActivate</code></td><td>May the user open this route?</td><td>login / role check</td></tr><tr><td><code>canActivateChild</code></td><td>Same, for <b>every child</b> under a parent route</td><td>one guard on an <code>/admin</code> parent</td></tr><tr><td><code>canDeactivate</code></td><td>May the user <b>leave</b> this page?</td><td>unsaved-changes prompt</td></tr><tr><td><code>canMatch</code></td><td>Should this route <b>match at all</b>? A failing route is skipped and the router tries the next one; it also stops a lazy chunk from being downloaded.</td><td>role-based routes, feature flags</td></tr><tr><td><code>resolve</code></td><td>Not a yes/no: fetch the data the page needs <b>before</b> it shows.</td><td>load a product by id</td></tr></table><p><code>canLoad</code> still exists but is <b>deprecated</b> — use <code>canMatch</code>.</p></section><section class="card "><div class="label">5 · MORE EXAMPLES</div><h2>canDeactivate, canMatch and resolve</h2><pre><span class="c">// canDeactivate: ask before leaving a dirty form</span>
+<span class="k">export</span> <span class="k">interface</span> HasUnsavedChanges { hasChanges(): boolean }
+<span class="k">export</span> <span class="k">const</span> leaveGuard: CanDeactivateFn&lt;HasUnsavedChanges&gt; = (page) =&gt;
+  !page.hasChanges() || confirm(&#x27;Discard your changes?&#x27;);
+
+<span class="c">// canMatch: this route only exists for admins (and its chunk is never downloaded otherwise)</span>
+<span class="k">export</span> <span class="k">const</span> adminMatch: CanMatchFn = () =&gt; <span class="k">inject</span>(AuthService).isAdmin();
+{ path: &#x27;admin&#x27;, canMatch: [adminMatch], loadChildren: () =&gt; <span class="k">import</span>(&#x27;./admin/routes&#x27;) }
+
+<span class="c">// resolve: load data before the page appears</span>
+<span class="k">export</span> <span class="k">const</span> productResolver: ResolveFn&lt;Product&gt; = (route) =&gt;
+  <span class="k">inject</span>(ProductService).getById(Number(route.paramMap.get(&#x27;id&#x27;)));
+{ path: &#x27;products/:id&#x27;, resolve: { product: productResolver }, component: ProductPage }</pre></section><section class="card "><div class="label">6 · ORDER OF EVENTS</div><h2>What happens during a navigation</h2><div class="num"><div class="step"><i></i><div><code>canMatch</code> runs while the router works out which route matches.</div></div><div class="step"><i></i><div><code>canDeactivate</code> runs on the page being <b>left</b>.</div></div><div class="step"><i></i><div><code>canActivateChild</code> (parent → child), then <code>canActivate</code> run on the page being <b>opened</b>.</div></div><div class="step"><i></i><div><code>resolve</code> loads the data the page needs.</div></div><div class="step"><i></i><div>The route activates and the component is created.</div></div></div><p>Several guards in one array must <b>all</b> allow the navigation. If one returns a <code>UrlTree</code>, that redirect is used instead.</p></section><section class="card "><div class="label">7 · TESTING A GUARD</div><h2>It is just a function — run it in an injection context</h2><pre>it(&#x27;redirects to /login while logged out&#x27;, () =&gt; {
+  TestBed.configureTestingModule({ providers: [provideRouter([])] });
+
+  <span class="k">const</span> result = TestBed.runInInjectionContext(() =&gt; membersGuard({} as any, {} as any));
+
+  expect(result instanceof UrlTree).toBeTrue();
+  expect(TestBed.<span class="k">inject</span>(Router).serializeUrl(result as UrlTree)).toBe(&#x27;/login&#x27;);
+});</pre><p>Replace <code>AuthService</code> with a fake in <code>providers</code> to test both the allowed and the blocked path without any real login.</p></section><section class="card "><div class="label">8 · COMMON MISTAKES</div><h2>Things that trip people up</h2><ul><li><b>Trusting the guard for security.</b> It only hides pages in the browser. Always verify on the server.</li><li><b>Calling <code>router.navigate()</code> in the guard.</b> Return a <code>UrlTree</code> instead.</li><li><b>An Observable that never completes.</b> The navigation waits forever. Add <code>take(1)</code>.</li><li><b>Redirect loops.</b> A guard that redirects to a route guarded by itself. Send users to a public page (e.g. <code>/login</code>).</li><li><b>Using a class-based guard.</b> <code>CanActivate</code> classes are deprecated; use functional guards.</li><li><b>Forgetting <code>canMatch</code> for lazy <code>loadChildren</code> routes.</b> <code>canActivate</code> runs after those child routes were already downloaded; <code>canMatch</code> runs first and prevents the download.</li></ul></section><section class="card "><div class="label">9 · CHEAT SHEET & QUICK QUIZ</div><h2></h2><table><tr><th>I want to…</th><th>Use</th></tr><tr><td>Block a page unless logged in</td><td><code>canActivate</code> returning a <code>UrlTree</code> to /login</td></tr><tr><td>Protect all children of a parent</td><td><code>canActivateChild</code> on the parent</td></tr><tr><td>Warn about unsaved changes</td><td><code>canDeactivate</code></td></tr><tr><td>Hide a route (and its lazy code) by role</td><td><code>canMatch</code></td></tr><tr><td>Load data before the page shows</td><td><code>resolve</code></td></tr></table><div class="qa"><b>Q: Which return value redirects?</b>A <code>UrlTree</code>. <code>false</code> only cancels.</div><div class="qa"><b>Q: Why is a guard not enough for security?</b>Client code can be changed. The server must check every request.</div><div class="qa"><b>Q: Which guard stops a lazy chunk from downloading?</b><code>canMatch</code> (<code>canLoad</code> is deprecated).</div><p>Try it live: <b>youssefezzat17.github.io/angular-lab/guards</b> — flip the login switch and open the members page.</p></section>
+<script>
+(function () {
+  const TITLE = "Route Guards";
+  const nodes = Array.from(document.body.children).filter((n) => n.tagName !== 'SCRIPT');
+  const pages = [];
+  function newPage() {
+    const page = document.createElement('div');
+    page.className = 'page';
+    const inner = document.createElement('div');
+    inner.className = 'inner';
+    page.appendChild(inner);
+    document.body.appendChild(page);
+    pages.push(page);
+    return inner;
+  }
+  let inner = newPage();
+  const fits = () => inner.scrollHeight <= inner.clientHeight + 1;
+  function place(node) {
+    inner.appendChild(node);
+    if (fits() || inner.children.length === 1) return;
+    // A long card is split between its own blocks (code, tables, lists) and continues on the next page.
+    if (node.classList.contains('card') && node.children.length > 3) {
+      const moved = [];
+      while (!fits() && node.children.length > 3) {
+        moved.unshift(node.lastElementChild);
+        node.removeChild(node.lastElementChild);
+      }
+      if (fits() && moved.length) {
+        const cont = document.createElement('section');
+        cont.className = 'card';
+        const label = node.querySelector('.label').textContent.replace(/ · continued$/, '');
+        cont.innerHTML = '<div class="label">' + label + ' · continued</div><div style="height:6px"></div>';
+        moved.forEach((c) => cont.appendChild(c));
+        inner = newPage();
+        place(cont);
+        return;
+      }
+      moved.forEach((c) => node.appendChild(c));
+    }
+    inner.removeChild(node);
+    inner = newPage();
+    inner.appendChild(node);
+  }
+  for (const node of nodes) place(node);
+  pages.forEach((page, i) => {
+    const foot = document.createElement('div');
+    foot.className = 'pfoot';
+    foot.innerHTML = '<span>Angular Lab · ' + TITLE + '</span><span>youssefezzat17.github.io/angular-lab · page ' + (i + 1) + ' of ' + pages.length + '</span>';
+    page.appendChild(foot);
+  });
+})();
+</script>
+</body></html>

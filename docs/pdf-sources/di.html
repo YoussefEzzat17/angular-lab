@@ -1,0 +1,136 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Dependency Injection — Angular Lab</title><style>
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+html, body { background: #1b130f; }
+.page { width: 210mm; height: 297mm; position: relative; overflow: hidden; background: #1b130f; page-break-after: always; break-after: page; }
+.page:last-child { page-break-after: auto; break-after: auto; }
+.head { margin-bottom: 8px; }
+.inner { position: absolute; left: 14mm; right: 14mm; top: 13mm; bottom: 17mm; }
+.pfoot { position: absolute; left: 14mm; right: 14mm; bottom: 7mm; display: flex; justify-content: space-between; font-size: 7pt; color: #6f6152; }
+body { margin: 0; color: #a8998a; font-family: "Liberation Sans", "Helvetica Neue", Arial, sans-serif; font-size: 9.2pt; line-height: 1.45; }
+.eyebrow { font-size: 7.6pt; letter-spacing: .14em; font-weight: 700; color: #c9a263; text-transform: uppercase; }
+h1 { margin: 4px 0 8px; font-size: 24pt; color: #f3e9d0; line-height: 1.1; }
+.lead { font-size: 10pt; margin: 0 0 12px; max-width: 170mm; }
+.lead b, p b { color: #f3e9d0; }
+.card { background: linear-gradient(180deg, #2a2019, #241a14); border: 1px solid #3d2f23; border-radius: 12px; padding: 11px 14px; margin-bottom: 9px;  break-inside: avoid; }
+.card.tight { padding: 10px 13px; }
+.label { break-after: avoid; font-size: 7pt; letter-spacing: .13em; font-weight: 700; color: #c9a263; text-transform: uppercase; }
+h2 { break-after: avoid; margin: 3px 0 6px; font-size: 12.2pt; color: #f3e9d0; line-height: 1.25; }
+h3 { margin: 10px 0 4px; font-size: 9.8pt; color: #e6d3ad; }
+p { margin: 0 0 7px; }
+p:last-child { margin-bottom: 0; }
+code { font-family: "Liberation Mono", "DejaVu Sans Mono", monospace; font-size: 8.6pt; color: #e6c88f; background: rgba(201,162,99,.12); padding: 0 3px; border-radius: 3px; }
+pre { margin: 6px 0 8px; background: #130d0a; border: 1px solid #3a2c20; border-radius: 8px; padding: 9px 11px; font-family: "Liberation Mono", "DejaVu Sans Mono", monospace; font-size: 7.6pt; line-height: 1.4; color: #d9c7a5; white-space: pre-wrap; word-break: break-word; break-inside: avoid; }
+pre .k { color: #e8a87c; } pre .s { color: #9ccf8f; } pre .c { color: #7d6e5e; font-style: italic; } pre .t { color: #8fb8e8; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.cols > div { background: #1d1510; border: 1px solid #3a2c20; border-radius: 9px; padding: 9px 11px; break-inside: avoid; }
+.cols h3 { margin-top: 0; }
+ul { margin: 4px 0 7px; padding-left: 15px; } li { margin: 2px 0; }
+table { width: 100%; border-collapse: collapse; margin: 6px 0 4px; font-size: 8.6pt; break-inside: avoid; }
+th { text-align: left; color: #c9a263; font-size: 7.4pt; letter-spacing: .08em; text-transform: uppercase; padding: 5px 7px; border-bottom: 1px solid #4a3a2b; }
+td { padding: 5px 7px; border-bottom: 1px solid #2f241a; vertical-align: top; }
+td:first-child { color: #f3e9d0; white-space: nowrap; }
+.callout { border-radius: 9px; padding: 8px 11px; margin: 7px 0; font-size: 9pt; break-inside: avoid; }
+.callout.tip { background: rgba(201,162,99,.10); border: 1px solid rgba(201,162,99,.35); }
+.callout.warn { background: rgba(122,26,38,.22); border: 1px solid rgba(190,80,95,.45); }
+.callout b.t { display: block; font-size: 7.4pt; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 2px; }
+.callout.tip b.t { color: #c9a263; } .callout.warn b.t { color: #e0899a; }
+.flow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
+.box { border: 1px solid #4a3a2b; background: #1d1510; color: #f3e9d0; border-radius: 8px; padding: 5px 9px; font-size: 8.6pt; font-weight: 700; }
+.box.gold { border-color: #c9a263; color: #e6c88f; } .box.ok { border-color: #4f9d7a; color: #8fd3b2; } .box.no { border-color: #b0505f; color: #e0899a; }
+.arrow { color: #c9a263; font-weight: 700; }
+.qa { margin: 0 0 7px; } .qa b { color: #f3e9d0; display: block; } 
+.foot { position: absolute; left: 14mm; right: 14mm; bottom: 7mm; display: flex; justify-content: space-between; font-size: 7pt; color: #6f6152; }
+.num { counter-reset: step; } .step { display: flex; gap: 8px; margin: 5px 0; } .step i { counter-increment: step; flex: none; width: 17px; height: 17px; border-radius: 50%; background: rgba(201,162,99,.18); color: #e6c88f; font-style: normal; font-weight: 700; font-size: 8pt; display: grid; place-items: center; }
+.step i::before { content: counter(step); }
+</style></head><body><div class="head"><div class="eyebrow">Angular Lab · Topic Guide</div><h1>Dependency Injection</h1><p class="lead">Dependency Injection lets a class <b>ask</b> for what it needs instead of building it. Angular's injector then hands over a shared or a fresh instance depending on <b>where you provided it</b>. This guide covers <b>inject()</b>, scopes, the injector hierarchy, provider recipes, and testing.</p></div><section class="card "><div class="label">1 · THE PROBLEM</div><h2>Why a component should not build its own dependencies</h2><p>Imagine <code>CartComponent</code> writes <code>const cart = new CartService()</code>. Three problems appear at once:</p>
+<ul><li><b>No sharing.</b> The header badge creates <i>another</i> <code>CartService</code>, so it never sees the same items.</li>
+<li><b>Hard to test.</b> You cannot swap the real service for a fake.</li>
+<li><b>Tight coupling.</b> If <code>CartService</code> later needs an <code>HttpClient</code>, every place that wrote <code>new</code> must change.</li></ul>
+<p><b>Dependency Injection (DI)</b> flips this around: a class just <i>declares what it needs</i>, and Angular's <b>injector</b> supplies it — creating it once and sharing it, or creating a fresh one, depending on where it was provided.</p><div class="flow"><span class="box">Component asks</span><span class="arrow">→</span><span class="box gold">inject(CartService)</span><span class="arrow">→</span><span class="box gold">Injector looks it up / creates it</span><span class="arrow">→</span><span class="box ok">Component receives it</span></div></section><section class="card "><div class="label">2 · THE BASICS</div><h2>@Injectable and inject()</h2><pre><span class="t">@Injectable</span>({ providedIn: &#x27;root&#x27; })        <span class="c">// one instance for the whole app</span>
+<span class="k">export</span> <span class="k">class</span> CartService {
+  <span class="k">readonly</span> items = signal&lt;number[]&gt;([]);
+  add(id: number) { <span class="k">this</span>.items.update((l) =&gt; [...l, id]); }
+}
+
+<span class="t">@Component</span>({ selector: &#x27;app-badge&#x27;, template: <span class="s">`{{ cart.items().length }}`</span> })
+<span class="k">export</span> <span class="k">class</span> BadgeComponent {
+  <span class="k">readonly</span> cart = <span class="k">inject</span>(CartService);       <span class="c">// modern style</span>
+  <span class="c">// constructor(private cart: CartService) {} // older, equivalent style</span>
+}</pre><p><code>providedIn: 'root'</code> makes the service <b>tree-shakable</b>: it is created lazily the first time something injects it, and removed from the bundle if nothing ever does.</p><div class="callout warn"><b class="t">Rule</b><code>inject()</code> only works in an <b>injection context</b>: a constructor, a field initializer, or a function Angular runs for you (a guard, a resolver, a provider factory). Calling it inside an event handler throws <code>NG0203</code>. Outside Angular's own code, use <code>runInInjectionContext</code>.</div></section><section class="card "><div class="label">3 · WHERE TO PROVIDE IT</div><h2>The place you provide a service decides its scope</h2><table><tr><th>Where</th><th>Instances</th><th>Lives until</th></tr><tr><td><code>providedIn: 'root'</code></td><td>One for the whole app</td><td>The app closes</td></tr><tr><td><code>bootstrapApplication(…, { providers })</code> / <code>app.config.ts</code></td><td>One for the whole app</td><td>The app closes</td></tr><tr><td>A route's <code>providers: [ … ]</code></td><td>One per route injector (shared by that route and its children)</td><td>The route injector is destroyed</td></tr><tr><td>A component's <code>providers: [ … ]</code></td><td><b>One per component instance</b> (and its children)</td><td>That component is destroyed</td></tr><tr><td>A component's <code>viewProviders: [ … ]</code></td><td>Like <code>providers</code> but hidden from projected content</td><td>That component is destroyed</td></tr></table><pre><span class="t">@Component</span>({
+  selector: &#x27;app-row-editor&#x27;,
+  providers: [RowEditState],   <span class="c">// every &lt;app-row-editor&gt; gets its own RowEditState</span>
+  template: <span class="s">`…`</span>,
+})
+<span class="k">export</span> <span class="k">class</span> RowEditorComponent { <span class="k">readonly</span> state = <span class="k">inject</span>(RowEditState); }</pre><div class="callout tip"><b class="t">Tip</b>Try it live in the Angular Lab <b>Dependency Injection</b> lesson: two components share a root service (same instance number), and two components with <code>providers</code> each get their own.</div></section><section class="card "><div class="label">4 · HOW ANGULAR FINDS IT</div><h2>The injector hierarchy</h2><p>When a class asks for a service, Angular searches upward until it finds a provider:</p><div class="num"><div class="step"><i></i><div><b>Element injectors</b> — the component and its parents in the template (<code>providers</code>, <code>viewProviders</code>, directives).</div></div><div class="step"><i></i><div><b>Environment injectors</b> — the route injector(s), then the <b>root</b> injector (<code>providedIn: 'root'</code>, <code>app.config</code>).</div></div><div class="step"><i></i><div><b>Platform injector</b>, and finally the <b>NullInjector</b>, which throws <code>NullInjectorError: No provider for X</code>.</div></div></div><table><tr><th>inject() option</th><th>Meaning</th></tr><tr><td><code>inject(X, { optional: true })</code></td><td>Return <code>null</code> instead of throwing when there is no provider</td></tr><tr><td><code>inject(X, { self: true })</code></td><td>Only look at this element's own injector</td></tr><tr><td><code>inject(X, { skipSelf: true })</code></td><td>Skip this element, look at its parents (e.g. get the <i>parent's</i> instance)</td></tr><tr><td><code>inject(X, { host: true })</code></td><td>Stop searching at the host component</td></tr></table></section><section class="card "><div class="label">5 · PROVIDER RECIPES</div><h2>Telling Angular how to build something</h2><pre>providers: [
+  { provide: Logger, useClass: ConsoleLogger },          <span class="c">// build a different class</span>
+  { provide: API_URL, useValue: &#x27;https:<span class="c">//api.example.com&#x27; }, // a ready-made value</span>
+  { provide: Clock, useFactory: () =&gt; <span class="k">new</span> Clock(<span class="k">inject</span>(Config).timezone) }, <span class="c">// compute it</span>
+  { provide: OldLogger, useExisting: Logger },           <span class="c">// an alias to another provider</span>
+]
+
+<span class="c">// Not a class? Use an InjectionToken as the key</span>
+<span class="k">export</span> <span class="k">const</span> API_URL = <span class="k">new</span> InjectionToken&lt;string&gt;(&#x27;API_URL&#x27;, {
+  providedIn: &#x27;root&#x27;,
+  factory: () =&gt; &#x27;https:<span class="c">//api.example.com&#x27;,   // a default; override in providers</span>
+});
+<span class="k">const</span> url = <span class="k">inject</span>(API_URL);</pre><p>Add <code>multi: true</code> when many providers should contribute to <b>one list</b> under the same token (for example a set of validators or plugins).</p></section><section class="card "><div class="label">6 · TESTING</div><h2>The best reason to use DI</h2><pre>TestBed.configureTestingModule({
+  providers: [{ provide: CartService, useValue: { items: signal([1, 2]) } }],
+});
+<span class="k">const</span> fixture = TestBed.createComponent(BadgeComponent);
+fixture.detectChanges();
+expect(fixture.nativeElement.textContent).toContain(&#x27;2&#x27;);   <span class="c">// used the fake</span></pre><p>Because the component only asks for <code>CartService</code>, the test can hand it any stand-in — no network, no real state, no changes to the component.</p></section><section class="card "><div class="label">7 · COMMON MISTAKES</div><h2>Things that trip people up</h2><ul><li><b>Providing the same service twice.</b> A service that is <code>providedIn: 'root'</code> <i>and</i> listed in a component's <code>providers</code> becomes <b>two different instances</b>. State seems to "not update" because the two sides hold different objects.</li><li><b>Forgetting <code>@Injectable()</code>.</b> A service that injects other services needs the decorator.</li><li><b>Circular dependencies.</b> A needs B and B needs A. Break the cycle by extracting shared logic into a third service.</li><li><b>Calling <code>inject()</code> too late</b> (inside a click handler). Store the injected value in a field instead.</li><li><b>Putting mutable per-user data in a root service on the server.</b> With SSR a root service is shared between requests; keep user data out of it.</li></ul></section><section class="card "><div class="label">8 · CHEAT SHEET & QUICK QUIZ</div><h2></h2><table><tr><th>I want…</th><th>Do this</th></tr><tr><td>One shared instance for the app</td><td><code>@Injectable({ providedIn: 'root' })</code></td></tr><tr><td>A new instance per component</td><td><code>providers: [Service]</code> on the component</td></tr><tr><td>To use a service</td><td><code>private readonly x = inject(Service)</code></td></tr><tr><td>A config value or interface as a dependency</td><td><code>InjectionToken</code> + <code>useValue</code> / <code>useFactory</code></td></tr><tr><td>A fake in a test</td><td><code>{ provide: Service, useValue: fake }</code></td></tr></table><div class="qa"><b>Q: What does providedIn: 'root' give you?</b>A single app-wide instance, created lazily and tree-shaken if unused.</div><div class="qa"><b>Q: When put a service in a component's providers?</b>When each component (copy) needs its own private state that dies with it.</div><div class="qa"><b>Q: Why does a service sometimes seem not to share state?</b>It was provided in more than one place, so there are several instances.</div><p>Try it live: <b>youssefezzat17.github.io/angular-lab/di</b></p></section>
+<script>
+(function () {
+  const TITLE = "Dependency Injection";
+  const nodes = Array.from(document.body.children).filter((n) => n.tagName !== 'SCRIPT');
+  const pages = [];
+  function newPage() {
+    const page = document.createElement('div');
+    page.className = 'page';
+    const inner = document.createElement('div');
+    inner.className = 'inner';
+    page.appendChild(inner);
+    document.body.appendChild(page);
+    pages.push(page);
+    return inner;
+  }
+  let inner = newPage();
+  const fits = () => inner.scrollHeight <= inner.clientHeight + 1;
+  function place(node) {
+    inner.appendChild(node);
+    if (fits() || inner.children.length === 1) return;
+    // A long card is split between its own blocks (code, tables, lists) and continues on the next page.
+    if (node.classList.contains('card') && node.children.length > 3) {
+      const moved = [];
+      while (!fits() && node.children.length > 3) {
+        moved.unshift(node.lastElementChild);
+        node.removeChild(node.lastElementChild);
+      }
+      if (fits() && moved.length) {
+        const cont = document.createElement('section');
+        cont.className = 'card';
+        const label = node.querySelector('.label').textContent.replace(/ · continued$/, '');
+        cont.innerHTML = '<div class="label">' + label + ' · continued</div><div style="height:6px"></div>';
+        moved.forEach((c) => cont.appendChild(c));
+        inner = newPage();
+        place(cont);
+        return;
+      }
+      moved.forEach((c) => node.appendChild(c));
+    }
+    inner.removeChild(node);
+    inner = newPage();
+    inner.appendChild(node);
+  }
+  for (const node of nodes) place(node);
+  pages.forEach((page, i) => {
+    const foot = document.createElement('div');
+    foot.className = 'pfoot';
+    foot.innerHTML = '<span>Angular Lab · ' + TITLE + '</span><span>youssefezzat17.github.io/angular-lab · page ' + (i + 1) + ' of ' + pages.length + '</span>';
+    page.appendChild(foot);
+  });
+})();
+</script>
+</body></html>

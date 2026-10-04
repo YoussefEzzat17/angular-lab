@@ -1,0 +1,122 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Change Detection — Angular Lab</title><style>
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+html, body { background: #1b130f; }
+.page { width: 210mm; height: 297mm; position: relative; overflow: hidden; background: #1b130f; page-break-after: always; break-after: page; }
+.page:last-child { page-break-after: auto; break-after: auto; }
+.head { margin-bottom: 8px; }
+.inner { position: absolute; left: 14mm; right: 14mm; top: 13mm; bottom: 17mm; }
+.pfoot { position: absolute; left: 14mm; right: 14mm; bottom: 7mm; display: flex; justify-content: space-between; font-size: 7pt; color: #6f6152; }
+body { margin: 0; color: #a8998a; font-family: "Liberation Sans", "Helvetica Neue", Arial, sans-serif; font-size: 9.2pt; line-height: 1.45; }
+.eyebrow { font-size: 7.6pt; letter-spacing: .14em; font-weight: 700; color: #c9a263; text-transform: uppercase; }
+h1 { margin: 4px 0 8px; font-size: 24pt; color: #f3e9d0; line-height: 1.1; }
+.lead { font-size: 10pt; margin: 0 0 12px; max-width: 170mm; }
+.lead b, p b { color: #f3e9d0; }
+.card { background: linear-gradient(180deg, #2a2019, #241a14); border: 1px solid #3d2f23; border-radius: 12px; padding: 11px 14px; margin-bottom: 9px;  break-inside: avoid; }
+.card.tight { padding: 10px 13px; }
+.label { break-after: avoid; font-size: 7pt; letter-spacing: .13em; font-weight: 700; color: #c9a263; text-transform: uppercase; }
+h2 { break-after: avoid; margin: 3px 0 6px; font-size: 12.2pt; color: #f3e9d0; line-height: 1.25; }
+h3 { margin: 10px 0 4px; font-size: 9.8pt; color: #e6d3ad; }
+p { margin: 0 0 7px; }
+p:last-child { margin-bottom: 0; }
+code { font-family: "Liberation Mono", "DejaVu Sans Mono", monospace; font-size: 8.6pt; color: #e6c88f; background: rgba(201,162,99,.12); padding: 0 3px; border-radius: 3px; }
+pre { margin: 6px 0 8px; background: #130d0a; border: 1px solid #3a2c20; border-radius: 8px; padding: 9px 11px; font-family: "Liberation Mono", "DejaVu Sans Mono", monospace; font-size: 7.6pt; line-height: 1.4; color: #d9c7a5; white-space: pre-wrap; word-break: break-word; break-inside: avoid; }
+pre .k { color: #e8a87c; } pre .s { color: #9ccf8f; } pre .c { color: #7d6e5e; font-style: italic; } pre .t { color: #8fb8e8; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.cols > div { background: #1d1510; border: 1px solid #3a2c20; border-radius: 9px; padding: 9px 11px; break-inside: avoid; }
+.cols h3 { margin-top: 0; }
+ul { margin: 4px 0 7px; padding-left: 15px; } li { margin: 2px 0; }
+table { width: 100%; border-collapse: collapse; margin: 6px 0 4px; font-size: 8.6pt; break-inside: avoid; }
+th { text-align: left; color: #c9a263; font-size: 7.4pt; letter-spacing: .08em; text-transform: uppercase; padding: 5px 7px; border-bottom: 1px solid #4a3a2b; }
+td { padding: 5px 7px; border-bottom: 1px solid #2f241a; vertical-align: top; }
+td:first-child { color: #f3e9d0; white-space: nowrap; }
+.callout { border-radius: 9px; padding: 8px 11px; margin: 7px 0; font-size: 9pt; break-inside: avoid; }
+.callout.tip { background: rgba(201,162,99,.10); border: 1px solid rgba(201,162,99,.35); }
+.callout.warn { background: rgba(122,26,38,.22); border: 1px solid rgba(190,80,95,.45); }
+.callout b.t { display: block; font-size: 7.4pt; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 2px; }
+.callout.tip b.t { color: #c9a263; } .callout.warn b.t { color: #e0899a; }
+.flow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
+.box { border: 1px solid #4a3a2b; background: #1d1510; color: #f3e9d0; border-radius: 8px; padding: 5px 9px; font-size: 8.6pt; font-weight: 700; }
+.box.gold { border-color: #c9a263; color: #e6c88f; } .box.ok { border-color: #4f9d7a; color: #8fd3b2; } .box.no { border-color: #b0505f; color: #e0899a; }
+.arrow { color: #c9a263; font-weight: 700; }
+.qa { margin: 0 0 7px; } .qa b { color: #f3e9d0; display: block; } 
+.foot { position: absolute; left: 14mm; right: 14mm; bottom: 7mm; display: flex; justify-content: space-between; font-size: 7pt; color: #6f6152; }
+.num { counter-reset: step; } .step { display: flex; gap: 8px; margin: 5px 0; } .step i { counter-increment: step; flex: none; width: 17px; height: 17px; border-radius: 50%; background: rgba(201,162,99,.18); color: #e6c88f; font-style: normal; font-weight: 700; font-size: 8pt; display: grid; place-items: center; }
+.step i::before { content: counter(step); }
+</style></head><body><div class="head"><div class="eyebrow">Angular Lab · Topic Guide</div><h1>Change Detection</h1><p class="lead">Change detection is how Angular decides <b>when to re-check a template</b> and update the DOM. By default it checks every component every time; <b>OnPush</b> checks only what might have changed. This guide covers Zone.js, the two strategies, the mutate-vs-replace trap, signals, the tools, and how to make an app faster.</p></div><section class="card "><div class="label">1 · WHAT IT IS</div><h2>How Angular keeps the screen in sync</h2><p><b>Change detection</b> is the process that compares what your templates <i>show</i> with your component data and updates the DOM when they differ. It runs after something might have changed:</p>
+<ul><li>a user event (click, input, keypress)</li><li>a timer (<code>setTimeout</code>, <code>setInterval</code>)</li><li>a finished request (HTTP, promises)</li></ul>
+<p>Angular learns about these through <b>Zone.js</b>, a library that wraps the browser APIs above. After each one it checks the component tree <b>top-down</b>, once.</p><div class="flow"><span class="box">Something happens</span><span class="arrow">→</span><span class="box gold">Zone.js notices</span><span class="arrow">→</span><span class="box gold">Angular checks the tree</span><span class="arrow">→</span><span class="box ok">DOM updated if values changed</span></div><div class="callout tip"><b class="t">Tip</b>Change detection checks <b>bindings in templates</b> (<code>{{ name }}</code>, <code>[disabled]</code>, <code>@if</code>…). It does not "watch" your variables directly.</div></section><section class="card "><div class="label">2 · TWO STRATEGIES</div><h2>Default checks everything, OnPush checks only what might have changed</h2><table><tr><th></th><th>Default</th><th>OnPush</th></tr><tr><td>Checked when</td><td>Every time anything in the app is checked</td><td>Only when it is marked dirty (list below)</td></tr><tr><td>Cost</td><td>Simple, but wasteful in big trees</td><td>Much less work; skipped subtrees cost nothing</td></tr><tr><td>How to enable</td><td>Nothing (it is the default)</td><td><code>changeDetection: ChangeDetectionStrategy.OnPush</code></td></tr></table><h3>An OnPush component is re-checked when…</h3><ul><li>one of its <code>input()</code>s receives a <b>new reference</b> (not a mutated one),</li><li>an <b>event</b> fires from its template or one of its children (a click inside it),</li><li>an <code>async</code> pipe in its template emits,</li><li>a <b>signal</b> read in its template changes,</li><li>you call <code>markForCheck()</code> (or <code>detectChanges()</code>) yourself.</li></ul><pre><span class="t">@Component</span>({
+  selector: &#x27;app-user-card&#x27;,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: <span class="s">`{{ user().name }}`</span>,
+})
+<span class="k">export</span> <span class="k">class</span> UserCardComponent {
+  <span class="k">readonly</span> user = input.required&lt;User&gt;();
+}</pre></section><section class="card "><div class="label">3 · THE CLASSIC TRAP</div><h2>Mutate vs. replace</h2><p>OnPush compares inputs by <b>reference</b> (<code>===</code>). If you change a property of the same object, the reference is identical, so Angular sees "no change" and skips the component.</p><div class="cols"><div><h3>Mutating — OnPush does <u>not</u> update</h3><pre>user.name = &#x27;Grace&#x27;;
+items.push(newItem);
+filters.active = <span class="k">true</span>;</pre></div><div><h3>Replacing — OnPush updates</h3><pre>user = { ...user, name: &#x27;Grace&#x27; };
+items = [...items, newItem];
+filters = { ...filters, active: <span class="k">true</span> };</pre></div></div><p>This is why OnPush pushes you toward <b>immutable updates</b> — which is also easier to reason about and debug. In the Angular Lab <b>Change Detection</b> lesson, press <i>Mutate name</i> then <i>Replace user</i> and watch the two cards react differently.</p></section><section class="card "><div class="label">4 · SIGNALS AND OnPush</div><h2>Why the two work so well together</h2><p>When a template reads a signal, Angular records <b>which component</b> depends on it. When the signal changes, exactly that component is marked for checking — even if it has <b>no inputs</b> and sits deep inside an OnPush tree.</p><pre><span class="t">@Component</span>({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: <span class="s">`Items in cart: {{ cart.count() }}`</span>,
+})
+<span class="k">export</span> <span class="k">class</span> BadgeComponent {
+  <span class="k">readonly</span> cart = <span class="k">inject</span>(CartService);   <span class="c">// count is a signal</span>
+}</pre><p>The result: fine-grained updates with no reference juggling. Angular also supports <b>zoneless</b> change detection (<code>provideZonelessChangeDetection()</code>), which drops Zone.js and relies on signals, events and <code>markForCheck()</code> to know when to update.</p></section><section class="card "><div class="label">5 · THE TOOLS</div><h2>ChangeDetectorRef and friends</h2><table><tr><th>Tool</th><th>What it does</th><th>When to use</th></tr><tr><td><code>markForCheck()</code></td><td>Marks this component and its ancestors dirty; the <b>next</b> normal check will include it</td><td>Data changed outside Angular's knowledge (a callback, a plain field)</td></tr><tr><td><code>detectChanges()</code></td><td>Checks this component's view <b>right now</b></td><td>Rare: after manual DOM-affecting work, or in tests</td></tr><tr><td><code>detach()</code> / <code>reattach()</code></td><td>Removes / restores the view from checks</td><td>Special cases like a frozen, very expensive view</td></tr><tr><td><code>NgZone.runOutsideAngular()</code></td><td>Runs code without triggering a check afterwards</td><td>High-frequency events (scroll, mousemove, animation frames)</td></tr><tr><td><code>async</code> pipe</td><td>Subscribes, marks dirty on each emission, unsubscribes for you</td><td>Showing an Observable in a template</td></tr></table></section><section class="card "><div class="label">6 · MAKING IT FASTER</div><h2>Practical rules</h2><ul><li><b>Use OnPush by default</b> for new components, especially list rows and "dumb" display components.</li><li><b>Keep template expressions cheap.</b> A method call like <code>{{ expensive() }}</code> runs on <i>every</i> check. Use a <code>computed()</code> signal or a pure pipe instead.</li><li><b>Track list items.</b> <code>@for (item of items; track item.id)</code> lets Angular reuse DOM nodes instead of rebuilding the list.</li><li><b>Update immutably</b> so OnPush components notice.</li><li><b>Move noisy events outside Angular</b> with <code>runOutsideAngular</code> and re-enter only when the UI must change.</li><li><b>Measure first.</b> Use the Angular DevTools <i>Profiler</i> tab to see which components are checked and how long each takes.</li></ul></section><section class="card "><div class="label">7 · THE FAMOUS ERROR</div><h2>ExpressionChangedAfterItHasBeenCheckedError (NG0100)</h2><p>In development mode Angular checks every binding <b>twice</b> to make sure nothing changed during the check. If a binding's value is different the second time, you see this error.</p><pre><span class="c">// Bad: the template reads a value that changes while it is being checked</span>
+get randomLabel() { <span class="k">return</span> Math.random(); }          <span class="c">// different every call</span>
+<span class="c">// Bad: a child changes data the parent already displayed</span>
+ngAfterViewInit() { <span class="k">this</span>.parentTitle = &#x27;Updated&#x27;; }</pre><p><b>Fix:</b> make bindings pure and stable, move the change into a signal / <code>computed()</code>, or update state earlier (for example in the constructor or an event handler) rather than in a lifecycle hook that runs after the view was checked.</p></section><section class="card "><div class="label">8 · COMMON MISTAKES</div><h2>Things that trip people up</h2><ul><li><b>"My OnPush component does not update."</b> You mutated the input. Replace the object/array instead.</li><li><b>Calling <code>detectChanges()</code> everywhere</b> to force the UI. Prefer signals or <code>markForCheck()</code>.</li><li><b>Heavy getters / methods in templates</b> that run on every check.</li><li><b>Subscribing manually and assigning to a field</b> in an OnPush component, with no <code>markForCheck()</code>. Use the <code>async</code> pipe or <code>toSignal()</code>.</li><li><b>Expecting OnPush to stop <i>child events</i>.</b> A click inside the component (or its children) always marks it dirty.</li></ul></section><section class="card "><div class="label">9 · CHEAT SHEET & QUICK QUIZ</div><h2></h2><table><tr><th>Situation</th><th>Answer</th></tr><tr><td>Input object mutated</td><td>OnPush will not see it → pass a new object</td></tr><tr><td>Signal read in the template changes</td><td>That component is re-checked</td></tr><tr><td>Observable in the template</td><td>Use <code>async</code> pipe (or <code>toSignal</code>)</td></tr><tr><td>Scroll / mousemove handlers</td><td><code>runOutsideAngular</code></td></tr><tr><td>Slow template</td><td>Profile first; use <code>computed()</code>, <code>track</code> and OnPush</td></tr></table><div class="qa"><b>Q: When is an OnPush component re-checked?</b>New input reference, an event inside it, an async pipe emission, a signal it reads changing, or markForCheck().</div><div class="qa"><b>Q: Why does mutating an input not update an OnPush child?</b>OnPush compares by reference; the same object means "no change".</div><div class="qa"><b>Q: Why do signals pair well with OnPush?</b>The read tells Angular exactly which component to re-check.</div><p>Try it live: <b>youssefezzat17.github.io/angular-lab/change-detection</b></p></section>
+<script>
+(function () {
+  const TITLE = "Change Detection";
+  const nodes = Array.from(document.body.children).filter((n) => n.tagName !== 'SCRIPT');
+  const pages = [];
+  function newPage() {
+    const page = document.createElement('div');
+    page.className = 'page';
+    const inner = document.createElement('div');
+    inner.className = 'inner';
+    page.appendChild(inner);
+    document.body.appendChild(page);
+    pages.push(page);
+    return inner;
+  }
+  let inner = newPage();
+  const fits = () => inner.scrollHeight <= inner.clientHeight + 1;
+  function place(node) {
+    inner.appendChild(node);
+    if (fits() || inner.children.length === 1) return;
+    // A long card is split between its own blocks (code, tables, lists) and continues on the next page.
+    if (node.classList.contains('card') && node.children.length > 3) {
+      const moved = [];
+      while (!fits() && node.children.length > 3) {
+        moved.unshift(node.lastElementChild);
+        node.removeChild(node.lastElementChild);
+      }
+      if (fits() && moved.length) {
+        const cont = document.createElement('section');
+        cont.className = 'card';
+        const label = node.querySelector('.label').textContent.replace(/ · continued$/, '');
+        cont.innerHTML = '<div class="label">' + label + ' · continued</div><div style="height:6px"></div>';
+        moved.forEach((c) => cont.appendChild(c));
+        inner = newPage();
+        place(cont);
+        return;
+      }
+      moved.forEach((c) => node.appendChild(c));
+    }
+    inner.removeChild(node);
+    inner = newPage();
+    inner.appendChild(node);
+  }
+  for (const node of nodes) place(node);
+  pages.forEach((page, i) => {
+    const foot = document.createElement('div');
+    foot.className = 'pfoot';
+    foot.innerHTML = '<span>Angular Lab · ' + TITLE + '</span><span>youssefezzat17.github.io/angular-lab · page ' + (i + 1) + ' of ' + pages.length + '</span>';
+    page.appendChild(foot);
+  });
+})();
+</script>
+</body></html>
