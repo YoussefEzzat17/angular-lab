@@ -1,41 +1,26 @@
 import { Routes } from '@angular/router';
 
-import { BindingComponent } from './pages/binding/binding.component';
-import { ComponentCommunicationComponent } from './pages/component-communication/component-communication.component';
-import { DirectivesComponent } from './pages/directives/directives.component';
-import { FavoritesComponent } from './pages/favorites/favorites.component';
-import { FeedbackComponent } from './pages/feedback/feedback.component';
-import { FormsComponent } from './pages/forms/forms.component';
+// The landing page stays in the main bundle (it is what every visitor sees first); every other page is
+// fetched the first time it is opened, then preloaded in the background once the app is idle.
 import { HomeComponent } from './pages/home/home.component';
-import { InterceptorComponent } from './pages/interceptor/interceptor.component';
-import { LazyLoadingComponent } from './pages/lazy-loading/lazy-loading.component';
-import { MoviesComponent } from './pages/movies/movies.component';
-import { NotFoundComponent } from './pages/not-found/not-found.component';
-import { PipesComponent } from './pages/pipes/pipes.component';
-import { ProductDetailsComponent } from './pages/product-details/product-details.component';
-import { ProductsComponent } from './pages/products/products.component';
-import { RoutingComponent } from './pages/routing/routing.component';
-import { RxjsComponent } from './pages/rxjs/rxjs.component';
-import { WatchlistComponent } from './pages/watchlist/watchlist.component';
-import { SignalsPlaygroundComponent } from './pages/signals-playground/signals-playground.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent, title: 'Angular Lab' },
-  { path: 'movies', component: MoviesComponent, title: 'Fetch API & HTTP' },
-  { path: 'binding', component: BindingComponent, title: 'Data Binding' },
-  { path: 'communication', component: ComponentCommunicationComponent, title: 'Component Communication' },
-  { path: 'directives', component: DirectivesComponent, title: 'Directives' },
-  { path: 'forms', component: FormsComponent, title: 'Angular Forms' },
-  { path: 'signals', component: SignalsPlaygroundComponent, title: 'Signals' },
-  { path: 'pipes', component: PipesComponent, title: 'Pipes' },
-  { path: 'routing', component: RoutingComponent, title: 'Routing' },
-  { path: 'rxjs', component: RxjsComponent, title: 'RxJS' },
-  { path: 'lazy-loading', component: LazyLoadingComponent, title: 'Lazy Loading' },
-  { path: 'interceptor', component: InterceptorComponent, title: 'HttpInterceptor' },
-  { path: 'products', component: ProductsComponent, title: 'Demo: Browse' },
-  { path: 'products/:id', component: ProductDetailsComponent, title: 'Title Details' },
-  { path: 'favorites', component: FavoritesComponent, title: 'Demo: My List' },
-  { path: 'watchlist', component: WatchlistComponent, title: 'Demo: Watchlist' },
-  { path: 'feedback', component: FeedbackComponent, title: 'Feedback' },
-  { path: '**', component: NotFoundComponent, title: 'Not Found' },
+  { path: 'movies', loadComponent: () => import('./pages/movies/movies.component').then((m) => m.MoviesComponent), title: 'Fetch API & HTTP' },
+  { path: 'binding', loadComponent: () => import('./pages/binding/binding.component').then((m) => m.BindingComponent), title: 'Data Binding' },
+  { path: 'communication', loadComponent: () => import('./pages/component-communication/component-communication.component').then((m) => m.ComponentCommunicationComponent), title: 'Component Communication' },
+  { path: 'directives', loadComponent: () => import('./pages/directives/directives.component').then((m) => m.DirectivesComponent), title: 'Directives' },
+  { path: 'forms', loadComponent: () => import('./pages/forms/forms.component').then((m) => m.FormsComponent), title: 'Angular Forms' },
+  { path: 'signals', loadComponent: () => import('./pages/signals-playground/signals-playground.component').then((m) => m.SignalsPlaygroundComponent), title: 'Signals' },
+  { path: 'pipes', loadComponent: () => import('./pages/pipes/pipes.component').then((m) => m.PipesComponent), title: 'Pipes' },
+  { path: 'routing', loadComponent: () => import('./pages/routing/routing.component').then((m) => m.RoutingComponent), title: 'Routing' },
+  { path: 'rxjs', loadComponent: () => import('./pages/rxjs/rxjs.component').then((m) => m.RxjsComponent), title: 'RxJS' },
+  { path: 'lazy-loading', loadComponent: () => import('./pages/lazy-loading/lazy-loading.component').then((m) => m.LazyLoadingComponent), title: 'Lazy Loading' },
+  { path: 'interceptor', loadComponent: () => import('./pages/interceptor/interceptor.component').then((m) => m.InterceptorComponent), title: 'HttpInterceptor' },
+  { path: 'products', loadComponent: () => import('./pages/products/products.component').then((m) => m.ProductsComponent), title: 'Demo: Browse' },
+  { path: 'products/:id', loadComponent: () => import('./pages/product-details/product-details.component').then((m) => m.ProductDetailsComponent), title: 'Title Details' },
+  { path: 'favorites', loadComponent: () => import('./pages/favorites/favorites.component').then((m) => m.FavoritesComponent), title: 'Demo: My List' },
+  { path: 'watchlist', loadComponent: () => import('./pages/watchlist/watchlist.component').then((m) => m.WatchlistComponent), title: 'Demo: Watchlist' },
+  { path: 'feedback', loadComponent: () => import('./pages/feedback/feedback.component').then((m) => m.FeedbackComponent), title: 'Feedback' },
+  { path: '**', loadComponent: () => import('./pages/not-found/not-found.component').then((m) => m.NotFoundComponent), title: 'Not Found' },
 ];

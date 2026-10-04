@@ -17,7 +17,7 @@ import { Component } from '@angular/core';
             aria-label="Youssef Ezzat — portfolio (opens in a new tab)"
             >Youssef Ezzat</a
           >
-          <span class="text-stone-600">&nbsp;(YE)</span>
+          <span class="text-stone-500">&nbsp;(YE)</span>
         </p>
       </div>
     </footer>

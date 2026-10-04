@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://youssefezzat17.github.io/angular-lab/sitemap.xml

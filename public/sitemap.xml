@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://youssefezzat17.github.io/angular-lab/</loc></url>
+  <url><loc>https://youssefezzat17.github.io/angular-lab/binding</loc></url>
+  <url><loc>https://youssefezzat17.github.io/angular-lab/pipes</loc></url>
+  <url><loc>https://youssefezzat17.github.io/angular-lab/directives</loc></url>
+  <url><loc>https://youssefezzat17.github.io/angular-lab/forms</loc></url>
+  <url><loc>https://youssefezzat17.github.io/angular-lab/communication</loc></url>
+  <url><loc>https://youssefezzat17.github.io/angular-lab/routing</loc></url>
+  <url><loc>https://youssefezzat17.github.io/angular-lab/signals</loc></url>
+  <url><loc>https://youssefezzat17.github.io/angular-lab/movies</loc></url>
+  <url><loc>https://youssefezzat17.github.io/angular-lab/rxjs</loc></url>
+  <url><loc>https://youssefezzat17.github.io/angular-lab/lazy-loading</loc></url>
+  <url><loc>https://youssefezzat17.github.io/angular-lab/interceptor</loc></url>
+  <url><loc>https://youssefezzat17.github.io/angular-lab/products</loc></url>
+  <url><loc>https://youssefezzat17.github.io/angular-lab/feedback</loc></url>
+</urlset>
