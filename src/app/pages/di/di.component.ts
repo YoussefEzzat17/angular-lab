@@ -69,7 +69,7 @@ export class DiPrivateCounterComponent {
   imports: [DiSharedCounterComponent, DiPrivateCounterComponent, FlowDiagramComponent, CodeBlockDirective, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <app-page-header title="Dependency Injection" illustration="di">
+      <app-page-header title="Dependency Injection" illustration="di" pdf="di.pdf">
         Components should not build the things they depend on — a component that does
         <code class="text-gold-300">new CartService()</code> can never share that cart with another component, and is painful to
         test. Instead it <em>asks</em> Angular for one with <code class="text-gold-300">inject()</code>, and Angular's injector

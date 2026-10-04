@@ -70,7 +70,7 @@ const NAMES = ['Ada', 'Grace', 'Linus', 'Margaret', 'Alan'];
   imports: [CdDefaultCardComponent, CdOnPushCardComponent, CdSignalReaderComponent, FlowDiagramComponent, CodeBlockDirective, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <app-page-header title="Change Detection" illustration="change-detection">
+      <app-page-header title="Change Detection" illustration="change-detection" pdf="change-detection.pdf">
         After something happens (a click, a response, a timer), Angular walks the component tree and re-checks what each
         template shows. By default it checks <em>every</em> component, every time. With
         <code class="text-gold-300">OnPush</code> a component is only re-checked when something it depends on actually changed —

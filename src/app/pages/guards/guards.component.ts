@@ -16,7 +16,7 @@ import { TopicNavComponent } from '../../shared/topic-nav.component';
   imports: [RouterLink, FlowDiagramComponent, CodeBlockDirective, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <app-page-header title="Route Guards" illustration="guards">
+      <app-page-header title="Route Guards" illustration="guards" pdf="guards.pdf">
         Routing decides <em>which</em> page to show; a guard decides <em>whether the user may see it at all</em>. A guard is
         a small function the router runs before it activates a route — return <code class="text-gold-300">true</code> to let
         the user in, or a redirect to send them somewhere else. Flip the switch below and try to open the members page.
