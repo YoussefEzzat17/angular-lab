@@ -11,7 +11,10 @@ export type IllustrationName =
   | 'lazy'
   | 'interceptor'
   | 'http'
-  | 'communication';
+  | 'communication'
+  | 'guards'
+  | 'di'
+  | 'change-detection';
 
 /**
  * Small animated diagram that sits beside a topic's intro. Drawn with the theme tokens, so it follows
@@ -207,6 +210,56 @@ export type IllustrationName =
           <circle class="packet up" cx="148" cy="110" r="3.5" />
           <text class="mono dim" x="84" y="84" text-anchor="end">&#64;Input</text>
           <text class="mono dim" x="156" y="84">&#64;Output</text>
+        }
+        @case ('guards') {
+          <!-- the guard lets one request through and bounces the other back -->
+          <rect class="chip" x="62" y="6" width="116" height="22" rx="11" />
+          <text class="mono gold-text" x="120" y="21" text-anchor="middle">canActivate</text>
+          <rect class="node" x="4" y="60" width="52" height="40" rx="9" />
+          <text class="mono" x="30" y="84" text-anchor="middle">User</text>
+          <rect class="node gold" x="96" y="40" width="48" height="80" rx="10" />
+          <text class="mono gold-text" x="120" y="86" text-anchor="middle">guard</text>
+          <rect class="node" x="184" y="60" width="52" height="40" rx="9" />
+          <text class="mono" x="210" y="84" text-anchor="middle">Page</text>
+          <path class="edge" d="M56 80 H96 M144 80 H184" />
+          <path class="edge redirect" d="M120 120 Q120 150 40 150 L34 150" />
+          <text class="mono dim" x="130" y="150">redirect</text>
+          <text class="mono ok-mark" x="120" y="36" text-anchor="middle">✓</text>
+          <text class="mono no-mark" x="120" y="36" text-anchor="middle">✗</text>
+          <circle class="pk pk-ok" r="5" />
+          <circle class="pk pk-no" r="5" />
+        }
+        @case ('di') {
+          <!-- one injector, one service instance, handed to every component that asks -->
+          <rect class="node gold" x="50" y="8" width="140" height="52" rx="12" />
+          <text class="mono dim" x="120" y="24" text-anchor="middle">Injector</text>
+          <rect class="svc" x="78" y="30" width="84" height="22" rx="11" />
+          <text class="mono svc-text" x="120" y="45" text-anchor="middle">CartService #1</text>
+          <path class="edge" d="M90 60 L56 108 M150 60 L184 108" />
+          <rect class="node" x="14" y="108" width="84" height="34" rx="9" />
+          <text class="mono" x="56" y="129" text-anchor="middle">CompA</text>
+          <rect class="node" x="142" y="108" width="84" height="34" rx="9" />
+          <text class="mono" x="184" y="129" text-anchor="middle">CompB</text>
+          <circle class="pk di-l" r="5" />
+          <circle class="pk di-r" r="5" />
+          <rect class="chip" x="40" y="148" width="160" height="20" rx="10" />
+          <text class="mono gold-text" x="120" y="162" text-anchor="middle">inject(CartService)</text>
+        }
+        @case ('change-detection') {
+          <!-- a check passes through the Default branch and skips the OnPush branch -->
+          <path class="edge" d="M110 40 L60 78 M130 40 L180 78 M50 98 L30 124 M70 98 L90 124 M170 98 L150 124 M190 98 L210 124" />
+          <rect class="node cd" style="animation-delay: 0s" x="92" y="12" width="56" height="28" rx="8" />
+          <text class="mono" x="120" y="30" text-anchor="middle">Root</text>
+          <rect class="node cd" style="animation-delay: 0.5s" x="32" y="70" width="56" height="28" rx="8" />
+          <text class="mono" x="60" y="88" text-anchor="middle">Default</text>
+          <rect class="node skip" x="152" y="70" width="56" height="28" rx="8" />
+          <text class="mono dim" x="180" y="88" text-anchor="middle">OnPush</text>
+          <rect class="node cd" style="animation-delay: 1s" x="6" y="124" width="48" height="26" rx="8" />
+          <rect class="node cd" style="animation-delay: 1s" x="66" y="124" width="48" height="26" rx="8" />
+          <rect class="node skip" x="126" y="124" width="48" height="26" rx="8" />
+          <rect class="node skip" x="186" y="124" width="48" height="26" rx="8" />
+          <text class="mono gold-text" x="60" y="164" text-anchor="middle">checked</text>
+          <text class="mono dim" x="180" y="164" text-anchor="middle">skipped</text>
         }
       }
     </svg>
@@ -425,8 +478,33 @@ export type IllustrationName =
       @keyframes icp-drop { 0%, 42% { opacity: 0; } 48%, 56% { opacity: 1; } 62%, 100% { opacity: 0; } }
       @keyframes icp-auth { 0%, 86% { opacity: 0; } 92%, 100% { opacity: 1; } }
 
+      /* guards */
+      .pk { fill: var(--gold); opacity: 0; }
+      .pk-ok { animation: pk-ok 6s linear infinite; }
+      .pk-no { animation: pk-no 6s linear infinite; }
+      .ok-mark { fill: rgb(var(--status-emerald)); font-size: 18px; opacity: 0; animation: ok-mark 6s infinite; }
+      .no-mark { fill: rgb(var(--panel-danger-heading)); font-size: 18px; opacity: 0; animation: no-mark 6s infinite; }
+      .redirect { stroke-dasharray: 3 3; }
+      @keyframes pk-ok { 0% { transform: translate(56px, 80px); opacity: 0; } 4% { opacity: 1; } 20% { transform: translate(100px, 80px); } 45% { transform: translate(184px, 80px); opacity: 1; } 49%, 100% { transform: translate(184px, 80px); opacity: 0; } }
+      @keyframes pk-no { 0%, 50% { transform: translate(56px, 80px); opacity: 0; } 54% { opacity: 1; } 68% { transform: translate(100px, 80px); } 76% { transform: translate(100px, 80px); } 94% { transform: translate(40px, 150px); opacity: 1; } 98%, 100% { transform: translate(40px, 150px); opacity: 0; } }
+      @keyframes ok-mark { 0%, 20% { opacity: 0; } 24%, 38% { opacity: 1; } 44%, 100% { opacity: 0; } }
+      @keyframes no-mark { 0%, 66% { opacity: 0; } 70%, 84% { opacity: 1; } 90%, 100% { opacity: 0; } }
+
+      /* dependency injection */
+      .svc { fill: rgb(var(--gold-500) / 0.2); stroke: var(--gold); stroke-width: 1; }
+      .svc-text { fill: rgb(var(--gold-300)); font-size: 10px; }
+      .di-l { animation: di-l 3.2s ease-in-out infinite; }
+      .di-r { animation: di-r 3.2s ease-in-out infinite; }
+      @keyframes di-l { 0% { transform: translate(90px, 60px); opacity: 0; } 12% { opacity: 1; } 85% { transform: translate(56px, 108px); opacity: 1; } 100% { transform: translate(56px, 108px); opacity: 0; } }
+      @keyframes di-r { 0% { transform: translate(150px, 60px); opacity: 0; } 12% { opacity: 1; } 85% { transform: translate(184px, 108px); opacity: 1; } 100% { transform: translate(184px, 108px); opacity: 0; } }
+
+      /* change detection */
+      .cd { animation: cd 4s ease-in-out infinite; }
+      .skip { stroke-dasharray: 4 3; opacity: 0.55; }
+      @keyframes cd { 0%, 12% { stroke: var(--line); } 18%, 34% { stroke: var(--gold); } 42%, 100% { stroke: var(--line); } }
+
       @media (prefers-reduced-motion: reduce) {
-        .toggle, .ghost, .typed, .caret, .packet, .u1, .u2, .u3, .p1, .p2, .p3, .react, .n1, .n2, .n3, .bad, .good, .field, .btn, .btn-text, .marble, .nav-home, .nav-admin, .cursor, .chunk-solid, .lz-not, .lz-dl, .lz-done, .progress, .page-box, .page-home, .page-admin, .icp-req, .icp-tok, .icp-key, .icp-drop, .icp-auth {
+        .toggle, .ghost, .typed, .caret, .packet, .u1, .u2, .u3, .p1, .p2, .p3, .react, .n1, .n2, .n3, .bad, .good, .field, .btn, .btn-text, .marble, .pk, .ok-mark, .no-mark, .di-l, .di-r, .cd, .nav-home, .nav-admin, .cursor, .chunk-solid, .lz-not, .lz-dl, .lz-done, .progress, .page-box, .page-home, .page-admin, .icp-req, .icp-tok, .icp-key, .icp-drop, .icp-auth {
           animation: none;
         }
         .packet, .marble {

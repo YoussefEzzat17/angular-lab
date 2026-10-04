@@ -21,17 +21,18 @@
 
 ## Overview
 
-Angular Lab teaches Angular through **11 lesson pages**. Each one explains *why* a concept exists and what problem it solves, shows a small animated diagram of what is actually happening, and gives you a live example you can click, edit and watch update in the browser. A small movie-and-series **demo app** shows several of these concepts working together in one real feature.
+Angular Lab teaches Angular through **14 lesson pages**. Each one explains *why* a concept exists and what problem it solves, shows a small animated diagram of what is actually happening, and gives you a live example you can click, edit and watch update in the browser. A small movie-and-series **demo app** shows several of these concepts working together in one real feature.
 
 It is built with modern Angular only: standalone components, signals, the `@if` / `@for` / `@switch` control flow and signal inputs — no NgModules. There is no backend; everything runs in the browser.
 
 ## Features
 
-- **11 interactive lessons** with an animated diagram beside each topic's intro, a recap quiz and next/previous navigation.
+- **14 interactive lessons** with an animated diagram beside each topic's intro, a recap quiz and next/previous navigation.
 - **Progress tracking** — pages you visit are remembered, and a "Mark as complete" button drives the progress bar on the home page. Saved in `localStorage`.
 - **Light and dark themes** built on CSS variables, so every colour follows the theme (toggle in the navbar; respects the system preference).
 - **Command palette** — press <kbd>⌘</kbd>/<kbd>Ctrl</kbd> + <kbd>K</kbd> to jump to any topic.
 - **Downloadable PDF guides** for each lesson, from the "Download PDF Guide" button.
+- **Grouped navigation** — lessons are organised into five groups in the Topics menu and on the home page.
 - **Demo app** — browse titles, keep a persistent **Watchlist** (with duplicate detection and a remove / clear-all page) and a **My List** of favourites; both survive a refresh.
 - **Toast notifications** with success / error / info styles, a countdown bar and pause-on-hover.
 - **Feedback form** that sends a real email through [EmailJS](https://www.emailjs.com/) (client-side, public key only).
@@ -44,21 +45,24 @@ It is built with modern Angular only: standalone components, signals, the `@if` 
 
 ## Lessons
 
-The order below is the recommended learning path.
+The lessons are grouped, and the order below is the recommended learning path (it is also what Next / Previous follow).
 
-| # | Topic | Route | What you learn |
-| - | --- | --- | --- |
-| 1 | Data Binding | `/binding` | Interpolation, property, event and two-way binding |
-| 2 | Pipes | `/pipes` | Formatting dates, prices and text in templates, plus a custom pipe |
-| 3 | Directives | `/directives` | `*ngIf`, `*ngFor` and custom attribute directives |
-| 4 | Angular Forms | `/forms` | Template-driven vs. reactive forms, validation |
-| 5 | Component Communication | `/communication` | `@Input()` / `@Output()`, parent ↔ child with animated data-flow arrows |
-| 6 | Routing | `/routing` | Routes, `router-outlet`, `routerLink`, route parameters |
-| 7 | Signals | `/signals` | `signal()`, `computed()`, `effect()` |
-| 8 | Fetch API & HTTP | `/movies` | `HttpClient`, services, a real public API |
-| 9 | RxJS | `/rxjs` | Observables, operators (`map`, `filter`, `switchMap`, `debounceTime`), memory leaks, the `async` pipe |
-| 10 | Lazy Loading | `/lazy-loading` | `loadComponent` and smaller initial bundles |
-| 11 | HttpInterceptor | `/interceptor` | One checkpoint for every request and response (e.g. attaching a token) |
+| Group | Topic | Route | What you learn |
+| --- | --- | --- | --- |
+| **Fundamentals** | Data Binding | `/binding` | Interpolation, property, event and two-way binding |
+| | Pipes | `/pipes` | Formatting dates, prices and text in templates, plus a custom pipe |
+| | Directives | `/directives` | `*ngIf`, `*ngFor` and custom attribute directives |
+| | Component Communication | `/communication` | `@Input()` / `@Output()`, parent ↔ child with animated data-flow arrows |
+| **Forms & Navigation** | Angular Forms | `/forms` | Template-driven vs. reactive forms, validation |
+| | Routing | `/routing` | Routes, `router-outlet`, `routerLink`, route parameters |
+| | Route Guards | `/guards` | `canActivate`, redirecting with a `UrlTree`, and the other guard kinds (live login demo) |
+| **Reactivity** | Signals | `/signals` | `signal()`, `computed()`, `effect()` |
+| | RxJS | `/rxjs` | Observables, operators (`map`, `filter`, `switchMap`, `debounceTime`), memory leaks, the `async` pipe |
+| **Services & Data** | Dependency Injection | `/di` | `inject()`, `providedIn: 'root'` vs. component `providers` — one shared instance vs. one each |
+| | Fetch API & HTTP | `/movies` | `HttpClient`, services, a real public API |
+| | HttpInterceptor | `/interceptor` | One checkpoint for every request and response (e.g. attaching a token) |
+| **Performance** | Change Detection | `/change-detection` | Default vs. `OnPush`, mutating vs. replacing, and why signals fit `OnPush` |
+| | Lazy Loading | `/lazy-loading` | `loadComponent` and smaller initial bundles |
 
 **Demo app:** `/products` (browse titles) · `/products/:id` (details) · `/watchlist` · `/favorites`. **Also:** `/feedback`.
 
@@ -103,7 +107,8 @@ The feedback page sends mail through EmailJS. Its service ID, template ID and **
 ```text
 src/app/
 ├── core/
-│   ├── data/          topics.ts — single source of truth for every lesson
+│   ├── data/          topics.ts — single source of truth for every lesson (and its group)
+│   ├── guards/        members.guard.ts — the guard used by the Route Guards lesson
 │   ├── layout/        navbar, footer, toast, command palette
 │   ├── models/        Movie, Product, User
 │   └── services/      progress, theme, toast, watchlist (cart), favorites,

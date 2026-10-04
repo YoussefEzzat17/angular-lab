@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { TOPICS } from '../../core/data/topics';
+import { GROUPED_TOPICS, TOPICS } from '../../core/data/topics';
 import { ProgressService } from '../../core/services/progress.service';
 import { ThemeService } from '../../core/services/theme.service';
 import { SignalNetworkComponent } from './signal-network.component';
@@ -56,26 +56,34 @@ import { SignalNetworkComponent } from './signal-network.component';
         <h2 class="mt-1 text-3xl font-bold">Pick a concept to explore</h2>
         <p class="mt-2 max-w-2xl text-stone-400">Each page explains why the concept exists, what problem it solves, and lets you try it live.</p>
 
-        <div class="mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          @for (topic of topics; track topic.path) {
-            <a
-              [routerLink]="topic.path"
-              class="group relative flex flex-col gap-3 rounded-2xl border border-stone-800 bg-stone-900 p-6 transition hover:border-gold-400/50 hover:bg-stone-800"
-            >
-              @if (progress.isCompleted(topic.path)) {
-                <span class="absolute right-4 top-4 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500/15 text-xs font-bold text-emerald-400">✓</span>
-              } @else if (progress.isVisited(topic.path)) {
-                <span class="absolute right-4 top-4 h-2 w-2 rounded-full bg-stone-600" title="Visited, not marked complete"></span>
-              }
-              <span class="text-3xl">{{ topic.icon }}</span>
-              <span class="flex items-center justify-between text-lg font-bold text-stone-100">
-                {{ topic.title }}
-                <span class="text-gold-400 transition group-hover:translate-x-1">→</span>
-              </span>
-              <p class="text-sm text-stone-400">{{ topic.description }}</p>
-            </a>
-          }
-        </div>
+        @for (group of groups; track group.id) {
+          <div class="mt-10">
+            <div class="flex flex-wrap items-baseline gap-x-3">
+              <h3 class="text-lg font-bold text-stone-100">{{ group.title }}</h3>
+              <p class="text-sm text-stone-500">{{ group.blurb }}</p>
+            </div>
+            <div class="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            @for (topic of group.topics; track topic.path) {
+              <a
+                [routerLink]="topic.path"
+                class="group relative flex flex-col gap-3 rounded-2xl border border-stone-800 bg-stone-900 p-6 transition hover:border-gold-400/50 hover:bg-stone-800"
+              >
+                @if (progress.isCompleted(topic.path)) {
+                  <span class="absolute right-4 top-4 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500/15 text-xs font-bold text-emerald-400">✓</span>
+                } @else if (progress.isVisited(topic.path)) {
+                  <span class="absolute right-4 top-4 h-2 w-2 rounded-full bg-stone-600" title="Visited, not marked complete"></span>
+                }
+                <span class="text-3xl">{{ topic.icon }}</span>
+                <span class="flex items-center justify-between text-lg font-bold text-stone-100">
+                  {{ topic.title }}
+                  <span class="text-gold-400 transition group-hover:translate-x-1">→</span>
+                </span>
+                <p class="text-sm text-stone-400">{{ topic.description }}</p>
+              </a>
+            }
+            </div>
+          </div>
+        }
       </div>
 
       <div class="mt-16 rounded-2xl border border-stone-800 bg-stone-900 p-6 sm:p-8">
@@ -97,6 +105,7 @@ export class HomeComponent {
   readonly progress = inject(ProgressService);
   readonly theme = inject(ThemeService);
   readonly topics = TOPICS;
+  readonly groups = GROUPED_TOPICS;
 
   continuePath(): string {
     const firstIncomplete = this.topics.find((topic) => !this.progress.isCompleted(topic.path));
