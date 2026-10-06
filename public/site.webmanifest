@@ -1,7 +1,7 @@
 {
   "name": "Angular Lab",
   "short_name": "Angular Lab",
-  "description": "Learn Angular by building \u2014 14 interactive lessons.",
+  "description": "Learn Angular by building \u2014 15 interactive lessons.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

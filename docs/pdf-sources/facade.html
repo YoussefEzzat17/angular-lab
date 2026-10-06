@@ -1,0 +1,161 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Facade Pattern — Angular Lab</title><style>
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+html, body { background: #1b130f; }
+.page { width: 210mm; height: 297mm; position: relative; overflow: hidden; background: #1b130f; page-break-after: always; break-after: page; }
+.page:last-child { page-break-after: auto; break-after: auto; }
+.head { margin-bottom: 8px; }
+.inner { position: absolute; left: 14mm; right: 14mm; top: 13mm; bottom: 17mm; }
+.pfoot { position: absolute; left: 14mm; right: 14mm; bottom: 7mm; display: flex; justify-content: space-between; font-size: 7pt; color: #6f6152; }
+body { margin: 0; color: #a8998a; font-family: "Liberation Sans", "Helvetica Neue", Arial, sans-serif; font-size: 9.2pt; line-height: 1.45; }
+.eyebrow { font-size: 7.6pt; letter-spacing: .14em; font-weight: 700; color: #c9a263; text-transform: uppercase; }
+h1 { margin: 4px 0 8px; font-size: 24pt; color: #f3e9d0; line-height: 1.1; }
+.lead { font-size: 10pt; margin: 0 0 12px; max-width: 170mm; }
+.lead b, p b { color: #f3e9d0; }
+.card { background: linear-gradient(180deg, #2a2019, #241a14); border: 1px solid #3d2f23; border-radius: 12px; padding: 11px 14px; margin-bottom: 9px;  break-inside: avoid; }
+.card.tight { padding: 10px 13px; }
+.label { break-after: avoid; font-size: 7pt; letter-spacing: .13em; font-weight: 700; color: #c9a263; text-transform: uppercase; }
+h2 { break-after: avoid; margin: 3px 0 6px; font-size: 12.2pt; color: #f3e9d0; line-height: 1.25; }
+h3 { margin: 10px 0 4px; font-size: 9.8pt; color: #e6d3ad; }
+p { margin: 0 0 7px; }
+p:last-child { margin-bottom: 0; }
+code { font-family: "Liberation Mono", "DejaVu Sans Mono", monospace; font-size: 8.6pt; color: #e6c88f; background: rgba(201,162,99,.12); padding: 0 3px; border-radius: 3px; }
+pre { margin: 6px 0 8px; background: #130d0a; border: 1px solid #3a2c20; border-radius: 8px; padding: 9px 11px; font-family: "Liberation Mono", "DejaVu Sans Mono", monospace; font-size: 7.6pt; line-height: 1.4; color: #d9c7a5; white-space: pre-wrap; word-break: break-word; break-inside: avoid; }
+pre .k { color: #e8a87c; } pre .s { color: #9ccf8f; } pre .c { color: #7d6e5e; font-style: italic; } pre .t { color: #8fb8e8; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.cols > div { background: #1d1510; border: 1px solid #3a2c20; border-radius: 9px; padding: 9px 11px; break-inside: avoid; }
+.cols h3 { margin-top: 0; }
+ul { margin: 4px 0 7px; padding-left: 15px; } li { margin: 2px 0; }
+table { width: 100%; border-collapse: collapse; margin: 6px 0 4px; font-size: 8.6pt; break-inside: avoid; }
+th { text-align: left; color: #c9a263; font-size: 7.4pt; letter-spacing: .08em; text-transform: uppercase; padding: 5px 7px; border-bottom: 1px solid #4a3a2b; }
+td { padding: 5px 7px; border-bottom: 1px solid #2f241a; vertical-align: top; }
+td:first-child { color: #f3e9d0; white-space: nowrap; }
+.callout { border-radius: 9px; padding: 8px 11px; margin: 7px 0; font-size: 9pt; break-inside: avoid; }
+.callout.tip { background: rgba(201,162,99,.10); border: 1px solid rgba(201,162,99,.35); }
+.callout.warn { background: rgba(122,26,38,.22); border: 1px solid rgba(190,80,95,.45); }
+.callout b.t { display: block; font-size: 7.4pt; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 2px; }
+.callout.tip b.t { color: #c9a263; } .callout.warn b.t { color: #e0899a; }
+.flow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
+.box { border: 1px solid #4a3a2b; background: #1d1510; color: #f3e9d0; border-radius: 8px; padding: 5px 9px; font-size: 8.6pt; font-weight: 700; }
+.box.gold { border-color: #c9a263; color: #e6c88f; } .box.ok { border-color: #4f9d7a; color: #8fd3b2; } .box.no { border-color: #b0505f; color: #e0899a; }
+.arrow { color: #c9a263; font-weight: 700; }
+.qa { margin: 0 0 7px; } .qa b { color: #f3e9d0; display: block; } 
+.foot { position: absolute; left: 14mm; right: 14mm; bottom: 7mm; display: flex; justify-content: space-between; font-size: 7pt; color: #6f6152; }
+.num { counter-reset: step; } .step { display: flex; gap: 8px; margin: 5px 0; } .step i { counter-increment: step; flex: none; width: 17px; height: 17px; border-radius: 50%; background: rgba(201,162,99,.18); color: #e6c88f; font-style: normal; font-weight: 700; font-size: 8pt; display: grid; place-items: center; }
+.step i::before { content: counter(step); }
+</style></head><body><div class="head"><div class="eyebrow">Angular Lab · Topic Guide</div><h1>Facade Pattern</h1><p class="lead">A <b>facade</b> is one simple front door in front of a messy set of services. Components ask the facade for an action ("place the order"); the facade knows which services to call, in what order, and what to undo when something fails. This guide covers the idea, how to build and use one, where it lives, its flavours, when <b>not</b> to use it, and how to test it.</p></div><section class="card "><div class="label">1 · THE PROBLEM</div><h2>A component that has to be a project manager</h2><p>Placing an order needs <b>four services</b> — cart, stock, payment, receipt — called in the <b>right order</b>, with an <b>undo</b> (release the stock) if the payment fails. If the component does all of that itself:</p>
+<ul><li>it injects four services it should not care about;</li>
+<li>the same steps get copy-pasted into every component that checks out;</li>
+<li>fixing the order or the rollback means editing every copy;</li>
+<li>testing the component means faking four services.</li></ul><div class="flow"><span class="box gold">Component</span><span class="arrow">→</span><span class="box">CartApi</span><span class="arrow">→</span><span class="box">StockApi</span><span class="arrow">→</span><span class="box">PaymentApi</span><span class="arrow">→</span><span class="box">ReceiptApi</span></div><p>The component has become a <b>project manager</b>: it knows the whole process instead of just showing a button.</p></section><section class="card "><div class="label">2 · THE IDEA</div><h2>Ask the waiter, not the kitchen</h2><p>In a restaurant you do not walk into the kitchen to tell the chef, the barista and the cashier what to do. You tell the <b>waiter</b> "I'll have the set menu", and the waiter coordinates everyone. The <b>Facade pattern</b> (one of the classic <i>Gang of Four</i> design patterns) is that waiter:</p>
+<div class="callout tip"><b class="t">Definition</b>A <b>facade</b> is a class that gives a <b>simple, unified interface</b> to a complicated subsystem.</div><div class="cols"><div><h3>Without a facade</h3><p>Component → 4 services.<br>4 dependencies.<br>The component knows the order and the undo.</p></div><div><h3>With a facade</h3><p>Component → <b>CheckoutFacade</b> → 4 services.<br>1 dependency.<br>The facade knows the order and the undo.</p></div></div><p>The subsystem services do <b>not</b> go away. They stay small and focused; the facade just coordinates them.</p></section><section class="card "><div class="label">3 · THE FACADE IN CODE</div><h2>Five steps to your own facade</h2><div class="num"><div class="step"><i></i><div><b>List the subsystems.</b> Which services does one user action touch? Write them in order.</div></div><div class="step"><i></i><div><b>Create the class.</b> <code>@Injectable</code> named <code>XxxFacade</code>, one per feature.</div></div><div class="step"><i></i><div><b>Inject the services</b> with <code>inject()</code> — the facade is the only class that knows them.</div></div><div class="step"><i></i><div><b>Expose a small API:</b> methods named after what the user wants, and signals for state.</div></div><div class="step"><i></i><div><b>Switch the components.</b> They inject only the facade and delete their old service calls.</div></div></div><pre><span class="t">@Injectable</span>({ providedIn: &#x27;root&#x27; })
+<span class="k">export</span> <span class="k">class</span> CheckoutFacade {
+  <span class="k">private</span> <span class="k">readonly</span> cart = <span class="k">inject</span>(CartApi);
+  <span class="k">private</span> <span class="k">readonly</span> stock = <span class="k">inject</span>(StockApi);
+  <span class="k">private</span> <span class="k">readonly</span> payment = <span class="k">inject</span>(PaymentApi);
+  <span class="k">private</span> <span class="k">readonly</span> receipt = <span class="k">inject</span>(ReceiptApi);
+
+  <span class="k">readonly</span> status = signal&lt;&#x27;idle&#x27; | &#x27;working&#x27; | &#x27;success&#x27; | &#x27;failed&#x27;&gt;(&#x27;idle&#x27;);
+  <span class="k">readonly</span> message = signal(&#x27;&#x27;);
+
+  <span class="k">async</span> placeOrder(): Promise&lt;void&gt; {
+    <span class="k">this</span>.status.set(&#x27;working&#x27;);
+    <span class="k">let</span> reservationId: string | <span class="k">undefined</span>;
+    try {
+      <span class="k">const</span> items = <span class="k">await</span> <span class="k">this</span>.cart.getItems();
+      reservationId = <span class="k">await</span> <span class="k">this</span>.stock.reserve(items);
+      <span class="k">const</span> total = items.reduce((sum, i) =&gt; sum + i.price, 0);
+      <span class="k">await</span> <span class="k">this</span>.payment.charge(total);
+      <span class="k">await</span> <span class="k">this</span>.receipt.send(reservationId);
+      <span class="k">this</span>.message.set(&#x27;Order placed!&#x27;);
+      <span class="k">this</span>.status.set(&#x27;success&#x27;);
+    } catch {
+      <span class="k">if</span> (reservationId) <span class="k">await</span> <span class="k">this</span>.stock.release(reservationId);   <span class="c">// the undo lives here</span>
+      <span class="k">this</span>.message.set(&#x27;Order failed&#x27;);
+      <span class="k">this</span>.status.set(&#x27;failed&#x27;);
+    }
+  }
+}</pre></section><section class="card "><div class="label">4 · USING IT</div><h2>The component gets tiny</h2><p>Components inject only the facade and read its signals. They never import the subsystem services, so those can change freely behind the facade.</p><pre><span class="t">@Component</span>({
+  selector: &#x27;app-checkout&#x27;,
+  template: <span class="s">`
+    &lt;button (click)=&quot;checkout.placeOrder()&quot; [disabled]=&quot;checkout.status() === &#x27;working&#x27;&quot;&gt;
+      Place order
+    &lt;/button&gt;
+    &lt;p&gt;{{ checkout.message() }}&lt;/p&gt;
+  `</span>,
+})
+<span class="k">export</span> <span class="k">class</span> CheckoutComponent {
+  protected <span class="k">readonly</span> checkout = <span class="k">inject</span>(CheckoutFacade);   <span class="c">// the only dependency</span>
+}</pre><table><tr><th></th><th>Without a facade</th><th>With a facade</th></tr><tr><td>Services the component knows</td><td>4</td><td>1</td></tr><tr><td>Handler in the component</td><td>~15 lines (order + try/catch + undo)</td><td>1 line: <code>placeOrder()</code></td></tr><tr><td>Fix the order or the rollback</td><td>Edit every component that copied it</td><td>Edit one class</td></tr><tr><td>Test the component</td><td>Fake 4 services</td><td>Fake 1 facade</td></tr></table></section><section class="card "><div class="label">5 · WHERE IT LIVES</div><h2>Folder and naming</h2><pre>src/app/features/checkout/
+├── checkout.facade.ts        ← the facade
+├── checkout.component.ts     ← talks only to the facade
+└── data/
+    ├── cart.api.ts           ← subsystems
+    ├── stock.api.ts
+    ├── payment.api.ts
+    └── receipt.api.ts</pre><ul><li>One facade per <b>feature</b> (checkout, products, auth) — not one for the whole app.</li><li>Name it <code>XxxFacade</code> so everyone recognises the role.</li><li>Provide it with <code>providedIn: 'root'</code>, or in the feature's route <code>providers</code> if its state should live only while the feature is open.</li></ul></section><section class="card "><div class="label">6 · TWO COMMON FLAVOURS</div><h2>Which kind of facade do you need?</h2><table><tr><th>Flavour</th><th>What it hides</th><th>Example</th></tr><tr><td>Service facade</td><td>Several services that must be called in order</td><td><code>CheckoutFacade</code> (this lesson)</td></tr><tr><td>State facade</td><td>The state library (NgRx store, selectors, actions)</td><td><code>ProductsFacade.products()</code> and <code>.load()</code> instead of <code>store.select</code> / <code>dispatch</code></td></tr><tr><td>API facade</td><td>Several HTTP endpoints behind one friendly method</td><td><code>ProfileFacade.load()</code> calls /user, /settings and /avatar together</td></tr></table></section><section class="card "><div class="label">7 · WHEN TO USE IT — AND WHEN NOT TO</div><h2></h2><div class="cols"><div><h3>Use it when</h3><ul><li>One action needs <b>several services</b> in a fixed order.</li><li>The same steps appear in <b>more than one component</b>.</li><li>You want components that only <b>show and click</b>.</li><li>You want to change a subsystem without touching the UI.</li><li>A feature is hard to test because of its many dependencies.</li></ul></div><div><h3>Skip it when</h3><ul><li>The component uses <b>one</b> service with one call — the facade would be a pass-through.</li><li>It would grow into a <b>"god class"</b> for the whole app.</li><li>You are putting <b>UI work</b> (templates, DOM) in it.</li><li>Components genuinely need full control of a subsystem.</li></ul></div></div></section><section class="card "><div class="label">8 · NOT TO BE CONFUSED WITH</div><h2>Facade vs. its look-alikes</h2><table><tr><th>Pattern</th><th>Purpose</th><th>In one line</th></tr><tr><td>Facade</td><td>Simplify a complicated subsystem</td><td>One easy front door to many classes.</td></tr><tr><td>Adapter</td><td>Make an incompatible interface fit</td><td>Converts one interface into the one you expect.</td></tr><tr><td>Mediator</td><td>Let components talk without knowing each other</td><td>A traffic controller between peers; a facade only talks one way (down).</td></tr><tr><td>Plain service</td><td>Hold one piece of logic or data</td><td>A single worker; a facade coordinates several workers.</td></tr></table></section><section class="card "><div class="label">9 · TESTING</div><h2>Two small kinds of test</h2><pre><span class="c">// 1. Test the facade: fake the subsystems, check the sequence and the rollback.</span>
+TestBed.configureTestingModule({
+  providers: [{ provide: PaymentApi, useValue: { charge: () =&gt; Promise.reject(<span class="k">new</span> Error(&#x27;declined&#x27;)) } }],
+});
+<span class="k">const</span> facade = TestBed.<span class="k">inject</span>(CheckoutFacade);
+<span class="k">await</span> facade.placeOrder();
+expect(facade.status()).toBe(&#x27;failed&#x27;);     <span class="c">// and stock.release() was called</span>
+
+<span class="c">// 2. Test the component: fake ONLY the facade.</span>
+TestBed.configureTestingModule({
+  providers: [{ provide: CheckoutFacade, useValue: { placeOrder: jasmine.createSpy(), status: signal(&#x27;idle&#x27;), message: signal(&#x27;&#x27;) } }],
+});</pre></section><section class="card "><div class="label">10 · COMMON MISTAKES</div><h2>Things that trip people up</h2><ul><li><b>A pass-through facade.</b> A class that only forwards one call adds a layer and no value.</li><li><b>The god facade.</b> One facade for the whole app becomes a dumping ground. Keep one per feature.</li><li><b>UI logic in the facade.</b> Opening dialogs, reading the DOM or building templates belongs to components.</li><li><b>Leaking the subsystems.</b> If the facade returns raw service objects, components start depending on them again. Return simple values and signals.</li><li><b>Forgetting error handling.</b> The facade is the best place for the undo/rollback and for turning errors into a message the UI can show.</li><li><b>Hiding things components must control.</b> If callers truly need fine-grained access, let them inject the service directly.</li></ul></section><section class="card "><div class="label">11 · CHEAT SHEET & QUICK QUIZ</div><h2></h2><table><tr><th>I want to…</th><th>Do this</th></tr><tr><td>Call several services for one user action</td><td>Put the sequence in a <code>XxxFacade</code> method</td></tr><tr><td>Keep components small</td><td>Components inject only the facade</td></tr><tr><td>Undo a half-finished action</td><td>Put the rollback in the facade's <code>catch</code></td></tr><tr><td>Show progress / errors in the UI</td><td>Expose <code>status</code> / <code>message</code> signals</td></tr><tr><td>Test the feature</td><td>Fake subsystems for the facade test; fake the facade for the component test</td></tr></table><div class="qa"><b>Q: What problem does a facade solve?</b>A component would have to know several services, their order and the undo. The facade owns that knowledge.</div><div class="qa"><b>Q: Does a facade replace the services?</b>No. It sits in front of them and calls them.</div><div class="qa"><b>Q: Facade vs adapter?</b>An adapter converts one interface into another that already exists; a facade creates a new, simpler interface over many classes.</div><p>Try it live: <b>youssefezzat17.github.io/angular-lab/facade</b> — place the same order with and without a facade, and decline the card to see the rollback.</p></section>
+<script>
+(function () {
+  const TITLE = "Facade Pattern";
+  const nodes = Array.from(document.body.children).filter((n) => n.tagName !== 'SCRIPT');
+  const pages = [];
+  function newPage() {
+    const page = document.createElement('div');
+    page.className = 'page';
+    const inner = document.createElement('div');
+    inner.className = 'inner';
+    page.appendChild(inner);
+    document.body.appendChild(page);
+    pages.push(page);
+    return inner;
+  }
+  let inner = newPage();
+  const fits = () => inner.scrollHeight <= inner.clientHeight + 1;
+  function place(node) {
+    inner.appendChild(node);
+    if (fits() || inner.children.length === 1) return;
+    // A long card is split between its own blocks (code, tables, lists) and continues on the next page.
+    if (node.classList.contains('card') && node.children.length > 3) {
+      const moved = [];
+      while (!fits() && node.children.length > 3) {
+        moved.unshift(node.lastElementChild);
+        node.removeChild(node.lastElementChild);
+      }
+      if (fits() && moved.length) {
+        const cont = document.createElement('section');
+        cont.className = 'card';
+        const label = node.querySelector('.label').textContent.replace(/ · continued$/, '');
+        cont.innerHTML = '<div class="label">' + label + ' · continued</div><div style="height:6px"></div>';
+        moved.forEach((c) => cont.appendChild(c));
+        inner = newPage();
+        place(cont);
+        return;
+      }
+      moved.forEach((c) => node.appendChild(c));
+    }
+    inner.removeChild(node);
+    inner = newPage();
+    inner.appendChild(node);
+  }
+  for (const node of nodes) place(node);
+  pages.forEach((page, i) => {
+    const foot = document.createElement('div');
+    foot.className = 'pfoot';
+    foot.innerHTML = '<span>Angular Lab · ' + TITLE + '</span><span>youssefezzat17.github.io/angular-lab · page ' + (i + 1) + ' of ' + pages.length + '</span>';
+    page.appendChild(foot);
+  });
+})();
+</script>
+</body></html>

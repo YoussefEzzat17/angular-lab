@@ -37,6 +37,7 @@ export const TOPICS: Topic[] = [
   { group: 'services-data', path: '/di', icon: '💉', title: 'Dependency Injection', description: 'inject(), providers and scope — who creates a service, and who shares it.' },
   { group: 'services-data', path: '/movies', icon: '🌐', title: 'Fetch API & HTTP', description: 'HttpClient and services, fetching real data from a public API.' },
   { group: 'services-data', path: '/interceptor', icon: '🛡️', title: 'HttpInterceptor', description: 'One checkpoint that every outgoing request and incoming response passes through.' },
+  { group: 'services-data', path: '/facade', icon: '🏛️', title: 'Facade Pattern', description: 'One simple front door over several services — how to keep components small and logic in one place.' },
   { group: 'performance', path: '/change-detection', icon: '🔄', title: 'Change Detection', description: 'Default vs OnPush — when Angular re-checks a component, and how to make it do less.' },
   { group: 'performance', path: '/lazy-loading', icon: '📦', title: 'Lazy Loading', description: 'loadComponent and smaller initial bundles for a faster first load.' },
 ];

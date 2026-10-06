@@ -29,7 +29,7 @@ const TONES: Record<LessonCardTone, string> = {
 @Component({
   selector: 'app-lesson-card',
   standalone: true,
-  host: { class: 'block' },
+  host: { class: 'block min-w-0' },
   template: `
     <article class="h-full rounded-2xl border p-6" [class]="surface().card">
       <p class="text-xs font-bold tracking-wider" [class]="labelClass()">{{ label() }}</p>
