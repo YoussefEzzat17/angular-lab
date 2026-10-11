@@ -21,13 +21,13 @@
 
 ## Overview
 
-Angular Lab teaches Angular through **14 lesson pages**. Each one explains *why* a concept exists and what problem it solves, shows a small animated diagram of what is actually happening, and gives you a live example you can click, edit and watch update in the browser. A small movie-and-series **demo app** shows several of these concepts working together in one real feature.
+Angular Lab teaches Angular through **15 lesson pages**. Each one explains *why* a concept exists and what problem it solves, shows a small animated diagram of what is actually happening, and gives you a live example you can click, edit and watch update in the browser. A small movie-and-series **demo app** shows several of these concepts working together in one real feature.
 
 It is built with modern Angular only: standalone components, signals, the `@if` / `@for` / `@switch` control flow and signal inputs — no NgModules. There is no backend; everything runs in the browser.
 
 ## Features
 
-- **14 interactive lessons** with an animated diagram beside each topic's intro, a recap quiz and next/previous navigation.
+- **15 interactive lessons** with an animated diagram beside each topic's intro, a recap quiz and next/previous navigation.
 - **Progress tracking** — pages you visit are remembered, and a "Mark as complete" button drives the progress bar on the home page. Saved in `localStorage`.
 - **Light and dark themes** built on CSS variables, so every colour follows the theme (toggle in the navbar; respects the system preference).
 - **Command palette** — press <kbd>⌘</kbd>/<kbd>Ctrl</kbd> + <kbd>K</kbd> to jump to any topic.
@@ -61,6 +61,7 @@ The lessons are grouped, and the order below is the recommended learning path (i
 | **Services & Data** | Dependency Injection | `/di` | `inject()`, `providedIn: 'root'` vs. component `providers` — one shared instance vs. one each |
 | | Fetch API & HTTP | `/movies` | `HttpClient`, services, a real public API |
 | | HttpInterceptor | `/interceptor` | One checkpoint for every request and response (e.g. attaching a token) |
+| | Facade Pattern | `/facade` | One simple front door over several services: build one, use it, test it, and when *not* to (live checkout demo with rollback) |
 | **Performance** | Change Detection | `/change-detection` | Default vs. `OnPush`, mutating vs. replacing, and why signals fit `OnPush` |
 | | Lazy Loading | `/lazy-loading` | `loadComponent` and smaller initial bundles |
 

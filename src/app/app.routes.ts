@@ -27,6 +27,7 @@ export const routes: Routes = [
   { path: 'guards/members', canActivate: [membersGuard], loadComponent: () => import('./pages/guards/members.component').then((m) => m.MembersComponent), title: 'Members Area' },
   { path: 'di', loadComponent: () => import('./pages/di/di.component').then((m) => m.DiComponent), title: 'Dependency Injection' },
   { path: 'change-detection', loadComponent: () => import('./pages/change-detection/change-detection.component').then((m) => m.ChangeDetectionComponent), title: 'Change Detection' },
+  { path: 'facade', loadComponent: () => import('./pages/facade/facade.component').then((m) => m.FacadeComponent), title: 'Facade Pattern' },
   { path: 'feedback', loadComponent: () => import('./pages/feedback/feedback.component').then((m) => m.FeedbackComponent), title: 'Feedback' },
   { path: '**', loadComponent: () => import('./pages/not-found/not-found.component').then((m) => m.NotFoundComponent), title: 'Not Found' },
 ];

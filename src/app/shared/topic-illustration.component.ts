@@ -14,7 +14,8 @@ export type IllustrationName =
   | 'communication'
   | 'guards'
   | 'di'
-  | 'change-detection';
+  | 'change-detection'
+  | 'facade';
 
 /**
  * Small animated diagram that sits beside a topic's intro. Drawn with the theme tokens, so it follows
@@ -261,6 +262,28 @@ export type IllustrationName =
           <text class="mono gold-text" x="60" y="164" text-anchor="middle">checked</text>
           <text class="mono dim" x="180" y="164" text-anchor="middle">skipped</text>
         }
+        @case ('facade') {
+          <!-- one request in, the facade fans it out to every subsystem in order -->
+          <rect class="node" x="4" y="62" width="56" height="40" rx="9" />
+          <text class="mono" x="32" y="86" text-anchor="middle">UI</text>
+          <rect class="node gold" x="84" y="22" width="56" height="120" rx="10" />
+          <text class="mono gold-text" x="112" y="78" text-anchor="middle">Facade</text>
+          <path class="edge" d="M60 82 H84" />
+          <path class="edge" d="M140 82 L170 29 M140 82 L170 67 M140 82 L170 105 M140 82 L170 143" />
+          <rect class="node fc-svc" style="animation-delay: 0s" x="170" y="14" width="66" height="30" rx="8" />
+          <text class="mono dim" x="203" y="33" text-anchor="middle">cart</text>
+          <rect class="node fc-svc" style="animation-delay: 0.15s" x="170" y="52" width="66" height="30" rx="8" />
+          <text class="mono dim" x="203" y="71" text-anchor="middle">stock</text>
+          <rect class="node fc-svc" style="animation-delay: 0.3s" x="170" y="90" width="66" height="30" rx="8" />
+          <text class="mono dim" x="203" y="109" text-anchor="middle">payment</text>
+          <rect class="node fc-svc" style="animation-delay: 0.45s" x="170" y="128" width="66" height="30" rx="8" />
+          <text class="mono dim" x="203" y="147" text-anchor="middle">receipt</text>
+          <circle class="pk fc-in" r="5" />
+          <circle class="pk fc-out" style="--y: 29px" r="4" />
+          <circle class="pk fc-out" style="--y: 67px" r="4" />
+          <circle class="pk fc-out" style="--y: 105px" r="4" />
+          <circle class="pk fc-out" style="--y: 143px" r="4" />
+        }
       }
     </svg>
   `,
@@ -503,8 +526,16 @@ export type IllustrationName =
       .skip { stroke-dasharray: 4 3; opacity: 0.55; }
       @keyframes cd { 0%, 12% { stroke: var(--line); } 18%, 34% { stroke: var(--gold); } 42%, 100% { stroke: var(--line); } }
 
+      /* facade */
+      .fc-in { animation: fc-in 4s linear infinite; }
+      .fc-out { animation: fc-out 4s linear infinite; }
+      .fc-svc { animation: fc-svc 4s ease-in-out infinite; }
+      @keyframes fc-in { 0% { transform: translate(60px, 82px); opacity: 0; } 5% { opacity: 1; } 24% { transform: translate(84px, 82px); opacity: 1; } 28%, 100% { transform: translate(84px, 82px); opacity: 0; } }
+      @keyframes fc-out { 0%, 27% { transform: translate(140px, 82px); opacity: 0; } 30% { transform: translate(140px, 82px); opacity: 1; } 52% { transform: translate(170px, var(--y)); opacity: 1; } 56%, 100% { transform: translate(170px, var(--y)); opacity: 0; } }
+      @keyframes fc-svc { 0%, 50% { stroke: var(--line); } 56%, 78% { stroke: var(--gold); } 86%, 100% { stroke: var(--line); } }
+
       @media (prefers-reduced-motion: reduce) {
-        .toggle, .ghost, .typed, .caret, .packet, .u1, .u2, .u3, .p1, .p2, .p3, .react, .n1, .n2, .n3, .bad, .good, .field, .btn, .btn-text, .marble, .pk, .ok-mark, .no-mark, .di-l, .di-r, .cd, .nav-home, .nav-admin, .cursor, .chunk-solid, .lz-not, .lz-dl, .lz-done, .progress, .page-box, .page-home, .page-admin, .icp-req, .icp-tok, .icp-key, .icp-drop, .icp-auth {
+        .toggle, .ghost, .typed, .caret, .packet, .u1, .u2, .u3, .p1, .p2, .p3, .react, .n1, .n2, .n3, .bad, .good, .field, .btn, .btn-text, .marble, .pk, .fc-in, .fc-out, .fc-svc, .ok-mark, .no-mark, .di-l, .di-r, .cd, .nav-home, .nav-admin, .cursor, .chunk-solid, .lz-not, .lz-dl, .lz-done, .progress, .page-box, .page-home, .page-admin, .icp-req, .icp-tok, .icp-key, .icp-drop, .icp-auth {
           animation: none;
         }
         .packet, .marble {
