@@ -12,7 +12,7 @@ import { SignalNetworkComponent } from './signal-network.component';
   template: `
     <section class="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-20">
       <div
-        class="grid items-center gap-8 overflow-hidden rounded-3xl bg-gradient-to-br from-gold-950 via-stone-900 to-stone-950 px-5 py-10 text-stone-100 ring-1 ring-gold-500/30 sm:gap-10 sm:px-12 sm:py-12 lg:grid-cols-2"
+        class="theme-dark-scope grid items-center gap-8 overflow-hidden rounded-3xl bg-gradient-to-br from-gold-950 via-stone-900 to-stone-950 px-5 py-10 text-stone-100 ring-1 ring-gold-500/30 sm:gap-10 sm:px-12 sm:py-12 lg:grid-cols-2"
       >
         <div>
           <p class="mb-3 text-sm font-semibold uppercase tracking-[.2em] text-gold-300">Angular Lab</p>

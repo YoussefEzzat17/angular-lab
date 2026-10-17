@@ -42,11 +42,8 @@ import { ProgressRingComponent } from '../../shared/progress-ring.component';
         </a>
       </div>
 
-      <!-- Spacer (pushes right section to the right) -->
-      <div class="flex-1"></div>
-
       <!-- Right section: progress ring + continue + search + dashboard + bookmarks + feedback + theme + avatar -->
-      <div class="flex items-center gap-2">
+      <div class="flex flex-1 items-center justify-end gap-4">
 
         <!-- Mini progress ring + count (desktop only) -->
         <div
@@ -80,11 +77,11 @@ import { ProgressRingComponent } from '../../shared/progress-ring.component';
         <button
           type="button"
           (click)="searchPalette.toggle()"
-          class="flex flex-1 items-center gap-2 rounded-xl border border-stone-800 bg-stone-900 px-3 py-1.5 text-xs text-stone-500 transition hover:border-stone-700 hover:bg-stone-800 hover:text-stone-300 lg:max-w-xs"
+          class="flex flex-1 items-center gap-2 rounded-xl border border-stone-800 bg-stone-900 px-3 py-1.5 text-xs text-stone-500 transition hover:border-stone-700 hover:bg-stone-800 hover:text-stone-300 lg:max-w-sm"
           aria-label="Search topics (⌘K)"
         >
           <app-icon name="search" class="h-3.5 w-3.5 shrink-0" />
-          <span class="hidden sm:inline">Search…</span>
+          <span class="hidden lg:inline">Search topics…</span>
           <kbd class="hidden rounded border border-stone-700 px-1 py-0.5 text-[10px] sm:inline">⌘K</kbd>
         </button>
 
