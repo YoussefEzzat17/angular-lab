@@ -12,12 +12,22 @@ export const routes: Routes = [
     pathMatch: 'full' as const,
   })),
 
-  // ── Learn layout (sidebar — used for ALL app pages) ──────────────────────
+  // ── Site layout: Home landing page (no sidebar) ──────────────────────────
+  {
+    path: '',
+    component: SiteLayoutComponent,
+    children: [
+      { path: '', component: HomeComponent, title: 'Angular Lab' },
+      { path: 'about', component: HomeComponent, title: 'About Angular Lab' },
+      { path: '**', loadComponent: () => import('./pages/not-found/not-found.component').then((m) => m.NotFoundComponent), title: 'Not Found' },
+    ],
+  },
+
+  // ── Learn layout (sidebar) — all app pages except home ───────────────────
   {
     path: '',
     loadComponent: () => import('./learn/layout/learn-layout.component').then((m) => m.LearnLayoutComponent),
     children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard',   loadComponent: () => import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent),     title: 'Dashboard' },
       { path: 'bookmarks',   loadComponent: () => import('./pages/bookmarks/bookmarks.component').then((m) => m.BookmarksComponent),     title: 'My Bookmarks' },
       { path: 'learn',       loadChildren: () => import('./learn/learn.routes').then((m) => m.LEARN_ROUTES) },
@@ -30,16 +40,6 @@ export const routes: Routes = [
       { path: 'feedback',    loadComponent: () => import('./pages/feedback/feedback.component').then((m) => m.FeedbackComponent),       title: 'Feedback' },
       // Guards members page — keep sidebar visible
       { path: 'guards/members', canActivate: [membersGuard], loadComponent: () => import('./pages/guards/members.component').then((m) => m.MembersComponent), title: 'Members Area' },
-    ],
-  },
-
-  // ── Site layout (used only for /about and 404) ───────────────────────────
-  {
-    path: '',
-    component: SiteLayoutComponent,
-    children: [
-      { path: 'about', component: HomeComponent, title: 'About Angular Lab' },
-      { path: '**',    loadComponent: () => import('./pages/not-found/not-found.component').then((m) => m.NotFoundComponent), title: 'Not Found' },
     ],
   },
 ];

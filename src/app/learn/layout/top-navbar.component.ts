@@ -15,19 +15,19 @@ import { ProgressRingComponent } from '../../shared/progress-ring.component';
 
       <!-- Left: logo -->
       <div class="flex shrink-0 items-center gap-2">
-        <a routerLink="/" aria-label="Angular Lab home" class="flex items-center gap-2 font-bold">
-          <!-- Angular shield icon SVG -->
-          <svg width="22" height="22" viewBox="0 0 250 250" aria-hidden="true">
-            <polygon fill="#DD0031" points="125,30 162,90 125,110 88,90"/>
-            <polygon fill="#C3002F" points="125,30 125,110 162,90"/>
-            <polygon fill="#ffffff" points="125,110 88,90 88,160 125,190 162,160 162,90"/>
-            <polygon fill="#e0e0e0" points="125,110 125,190 162,160 162,90"/>
-            <polygon fill="#ffffff" points="88,160 98,140 125,150 152,140 162,160 125,185"/>
-            <polygon fill="#e0e0e0" points="125,150 152,140 162,160 125,185"/>
-            <polygon fill="#DD0031" points="98,140 88,160 125,185 125,150"/>
-            <polygon fill="#C3002F" points="125,150 125,185 162,160 152,140"/>
+        <a routerLink="/" aria-label="Angular Lab home" class="flex items-center font-bold">
+          <svg width="10" height="18" viewBox="0 0 12 20" fill="none" aria-hidden="true" class="text-gold-400">
+            <path d="M10 2L2 10L10 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+              stroke-dasharray="24" stroke-dashoffset="24"
+              style="animation: draw-bracket 0.5s ease forwards 0.1s"></path>
           </svg>
-          <span class="text-base text-stone-100 sm:text-lg">Angular <span class="text-gold-400">Lab</span></span>
+          <span class="text-base text-gold-400 sm:text-lg">Angular</span>
+          <span class="text-base text-stone-100 sm:text-lg">&nbsp;Lab</span>
+          <svg width="10" height="18" viewBox="0 0 12 20" fill="none" aria-hidden="true" class="text-gold-400">
+            <path d="M2 2L10 10L2 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+              stroke-dasharray="24" stroke-dashoffset="24"
+              style="animation: draw-bracket 0.5s ease forwards 0.3s"></path>
+          </svg>
         </a>
       </div>
 
@@ -66,20 +66,19 @@ import { ProgressRingComponent } from '../../shared/progress-ring.component';
         <button
           type="button"
           (click)="searchPalette.toggle()"
-          class="flex flex-1 items-center gap-2 rounded-xl border border-stone-800 bg-stone-900 px-3 py-1.5 text-xs text-stone-500 transition hover:border-stone-700 hover:bg-stone-800 hover:text-stone-300 lg:max-w-sm"
+          class="flex flex-1 items-center gap-2 rounded-xl border border-stone-800 bg-stone-900 px-3 py-2 text-sm text-stone-500 transition hover:border-stone-700 hover:bg-stone-800 hover:text-stone-300 lg:max-w-md"
           aria-label="Search topics (⌘K)"
         >
-          <app-icon name="search" class="h-3.5 w-3.5 shrink-0" />
-          <span class="hidden lg:inline">Search topics…</span>
-          <kbd class="hidden rounded border border-stone-700 px-1 py-0.5 text-[10px] sm:inline">⌘K</kbd>
+          <app-icon name="search" class="h-4 w-4 shrink-0" />
+          <span class="hidden sm:inline">Search topics…</span>
+          <kbd class="ml-auto hidden rounded border border-stone-700 px-1.5 py-0.5 text-[10px] sm:inline">⌘K</kbd>
         </button>
 
-        <!-- Saved Topics (xl+ only) -->
+        <!-- Saved Topics (lg+ only) -->
         <a routerLink="/bookmarks" routerLinkActive="text-gold-300 bg-gold-500/10"
-           class="hidden items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-stone-400 transition hover:bg-stone-800 hover:text-stone-200 xl:flex"
-           aria-label="Saved Topics"
-           title="Saved Topics">
-          🔖
+           class="hidden items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-stone-400 transition hover:bg-stone-800 hover:text-stone-200 lg:flex"
+           aria-label="Saved Topics">
+          🔖 <span class="ml-1">Saved Topics</span>
         </a>
 
         <!-- Feedback -->
