@@ -8,6 +8,8 @@ describe('GuardsComponent', () => {
   it('shows the login state and flips it with the switch', () => {
     TestBed.configureTestingModule({ providers: [provideRouter([])] });
     const fixture = TestBed.createComponent(GuardsComponent);
+    // The login switch lives in the try-it section, so select that section.
+    fixture.componentRef.setInput('section', 'try-it');
     fixture.detectChanges();
     const root: HTMLElement = fixture.nativeElement;
     expect(root.textContent).toContain('logged out');
