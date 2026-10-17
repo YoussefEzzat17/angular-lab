@@ -16,7 +16,7 @@ import { DemoAuthService } from '../../core/services/demo-auth.service';
           You are seeing this because <code class="text-gold-300">membersGuard</code> returned <code class="text-gold-300">true</code>.
         </p>
         <div class="mt-6 flex flex-wrap justify-center gap-3">
-          <a routerLink="/guards" class="rounded-xl border border-stone-700 px-4 py-2.5 font-semibold text-stone-200 hover:bg-stone-800">← Back to the lesson</a>
+          <a routerLink="/learn/guards/try-it" class="rounded-xl border border-stone-700 px-4 py-2.5 font-semibold text-stone-200 hover:bg-stone-800">← Back to the lesson</a>
           <button type="button" (click)="logOut()" class="rounded-xl bg-gold-500 px-4 py-2.5 font-semibold text-white hover:bg-gold-400">Log out and go back</button>
         </div>
       </div>
@@ -29,6 +29,6 @@ export class MembersComponent {
 
   logOut(): void {
     this.auth.logOut();
-    this.router.navigate(['/guards']);
+    this.router.navigate(['/learn/guards/try-it']);
   }
 }

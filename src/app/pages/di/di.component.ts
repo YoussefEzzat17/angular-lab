@@ -1,11 +1,12 @@
-import { Component, Injectable, inject, signal } from '@angular/core';
+import { Component, Injectable, inject, signal, input } from '@angular/core';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
-import { RecapComponent, RecapItem } from '../../shared/recap.component';
-import { TopicNavComponent } from '../../shared/topic-nav.component';
+import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
+import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
+import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
 
 let nextInstanceId = 1;
 
@@ -66,10 +67,12 @@ export class DiPrivateCounterComponent {
 
 @Component({
   standalone: true,
-  imports: [DiSharedCounterComponent, DiPrivateCounterComponent, FlowDiagramComponent, CodeBlockDirective, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
+  imports: [DiSharedCounterComponent, DiPrivateCounterComponent, FlowDiagramComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
-    <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <app-page-header title="Dependency Injection" illustration="di" pdf="di.pdf">
+    <app-lesson-player [topicId]="'di'" [section]="section()">
+      <ng-template appLessonSection="basics">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <app-page-header title="Dependency Injection" illustration="di">
         Components should not build the things they depend on — a component that does
         <code class="text-gold-300">new CartService()</code> can never share that cart with another component, and is painful to
         test. Instead it <em>asks</em> Angular for one with <code class="text-gold-300">inject()</code>, and Angular's injector
@@ -86,7 +89,13 @@ export class DiPrivateCounterComponent {
           <app-flow-diagram class="mt-4 block" from="inject(CartService)" to="the injector hands over the instance" direction="right" />
           <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ rootCode }}</pre>
         </app-lesson-card>
+      </div>
+      </section>
+      </ng-template>
 
+      <ng-template appLessonSection="scope">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <div class="mt-10 grid gap-5 md:grid-cols-2">
         <app-lesson-card variant="highlight" label="2 · ONE SHARED INSTANCE" heading="providedIn: 'root'">
           <p class="mt-2 text-sm text-stone-400">
             Both components inject the same root service. Same instance number, same count — click either one.
@@ -96,7 +105,6 @@ export class DiPrivateCounterComponent {
             <app-di-shared-counter />
           </div>
         </app-lesson-card>
-
         <app-lesson-card variant="highlight" class="md:col-span-2" label="3 · ONE INSTANCE EACH" heading="providers: [ … ] on the component">
           <p class="mt-2 text-sm text-stone-400">
             When a component lists the service in its own <code class="text-gold-300">providers</code>, Angular creates a new
@@ -109,13 +117,33 @@ export class DiPrivateCounterComponent {
           <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ providersCode }}</pre>
         </app-lesson-card>
       </div>
+      </section>
+      </ng-template>
 
-      <app-recap [items]="recapItems" />
-      <app-topic-nav />
-    </section>
+      <ng-template appLessonSection="providers">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <div class="mt-10 grid gap-5 md:grid-cols-2">
+        <app-lesson-card label="CUSTOM PROVIDERS" heading="Swap the implementation with useClass, useValue or useFactory">
+          <p class="mt-2 text-sm text-stone-400">
+            A provider tells the injector how to create a token. <code class="text-gold-300">useClass</code> swaps one class for another,
+            <code class="text-gold-300">useValue</code> supplies a fixed value, and <code class="text-gold-300">useFactory</code> builds the instance with a function.
+            Tests use the same idea to replace real services with fakes.
+          </p>
+          <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">providers: [
+  &#123; provide: CartService, useClass: FakeCartService &#125;,
+  &#123; provide: API_URL, useValue: '/api' &#125;,
+]</pre>
+        </app-lesson-card>
+      </div>
+
+      <app-knowledge-check [items]="checkItems" />
+      </section>
+      </ng-template>
+    </app-lesson-player>
   `,
 })
 export class DiComponent {
+  readonly section = input<string>();
   readonly rootCode = `@Injectable({ providedIn: 'root' })
 export class CartService {
   readonly count = signal(0);
@@ -130,7 +158,7 @@ private readonly cart = inject(CartService);`;
   template: \`...\`,
 })`;
 
-  readonly recapItems: RecapItem[] = [
+  readonly checkItems: KnowledgeCheckItem[] = [
     {
       question: 'What does providedIn: \'root\' give you?',
       answer: 'A single app-wide instance, created lazily the first time something injects it — and tree-shaken away if nothing ever does.',

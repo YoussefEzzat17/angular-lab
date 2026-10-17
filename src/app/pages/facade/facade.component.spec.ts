@@ -8,6 +8,7 @@ describe('FacadeComponent', () => {
   function setup() {
     TestBed.configureTestingModule({ providers: [provideRouter([])] });
     const fixture = TestBed.createComponent(FacadeComponent);
+    fixture.componentRef.setInput('section', 'try-it');
     fixture.detectChanges();
     const root: HTMLElement = fixture.nativeElement;
     const button = (text: string) => Array.from(root.querySelectorAll('button')).find((b) => b.textContent!.includes(text)) as HTMLButtonElement;

@@ -7,6 +7,7 @@ describe('ChangeDetectionComponent', () => {
   function setup() {
     TestBed.configureTestingModule({ providers: [provideRouter([])] });
     const fixture = TestBed.createComponent(ChangeDetectionComponent);
+    fixture.componentRef.setInput('section', 'onpush');
     fixture.detectChanges();
     const root: HTMLElement = fixture.nativeElement;
     const name = (tag: string) => root.querySelector(`${tag} p.text-lg`)!.textContent!.trim();
@@ -33,6 +34,7 @@ describe('ChangeDetectionComponent', () => {
   it('an OnPush component that reads a signal updates when the signal changes', () => {
     setup();
     const fixture = TestBed.createComponent(ChangeDetectionComponent);
+    fixture.componentRef.setInput('section', 'signals-cd');
     fixture.detectChanges();
     const el: HTMLElement = fixture.nativeElement;
     const value = () => el.querySelector('app-cd-signal-reader p.text-2xl')!.textContent!.trim();

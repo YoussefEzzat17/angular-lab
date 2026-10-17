@@ -1,19 +1,22 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, computed, effect, signal } from '@angular/core';
+import { Component, computed, effect, signal, input } from '@angular/core';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
-import { RecapComponent, RecapItem } from '../../shared/recap.component';
-import { TopicNavComponent } from '../../shared/topic-nav.component';
+import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
+import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
+import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
 
 @Component({
   standalone: true,
-  imports: [CurrencyPipe, FlowDiagramComponent, CodeBlockDirective, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
+  imports: [CurrencyPipe, FlowDiagramComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
-    <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <app-page-header title="Signals" illustration="signals" pdf="signals.pdf">
+    <app-lesson-player [topicId]="'signals'" [section]="section()">
+      <ng-template appLessonSection="basics">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <app-page-header title="Signals" illustration="signals">
         Before Signals, Angular had to check every component on every event to see what changed — reliable, but wasteful. A
         <code class="text-gold-300">signal()</code> is a value that knows exactly who's reading it, so Angular can update only what
         actually depends on it. Change the product and quantity below and watch every dependent value update automatically.
@@ -57,7 +60,13 @@ import { TopicNavComponent } from '../../shared/topic-nav.component';
           <div class="mt-5 flex items-center gap-4"><button (click)="decreaseQuantity()" class="grid h-10 w-10 place-items-center rounded-xl border border-stone-600 text-xl hover:bg-stone-800">−</button><strong class="text-2xl">{{ quantity() }}</strong><button (click)="increaseQuantity()" class="grid h-10 w-10 place-items-center rounded-xl bg-gold-500 text-xl hover:bg-gold-400">+</button></div>
           <p class="mt-4 text-xs text-stone-500"><code class="text-gold-300">set(5)</code> chooses a value. <code class="text-gold-300">update(value =&gt; value + 1)</code> uses the old value.</p>
         </app-lesson-card>
+      </div>
+      </section>
+      </ng-template>
 
+      <ng-template appLessonSection="computed">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+        <div class="mt-10 grid gap-5 md:grid-cols-2">
         <app-lesson-card label="4 · COMPUTED()" heading="A derived value">
           <p class="mt-2 text-sm text-stone-400"><code class="text-gold-300">computed()</code> creates a value from other Signals. It is never updated manually.</p>
           <div class="mt-5 rounded-xl bg-stone-800 p-4"><p>Price: {{ price() | currency }}</p><p>Quantity: {{ quantity() }}</p><p class="mt-2 text-lg">Total price: <strong class="text-gold-300">{{ totalPrice() | currency }}</strong></p></div>
@@ -75,19 +84,67 @@ quantity ────┘</pre>
        ↓
 subtotal changes → discount changes → finalPrice changes</pre>
       </app-lesson-card>
+      </section>
+      </ng-template>
 
+      <ng-template appLessonSection="effects">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <app-lesson-card class="mt-5" label="6 · EFFECT()" heading="Run a side effect">
         <p class="mt-2 text-sm text-stone-400"><code class="text-gold-300">effect()</code> runs side effects when the Signals it reads change. Open the browser console and change quantity to see <code class="text-gold-300">Cart changed:</code>.</p>
         <app-flow-diagram class="mt-4 block" from="finalPrice() changes" to="effect() re-runs" direction="right" />
         <p class="mt-4 text-sm text-stone-300"><strong>Remember:</strong> <code class="text-gold-300">computed()</code> derives data for the UI; <code class="text-gold-300">effect()</code> performs a side effect such as logging.</p>
       </app-lesson-card>
+      </section>
+      </ng-template>
 
-      <app-recap [items]="recapItems" />
-      <app-topic-nav />
-    </section>
+      <ng-template appLessonSection="component-signals">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+        <app-lesson-card class="mt-10" label="COMPONENT SIGNALS" heading="input() and output() as signals">
+          <p class="mt-2 text-sm text-stone-400">
+            Components can use signals for their API too. <code class="text-gold-300">input()</code> reads a value from the parent and
+            returns a signal you read with <code class="text-gold-300">()</code>. <code class="text-gold-300">output()</code> replaces
+            <code class="text-gold-300">&#64;Output()</code> and <code class="text-gold-300">EventEmitter</code>.
+          </p>
+          <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">readonly price = input.required&lt;number&gt;();
+readonly added = output&lt;number&gt;();
+
+// inside the component
+this.added.emit(this.price() * 2);</pre>
+        </app-lesson-card>
+      </section>
+      </ng-template>
+
+      <ng-template appLessonSection="interop">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+        <app-lesson-card class="mt-10" label="INTEROP" heading="Bridge Observables and signals">
+          <p class="mt-2 text-sm text-stone-400">
+            HttpClient and the Router return Observables. <code class="text-gold-300">toSignal()</code> subscribes for you and exposes the latest
+            value as a signal, and it unsubscribes automatically when the component is destroyed.
+          </p>
+          <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">readonly products = toSignal(this.http.get&lt;Product[]&gt;('/api/products'), &#123; initialValue: [] &#125;);</pre>
+          <p class="mt-3 text-sm text-stone-400">In the other direction, <code class="text-gold-300">toObservable()</code> turns a signal into an Observable.</p>
+        </app-lesson-card>
+      </section>
+      </ng-template>
+
+      <ng-template appLessonSection="try-it">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+        <app-lesson-card class="mt-10" variant="highlight" label="TRY IT" heading="Add a signal yourself">
+          <p class="mt-2 text-sm text-stone-400">
+            Add a <code class="text-gold-300">shippingFee</code> signal (for example <code class="text-gold-300">signal(5)</code>) and a
+            <code class="text-gold-300">total</code> computed that adds it to the subtotal. Then show it in the template with
+            <code class="text-gold-300">{{ '{{ total() | currency }}' }}</code>.
+          </p>
+        </app-lesson-card>
+
+      <app-knowledge-check [items]="checkItems" />
+      </section>
+      </ng-template>
+    </app-lesson-player>
   `,
 })
 export class SignalsPlaygroundComponent {
+  readonly section = input<string>();
   // signal() creates reactive state.
   readonly productName = signal('Protein');
   readonly price = signal(50);
@@ -125,7 +182,7 @@ export class SignalsPlaygroundComponent {
     this.price.update((value) => Math.max(5, value - 5));
   }
 
-  readonly recapItems: RecapItem[] = [
+  readonly checkItems: KnowledgeCheckItem[] = [
     {
       question: 'Why do we write count() in the template instead of count?',
       answer: 'count is the Signal itself (a function reference); count() reads its current value — and calling it registers the template as a dependent so it updates automatically.',

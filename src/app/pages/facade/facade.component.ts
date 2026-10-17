@@ -1,10 +1,11 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, input } from '@angular/core';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
-import { RecapComponent, RecapItem } from '../../shared/recap.component';
-import { TopicNavComponent } from '../../shared/topic-nav.component';
+import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
+import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
+import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
 import { CartApi, CheckoutFacade, CheckoutStatus, DemoSettings, LogLine, PaymentApi, ReceiptApi, StockApi } from './checkout-demo';
 
 type Mode = 'without' | 'with';
@@ -43,10 +44,12 @@ placeOrder() {
 
 @Component({
   standalone: true,
-  imports: [CodeBlockDirective, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
+  imports: [CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
-    <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <app-page-header title="Facade Pattern" illustration="facade" pdf="facade.pdf">
+    <app-lesson-player [topicId]="'facade'" [section]="section()">
+      <ng-template appLessonSection="problem">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <app-page-header title="Facade Pattern" illustration="facade">
         A <strong class="text-stone-200">facade</strong> is one simple front door in front of a messy set of services. Instead of
         every component learning how the cart, the stock, the payment and the email services fit together, they ask a single
         class — <code class="text-gold-300">CheckoutFacade</code> — to "place the order". The facade knows the steps, the order,
@@ -66,7 +69,13 @@ placeOrder() {
             <li>• testing the component means faking four services.</li>
           </ul>
         </app-lesson-card>
+      </div>
+      </section>
+      </ng-template>
 
+      <ng-template appLessonSection="services-overview">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <div class="mt-10 grid gap-5 md:grid-cols-2">
         <app-lesson-card label="2 · THE IDEA" heading="Ask the waiter, not the kitchen">
           <p class="mt-2 text-sm text-stone-400">
             In a restaurant you do not walk into the kitchen to tell the chef, the barista and the cashier what to do. You tell the
@@ -77,7 +86,6 @@ placeOrder() {
             <b class="text-gold-300">Facade</b> = a class that gives a <b>simple, unified interface</b> to a complicated subsystem.
           </p>
         </app-lesson-card>
-
         <app-lesson-card class="md:col-span-2" label="3 · BEFORE AND AFTER" heading="Same four services, very different component">
           <div class="mt-4 grid gap-4 md:grid-cols-2">
             <figure class="rounded-xl bg-stone-800 p-4">
@@ -112,7 +120,55 @@ placeOrder() {
             </figure>
           </div>
         </app-lesson-card>
+      </div>
+      </section>
+      </ng-template>
 
+      <ng-template appLessonSection="building">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <div class="mt-10 grid gap-5 md:grid-cols-2">
+        <app-lesson-card class="md:col-span-2" label="5 · BUILD ONE" heading="Five steps to your own facade">
+          <ol class="mt-4 grid gap-3 md:grid-cols-5">
+            @for (step of buildSteps; track step.title; let i = $index) {
+              <li class="rounded-xl bg-stone-800 p-4">
+                <span class="grid h-7 w-7 place-items-center rounded-full bg-gold-500/20 text-sm font-bold text-gold-300">{{ i + 1 }}</span>
+                <p class="mt-2 font-semibold text-stone-100">{{ step.title }}</p>
+                <p class="mt-1 text-xs text-stone-400">{{ step.text }}</p>
+              </li>
+            }
+          </ol>
+          <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ facadeCode }}</pre>
+        </app-lesson-card>
+      </div>
+      </section>
+      </ng-template>
+
+      <ng-template appLessonSection="wiring">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <div class="mt-10 grid gap-5 md:grid-cols-2">
+        <app-lesson-card label="6 · USING IT" heading="The component gets tiny">
+          <p class="mt-2 text-sm text-stone-400">
+            Components inject only the facade and read its signals. They never import the subsystem services, so those can change
+            freely behind the facade.
+          </p>
+          <pre class="mt-3 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ usageCode }}</pre>
+        </app-lesson-card>
+
+        <app-lesson-card label="7 · WHERE IT LIVES" heading="Folder and naming">
+          <pre class="mt-3 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ folderCode }}</pre>
+          <ul class="mt-3 space-y-1.5 text-sm text-stone-400">
+            <li>• One facade per <b class="text-stone-200">feature</b> (checkout, products, auth) — not one for the whole app.</li>
+            <li>• Name it <code class="text-gold-300">XxxFacade</code> so people recognise the role.</li>
+            <li>• Provide it with <code class="text-gold-300">providedIn: 'root'</code>, or in the feature's route <code class="text-gold-300">providers</code>.</li>
+          </ul>
+        </app-lesson-card>
+      </div>
+      </section>
+      </ng-template>
+
+      <ng-template appLessonSection="try-it">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <div class="mt-10 grid gap-5 md:grid-cols-2">
         <app-lesson-card variant="highlight" class="md:col-span-2" label="4 · TRY IT" heading="Place the same order both ways">
           <p class="mt-2 text-sm text-stone-400">
             Both versions do <b class="text-stone-200">exactly the same work</b> and produce the same log. The difference is where the
@@ -172,37 +228,13 @@ placeOrder() {
             </div>
           </div>
         </app-lesson-card>
+      </div>
+      </section>
+      </ng-template>
 
-        <app-lesson-card class="md:col-span-2" label="5 · BUILD ONE" heading="Five steps to your own facade">
-          <ol class="mt-4 grid gap-3 md:grid-cols-5">
-            @for (step of buildSteps; track step.title; let i = $index) {
-              <li class="rounded-xl bg-stone-800 p-4">
-                <span class="grid h-7 w-7 place-items-center rounded-full bg-gold-500/20 text-sm font-bold text-gold-300">{{ i + 1 }}</span>
-                <p class="mt-2 font-semibold text-stone-100">{{ step.title }}</p>
-                <p class="mt-1 text-xs text-stone-400">{{ step.text }}</p>
-              </li>
-            }
-          </ol>
-          <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ facadeCode }}</pre>
-        </app-lesson-card>
-
-        <app-lesson-card label="6 · USING IT" heading="The component gets tiny">
-          <p class="mt-2 text-sm text-stone-400">
-            Components inject only the facade and read its signals. They never import the subsystem services, so those can change
-            freely behind the facade.
-          </p>
-          <pre class="mt-3 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ usageCode }}</pre>
-        </app-lesson-card>
-
-        <app-lesson-card label="7 · WHERE IT LIVES" heading="Folder and naming">
-          <pre class="mt-3 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ folderCode }}</pre>
-          <ul class="mt-3 space-y-1.5 text-sm text-stone-400">
-            <li>• One facade per <b class="text-stone-200">feature</b> (checkout, products, auth) — not one for the whole app.</li>
-            <li>• Name it <code class="text-gold-300">XxxFacade</code> so people recognise the role.</li>
-            <li>• Provide it with <code class="text-gold-300">providedIn: 'root'</code>, or in the feature's route <code class="text-gold-300">providers</code>.</li>
-          </ul>
-        </app-lesson-card>
-
+      <ng-template appLessonSection="patterns">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <div class="mt-10 grid gap-5 md:grid-cols-2">
         <app-lesson-card class="md:col-span-2" label="8 · TWO COMMON FLAVOURS" heading="Which kind of facade do you need?">
           <div class="mt-3 overflow-x-auto">
             <table class="w-full min-w-[34rem] text-left text-sm">
@@ -272,10 +304,15 @@ placeOrder() {
           <pre class="mt-3 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ testCode }}</pre>
         </app-lesson-card>
       </div>
+      </section>
+      </ng-template>
 
-      <app-recap [items]="recapItems" />
-      <app-topic-nav />
-    </section>
+      <ng-template appLessonSection="knowledge-check">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+        <app-knowledge-check [items]="checkItems" />
+      </section>
+      </ng-template>
+    </app-lesson-player>
   `,
   styles: `
     .box {
@@ -311,6 +348,8 @@ placeOrder() {
   `,
 })
 export class FacadeComponent {
+  readonly section = input<string>();
+
   readonly settings = inject(DemoSettings);
   private readonly facade = inject(CheckoutFacade);
   private readonly cart = inject(CartApi);
@@ -485,7 +524,7 @@ TestBed.configureTestingModule({
   providers: [{ provide: CheckoutFacade, useValue: { placeOrder: jasmine.createSpy(), status: signal('idle'), message: signal('') } }],
 });`;
 
-  readonly recapItems: RecapItem[] = [
+  readonly checkItems: KnowledgeCheckItem[] = [
     {
       question: 'What problem does a facade solve?',
       answer: 'A component would otherwise have to know several services, the order to call them in, and how to undo a failure. The facade owns that knowledge, so the component asks for one simple action.',

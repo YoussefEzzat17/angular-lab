@@ -1,76 +1,154 @@
 import { Injectable, computed, signal } from '@angular/core';
-
 import { TOPICS } from '../data/topics';
+import type { TopicId, TopicProgress, ProgressStateV2, QuizAttempt, ActivityEntry, TopicStatus } from '../models/learning.models';
+import { readStored, writeStored } from './safe-storage';
+import { migrateProgress } from './progress-migration';
 
-const VISITED_KEY = 'angular-lab:visited-topics';
-const COMPLETED_KEY = 'angular-lab:completed-topics';
+const PROGRESS_KEY = 'angular-lab:progress';
 
-function readStoredPaths(key: string): Set<string> {
-  try {
-    const raw = localStorage.getItem(key);
-    return raw ? new Set(JSON.parse(raw)) : new Set();
-  } catch {
-    return new Set();
-  }
-}
-
-/**
- * Two separate signals on purpose:
- * - "visited" is set automatically the moment a topic page loads — a light "you've been here" trail.
- * - "completed" only ever changes when the student clicks "Mark as Complete" themselves, so the
- *   progress bar reflects actual intent instead of a page that was opened and immediately left.
- */
 @Injectable({ providedIn: 'root' })
 export class ProgressService {
-  private readonly visited = signal<Set<string>>(readStoredPaths(VISITED_KEY));
-  private readonly completed = signal<Set<string>>(readStoredPaths(COMPLETED_KEY));
+  private readonly state = signal<ProgressStateV2>(this.load());
 
-  readonly visitedCount = computed(() => this.visited().size);
-  readonly completedCount = computed(() => this.completed().size);
   readonly totalCount = TOPICS.length;
-  readonly percent = computed(() => Math.round((this.completedCount() / this.totalCount) * 100));
+  readonly completedCount = computed(() =>
+    Object.values(this.state().topics).filter((t) => t?.completedAt).length
+  );
+  readonly percent = computed(() =>
+    Math.round((this.completedCount() / this.totalCount) * 100)
+  );
+  readonly recentActivity = computed(() => this.state().activity.slice(-10).reverse());
 
-  isVisited(path: string): boolean {
-    return this.visited().has(path);
+  status(id: TopicId): TopicStatus {
+    const t = this.state().topics[id];
+    if (!t) return 'not-started';
+    if (t.completedAt) return 'completed';
+    if (t.sectionsDone.length > 0 || t.firstVisitedAt) return 'in-progress';
+    return 'not-started';
   }
 
   isCompleted(path: string): boolean {
-    return this.completed().has(path);
+    const topic = TOPICS.find((t) => t.legacyPath === path || t.path === path);
+    if (!topic) return false;
+    return this.status(topic.id) === 'completed';
   }
 
-  markVisited(path: string): void {
-    if (this.visited().has(path)) {
-      return;
-    }
-    const next = new Set(this.visited());
-    next.add(path);
-    this.visited.set(next);
-    this.persist(VISITED_KEY, next);
+  isVisited(path: string): boolean {
+    const topic = TOPICS.find((t) => t.legacyPath === path || t.path === path);
+    if (!topic) return false;
+    const t = this.state().topics[topic.id];
+    return !!t?.firstVisitedAt;
   }
 
-  toggleCompleted(path: string): void {
-    const next = new Set(this.completed());
-    if (next.has(path)) {
-      next.delete(path);
-    } else {
-      next.add(path);
-    }
-    this.completed.set(next);
-    this.persist(COMPLETED_KEY, next);
+  isSectionDone(topicId: TopicId, sectionId: string): boolean {
+    return this.state().topics[topicId]?.sectionsDone.includes(sectionId) ?? false;
+  }
+
+  allSectionsDone(topicId: TopicId): boolean {
+    const topic = TOPICS.find((t) => t.id === topicId);
+    if (!topic) return false;
+    const done = this.state().topics[topicId]?.sectionsDone ?? [];
+    return topic.sections.every((s) => done.includes(s.id));
+  }
+
+  firstIncompleteSection(topicId: TopicId): string | null {
+    const topic = TOPICS.find((t) => t.id === topicId);
+    if (!topic) return null;
+    const done = this.state().topics[topicId]?.sectionsDone ?? [];
+    return topic.sections.find((s) => !done.includes(s.id))?.id ?? null;
+  }
+
+  getLastSection(topicId: TopicId): string | undefined {
+    return this.state().topics[topicId]?.lastSectionId;
+  }
+
+  getBestScore(topicId: TopicId): number | undefined {
+    return this.state().topics[topicId]?.bestScore;
+  }
+
+  getAttempts(topicId: TopicId): QuizAttempt[] {
+    return this.state().topics[topicId]?.attempts ?? [];
+  }
+
+  markVisited(topicId: TopicId): void {
+    this.patch(topicId, (t) => {
+      if (t.firstVisitedAt) return t;
+      return { ...t, firstVisitedAt: new Date().toISOString(), lastVisitedAt: new Date().toISOString() };
+    });
+  }
+
+  setLastSection(topicId: TopicId, sectionId: string): void {
+    this.patch(topicId, (t) => ({ ...t, lastSectionId: sectionId, lastVisitedAt: new Date().toISOString() }));
+  }
+
+  completeSection(topicId: TopicId, sectionId: string): void {
+    this.patch(topicId, (t) => {
+      if (t.sectionsDone.includes(sectionId)) return t;
+      const sectionsDone = [...t.sectionsDone, sectionId];
+      return { ...t, sectionsDone, lastVisitedAt: new Date().toISOString() };
+    });
+    this.addActivity({ kind: 'section-done', topicId, sectionId, at: new Date().toISOString() });
+  }
+
+  /**
+   * Manual "Mark as Complete" toggle used by the existing topic pages until the quiz gate ships.
+   * It sets or clears completedAt only; completedVia stays unset, so it is never mistaken for a quiz pass.
+   */
+  toggleManualComplete(topicId: TopicId): void {
+    this.patch(topicId, (t) => {
+      if (t.completedAt) {
+        return { ...t, completedAt: undefined, completedVia: undefined };
+      }
+      return { ...t, completedAt: new Date().toISOString() };
+    });
+  }
+
+  recordQuizAttempt(attempt: QuizAttempt): void {
+    this.patch(attempt.topicId, (t) => {
+      const attempts = [...t.attempts, attempt].slice(-5);
+      const bestScore = Math.max(t.bestScore ?? 0, attempt.score);
+      const completedAt = attempt.passed ? (t.completedAt ?? new Date().toISOString()) : t.completedAt;
+      const completedVia = attempt.passed ? (t.completedVia ?? 'quiz') : t.completedVia;
+      return { ...t, attempts, bestScore, completedAt, completedVia };
+    });
+    this.addActivity({
+      kind: attempt.passed ? 'quiz-passed' : 'quiz-failed',
+      topicId: attempt.topicId, score: attempt.score, at: attempt.submittedAt,
+    });
   }
 
   reset(): void {
-    this.visited.set(new Set());
-    this.completed.set(new Set());
-    this.persist(VISITED_KEY, new Set());
-    this.persist(COMPLETED_KEY, new Set());
+    const fresh: ProgressStateV2 = { version: 2, topics: {}, activity: [] };
+    this.state.set(fresh);
+    writeStored(PROGRESS_KEY, fresh);
   }
 
-  private persist(key: string, paths: Set<string>): void {
-    try {
-      localStorage.setItem(key, JSON.stringify([...paths]));
-    } catch {
-      // localStorage unavailable (private mode, etc.) — progress just won't persist.
+  private patch(topicId: TopicId, fn: (t: TopicProgress) => TopicProgress): void {
+    this.state.update((s) => {
+      const existing: TopicProgress = s.topics[topicId] ?? { sectionsDone: [], attempts: [] };
+      const next = { ...s, topics: { ...s.topics, [topicId]: fn(existing) } };
+      writeStored(PROGRESS_KEY, next);
+      return next;
+    });
+  }
+
+  private addActivity(entry: Omit<ActivityEntry, 'at'> & { at: string }): void {
+    this.state.update((s) => {
+      const activity = [...s.activity, entry as ActivityEntry].slice(-30);
+      const next = { ...s, activity };
+      writeStored(PROGRESS_KEY, next);
+      return next;
+    });
+  }
+
+  private load(): ProgressStateV2 {
+    const stored = readStored<unknown>(PROGRESS_KEY, null);
+    if (stored && typeof stored === 'object' && (stored as { version?: unknown }).version === 2) {
+      return stored as ProgressStateV2;
     }
+    // Attempt migration from old keys
+    const migrated = migrateProgress();
+    writeStored(PROGRESS_KEY, migrated);
+    return migrated;
   }
 }

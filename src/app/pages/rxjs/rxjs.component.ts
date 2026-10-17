@@ -1,12 +1,13 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, OnDestroy, signal } from '@angular/core';
+import { Component, OnDestroy, signal, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
-import { RecapComponent, RecapItem } from '../../shared/recap.component';
-import { TopicNavComponent } from '../../shared/topic-nav.component';
+import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
+import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
+import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
 import {
   Observable,
   Subject,
@@ -25,10 +26,12 @@ import {
 
 @Component({
   standalone: true,
-  imports: [FormsModule, AsyncPipe, CodeBlockDirective, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
+  imports: [FormsModule, AsyncPipe, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
-    <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <app-page-header title="RxJS from Scratch" illustration="rxjs" pdf="rxjs-cheat-sheet.pdf">
+    <app-lesson-player [topicId]="'rxjs'" [section]="section()">
+      <ng-template appLessonSection="observables">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <app-page-header title="RxJS from Scratch" illustration="rxjs">
         RxJS is a library that helps you deal with anything that happens "over time" — a click, typing in an input, an API response — as one
         <strong class="text-gold-300">data stream</strong> you can filter, transform and control, instead of handling each as a separate event.
         Try the examples below, and open the console to see what's happening under the hood.
@@ -105,7 +108,11 @@ import {
           <p class="mt-2 text-xs text-stone-500">Click subscribe, let a few numbers come in, then click unsubscribe — notice it stops instantly, just like pausing the show.</p>
         </div>
       </app-lesson-card>
+      </section>
+      </ng-template>
 
+      <ng-template appLessonSection="operators">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <!-- 3 · OPERATORS -->
       <app-lesson-card class="mt-5" label="3 · The most common operators" heading="map and filter — reshape the stream on the way through">
         <p class="mt-2 text-sm text-stone-400">
@@ -128,37 +135,102 @@ take(3):         20───40───60|  (completes after 3 values)</pre>
         </div>
       </app-lesson-card>
 
-      <!-- 4 · SEARCH: debounce + switchMap -->
-      <app-lesson-card
-        class="mt-5"
-        variant="highlight"
-        label="4 · debounceTime + distinctUntilChanged + switchMap"
-        heading="A real search box that cancels stale requests"
-      >
-        <p class="mt-2 text-sm text-stone-400">
-          <code class="text-gold-300">debounceTime(400)</code> waits for 400ms of silence after typing before it sends. <code class="text-gold-300">distinctUntilChanged()</code>
-          skips the search if the value hasn't changed. <code class="text-gold-300">switchMap</code> cancels the previous request the instant a new one comes in (critical so the order never gets mixed up).
-        </p>
-        <input
-          type="text"
-          [ngModel]="searchInputValue()"
-          (ngModelChange)="onSearchInput($event)"
-          placeholder="Type a movie name... try typing fast"
-          class="mt-4 w-full rounded-xl border border-stone-700 bg-stone-900 px-4 py-2.5 text-stone-100 placeholder:text-stone-500 focus:border-gold-400 focus:outline-none"
-        />
-        <div class="mt-4 grid gap-3 sm:grid-cols-2">
-          <div class="rounded-xl bg-stone-900 p-4">
-            <p class="text-xs text-stone-400">Number of "API calls" made</p>
-            <strong class="text-2xl text-gold-300">{{ apiCallCount() }}</strong>
-            <p class="mt-1 text-xs text-stone-500">Notice it doesn't grow with every keystroke — thanks to debounce</p>
-          </div>
-          <div class="rounded-xl bg-stone-900 p-4">
-            <p class="text-xs text-stone-400">Latest result received (never a stale one)</p>
-            <strong class="text-lg text-emerald-300">{{ searchResult() || '—' }}</strong>
-          </div>
+      <!-- 7 · CHEAT SHEET -->
+      <app-lesson-card class="mt-5" label="7 · Quick cheat sheet" heading="The operators you'll use every day">
+        <div class="mt-4 overflow-x-auto rounded-xl border border-stone-800">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-stone-800 text-stone-300">
+              <tr>
+                <th class="px-4 py-2 font-semibold">Operator</th>
+                <th class="px-4 py-2 font-semibold">What it does</th>
+                <th class="px-4 py-2 font-semibold">Example</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-stone-800 text-stone-400">
+              @for (row of cheatSheet; track row.op) {
+                <tr>
+                  <td class="whitespace-nowrap px-4 py-2 font-mono text-gold-300">{{ row.op }}</td>
+                  <td class="px-4 py-2">{{ row.desc }}</td>
+                  <td class="whitespace-nowrap px-4 py-2 font-mono text-xs text-stone-500">{{ row.use }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
         </div>
       </app-lesson-card>
+      </section>
+      </ng-template>
 
+      <ng-template appLessonSection="async-pipe">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <!-- 6 · ASYNC PIPE -->
+      <app-lesson-card
+        class="mt-5"
+        variant="success"
+        label="6 · async pipe — the cleaner fix"
+        heading="Let Angular subscribe/unsubscribe on your behalf"
+      >
+        <p class="mt-2 text-sm text-stone-400">
+          Instead of calling <code class="text-emerald-300">.subscribe()</code> manually and remembering to call <code class="text-emerald-300">unsubscribe</code> in
+          <code class="text-emerald-300">ngOnDestroy</code>, use <code class="text-emerald-300">| async</code> in the template. It subscribes automatically when
+          the element appears, and unsubscribes automatically when it's removed — so a memory leak isn't even possible.
+        </p>
+        <div class="mt-5 grid gap-4 sm:grid-cols-2">
+          <div class="min-w-0 rounded-xl bg-stone-900 p-4">
+            <p class="text-xs font-bold text-rose-300">❌ The manual way</p>
+            <pre class="mt-2 overflow-x-auto text-[11px] leading-relaxed text-stone-300">movies$: Observable&lt;Movie[]&gt;;
+movies: Movie[] = [];
+private sub!: Subscription;
+
+ngOnInit() &#123;
+  this.sub = this.movies$.subscribe(
+    m =&gt; this.movies = m
+  );
+&#125;
+
+ngOnDestroy() &#123;
+  this.sub.unsubscribe(); // easy to forget!
+&#125;</pre>
+          </div>
+          <div class="min-w-0 rounded-xl bg-[rgb(var(--panel-success-bg))] p-4">
+            <p class="text-xs font-bold text-emerald-300">✅ With async pipe</p>
+            <pre class="mt-2 overflow-x-auto text-[11px] leading-relaxed text-emerald-300">movies$ = this.api.getMovies();
+
+// in the template, that's it:
+&#64;for (m of movies$ | async; track m.id) &#123;
+  ...
+&#125;
+// no subscribe, no unsubscribe 🎉</pre>
+          </div>
+        </div>
+
+        <div class="mt-5 rounded-xl bg-stone-800 p-4">
+          <p class="text-xs text-stone-400">A working example right now (the same ticker from above, but with async pipe):</p>
+          <p class="mt-2 text-sm">
+            Current value: <strong class="text-emerald-300">{{ asyncDemo$ | async }}</strong>
+          </p>
+          <p class="mt-2 text-xs text-stone-500">No subscribe or unsubscribe button here — the pipe handles it on its own for as long as the page is open.</p>
+        </div>
+      </app-lesson-card>
+      </section>
+      </ng-template>
+
+      <ng-template appLessonSection="subjects">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <app-lesson-card class="mt-10" label="SUBJECTS" heading="An Observable you can push into">
+        <p class="mt-2 text-sm text-stone-400">
+          A <code class="text-gold-300">Subject</code> lets you call <code class="text-gold-300">next(value)</code> yourself and sends that value to every
+          current subscriber. A <code class="text-gold-300">BehaviorSubject</code> also remembers its latest value and gives it to new subscribers at once.
+        </p>
+        <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">private readonly count$ = new BehaviorSubject(0);
+
+increment() &#123; this.count$.next(this.count$.value + 1); &#125;</pre>
+      </app-lesson-card>
+      </section>
+      </ng-template>
+
+      <ng-template appLessonSection="memory-leaks">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <!-- 5 · SUBSCRIBE & MEMORY LEAK -->
       <app-lesson-card
         class="mt-5"
@@ -211,87 +283,51 @@ ngOnDestroy() &#123;
   this.sub.unsubscribe(); // closes every subscription that was added
 &#125;</pre>
       </app-lesson-card>
+      </section>
+      </ng-template>
 
-      <!-- 6 · ASYNC PIPE -->
+      <ng-template appLessonSection="try-it">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <!-- 4 · SEARCH: debounce + switchMap -->
       <app-lesson-card
         class="mt-5"
-        variant="success"
-        label="6 · async pipe — the cleaner fix"
-        heading="Let Angular subscribe/unsubscribe on your behalf"
+        variant="highlight"
+        label="4 · debounceTime + distinctUntilChanged + switchMap"
+        heading="A real search box that cancels stale requests"
       >
         <p class="mt-2 text-sm text-stone-400">
-          Instead of calling <code class="text-emerald-300">.subscribe()</code> manually and remembering to call <code class="text-emerald-300">unsubscribe</code> in
-          <code class="text-emerald-300">ngOnDestroy</code>, use <code class="text-emerald-300">| async</code> in the template. It subscribes automatically when
-          the element appears, and unsubscribes automatically when it's removed — so a memory leak isn't even possible.
+          <code class="text-gold-300">debounceTime(400)</code> waits for 400ms of silence after typing before it sends. <code class="text-gold-300">distinctUntilChanged()</code>
+          skips the search if the value hasn't changed. <code class="text-gold-300">switchMap</code> cancels the previous request the instant a new one comes in (critical so the order never gets mixed up).
         </p>
-        <div class="mt-5 grid gap-4 sm:grid-cols-2">
-          <div class="min-w-0 rounded-xl bg-stone-900 p-4">
-            <p class="text-xs font-bold text-rose-300">❌ The manual way</p>
-            <pre class="mt-2 overflow-x-auto text-[11px] leading-relaxed text-stone-300">movies$: Observable&lt;Movie[]&gt;;
-movies: Movie[] = [];
-private sub!: Subscription;
-
-ngOnInit() &#123;
-  this.sub = this.movies$.subscribe(
-    m =&gt; this.movies = m
-  );
-&#125;
-
-ngOnDestroy() &#123;
-  this.sub.unsubscribe(); // easy to forget!
-&#125;</pre>
+        <input
+          type="text"
+          [ngModel]="searchInputValue()"
+          (ngModelChange)="onSearchInput($event)"
+          placeholder="Type a movie name... try typing fast"
+          class="mt-4 w-full rounded-xl border border-stone-700 bg-stone-900 px-4 py-2.5 text-stone-100 placeholder:text-stone-500 focus:border-gold-400 focus:outline-none"
+        />
+        <div class="mt-4 grid gap-3 sm:grid-cols-2">
+          <div class="rounded-xl bg-stone-900 p-4">
+            <p class="text-xs text-stone-400">Number of "API calls" made</p>
+            <strong class="text-2xl text-gold-300">{{ apiCallCount() }}</strong>
+            <p class="mt-1 text-xs text-stone-500">Notice it doesn't grow with every keystroke — thanks to debounce</p>
           </div>
-          <div class="min-w-0 rounded-xl bg-[rgb(var(--panel-success-bg))] p-4">
-            <p class="text-xs font-bold text-emerald-300">✅ With async pipe</p>
-            <pre class="mt-2 overflow-x-auto text-[11px] leading-relaxed text-emerald-300">movies$ = this.api.getMovies();
-
-// in the template, that's it:
-&#64;for (m of movies$ | async; track m.id) &#123;
-  ...
-&#125;
-// no subscribe, no unsubscribe 🎉</pre>
+          <div class="rounded-xl bg-stone-900 p-4">
+            <p class="text-xs text-stone-400">Latest result received (never a stale one)</p>
+            <strong class="text-lg text-emerald-300">{{ searchResult() || '—' }}</strong>
           </div>
-        </div>
-
-        <div class="mt-5 rounded-xl bg-stone-800 p-4">
-          <p class="text-xs text-stone-400">A working example right now (the same ticker from above, but with async pipe):</p>
-          <p class="mt-2 text-sm">
-            Current value: <strong class="text-emerald-300">{{ asyncDemo$ | async }}</strong>
-          </p>
-          <p class="mt-2 text-xs text-stone-500">No subscribe or unsubscribe button here — the pipe handles it on its own for as long as the page is open.</p>
         </div>
       </app-lesson-card>
 
-      <!-- 7 · CHEAT SHEET -->
-      <app-lesson-card class="mt-5" label="7 · Quick cheat sheet" heading="The operators you'll use every day">
-        <div class="mt-4 overflow-x-auto rounded-xl border border-stone-800">
-          <table class="w-full text-left text-sm">
-            <thead class="bg-stone-800 text-stone-300">
-              <tr>
-                <th class="px-4 py-2 font-semibold">Operator</th>
-                <th class="px-4 py-2 font-semibold">What it does</th>
-                <th class="px-4 py-2 font-semibold">Example</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-stone-800 text-stone-400">
-              @for (row of cheatSheet; track row.op) {
-                <tr>
-                  <td class="whitespace-nowrap px-4 py-2 font-mono text-gold-300">{{ row.op }}</td>
-                  <td class="px-4 py-2">{{ row.desc }}</td>
-                  <td class="whitespace-nowrap px-4 py-2 font-mono text-xs text-stone-500">{{ row.use }}</td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      </app-lesson-card>
-
-      <app-recap [items]="recapItems" />
-      <app-topic-nav />
-    </section>
+      <app-knowledge-check [items]="checkItems" />
+      </section>
+      </ng-template>
+    </app-lesson-player>
   `,
 })
 export class RxjsComponent implements OnDestroy {
+  readonly section = input<string>();
+
   // ── 2 · Observable ticker demo ──────────────────────────────
   readonly tickerRunning = signal(false);
   readonly tickerValues = signal<number[]>([]);
@@ -397,7 +433,7 @@ export class RxjsComponent implements OnDestroy {
     this.cleanupLeaks();
   }
 
-  readonly recapItems: RecapItem[] = [
+  readonly checkItems: KnowledgeCheckItem[] = [
     {
       question: 'Why does switchMap cancel the previous request instead of letting it finish?',
       answer: "So a stale response (from an earlier keystroke) can't arrive after a newer one and overwrite it with outdated data.",

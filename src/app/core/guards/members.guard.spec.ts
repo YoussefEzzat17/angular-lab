@@ -9,10 +9,10 @@ describe('membersGuard', () => {
 
   const run = () => TestBed.runInInjectionContext(() => membersGuard({} as never, {} as never));
 
-  it('redirects to /guards?denied=1 while logged out', () => {
+  it('redirects to /learn/guards/try-it?denied=1 while logged out', () => {
     const result = run();
     expect(result instanceof UrlTree).toBeTrue();
-    expect(TestBed.inject(Router).serializeUrl(result as UrlTree)).toBe('/guards?denied=1');
+    expect(TestBed.inject(Router).serializeUrl(result as UrlTree)).toBe('/learn/guards/try-it?denied=1');
   });
 
   it('lets the user through once logged in', () => {

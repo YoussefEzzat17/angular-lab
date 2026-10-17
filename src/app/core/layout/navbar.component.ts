@@ -32,6 +32,14 @@ import { ThemeService } from '../services/theme.service';
             Home
           </a>
 
+          <a
+            routerLink="/dashboard"
+            routerLinkActive="text-gold-400"
+            class="rounded-lg px-3 py-2 transition hover:text-gold-400"
+          >
+            Dashboard
+          </a>
+
           <div class="relative">
             <button
               type="button"
@@ -62,7 +70,7 @@ import { ThemeService } from '../services/theme.service';
                           <span class="text-base">{{ topic.icon }}</span>
                           <span class="flex min-w-0 items-center gap-1.5">
                             <span class="truncate font-semibold text-stone-100">{{ topic.title }}</span>
-                            @if (progress.isCompleted(topic.path)) {
+                            @if (progress.isCompleted(topic.legacyPath)) {
                               <span class="shrink-0 text-xs text-emerald-400">✓</span>
                             }
                           </span>
@@ -198,7 +206,7 @@ import { ThemeService } from '../services/theme.service';
                     <span>{{ topic.icon }}</span>
                     {{ topic.title }}
                   </span>
-                  @if (progress.isCompleted(topic.path)) {
+                  @if (progress.isCompleted(topic.legacyPath)) {
                     <span class="text-xs text-emerald-400">✓</span>
                   }
                 </a>
@@ -243,7 +251,6 @@ export class NavbarComponent implements OnDestroy {
   readonly topics = TOPICS;
   readonly groups = GROUPED_TOPICS;
 
-  private readonly topicPaths = new Set(this.topics.map((topic) => topic.path));
   private readonly demoPaths = new Set(['/products', '/favorites']);
 
   private readonly router = inject(Router);
@@ -260,7 +267,7 @@ export class NavbarComponent implements OnDestroy {
   }
 
   isTopicActive(): boolean {
-    return this.topicPaths.has(this.router.url.split('?')[0]);
+    return this.router.url.split('?')[0].startsWith('/learn/');
   }
 
   isDemoActive(): boolean {

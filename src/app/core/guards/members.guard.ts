@@ -9,5 +9,6 @@ export const membersGuard: CanActivateFn = () => {
   const router = inject(Router);
 
   // Returning a UrlTree redirects instead of just cancelling, so the user always lands somewhere useful.
-  return auth.loggedIn() ? true : router.createUrlTree(['/guards'], { queryParams: { denied: '1' } });
+  // Lands on the try-it section, where the login switch and the "Blocked" alert live.
+  return auth.loggedIn() ? true : router.createUrlTree(['/learn', 'guards', 'try-it'], { queryParams: { denied: '1' } });
 };

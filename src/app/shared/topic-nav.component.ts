@@ -36,7 +36,7 @@ import { ProgressService } from '../core/services/progress.service';
     <nav class="mt-4 flex items-stretch justify-between gap-3">
       @if (previous()) {
         <a
-          [routerLink]="previous()!.path"
+          [routerLink]="previous()!.legacyPath"
           class="group flex min-w-0 flex-1 items-center gap-3 rounded-2xl border border-stone-800 bg-stone-900 p-4 transition hover:border-gold-400/50 hover:bg-stone-800"
         >
           <span class="text-gold-400 transition group-hover:-translate-x-1">←</span>
@@ -51,7 +51,7 @@ import { ProgressService } from '../core/services/progress.service';
 
       @if (next()) {
         <a
-          [routerLink]="next()!.path"
+          [routerLink]="next()!.legacyPath"
           class="group flex min-w-0 flex-1 items-center justify-end gap-3 rounded-2xl border border-stone-800 bg-stone-900 p-4 text-right transition hover:border-gold-400/50 hover:bg-stone-800"
         >
           <span class="min-w-0">
@@ -71,10 +71,13 @@ export class TopicNavComponent implements OnInit {
   private readonly progress = inject(ProgressService);
 
   private readonly currentPath = this.router.url.split('?')[0];
-  private readonly currentIndex = TOPICS.findIndex((topic) => topic.path === this.currentPath);
+  private readonly currentIndex = TOPICS.findIndex((topic) => topic.legacyPath === this.currentPath);
+  private readonly currentTopic = this.currentIndex >= 0 ? TOPICS[this.currentIndex] : null;
 
   ngOnInit(): void {
-    this.progress.markVisited(this.currentPath);
+    if (this.currentTopic) {
+      this.progress.markVisited(this.currentTopic.id);
+    }
   }
 
   isCompleted(): boolean {
@@ -82,7 +85,9 @@ export class TopicNavComponent implements OnInit {
   }
 
   toggleComplete(): void {
-    this.progress.toggleCompleted(this.currentPath);
+    if (this.currentTopic) {
+      this.progress.toggleManualComplete(this.currentTopic.id);
+    }
   }
 
   previous() {
