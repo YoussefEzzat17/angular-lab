@@ -17,6 +17,7 @@ export const routes: Routes = [
     path: '',
     loadComponent: () => import('./learn/layout/learn-layout.component').then((m) => m.LearnLayoutComponent),
     children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'learn', loadChildren: () => import('./learn/learn.routes').then((m) => m.LEARN_ROUTES) },
       { path: 'dashboard', loadComponent: () => import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent), title: 'Dashboard' },
       { path: 'bookmarks', loadComponent: () => import('./pages/bookmarks/bookmarks.component').then((m) => m.BookmarksComponent), title: 'My Bookmarks' },
@@ -28,7 +29,7 @@ export const routes: Routes = [
     path: '',
     component: SiteLayoutComponent,
     children: [
-      { path: '', component: HomeComponent, title: 'Angular Lab' },
+      { path: 'home', component: HomeComponent, title: 'Angular Lab' },
       { path: 'products', loadComponent: () => import('./pages/products/products.component').then((m) => m.ProductsComponent), title: 'Demo: Browse' },
       { path: 'products/:id', loadComponent: () => import('./pages/product-details/product-details.component').then((m) => m.ProductDetailsComponent), title: 'Product Details' },
       { path: 'favorites', loadComponent: () => import('./pages/favorites/favorites.component').then((m) => m.FavoritesComponent), title: 'Demo: My List' },
