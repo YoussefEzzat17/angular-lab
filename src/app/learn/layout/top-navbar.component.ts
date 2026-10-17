@@ -20,7 +20,7 @@ import { ProgressRingComponent } from '../../shared/progress-ring.component';
           type="button"
           (click)="sidebarState.toggleCollapsed()"
           aria-label="Toggle sidebar"
-          class="grid h-8 w-8 place-items-center rounded-lg text-stone-400 transition hover:bg-stone-800 hover:text-gold-300"
+          class="hidden lg:grid h-8 w-8 place-items-center rounded-lg text-stone-400 transition hover:bg-stone-800 hover:text-gold-300"
         >
           <app-icon name="menu" class="h-4 w-4" />
         </button>
@@ -46,17 +46,23 @@ import { ProgressRingComponent } from '../../shared/progress-ring.component';
       <div class="flex-1"></div>
 
       <!-- Right section: progress ring + continue + search + dashboard + bookmarks + feedback + theme + avatar -->
-      <div class="flex shrink-0 items-center gap-2">
+      <div class="flex items-center gap-2">
 
         <!-- Mini progress ring + count (desktop only) -->
-        <div class="hidden items-center gap-2 lg:flex">
+        <div
+          class="hidden items-center gap-2 lg:flex"
+          [title]="'Progress: ' + facade.percent() + '% — ' + facade.completedCount() + ' of ' + facade.totalCount + ' topics complete'"
+        >
           <app-progress-ring
             [percent]="facade.percent()"
             [size]="28"
             [strokeWidth]="3"
             [ariaText]="facade.completedCount() + ' of ' + facade.totalCount + ' topics complete'"
           />
-          <span class="text-xs font-semibold text-gold-300">{{ facade.completedCount() }}/{{ facade.totalCount }}</span>
+          <div class="flex flex-col leading-none">
+            <span class="text-xs font-semibold text-gold-300">{{ facade.completedCount() }}/{{ facade.totalCount }} topics</span>
+            <span class="text-[10px] text-stone-500">{{ facade.percent() }}% done</span>
+          </div>
         </div>
 
         <!-- Continue button (desktop only) -->
@@ -74,7 +80,7 @@ import { ProgressRingComponent } from '../../shared/progress-ring.component';
         <button
           type="button"
           (click)="searchPalette.toggle()"
-          class="flex items-center gap-2 rounded-xl border border-stone-800 bg-stone-900 px-3 py-1.5 text-xs text-stone-500 transition hover:border-stone-700 hover:bg-stone-800 hover:text-stone-300"
+          class="flex flex-1 items-center gap-2 rounded-xl border border-stone-800 bg-stone-900 px-3 py-1.5 text-xs text-stone-500 transition hover:border-stone-700 hover:bg-stone-800 hover:text-stone-300 lg:max-w-xs"
           aria-label="Search topics (⌘K)"
         >
           <app-icon name="search" class="h-3.5 w-3.5 shrink-0" />

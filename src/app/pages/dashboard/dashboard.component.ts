@@ -10,10 +10,10 @@ import { SignalNetworkComponent } from '../home/signal-network.component';
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
 
       <!-- ── Hero banner ─────────────────────────────────────────── -->
-      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gold-950 via-stone-900 to-stone-950 px-6 py-10 text-stone-100 ring-1 ring-gold-500/30 sm:px-12 sm:py-12">
+      <div class="theme-dark-scope relative overflow-hidden rounded-3xl bg-gradient-to-br from-gold-950 via-stone-900 to-stone-950 px-6 py-10 text-stone-100 ring-1 ring-gold-500/30 sm:px-12 sm:py-12">
 
         <!-- Signal Network — decorative background, right side -->
-        <div class="pointer-events-none absolute inset-y-0 right-0 w-1/2 opacity-30 sm:opacity-40">
+        <div class="pointer-events-none absolute inset-y-0 right-0 w-1/2 opacity-40 hidden sm:block">
           <app-signal-network class="block h-full w-full" />
         </div>
 
