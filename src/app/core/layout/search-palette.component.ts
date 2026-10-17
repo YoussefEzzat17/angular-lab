@@ -80,7 +80,7 @@ export class SearchPaletteComponent {
   readonly activeIndex = signal(0);
 
   private readonly allItems: ResultItem[] = [
-    ...TOPICS.map((t) => ({ path: t.path, icon: t.icon, title: t.title, description: t.description, isTopic: true })),
+    ...TOPICS.map((t) => ({ path: t.legacyPath, icon: t.icon, title: t.title, description: t.description, isTopic: true })),
     ...DEMO_LINKS.map((d) => ({ path: d.path, icon: '🎬', title: d.label, description: 'Demo app', isTopic: false })),
   ];
 

@@ -52,9 +52,9 @@ import { ThemeService } from '../services/theme.service';
                   @for (group of groups; track group.id) {
                     <div class="min-w-0">
                       <p class="px-3 pb-1 text-[11px] font-bold uppercase tracking-wider text-gold-400">{{ group.title }}</p>
-                      @for (topic of group.topics; track topic.path) {
+                      @for (topic of group.topics; track topic.legacyPath) {
                         <a
-                          [routerLink]="topic.path"
+                          [routerLink]="topic.legacyPath"
                           routerLinkActive="bg-gold-500/10 text-gold-300"
                           class="flex items-center gap-2.5 rounded-xl px-3 py-2 transition hover:bg-stone-800"
                           (click)="closeAll()"
@@ -62,7 +62,7 @@ import { ThemeService } from '../services/theme.service';
                           <span class="text-base">{{ topic.icon }}</span>
                           <span class="flex min-w-0 items-center gap-1.5">
                             <span class="truncate font-semibold text-stone-100">{{ topic.title }}</span>
-                            @if (progress.isCompleted(topic.path)) {
+                            @if (progress.isCompleted(topic.legacyPath)) {
                               <span class="shrink-0 text-xs text-emerald-400">✓</span>
                             }
                           </span>
@@ -187,9 +187,9 @@ import { ThemeService } from '../services/theme.service';
             <p class="mt-3 px-3 text-xs font-bold uppercase tracking-wider text-gold-400">Topics</p>
             @for (group of groups; track group.id) {
               <p class="mt-2 px-3 text-[11px] font-semibold uppercase tracking-wider text-stone-500">{{ group.title }}</p>
-              @for (topic of group.topics; track topic.path) {
+              @for (topic of group.topics; track topic.legacyPath) {
                 <a
-                  [routerLink]="topic.path"
+                  [routerLink]="topic.legacyPath"
                   routerLinkActive="bg-gold-500/15 text-gold-300"
                   class="flex min-h-11 items-center justify-between gap-2 rounded-xl px-3 py-2 hover:bg-stone-800"
                   (click)="closeMenu()"
@@ -198,7 +198,7 @@ import { ThemeService } from '../services/theme.service';
                     <span>{{ topic.icon }}</span>
                     {{ topic.title }}
                   </span>
-                  @if (progress.isCompleted(topic.path)) {
+                  @if (progress.isCompleted(topic.legacyPath)) {
                     <span class="text-xs text-emerald-400">✓</span>
                   }
                 </a>
@@ -243,7 +243,7 @@ export class NavbarComponent implements OnDestroy {
   readonly topics = TOPICS;
   readonly groups = GROUPED_TOPICS;
 
-  private readonly topicPaths = new Set(this.topics.map((topic) => topic.path));
+  private readonly topicPaths = new Set(this.topics.map((topic) => topic.legacyPath));
   private readonly demoPaths = new Set(['/products', '/favorites']);
 
   private readonly router = inject(Router);

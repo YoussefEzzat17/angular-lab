@@ -46,7 +46,7 @@ placeOrder() {
   imports: [CodeBlockDirective, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <app-page-header title="Facade Pattern" illustration="facade" pdf="facade.pdf">
+      <app-page-header title="Facade Pattern" illustration="facade">
         A <strong class="text-stone-200">facade</strong> is one simple front door in front of a messy set of services. Instead of
         every component learning how the cart, the stock, the payment and the email services fit together, they ask a single
         class — <code class="text-gold-300">CheckoutFacade</code> — to "place the order". The facade knows the steps, the order,

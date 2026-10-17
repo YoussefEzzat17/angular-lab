@@ -31,7 +31,6 @@ It is built with modern Angular only: standalone components, signals, the `@if` 
 - **Progress tracking** — pages you visit are remembered, and a "Mark as complete" button drives the progress bar on the home page. Saved in `localStorage`.
 - **Light and dark themes** built on CSS variables, so every colour follows the theme (toggle in the navbar; respects the system preference).
 - **Command palette** — press <kbd>⌘</kbd>/<kbd>Ctrl</kbd> + <kbd>K</kbd> to jump to any topic.
-- **Downloadable PDF guides** for each lesson, from the "Download PDF Guide" button.
 - **Grouped navigation** — lessons are organised into five groups in the Topics menu and on the home page.
 - **Demo app** — browse titles, keep a persistent **Watchlist** (with duplicate detection and a remove / clear-all page) and a **My List** of favourites; both survive a refresh.
 - **Toast notifications** with success / error / info styles, a countdown bar and pause-on-hover.
@@ -118,10 +117,9 @@ src/app/
 │                      (home, products, product-details, watchlist, favorites, feedback)
 ├── shared/            reusable UI: page-header, lesson-card, recap, topic-nav,
 │                      topic-illustration, flow-arrow, flow-diagram, icon,
-│                      download-pdf-button, code-block directive
+│                      code-block directive
 ├── directives/        custom attribute directives used in the lessons
 └── pipes/             custom pipes used in the lessons
-public/pdfs/           downloadable PDF guide for each lesson
 docs/                  workshop blueprint and slide deck, README screenshots
 ```
 

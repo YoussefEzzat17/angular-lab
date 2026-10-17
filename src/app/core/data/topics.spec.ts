@@ -2,11 +2,25 @@ import { routes } from '../../app.routes';
 import { GROUPED_TOPICS, TOPICS, TOPIC_GROUPS } from './topics';
 
 describe('topics data', () => {
-  it('has unique paths and every topic has a route', () => {
+  it('has unique paths and every topic has a route at its legacy path', () => {
     const paths = TOPICS.map((t) => t.path);
     expect(new Set(paths).size).toBe(paths.length);
     const routePaths = new Set(routes.map((r) => '/' + r.path));
-    for (const path of paths) expect(routePaths.has(path)).withContext(path).toBeTrue();
+    for (const topic of TOPICS) {
+      expect(routePaths.has(topic.legacyPath)).withContext(topic.legacyPath).toBeTrue();
+      expect(topic.path).withContext(topic.id).toBe('/learn/' + topic.legacyPath.slice(1));
+    }
+  });
+
+  it('has unique ids, and unique section ids within each topic', () => {
+    const ids = TOPICS.map((t) => t.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    for (const topic of TOPICS) {
+      const sectionIds = topic.sections.map((s) => s.id);
+      expect(new Set(sectionIds).size).withContext(topic.id).toBe(sectionIds.length);
+      expect(sectionIds).not.toContain('quiz');
+      expect(sectionIds).not.toContain('complete');
+    }
   });
 
   it('is sorted by group order, so Next/Previous follow the same path as the menus', () => {
