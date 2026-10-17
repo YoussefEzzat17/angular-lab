@@ -31,7 +31,7 @@ import { LearnFooterComponent } from './learn-footer.component';
       <aside
         class="hidden h-full lg:flex lg:flex-col lg:border-r lg:border-stone-800 lg:bg-stone-950 lg:transition-all lg:duration-300"
         [style.width]="sidebarState.collapsed() ? '72px' : '280px'"
-        [class.overflow-x-visible]="sidebarState.collapsed()"
+        [style.overflow]="sidebarState.collapsed() ? 'visible' : 'hidden'"
       >
         @if (!sidebarState.collapsed()) {
           <app-course-sidebar class="flex h-full w-[280px] flex-col" />
@@ -67,6 +67,7 @@ import { LearnFooterComponent } from './learn-footer.component';
               <a
                 [routerLink]="['/learn', topic.id]"
                 [attr.aria-label]="topic.title"
+                [attr.title]="topic.title"
                 [class]="isActive('/learn/' + topic.id) ? 'group relative grid h-10 w-10 place-items-center rounded-xl bg-gold-500/20 text-gold-400' : 'group relative grid h-10 w-10 place-items-center rounded-xl text-stone-400 transition hover:bg-stone-800 hover:text-gold-300'"
               >
                 <span class="text-base leading-none">{{ topic.icon }}</span>
@@ -81,6 +82,7 @@ import { LearnFooterComponent } from './learn-footer.component';
             <!-- Bookmarks icon -->
             <a routerLink="/bookmarks"
                aria-label="Bookmarks"
+               title="Saved Topics"
                class="group relative grid h-10 w-10 place-items-center rounded-xl text-stone-400 transition hover:bg-stone-800 hover:text-gold-300">
               <span class="text-base">🔖</span>
               <span class="pointer-events-none absolute left-full ml-2 z-50 hidden whitespace-nowrap rounded-lg bg-stone-800 px-2.5 py-1.5 text-xs font-semibold text-stone-100 shadow-lg group-hover:block">

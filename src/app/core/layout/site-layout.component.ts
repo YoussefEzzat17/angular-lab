@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { NavbarComponent } from './navbar.component';
+import { TopNavbarComponent } from '../../learn/layout/top-navbar.component';
 import { FooterComponent } from './footer.component';
 
 @Component({
   selector: 'app-site-layout',
   standalone: true,
-  imports: [RouterOutlet, NavbarComponent, FooterComponent],
+  imports: [RouterOutlet, TopNavbarComponent, FooterComponent],
   template: `
     <div class="flex min-h-screen flex-col">
-      <app-navbar />
+      <app-top-navbar />
       <main class="flex-1">
         <router-outlet />
       </main>
