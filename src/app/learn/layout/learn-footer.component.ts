@@ -10,8 +10,8 @@ import { RouterLink } from '@angular/router';
       <!-- On mobile: stack vertically, centred. On lg+: single row. -->
       <div class="mx-auto flex max-w-5xl flex-col items-center gap-3 px-6 py-5 lg:flex-row lg:justify-between">
 
-        <!-- Left: brand -->
-        <p class="font-semibold text-gold-400">
+        <!-- Left: brand (desktop only) -->
+        <p class="hidden font-semibold text-gold-400 lg:block">
           &lt;Angular <span class="text-stone-100">Lab</span>&gt;
         </p>
 
