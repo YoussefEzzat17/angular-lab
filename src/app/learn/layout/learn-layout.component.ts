@@ -4,7 +4,6 @@ import { filter, Subscription } from 'rxjs';
 import { A11yModule } from '@angular/cdk/a11y';
 import { SidebarStateService } from '../../core/services/sidebar-state.service';
 import { ProfileService } from '../../core/services/profile.service';
-import { SearchPaletteService } from '../../core/services/search-palette.service';
 import { OnboardingDialogComponent } from '../../core/onboarding/onboarding-dialog.component';
 import { CourseSidebarComponent } from '../sidebar/course-sidebar.component';
 import { IconComponent } from '../../shared/icon.component';
@@ -174,7 +173,6 @@ import { LearnFooterComponent } from './learn-footer.component';
 })
 export class LearnLayoutComponent implements OnDestroy {
   readonly sidebarState = inject(SidebarStateService);
-  readonly searchPalette = inject(SearchPaletteService);
   private readonly profile = inject(ProfileService);
   private readonly router = inject(Router);
   readonly showOnboarding = computed(() => !this.profile.onboardingDone());
