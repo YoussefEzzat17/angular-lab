@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { GROUPED_TOPICS, TOPICS, TOPIC_GROUPS } from '../../core/data/topics';
+
+import { GROUPED_TOPICS, TOPIC_GROUPS, TOPICS } from '../../core/data/topics';
 import { ProgressService } from '../../core/services/progress.service';
 import { SignalNetworkComponent } from './signal-network.component';
 
@@ -9,7 +10,7 @@ import { SignalNetworkComponent } from './signal-network.component';
   imports: [RouterLink, SignalNetworkComponent],
   template: `
     <!-- ── Hero ───────────────────────────────────────────────────────── -->
-    <section class="theme-dark-scope border-b border-stone-800 bg-stone-950">
+    <section class="border-b border-stone-800 bg-stone-950">
       <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
         <div class="grid items-center gap-12 lg:grid-cols-2">
 
@@ -51,10 +52,6 @@ import { SignalNetworkComponent } from './signal-network.component';
           <!-- Right: animated visual -->
           <div class="theme-dark-scope relative overflow-hidden rounded-2xl border border-gold-500/15 bg-gradient-to-br from-gold-950 via-stone-900 to-stone-950 p-6">
             <app-signal-network class="block h-[280px] w-full sm:h-[320px]" />
-            <!-- Floating labels -->
-            <div class="absolute bottom-4 left-4 rounded-lg bg-stone-950/80 px-3 py-1.5 text-xs font-mono text-gold-300 backdrop-blur">
-              signal() · computed() · effect()
-            </div>
           </div>
         </div>
       </div>

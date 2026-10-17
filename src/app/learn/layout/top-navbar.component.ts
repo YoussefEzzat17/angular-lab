@@ -1,9 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+
 import { LearningFacade } from '../../core/services/learning.facade';
-import { ThemeService } from '../../core/services/theme.service';
 import { SearchPaletteService } from '../../core/services/search-palette.service';
+import { ThemeService } from '../../core/services/theme.service';
 import { IconComponent } from '../../shared/icon.component';
+
 @Component({
   selector: 'app-top-navbar',
   standalone: true,
@@ -32,9 +34,9 @@ import { IconComponent } from '../../shared/icon.component';
       <!-- Right section: progress ring + continue + search + dashboard + bookmarks + feedback + theme + avatar -->
       <div class="flex flex-1 items-center justify-end gap-4">
 
-        <!-- Progress pill (desktop only) — theme-dark-scope keeps it readable in light mode -->
+        <!-- Progress pill (desktop only) -->
         <div
-          class="theme-dark-scope hidden items-center gap-2.5 rounded-xl border border-stone-800 bg-stone-900 px-3 py-1.5 lg:flex"
+          class=" hidden items-center gap-2.5 rounded-xl border border-stone-800 bg-stone-900 px-3 py-1.5 lg:flex"
           [title]="'Progress: ' + facade.percent() + '% — ' + facade.completedCount() + ' of ' + facade.totalCount + ' topics complete'"
         >
           <!-- Mini inline bar -->
