@@ -65,12 +65,12 @@ import { SignalNetworkComponent } from './signal-network.component';
             <div class="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             @for (topic of group.topics; track topic.legacyPath) {
               <a
-                [routerLink]="topic.legacyPath"
+                [routerLink]="topic.path"
                 class="group relative flex flex-col gap-3 rounded-2xl border border-stone-800 bg-stone-900 p-6 transition hover:border-gold-400/50 hover:bg-stone-800"
               >
-                @if (progress.isCompleted(topic.legacyPath)) {
+                @if (progress.isCompleted(topic.path)) {
                   <span class="absolute right-4 top-4 flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500/15 text-xs font-bold text-emerald-400">✓</span>
-                } @else if (progress.isVisited(topic.legacyPath)) {
+                } @else if (progress.isVisited(topic.path)) {
                   <span class="absolute right-4 top-4 h-2 w-2 rounded-full bg-stone-600" title="Visited, not marked complete"></span>
                 }
                 <span class="text-3xl">{{ topic.icon }}</span>
@@ -108,7 +108,7 @@ export class HomeComponent {
   readonly groups = GROUPED_TOPICS;
 
   continuePath(): string {
-    const firstIncomplete = this.topics.find((topic) => !this.progress.isCompleted(topic.legacyPath));
-    return firstIncomplete ? firstIncomplete.legacyPath : this.topics[0].legacyPath;
+    const firstIncomplete = this.topics.find((topic) => !this.progress.isCompleted(topic.path));
+    return firstIncomplete ? firstIncomplete.path : this.topics[0].path;
   }
 }

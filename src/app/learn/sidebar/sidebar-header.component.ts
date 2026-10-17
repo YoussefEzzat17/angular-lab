@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 import { SidebarStateService } from '../../core/services/sidebar-state.service';
 import { LearningFacade } from '../../core/services/learning.facade';
 import { SearchPaletteService } from '../../core/services/search-palette.service';
+import { ThemeService } from '../../core/services/theme.service';
 import { IconComponent } from '../../shared/icon.component';
 
 @Component({
@@ -10,21 +11,20 @@ import { IconComponent } from '../../shared/icon.component';
   standalone: true,
   imports: [RouterLink, IconComponent],
   template: `
+    <!-- Top row: logo + dark mode + collapse -->
     <div class="flex items-center justify-between border-b border-stone-800 px-4 py-3">
       <a routerLink="/" class="text-lg font-bold text-gold-400">
         Angular <span class="text-stone-100">Lab</span>
       </a>
       <div class="flex items-center gap-1">
-        <!-- Search button -->
         <button
           type="button"
-          (click)="searchPalette.toggle()"
-          aria-label="Search (⌘K)"
+          (click)="theme.toggle()"
+          [attr.aria-label]="theme.theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
           class="grid h-8 w-8 place-items-center rounded-lg text-stone-400 transition hover:bg-stone-800 hover:text-gold-300"
         >
-          <app-icon name="search" class="h-4 w-4" />
+          <app-icon [name]="theme.theme() === 'dark' ? 'moon' : 'sun'" class="h-4 w-4" />
         </button>
-        <!-- Collapse button -->
         <button
           type="button"
           (click)="sidebarState.toggleCollapsed()"
@@ -36,18 +36,28 @@ import { IconComponent } from '../../shared/icon.component';
       </div>
     </div>
 
+    <!-- Search bar row -->
+    <div class="border-b border-stone-800 px-3 py-2">
+      <button
+        type="button"
+        (click)="searchPalette.toggle()"
+        class="flex w-full items-center gap-2.5 rounded-xl border border-stone-800 bg-stone-900 px-3 py-2 text-sm text-stone-500 transition hover:border-stone-700 hover:bg-stone-800 hover:text-stone-300"
+        aria-label="Search topics (⌘K)"
+      >
+        <app-icon name="search" class="h-4 w-4 shrink-0" />
+        <span class="flex-1 text-left">Search topics…</span>
+        <kbd class="shrink-0 rounded border border-stone-700 px-1.5 py-0.5 text-[10px]">⌘K</kbd>
+      </button>
+    </div>
+
     <!-- Progress summary -->
     <div class="border-b border-stone-800 p-4">
-      <div class="flex items-center gap-3">
-        <div class="flex-1">
-          <div class="flex items-center justify-between text-xs text-stone-400">
-            <span>Progress</span>
-            <span class="font-semibold text-gold-300">{{ facade.completedCount() }}/{{ facade.totalCount }} topics</span>
-          </div>
-          <div class="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-stone-800">
-            <div class="h-full rounded-full bg-gold-500 transition-all duration-500" [style.width.%]="facade.percent()"></div>
-          </div>
-        </div>
+      <div class="flex items-center justify-between text-xs text-stone-400">
+        <span>Progress</span>
+        <span class="font-semibold text-gold-300">{{ facade.completedCount() }}/{{ facade.totalCount }} topics</span>
+      </div>
+      <div class="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-stone-800">
+        <div class="h-full rounded-full bg-gold-500 transition-all duration-500" [style.width.%]="facade.percent()"></div>
       </div>
       <a
         [routerLink]="facade.continueTarget()"
@@ -72,4 +82,5 @@ export class SidebarHeaderComponent {
   readonly sidebarState = inject(SidebarStateService);
   readonly facade = inject(LearningFacade);
   readonly searchPalette = inject(SearchPaletteService);
+  readonly theme = inject(ThemeService);
 }
