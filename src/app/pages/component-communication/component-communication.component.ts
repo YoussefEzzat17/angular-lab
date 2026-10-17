@@ -1,12 +1,12 @@
-import { Component, signal, WritableSignal, input } from '@angular/core';
+import { Component, input, signal, WritableSignal } from '@angular/core';
 
-import { FlowArrowComponent } from '../../shared/flow-arrow.component';
-import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
-import { LessonCardComponent } from '../../shared/lesson-card.component';
-import { PageHeaderComponent } from '../../shared/page-header.component';
-import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
 import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
+import { FlowArrowComponent } from '../../shared/flow-arrow.component';
+import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
+import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
+import { LessonCardComponent } from '../../shared/lesson-card.component';
+import { PageHeaderComponent } from '../../shared/page-header.component';
 import { TitlePreviewComponent } from '../../shared/title-preview.component';
 
 @Component({
@@ -46,12 +46,6 @@ import { TitlePreviewComponent } from '../../shared/title-preview.component';
 
 onAdd() &#123; this.addToWatchlist.emit(this.title); &#125;</pre>
         </app-lesson-card>
-
-      <div class="mt-3 rounded-2xl border border-[rgb(var(--panel-danger-heading))]/30 bg-[rgb(var(--panel-danger-bg))] p-5">
-        <p class="font-semibold text-[rgb(var(--panel-danger-heading))]">Message received by parent</p>
-        <p class="mt-2 text-stone-300">{{ receivedMessage || 'Click “Add to watchlist” in the child component.' }}</p>
-        <code class="mt-3 block text-sm text-[rgb(var(--panel-danger-heading))]">(addToWatchlist)="receiveTitle($event)"</code>
-      </div>
       </section>
       </ng-template>
 
@@ -62,7 +56,7 @@ onAdd() &#123; this.addToWatchlist.emit(this.title); &#125;</pre>
         <p class="mt-2 text-sm text-stone-300">
           You could — services are great for state shared across many unrelated components. But when data only
           needs to move between a direct parent and its child, <code class="text-gold-300">&#64;Input()</code>/<code class="text-gold-300">&#64;Output()</code>
-          keeps the relationship explicit right there in the template, so anyone reading <code class="text-gold-300">&lt;app-title-preview [rawan] (addToWatchlist)&gt;</code>
+          keeps the relationship explicit right there in the template, so anyone reading <code class="text-gold-300">&lt;app-title-preview [title] (addToWatchlist)&gt;</code>
           can see exactly what flows in and out — no hunting through a service to find who else is listening.
         </p>
       </div>
@@ -103,6 +97,12 @@ onAdd() &#123; this.addToWatchlist.emit(this.title); &#125;</pre>
             [active]="messageFlowing()"
           />
         </div>
+      </div>
+
+      <div class="mt-6 rounded-2xl border border-[rgb(var(--panel-danger-heading))]/30 bg-[rgb(var(--panel-danger-bg))] p-5">
+        <p class="font-semibold text-[rgb(var(--panel-danger-heading))]">Message received by parent</p>
+        <p class="mt-2 text-stone-300">{{ receivedMessage || 'Click “Add to watchlist” in the child component.' }}</p>
+        <code class="mt-3 block text-sm text-[rgb(var(--panel-danger-heading))]">(addToWatchlist)="receiveTitle($event)"</code>
       </div>
 
       <app-knowledge-check [items]="checkItems" />
