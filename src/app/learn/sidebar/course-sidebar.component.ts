@@ -2,12 +2,11 @@ import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SidebarHeaderComponent } from './sidebar-header.component';
 import { CurriculumTreeComponent } from './curriculum-tree.component';
-import { SidebarUserComponent } from './sidebar-user.component';
 
 @Component({
   selector: 'app-course-sidebar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, SidebarHeaderComponent, CurriculumTreeComponent, SidebarUserComponent],
+  imports: [RouterLink, RouterLinkActive, SidebarHeaderComponent, CurriculumTreeComponent],
   host: { class: 'flex flex-col h-full' },
   template: `
     <app-sidebar-header />
@@ -26,14 +25,7 @@ import { SidebarUserComponent } from './sidebar-user.component';
          class="flex min-h-9 items-center gap-2.5 rounded-xl px-3 py-1.5 text-sm text-stone-400 transition hover:bg-stone-800 hover:text-stone-200">
         <span>♡</span> My List
       </a>
-      <a routerLink="/feedback"
-         routerLinkActive="bg-gold-500/10 text-gold-300"
-         class="flex min-h-9 items-center gap-2.5 rounded-xl px-3 py-1.5 text-sm text-stone-400 transition hover:bg-stone-800 hover:text-stone-200">
-        <span>📝</span> Feedback
-      </a>
     </div>
-
-    <app-sidebar-user />
   `,
 })
 export class CourseSidebarComponent {}

@@ -1,9 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { SidebarStateService } from '../../core/services/sidebar-state.service';
 import { LearningFacade } from '../../core/services/learning.facade';
 import { SearchPaletteService } from '../../core/services/search-palette.service';
-import { ThemeService } from '../../core/services/theme.service';
 import { IconComponent } from '../../shared/icon.component';
 
 @Component({
@@ -11,33 +9,8 @@ import { IconComponent } from '../../shared/icon.component';
   standalone: true,
   imports: [RouterLink, IconComponent],
   template: `
-    <!-- Top row: logo + dark mode + collapse -->
-    <div class="flex items-center justify-between border-b border-stone-800 px-4 py-3">
-      <a routerLink="/" class="text-lg font-bold text-gold-400">
-        Angular <span class="text-stone-100">Lab</span>
-      </a>
-      <div class="flex items-center gap-1">
-        <button
-          type="button"
-          (click)="theme.toggle()"
-          [attr.aria-label]="theme.theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
-          class="grid h-8 w-8 place-items-center rounded-lg text-stone-400 transition hover:bg-stone-800 hover:text-gold-300"
-        >
-          <app-icon [name]="theme.theme() === 'dark' ? 'moon' : 'sun'" class="h-4 w-4" />
-        </button>
-        <button
-          type="button"
-          (click)="sidebarState.toggleCollapsed()"
-          [attr.aria-label]="sidebarState.collapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
-          class="grid h-8 w-8 place-items-center rounded-lg text-stone-400 transition hover:bg-stone-800 hover:text-gold-300"
-        >
-          <app-icon name="menu" class="h-4 w-4" />
-        </button>
-      </div>
-    </div>
-
-    <!-- Search bar row -->
-    <div class="border-b border-stone-800 px-3 py-2">
+    <!-- Search bar -->
+    <div class="border-b border-stone-800 px-3 py-2.5">
       <button
         type="button"
         (click)="searchPalette.toggle()"
@@ -79,8 +52,6 @@ import { IconComponent } from '../../shared/icon.component';
   `,
 })
 export class SidebarHeaderComponent {
-  readonly sidebarState = inject(SidebarStateService);
   readonly facade = inject(LearningFacade);
   readonly searchPalette = inject(SearchPaletteService);
-  readonly theme = inject(ThemeService);
 }

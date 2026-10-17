@@ -9,21 +9,29 @@ import { OnboardingDialogComponent } from '../../core/onboarding/onboarding-dial
 import { CourseSidebarComponent } from '../sidebar/course-sidebar.component';
 import { IconComponent } from '../../shared/icon.component';
 import { TOPICS } from '../../core/data/topics';
+import { TopNavbarComponent } from './top-navbar.component';
+import { LearnFooterComponent } from './learn-footer.component';
 
 @Component({
   selector: 'app-learn-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, CourseSidebarComponent, IconComponent, A11yModule, OnboardingDialogComponent],
+  imports: [RouterOutlet, RouterLink, CourseSidebarComponent, IconComponent, A11yModule, OnboardingDialogComponent, TopNavbarComponent, LearnFooterComponent],
   template: `
     @if (showOnboarding()) {
       <app-onboarding-dialog (closed)="onOnboardingClosed()" />
     }
 
-    <div class="flex h-screen overflow-hidden">
+    <div class="flex h-screen flex-col overflow-hidden">
+
+      <!-- Top navbar — full width, always visible -->
+      <app-top-navbar />
+
+      <!-- Body row: sidebar + content -->
+      <div class="flex flex-1 overflow-hidden">
 
       <!-- Desktop sidebar -->
       <aside
-        class="hidden h-screen sticky top-0 lg:flex lg:flex-col lg:border-r lg:border-stone-800 lg:bg-stone-950 lg:transition-all lg:duration-300"
+        class="hidden h-full lg:flex lg:flex-col lg:border-r lg:border-stone-800 lg:bg-stone-950 lg:transition-all lg:duration-300"
         [style.width]="sidebarState.collapsed() ? '72px' : '280px'"
         [class.overflow-hidden]="sidebarState.collapsed()"
       >
@@ -87,24 +95,12 @@ import { TOPICS } from '../../core/data/topics';
       <!-- Main content column -->
       <div class="flex min-w-0 flex-1 flex-col overflow-y-auto">
 
-        <!-- Mobile top bar — title + search -->
-        <header class="flex items-center justify-between border-b border-stone-800 bg-stone-950/95 px-4 py-3 lg:hidden">
-          <div class="w-10"></div>
-          <a routerLink="/dashboard" class="text-base font-bold text-gold-400">Angular <span class="text-stone-100">Lab</span></a>
-          <button
-            type="button"
-            (click)="searchPalette.toggle()"
-            aria-label="Search"
-            class="grid h-10 w-10 place-items-center rounded-xl text-stone-300 transition hover:bg-stone-800"
-          >
-            <app-icon name="search" class="h-5 w-5" />
-          </button>
-        </header>
-
         <!-- Router outlet -->
         <main class="flex-1 pb-20 lg:pb-0" id="learn-main">
           <router-outlet />
         </main>
+
+        <app-learn-footer />
 
         <!-- Mobile bottom nav -->
         <nav class="lg:hidden fixed bottom-0 inset-x-0 z-30 border-t border-stone-800 bg-stone-950/95 backdrop-blur"
@@ -138,6 +134,8 @@ import { TOPICS } from '../../core/data/topics';
 
           </div>
         </nav>
+      </div>
+
       </div>
 
       <!-- Mobile bottom sheet (replaces left drawer) -->
