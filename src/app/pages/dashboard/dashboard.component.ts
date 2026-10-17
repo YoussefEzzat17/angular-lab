@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { LearningFacade } from '../../core/services/learning.facade';
+
 import { GROUPED_TOPICS } from '../../core/data/topics';
+import { LearningFacade } from '../../core/services/learning.facade';
 
 @Component({
   standalone: true,
@@ -18,7 +19,7 @@ import { GROUPED_TOPICS } from '../../core/data/topics';
             <p class="text-xs font-bold uppercase tracking-widest text-gold-400">Dashboard</p>
             <h1 class="mt-2 text-3xl font-bold text-stone-100 sm:text-4xl">
               @if (facade.name()) {
-                Welcome back,<br/><span class="text-gold-400">{{ facade.name() }}</span> 👋
+                Welcome back, <span class="text-gold-400">{{ facade.name() }}</span> 👋
               } @else {
                 Your learning<br/><span class="text-gold-400">dashboard</span>
               }
@@ -110,7 +111,7 @@ import { GROUPED_TOPICS } from '../../core/data/topics';
       </div>
 
       <!-- ── Quick stats ─────────────────────────────────────────────────── -->
-      <div class="mt-6 grid grid-cols-3 gap-3 sm:gap-4">
+      <div class="theme-dark-scope mt-6 grid grid-cols-3 gap-3 sm:gap-4">
         <div class="rounded-2xl border border-stone-800 bg-stone-900 p-4 text-center">
           <p class="text-2xl font-bold text-emerald-400">{{ facade.completedCount() }}</p>
           <p class="mt-1 text-xs text-stone-400">Completed</p>
@@ -126,7 +127,7 @@ import { GROUPED_TOPICS } from '../../core/data/topics';
       </div>
 
       <!-- ── Progress by group ─────────────────────────────────────────── -->
-      <div class="mt-10">
+      <div class="theme-dark-scope mt-10">
         <h2 class="text-lg font-bold text-stone-100">Progress by Group</h2>
         <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           @for (group of facade.groups(); track group.id) {
@@ -161,7 +162,7 @@ import { GROUPED_TOPICS } from '../../core/data/topics';
 
       <!-- ── Recent activity ───────────────────────────────────────────── -->
       @if (facade.recentActivity().length) {
-        <div class="mt-10">
+        <div class="theme-dark-scope mt-10">
           <h2 class="text-lg font-bold text-stone-100">Recent Activity</h2>
           <div class="mt-4 space-y-2">
             @for (entry of facade.recentActivity(); track entry.at) {

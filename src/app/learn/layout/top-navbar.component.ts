@@ -32,10 +32,9 @@ import { IconComponent } from '../../shared/icon.component';
       <!-- Right section: progress ring + continue + search + dashboard + bookmarks + feedback + theme + avatar -->
       <div class="flex flex-1 items-center justify-end gap-4">
 
-        <!-- Mini progress ring + count (desktop only) -->
-        <!-- Progress pill (desktop only) -->
+        <!-- Progress pill (desktop only) — theme-dark-scope keeps it readable in light mode -->
         <div
-          class="hidden items-center gap-2.5 rounded-xl border border-stone-800 bg-stone-900 px-3 py-1.5 lg:flex"
+          class="theme-dark-scope hidden items-center gap-2.5 rounded-xl border border-stone-800 bg-stone-900 px-3 py-1.5 lg:flex"
           [title]="'Progress: ' + facade.percent() + '% — ' + facade.completedCount() + ' of ' + facade.totalCount + ' topics complete'"
         >
           <!-- Mini inline bar -->
@@ -43,7 +42,10 @@ import { IconComponent } from '../../shared/icon.component';
             <div class="h-full rounded-full bg-gold-500 transition-all duration-500"
                  [style.width.%]="facade.percent()"></div>
           </div>
-          <span class="text-xs font-semibold text-gold-300">{{ facade.completedCount() }}<span class="text-stone-600">/{{ facade.totalCount }}</span></span>
+          <span class="text-xs font-semibold text-gold-300">
+            {{ facade.completedCount() }}<span class="text-stone-500">/{{ facade.totalCount }}</span>
+            <span class="ml-1 font-normal text-stone-400">topics</span>
+          </span>
         </div>
 
         <!-- Continue button (desktop only) -->
