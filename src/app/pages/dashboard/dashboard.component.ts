@@ -11,7 +11,7 @@ import { LearningFacade } from '../../core/services/learning.facade';
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
 
       <!-- ── Hero: welcome + topic map ──────────────────────────────────── -->
-      <div class="theme-dark-scope overflow-hidden rounded-3xl bg-gradient-to-br from-gold-950 via-stone-900 to-stone-950 ring-1 ring-gold-500/30">
+      <div class="overflow-hidden rounded-3xl bg-gradient-to-br from-gold-950 via-stone-900 to-stone-950 ring-1 ring-gold-500/30">
         <div class="grid lg:grid-cols-2">
 
           <!-- Left: copy + stats -->
@@ -66,22 +66,22 @@ import { LearningFacade } from '../../core/services/learning.facade';
                      [attr.aria-valuenow]="facade.percent()"
                      [attr.aria-valuetext]="facade.completedCount() + ' of ' + facade.totalCount + ' topics complete'"
                      class="-rotate-90">
-                  <!-- Track -->
+                  <!-- Track — uses CSS var so it adapts to light/dark -->
                   <circle cx="80" cy="80" r="68" fill="none"
-                          stroke="rgb(41 37 36)" stroke-width="12"/>
-                  <!-- Progress arc -->
+                          stroke="rgb(var(--stone-800))" stroke-width="12"/>
+                  <!-- Progress arc — gold-500 CSS var -->
                   <circle cx="80" cy="80" r="68" fill="none"
-                          stroke="rgb(181 138 74)"
+                          stroke="rgb(var(--gold-500))"
                           stroke-width="12"
                           stroke-linecap="round"
                           [attr.stroke-dasharray]="circumference"
                           [attr.stroke-dashoffset]="dashOffset()"
                           style="transition: stroke-dashoffset 0.8s ease"/>
                 </svg>
-                <!-- Center text -->
+                <!-- Center text — stone tokens adapt automatically -->
                 <div class="absolute inset-0 flex flex-col items-center justify-center rotate-0">
                   <span class="text-4xl font-bold text-stone-100 leading-none">{{ facade.completedCount() }}</span>
-                  <span class="text-sm text-stone-500 mt-1">/{{ facade.totalCount }}</span>
+                  <span class="text-sm text-stone-400 mt-1">/{{ facade.totalCount }}</span>
                   <span class="text-xs font-semibold text-gold-400 mt-0.5">topics</span>
                 </div>
               </div>
