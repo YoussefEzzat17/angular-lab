@@ -1,15 +1,13 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { SidebarHeaderComponent } from './sidebar-header.component';
 import { CurriculumTreeComponent } from './curriculum-tree.component';
 
 @Component({
   selector: 'app-course-sidebar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, SidebarHeaderComponent, CurriculumTreeComponent],
+  imports: [RouterLink, RouterLinkActive, CurriculumTreeComponent],
   host: { class: 'flex flex-col h-full' },
   template: `
-    <app-sidebar-header />
     <app-curriculum-tree class="flex-1 overflow-y-auto" />
 
     <!-- Demo App links -->
