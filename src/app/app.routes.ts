@@ -18,7 +18,6 @@ export const routes: Routes = [
     component: SiteLayoutComponent,
     children: [
       { path: '', component: HomeComponent, title: 'Angular Lab' },
-      { path: 'about', component: HomeComponent, title: 'About Angular Lab' },
     ],
   },
 

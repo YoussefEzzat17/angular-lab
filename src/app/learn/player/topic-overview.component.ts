@@ -22,18 +22,16 @@ import type { TopicId } from '../../core/models/learning.models';
         </div>
 
         <!-- Progress ring + stats -->
-        <div class="mt-8 flex items-center gap-5 rounded-2xl border border-stone-800 bg-stone-900 p-5">
+        <div class="mt-8 flex flex-wrap items-center gap-4 rounded-2xl border border-stone-800 bg-stone-900 p-5">
           <app-progress-ring [percent]="sectionPercent()" [ariaText]="sectionPercent() + '% complete'" [size]="56" [strokeWidth]="5" />
-          <div>
+          <div class="flex-1 min-w-0">
             <p class="text-sm text-stone-400">{{ doneSections() }} of {{ t.sections.length }} sections done</p>
             <p class="mt-0.5 text-xs text-stone-500">~{{ totalMinutes() }} min · {{ t.sections.length }} sections</p>
           </div>
-          <div class="ml-auto">
-            <a [routerLink]="startPath()"
-               class="rounded-xl bg-gold-500 px-5 py-2.5 font-semibold text-white transition hover:bg-gold-400">
-              {{ doneSections() === 0 ? 'Start →' : 'Continue →' }}
-            </a>
-          </div>
+          <a [routerLink]="startPath()"
+             class="w-full rounded-xl bg-gold-500 px-5 py-2.5 text-center font-semibold text-white transition hover:bg-gold-400 sm:w-auto">
+            {{ doneSections() === 0 ? 'Start →' : 'Continue →' }}
+          </a>
         </div>
 
         <!-- Objectives -->

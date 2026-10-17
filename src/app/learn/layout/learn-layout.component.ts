@@ -109,10 +109,10 @@ import { LearnFooterComponent } from './learn-footer.component';
              aria-label="Main navigation">
           <div class="flex items-center justify-around px-2 py-2">
 
-            <a routerLink="/dashboard"
-               [class]="isMobileActive('/dashboard') ? 'flex flex-col items-center gap-0.5 px-3 py-1 text-gold-400' : 'flex flex-col items-center gap-0.5 px-3 py-1 text-stone-500'"
-               aria-label="Dashboard">
-              <span class="text-xl">📊</span>
+            <a routerLink="/"
+               [class]="isMobileActive('/') ? 'flex flex-col items-center gap-0.5 px-3 py-1 text-gold-400' : 'flex flex-col items-center gap-0.5 px-3 py-1 text-stone-500'"
+               aria-label="Home">
+              <span class="text-xl">🏠</span>
               <span class="text-[10px] font-semibold">Home</span>
             </a>
 
@@ -125,6 +125,13 @@ import { LearnFooterComponent } from './learn-footer.component';
               <span class="text-xl">📚</span>
               <span class="text-[10px] font-semibold">Topics</span>
             </button>
+
+            <a routerLink="/products"
+               [class]="isDemoMobileActive() ? 'flex flex-col items-center gap-0.5 px-3 py-1 text-gold-400' : 'flex flex-col items-center gap-0.5 px-3 py-1 text-stone-500'"
+               aria-label="Demo App">
+              <span class="text-xl">🎬</span>
+              <span class="text-[10px] font-semibold">Demo</span>
+            </a>
 
             <a routerLink="/bookmarks"
                [class]="isMobileActive('/bookmarks') ? 'flex flex-col items-center gap-0.5 px-3 py-1 text-gold-400' : 'flex flex-col items-center gap-0.5 px-3 py-1 text-stone-500'"
@@ -199,6 +206,11 @@ export class LearnLayoutComponent implements OnDestroy {
 
   isMobileActive(path: string): boolean {
     return this.router.url === path || this.router.url.startsWith(path + '/');
+  }
+
+  isDemoMobileActive(): boolean {
+    const url = this.router.url;
+    return url.startsWith('/products') || url.startsWith('/favorites') || url.startsWith('/movies') || url.startsWith('/watchlist');
   }
 
   @HostListener('document:keydown.escape')
