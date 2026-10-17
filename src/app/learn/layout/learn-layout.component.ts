@@ -4,6 +4,7 @@ import { filter, Subscription } from 'rxjs';
 import { A11yModule } from '@angular/cdk/a11y';
 import { SidebarStateService } from '../../core/services/sidebar-state.service';
 import { ProfileService } from '../../core/services/profile.service';
+import { SearchPaletteService } from '../../core/services/search-palette.service';
 import { OnboardingDialogComponent } from '../../core/onboarding/onboarding-dialog.component';
 import { CourseSidebarComponent } from '../sidebar/course-sidebar.component';
 import { IconComponent } from '../../shared/icon.component';
@@ -18,11 +19,11 @@ import { TOPICS } from '../../core/data/topics';
       <app-onboarding-dialog (closed)="onOnboardingClosed()" />
     }
 
-    <div class="flex min-h-screen">
+    <div class="flex h-screen overflow-hidden">
 
       <!-- Desktop sidebar -->
       <aside
-        class="hidden lg:flex lg:flex-col lg:border-r lg:border-stone-800 lg:bg-stone-950 lg:transition-all lg:duration-300"
+        class="hidden h-screen sticky top-0 lg:flex lg:flex-col lg:border-r lg:border-stone-800 lg:bg-stone-950 lg:transition-all lg:duration-300"
         [style.width]="sidebarState.collapsed() ? '72px' : '280px'"
         [class.overflow-hidden]="sidebarState.collapsed()"
       >
@@ -84,11 +85,20 @@ import { TOPICS } from '../../core/data/topics';
       </aside>
 
       <!-- Main content column -->
-      <div class="flex min-w-0 flex-1 flex-col">
+      <div class="flex min-w-0 flex-1 flex-col overflow-y-auto">
 
-        <!-- Mobile top bar — title only -->
-        <header class="flex items-center justify-center border-b border-stone-800 bg-stone-950/95 px-4 py-3 lg:hidden">
+        <!-- Mobile top bar — title + search -->
+        <header class="flex items-center justify-between border-b border-stone-800 bg-stone-950/95 px-4 py-3 lg:hidden">
+          <div class="w-10"></div>
           <a routerLink="/dashboard" class="text-base font-bold text-gold-400">Angular <span class="text-stone-100">Lab</span></a>
+          <button
+            type="button"
+            (click)="searchPalette.toggle()"
+            aria-label="Search"
+            class="grid h-10 w-10 place-items-center rounded-xl text-stone-300 transition hover:bg-stone-800"
+          >
+            <app-icon name="search" class="h-5 w-5" />
+          </button>
         </header>
 
         <!-- Router outlet -->
@@ -166,6 +176,7 @@ import { TOPICS } from '../../core/data/topics';
 })
 export class LearnLayoutComponent implements OnDestroy {
   readonly sidebarState = inject(SidebarStateService);
+  readonly searchPalette = inject(SearchPaletteService);
   private readonly profile = inject(ProfileService);
   private readonly router = inject(Router);
   readonly showOnboarding = computed(() => !this.profile.onboardingDone());

@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { SidebarStateService } from '../../core/services/sidebar-state.service';
 import { LearningFacade } from '../../core/services/learning.facade';
+import { SearchPaletteService } from '../../core/services/search-palette.service';
 import { IconComponent } from '../../shared/icon.component';
 
 @Component({
@@ -13,14 +14,26 @@ import { IconComponent } from '../../shared/icon.component';
       <a routerLink="/" class="text-lg font-bold text-gold-400">
         Angular <span class="text-stone-100">Lab</span>
       </a>
-      <button
-        type="button"
-        (click)="sidebarState.toggleCollapsed()"
-        [attr.aria-label]="sidebarState.collapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
-        class="grid h-8 w-8 place-items-center rounded-lg text-stone-400 transition hover:bg-stone-800 hover:text-gold-300"
-      >
-        <app-icon name="menu" class="h-4 w-4" />
-      </button>
+      <div class="flex items-center gap-1">
+        <!-- Search button -->
+        <button
+          type="button"
+          (click)="searchPalette.toggle()"
+          aria-label="Search (⌘K)"
+          class="grid h-8 w-8 place-items-center rounded-lg text-stone-400 transition hover:bg-stone-800 hover:text-gold-300"
+        >
+          <app-icon name="search" class="h-4 w-4" />
+        </button>
+        <!-- Collapse button -->
+        <button
+          type="button"
+          (click)="sidebarState.toggleCollapsed()"
+          [attr.aria-label]="sidebarState.collapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
+          class="grid h-8 w-8 place-items-center rounded-lg text-stone-400 transition hover:bg-stone-800 hover:text-gold-300"
+        >
+          <app-icon name="menu" class="h-4 w-4" />
+        </button>
+      </div>
     </div>
 
     <!-- Progress summary -->
@@ -58,4 +71,5 @@ import { IconComponent } from '../../shared/icon.component';
 export class SidebarHeaderComponent {
   readonly sidebarState = inject(SidebarStateService);
   readonly facade = inject(LearningFacade);
+  readonly searchPalette = inject(SearchPaletteService);
 }

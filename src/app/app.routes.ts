@@ -29,7 +29,7 @@ export const routes: Routes = [
     path: '',
     component: SiteLayoutComponent,
     children: [
-      { path: 'home', component: HomeComponent, title: 'Angular Lab' },
+      { path: 'about', component: HomeComponent, title: 'About Angular Lab' },
       { path: 'products', loadComponent: () => import('./pages/products/products.component').then((m) => m.ProductsComponent), title: 'Demo: Browse' },
       { path: 'products/:id', loadComponent: () => import('./pages/product-details/product-details.component').then((m) => m.ProductDetailsComponent), title: 'Product Details' },
       { path: 'favorites', loadComponent: () => import('./pages/favorites/favorites.component').then((m) => m.FavoritesComponent), title: 'Demo: My List' },
