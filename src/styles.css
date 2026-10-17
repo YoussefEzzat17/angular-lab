@@ -166,3 +166,8 @@
 .text-rose-300, .text-rose-400 { color: rgb(var(--status-rose)) !important; }
 .text-emerald-300, .text-emerald-400 { color: rgb(var(--status-emerald)) !important; }
 .text-amber-200 { color: rgb(var(--status-amber)) !important; }
+
+/* Logo bracket draw animation */
+@keyframes draw-bracket {
+  to { stroke-dashoffset: 0; }
+}

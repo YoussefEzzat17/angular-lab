@@ -6,7 +6,6 @@ import { SidebarStateService } from '../../core/services/sidebar-state.service';
 import { ProfileService } from '../../core/services/profile.service';
 import { OnboardingDialogComponent } from '../../core/onboarding/onboarding-dialog.component';
 import { CourseSidebarComponent } from '../sidebar/course-sidebar.component';
-import { IconComponent } from '../../shared/icon.component';
 import { TOPICS } from '../../core/data/topics';
 import { TopNavbarComponent } from './top-navbar.component';
 import { LearnFooterComponent } from './learn-footer.component';
@@ -14,7 +13,7 @@ import { LearnFooterComponent } from './learn-footer.component';
 @Component({
   selector: 'app-learn-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, CourseSidebarComponent, IconComponent, A11yModule, OnboardingDialogComponent, TopNavbarComponent, LearnFooterComponent],
+  imports: [RouterOutlet, RouterLink, CourseSidebarComponent, A11yModule, OnboardingDialogComponent, TopNavbarComponent, LearnFooterComponent],
   template: `
     @if (showOnboarding()) {
       <app-onboarding-dialog (closed)="onOnboardingClosed()" />
@@ -39,16 +38,6 @@ import { LearnFooterComponent } from './learn-footer.component';
         } @else {
           <!-- Rail mode: topic icons + tooltips -->
           <div class="flex h-full flex-col items-center gap-1 overflow-y-auto py-3">
-            <!-- Expand button -->
-            <button
-              type="button"
-              (click)="sidebarState.toggleCollapsed()"
-              aria-label="Expand sidebar"
-              class="mb-2 grid h-10 w-10 place-items-center rounded-xl text-stone-400 transition hover:bg-stone-800 hover:text-gold-300"
-            >
-              <app-icon name="menu" class="h-5 w-5" />
-            </button>
-
             <!-- Dashboard icon -->
             <a routerLink="/dashboard"
                [class]="isActive('/dashboard') ? 'group relative grid h-10 w-10 place-items-center rounded-xl bg-gold-500/20 text-gold-400' : 'group relative grid h-10 w-10 place-items-center rounded-xl text-stone-400 transition hover:bg-stone-800 hover:text-gold-300'"
