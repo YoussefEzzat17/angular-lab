@@ -1,7 +1,7 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LearningFacade } from '../../core/services/learning.facade';
-import { TOPICS, GROUPED_TOPICS } from '../../core/data/topics';
+import { GROUPED_TOPICS } from '../../core/data/topics';
 
 @Component({
   standalone: true,
@@ -54,38 +54,55 @@ import { TOPICS, GROUPED_TOPICS } from '../../core/data/topics';
             </div>
           </div>
 
-          <!-- Right: Topic Progress Map -->
-          <div class="flex items-center justify-center border-t border-gold-500/10 p-6 lg:border-l lg:border-t-0">
-            <div>
-              <p class="mb-4 text-center text-xs font-bold uppercase tracking-widest text-stone-500">Topic Progress</p>
-              <!-- 5 groups × 3 cols max, each topic is a colored node -->
-              <div class="space-y-4">
-                @for (group of groups; track group.id) {
+          <!-- Right: Large Progress Ring -->
+          <div class="flex items-center justify-center border-t border-gold-500/10 p-8 lg:border-l lg:border-t-0">
+            <div class="flex flex-col items-center gap-6">
+
+              <!-- Big SVG ring -->
+              <div class="relative">
+                <svg width="160" height="160" viewBox="0 0 160 160"
+                     role="progressbar"
+                     [attr.aria-valuenow]="facade.percent()"
+                     [attr.aria-valuetext]="facade.completedCount() + ' of ' + facade.totalCount + ' topics complete'"
+                     class="-rotate-90">
+                  <!-- Track -->
+                  <circle cx="80" cy="80" r="68" fill="none"
+                          stroke="rgb(41 37 36)" stroke-width="12"/>
+                  <!-- Progress arc -->
+                  <circle cx="80" cy="80" r="68" fill="none"
+                          stroke="rgb(181 138 74)"
+                          stroke-width="12"
+                          stroke-linecap="round"
+                          [attr.stroke-dasharray]="circumference"
+                          [attr.stroke-dashoffset]="dashOffset()"
+                          style="transition: stroke-dashoffset 0.8s ease"/>
+                </svg>
+                <!-- Center text -->
+                <div class="absolute inset-0 flex flex-col items-center justify-center rotate-0">
+                  <span class="text-4xl font-bold text-stone-100 leading-none">{{ facade.completedCount() }}</span>
+                  <span class="text-sm text-stone-500 mt-1">/{{ facade.totalCount }}</span>
+                  <span class="text-xs font-semibold text-gold-400 mt-0.5">topics</span>
+                </div>
+              </div>
+
+              <!-- Stats row below ring -->
+              <div class="flex items-center gap-8 text-center">
+                <div>
+                  <p class="text-xl font-bold text-gold-400">{{ facade.percent() }}%</p>
+                  <p class="text-xs text-stone-500">Complete</p>
+                </div>
+                <div class="h-8 w-px bg-stone-800"></div>
+                <div>
+                  <p class="text-xl font-bold text-stone-100">{{ facade.totalCount - facade.completedCount() }}</p>
+                  <p class="text-xs text-stone-500">Remaining</p>
+                </div>
+                @if (facade.streak() > 0) {
+                  <div class="h-8 w-px bg-stone-800"></div>
                   <div>
-                    <p class="mb-2 text-[10px] font-bold uppercase tracking-wider text-gold-400/60">{{ group.title }}</p>
-                    <div class="flex flex-wrap gap-2">
-                      @for (topic of group.topics; track topic.id) {
-                        <a
-                          [routerLink]="topic.path"
-                          [title]="topic.title + ' — ' + topicStatusLabel(topic.id)"
-                          class="group relative flex h-10 w-10 items-center justify-center rounded-xl text-lg transition-transform hover:scale-110"
-                          [class]="topicNodeClass(topic.id)"
-                        >
-                          {{ topic.icon }}
-                          <!-- Tiny status dot -->
-                          <span class="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-stone-900"
-                                [class]="topicDotClass(topic.id)"></span>
-                        </a>
-                      }
-                    </div>
+                    <p class="text-xl font-bold text-gold-400">🔥 {{ facade.streak() }}</p>
+                    <p class="text-xs text-stone-500">Day streak</p>
                   </div>
                 }
-              </div>
-              <!-- Legend -->
-              <div class="mt-5 flex items-center gap-4 text-[10px] text-stone-500">
-                <span class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-stone-700"></span> Not started</span>
-                <span class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-gold-500/60"></span> In progress</span>
-                <span class="flex items-center gap-1.5"><span class="h-2 w-2 rounded-full bg-emerald-500"></span> Completed</span>
               </div>
             </div>
           </div>
@@ -168,31 +185,11 @@ export class DashboardComponent {
   readonly facade = inject(LearningFacade);
   readonly groups = GROUPED_TOPICS;
 
-  topicNodeClass(topicId: string): string {
-    const status = this.facade.groups()
-      .flatMap(g => g.topics)
-      .find(t => t.id === topicId)?.status ?? 'not-started';
-    if (status === 'completed') return 'bg-emerald-500/20 text-emerald-400 ring-1 ring-emerald-500/40';
-    if (status === 'in-progress') return 'bg-gold-500/20 text-gold-300 ring-1 ring-gold-500/40';
-    return 'bg-stone-800 text-stone-400 ring-1 ring-stone-700';
-  }
+  // SVG ring: radius 68, circumference = 2π × 68 ≈ 427.3
+  readonly circumference = 2 * Math.PI * 68;
 
-  topicDotClass(topicId: string): string {
-    const status = this.facade.groups()
-      .flatMap(g => g.topics)
-      .find(t => t.id === topicId)?.status ?? 'not-started';
-    if (status === 'completed') return 'bg-emerald-500';
-    if (status === 'in-progress') return 'bg-gold-500';
-    return 'bg-stone-700';
-  }
-
-  topicStatusLabel(topicId: string): string {
-    const status = this.facade.groups()
-      .flatMap(g => g.topics)
-      .find(t => t.id === topicId)?.status ?? 'not-started';
-    if (status === 'completed') return 'Completed ✓';
-    if (status === 'in-progress') return 'In progress';
-    return 'Not started';
+  dashOffset(): number {
+    return this.circumference * (1 - this.facade.percent() / 100);
   }
 
   activityLabel(kind: string): string {
