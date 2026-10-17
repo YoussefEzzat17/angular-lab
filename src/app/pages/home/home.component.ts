@@ -9,19 +9,17 @@ import { SignalNetworkComponent } from './signal-network.component';
   imports: [RouterLink, SignalNetworkComponent],
   template: `
     <!-- ── Hero ───────────────────────────────────────────────────────── -->
-    <section class="border-b border-stone-800 bg-stone-950">
+    <section class="theme-dark-scope border-b border-stone-800 bg-stone-950">
       <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
         <div class="grid items-center gap-12 lg:grid-cols-2">
 
           <!-- Left: copy -->
           <div>
-            <div class="mb-4 inline-flex items-center gap-2 rounded-full border border-gold-400/30 bg-gold-500/10 px-3 py-1 text-xs font-semibold text-gold-300">
-              ✦ 15 interactive topics · Free forever
-            </div>
             <h1 class="text-4xl font-bold leading-tight tracking-tight text-stone-100 sm:text-5xl lg:text-6xl">
               Learn Angular<br/>
               <span class="text-gold-400">by building.</span>
             </h1>
+            <p class="mt-3 text-sm text-stone-500">by <a href="https://youssef-ezzat.vercel.app/" target="_blank" rel="noopener noreferrer" class="text-gold-400 hover:underline">Youssef Ezzat</a></p>
             <p class="mt-6 max-w-lg text-lg text-stone-400">
               A hands-on playground for Angular's core concepts. Every topic is a real, interactive page you can read, click and experiment with — not just slides.
             </p>

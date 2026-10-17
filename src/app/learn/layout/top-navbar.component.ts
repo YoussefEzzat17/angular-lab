@@ -4,12 +4,10 @@ import { LearningFacade } from '../../core/services/learning.facade';
 import { ThemeService } from '../../core/services/theme.service';
 import { SearchPaletteService } from '../../core/services/search-palette.service';
 import { IconComponent } from '../../shared/icon.component';
-import { ProgressRingComponent } from '../../shared/progress-ring.component';
-
 @Component({
   selector: 'app-top-navbar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, IconComponent, ProgressRingComponent],
+  imports: [RouterLink, RouterLinkActive, IconComponent],
   template: `
     <header class="flex h-14 shrink-0 items-center gap-3 border-b border-stone-800 bg-stone-950/95 px-4 backdrop-blur sm:px-6">
 
@@ -35,20 +33,17 @@ import { ProgressRingComponent } from '../../shared/progress-ring.component';
       <div class="flex flex-1 items-center justify-end gap-4">
 
         <!-- Mini progress ring + count (desktop only) -->
+        <!-- Progress pill (desktop only) -->
         <div
-          class="hidden items-center gap-2 lg:flex"
+          class="hidden items-center gap-2.5 rounded-xl border border-stone-800 bg-stone-900 px-3 py-1.5 lg:flex"
           [title]="'Progress: ' + facade.percent() + '% — ' + facade.completedCount() + ' of ' + facade.totalCount + ' topics complete'"
         >
-          <app-progress-ring
-            [percent]="facade.percent()"
-            [size]="28"
-            [strokeWidth]="3"
-            [ariaText]="facade.completedCount() + ' of ' + facade.totalCount + ' topics complete'"
-          />
-          <div class="flex flex-col leading-none">
-            <span class="text-xs font-semibold text-gold-300">{{ facade.completedCount() }}/{{ facade.totalCount }} topics</span>
-            <span class="text-[10px] text-stone-500">{{ facade.percent() }}% done</span>
+          <!-- Mini inline bar -->
+          <div class="h-1.5 w-20 overflow-hidden rounded-full bg-stone-700">
+            <div class="h-full rounded-full bg-gold-500 transition-all duration-500"
+                 [style.width.%]="facade.percent()"></div>
           </div>
+          <span class="text-xs font-semibold text-gold-300">{{ facade.completedCount() }}<span class="text-stone-600">/{{ facade.totalCount }}</span></span>
         </div>
 
         <!-- Continue button (desktop only) -->
