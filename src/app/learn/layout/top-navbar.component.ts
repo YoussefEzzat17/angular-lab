@@ -74,6 +74,13 @@ import { ProgressRingComponent } from '../../shared/progress-ring.component';
           <kbd class="ml-auto hidden rounded border border-stone-700 px-1.5 py-0.5 text-[10px] sm:inline">⌘K</kbd>
         </button>
 
+        <!-- Dashboard (lg+ only) -->
+        <a routerLink="/dashboard" routerLinkActive="text-gold-300 bg-gold-500/10"
+           class="hidden items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-stone-400 transition hover:bg-stone-800 hover:text-stone-200 lg:flex"
+           aria-label="Dashboard">
+          📊 Dashboard
+        </a>
+
         <!-- Saved Topics (lg+ only) -->
         <a routerLink="/bookmarks" routerLinkActive="text-gold-300 bg-gold-500/10"
            class="hidden items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium text-stone-400 transition hover:bg-stone-800 hover:text-stone-200 lg:flex"

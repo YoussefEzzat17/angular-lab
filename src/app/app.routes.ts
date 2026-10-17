@@ -12,9 +12,15 @@ export const routes: Routes = [
     pathMatch: 'full' as const,
   })),
 
-  // ── Home landing page (no sidebar) ──────────────────────────────────────
-  { path: '', component: HomeComponent, title: 'Angular Lab' },
-  { path: 'about', component: HomeComponent, title: 'About Angular Lab' },
+  // ── Home landing page (navbar + footer, no sidebar) ─────────────────────
+  {
+    path: '',
+    component: SiteLayoutComponent,
+    children: [
+      { path: '', component: HomeComponent, title: 'Angular Lab' },
+      { path: 'about', component: HomeComponent, title: 'About Angular Lab' },
+    ],
+  },
 
   // ── Learn layout (sidebar) — all app pages ───────────────────────────────
   {

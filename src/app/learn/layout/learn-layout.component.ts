@@ -31,13 +31,13 @@ import { LearnFooterComponent } from './learn-footer.component';
       <aside
         class="hidden h-full lg:flex lg:flex-col lg:border-r lg:border-stone-800 lg:bg-stone-950 lg:transition-all lg:duration-300"
         [style.width]="sidebarState.collapsed() ? '72px' : '280px'"
-        [class.overflow-hidden]="sidebarState.collapsed()"
+        [class.overflow-x-visible]="sidebarState.collapsed()"
       >
         @if (!sidebarState.collapsed()) {
           <app-course-sidebar class="flex h-full w-[280px] flex-col" />
         } @else {
           <!-- Rail mode: topic icons + tooltips -->
-          <div class="flex h-full flex-col items-center gap-1 overflow-y-auto py-3">
+          <div class="flex h-full flex-col items-center gap-1 overflow-y-auto overflow-x-visible py-3">
             <!-- Expand chevron button -->
             <button
               type="button"
