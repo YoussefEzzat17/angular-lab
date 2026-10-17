@@ -18,6 +18,8 @@ export const routes: Routes = [
     loadComponent: () => import('./learn/layout/learn-layout.component').then((m) => m.LearnLayoutComponent),
     children: [
       { path: 'learn', loadChildren: () => import('./learn/learn.routes').then((m) => m.LEARN_ROUTES) },
+      { path: 'dashboard', loadComponent: () => import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent), title: 'Dashboard' },
+      { path: 'bookmarks', loadComponent: () => import('./pages/bookmarks/bookmarks.component').then((m) => m.BookmarksComponent), title: 'My Bookmarks' },
     ],
   },
 

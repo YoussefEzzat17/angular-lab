@@ -27,6 +27,9 @@ export class LearningFacade {
   readonly totalCount = this.progress.totalCount;
   readonly recentActivity = this.progress.recentActivity;
 
+  // ── Bookmark passthrough ─────────────────────────────────────────────────
+  readonly bookmarkCount = this.bookmarks.count;
+
   // ── Curriculum with status ───────────────────────────────────────────────
   readonly groups = computed(() =>
     GROUPED_TOPICS.map((g) => ({

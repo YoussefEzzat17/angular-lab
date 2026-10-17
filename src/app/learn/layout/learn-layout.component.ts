@@ -1,15 +1,21 @@
-import { Component, HostListener, inject } from '@angular/core';
+import { Component, HostListener, computed, inject } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { A11yModule } from '@angular/cdk/a11y';
 import { SidebarStateService } from '../../core/services/sidebar-state.service';
+import { ProfileService } from '../../core/services/profile.service';
+import { OnboardingDialogComponent } from '../../core/onboarding/onboarding-dialog.component';
 import { CourseSidebarComponent } from '../sidebar/course-sidebar.component';
 import { IconComponent } from '../../shared/icon.component';
 
 @Component({
   selector: 'app-learn-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, CourseSidebarComponent, IconComponent, A11yModule],
+  imports: [RouterOutlet, RouterLink, CourseSidebarComponent, IconComponent, A11yModule, OnboardingDialogComponent],
   template: `
+    @if (showOnboarding()) {
+      <app-onboarding-dialog (closed)="onOnboardingClosed()" />
+    }
+
     <div class="flex min-h-screen">
 
       <!-- Desktop sidebar -->
@@ -81,6 +87,10 @@ import { IconComponent } from '../../shared/icon.component';
 })
 export class LearnLayoutComponent {
   readonly sidebarState = inject(SidebarStateService);
+  private readonly profile = inject(ProfileService);
+  readonly showOnboarding = computed(() => !this.profile.onboardingDone());
+
+  onOnboardingClosed(): void {}
 
   @HostListener('document:keydown.escape')
   onEscape(): void {

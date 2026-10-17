@@ -42,6 +42,16 @@ import { IconComponent } from '../../shared/icon.component';
       >
         {{ facade.completedCount() === 0 ? 'Start learning →' : 'Continue →' }}
       </a>
+      <div class="mt-2 grid grid-cols-2 gap-2">
+        <a routerLink="/dashboard"
+           class="flex items-center justify-center gap-1.5 rounded-xl border border-stone-800 px-3 py-2 text-xs font-semibold text-stone-400 transition hover:bg-stone-800 hover:text-stone-200">
+          📊 Dashboard
+        </a>
+        <a routerLink="/bookmarks"
+           class="flex items-center justify-center gap-1.5 rounded-xl border border-stone-800 px-3 py-2 text-xs font-semibold text-stone-400 transition hover:bg-stone-800 hover:text-stone-200">
+          🔖 Bookmarks
+        </a>
+      </div>
     </div>
   `,
 })

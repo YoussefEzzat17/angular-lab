@@ -4,6 +4,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import { TOPICS } from '../../core/data/topics';
 import { LearningFacade } from '../../core/services/learning.facade';
 import { ProgressService } from '../../core/services/progress.service';
+import { BookmarkService } from '../../core/services/bookmark.service';
 import { LessonSectionDirective } from './lesson-section.directive';
 import { SectionNavBarComponent, SectionNavItem } from './section-nav-bar.component';
 import type { TopicId } from '../../core/models/learning.models';
@@ -17,12 +18,22 @@ import type { TopicId } from '../../core/models/learning.models';
       <!-- Section header -->
       <div class="border-b border-stone-800 bg-stone-950/80 px-4 py-3 sm:px-6">
         <div class="mx-auto flex max-w-5xl items-center justify-between gap-4">
-          <p class="text-sm text-stone-400">
-            Section {{ currentIndex() + 1 }} of {{ topicMeta()?.sections?.length ?? 0 }}
-            @if (currentSection()) {
-              · <span class="font-semibold text-stone-200">{{ currentSection()!.title }}</span>
-            }
-          </p>
+          <div class="flex min-w-0 items-center gap-3">
+            <p class="text-sm text-stone-400">
+              Section {{ currentIndex() + 1 }} of {{ topicMeta()?.sections?.length ?? 0 }}
+              @if (currentSection()) {
+                · <span class="font-semibold text-stone-200">{{ currentSection()!.title }}</span>
+              }
+            </p>
+            <button type="button"
+              (click)="toggleBookmark()"
+              [attr.aria-pressed]="isBookmarked()"
+              [attr.aria-label]="isBookmarked() ? 'Remove bookmark' : 'Bookmark this section'"
+              class="text-lg transition"
+              [class.text-gold-400]="isBookmarked()"
+              [class.text-stone-600]="!isBookmarked()"
+            >🔖</button>
+          </div>
           @if (facade.initials()) {
             <span class="text-xs text-stone-500">{{ topicMeta()?.title }}</span>
           }
@@ -56,6 +67,7 @@ export class LessonPlayerComponent {
 
   protected readonly facade = inject(LearningFacade);
   private readonly progress = inject(ProgressService);
+  private readonly bookmarks = inject(BookmarkService);
   private readonly router = inject(Router);
 
   protected readonly sectionDirectives = contentChildren(LessonSectionDirective);
@@ -104,6 +116,14 @@ export class LessonPlayerComponent {
         untracked(() => this.facade.visitSection(this.topicId(), sectionId));
       }
     });
+  }
+
+  isBookmarked(): boolean {
+    return this.bookmarks.isBookmarked(this.topicId(), this.activeSectionId());
+  }
+
+  toggleBookmark(): void {
+    this.bookmarks.toggle(this.topicId(), this.activeSectionId());
   }
 
   navigateTo(sectionId: string): void {
