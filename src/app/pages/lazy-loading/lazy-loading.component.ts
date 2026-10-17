@@ -1,10 +1,11 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, input } from '@angular/core';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
-import { RecapComponent, RecapItem } from '../../shared/recap.component';
-import { TopicNavComponent } from '../../shared/topic-nav.component';
+import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
+import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
+import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
 
 interface RouteChunk {
   path: string;
@@ -14,9 +15,11 @@ interface RouteChunk {
 
 @Component({
   standalone: true,
-  imports: [CodeBlockDirective, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
+  imports: [CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
-    <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+    <app-lesson-player [topicId]="'lazy-loading'" [section]="section()">
+      <ng-template appLessonSection="basics">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <app-page-header title="Lazy Loading" illustration="lazy">
         Lazy loading means a route's code is downloaded only <strong class="text-gold-300">when the user actually visits it</strong>, instead of
         shipping every page's component inside the main JavaScript bundle from the very first load.
@@ -56,7 +59,11 @@ export const routes: Routes = [
           </div>
         </div>
       </app-lesson-card>
+      </section>
+      </ng-template>
 
+      <ng-template appLessonSection="bundles">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <!-- 3 · INTERACTIVE DEMO -->
       <app-lesson-card
         class="mt-5"
@@ -147,13 +154,44 @@ export const routes: Routes = [
           </div>
         </div>
       </app-lesson-card>
+      </section>
+      </ng-template>
 
-      <app-recap [items]="recapItems" />
-      <app-topic-nav />
-    </section>
+      <ng-template appLessonSection="preloading">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+        <app-lesson-card class="mt-10" label="PRELOADING · STRATEGIES" heading="Fetch lazy chunks in the background">
+          <p class="mt-2 text-sm text-stone-400">
+            Lazy loading delays a route's code until the user opens it. Preloading downloads those chunks in the background after the
+            first screen renders, so the next navigation feels instant. Angular's default is <code class="text-gold-300">NoPreloading</code>.
+          </p>
+          <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">import &#123; provideRouter, withPreloading, PreloadAllModules &#125; from '@angular/router';
+
+provideRouter(routes, withPreloading(PreloadAllModules));</pre>
+        </app-lesson-card>
+      </section>
+      </ng-template>
+
+      <ng-template appLessonSection="devtools">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+        <app-lesson-card class="mt-10" label="DEVTOOLS · MEASURE" heading="See each chunk load in the browser">
+          <p class="mt-2 text-sm text-stone-400">
+            Open the browser's Network tab, reload, and filter by JS. A lazy route's file only appears once you navigate to it.
+            Compare the initial transfer size before and after you add <code class="text-gold-300">loadComponent</code>.
+          </p>
+          <ul class="mt-4 space-y-2 text-sm text-stone-300">
+            <li>Chrome / Edge: DevTools → Network → filter <code class="text-gold-300">JS</code></li>
+            <li>Terminal: <code class="text-gold-300">ng build</code> lists every chunk and its size</li>
+          </ul>
+        </app-lesson-card>
+
+      <app-knowledge-check [items]="checkItems" />
+      </section>
+      </ng-template>
+    </app-lesson-player>
   `,
 })
 export class LazyLoadingComponent {
+  readonly section = input<string>();
   readonly routeChunks: RouteChunk[] = [
     { path: '/products', label: 'Products', kb: 38 },
     { path: '/checkout', label: 'Checkout', kb: 22 },
@@ -196,7 +234,7 @@ export class LazyLoadingComponent {
     return Math.round((this.initialBundleKb() / max) * 100);
   }
 
-  readonly recapItems: RecapItem[] = [
+  readonly checkItems: KnowledgeCheckItem[] = [
     {
       question: "What's the one-line change that turns an eager route into a lazy one?",
       answer: "component: X becomes loadComponent: () => import('./path').then(m => m.X).",

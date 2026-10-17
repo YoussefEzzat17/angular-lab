@@ -4,8 +4,9 @@ import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
-import { RecapComponent, RecapItem } from '../../shared/recap.component';
-import { TopicNavComponent } from '../../shared/topic-nav.component';
+import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
+import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
+import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
 
 export interface DemoUser {
   name: string;
@@ -67,9 +68,11 @@ const NAMES = ['Ada', 'Grace', 'Linus', 'Margaret', 'Alan'];
 
 @Component({
   standalone: true,
-  imports: [CdDefaultCardComponent, CdOnPushCardComponent, CdSignalReaderComponent, FlowDiagramComponent, CodeBlockDirective, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
+  imports: [CdDefaultCardComponent, CdOnPushCardComponent, CdSignalReaderComponent, FlowDiagramComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
-    <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+    <app-lesson-player [topicId]="'change-detection'" [section]="section()">
+      <ng-template appLessonSection="default">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <app-page-header title="Change Detection" illustration="change-detection">
         After something happens (a click, a response, a timer), Angular walks the component tree and re-checks what each
         template shows. By default it checks <em>every</em> component, every time. With
@@ -87,7 +90,13 @@ const NAMES = ['Ada', 'Grace', 'Linus', 'Margaret', 'Alan'];
           <app-flow-diagram class="mt-4 block" from="something happens" to="Angular re-checks the tree" direction="right" />
           <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ onPushCode }}</pre>
         </app-lesson-card>
+      </div>
+      </section>
+      </ng-template>
 
+      <ng-template appLessonSection="onpush">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <div class="mt-10 grid gap-5 md:grid-cols-2">
         <app-lesson-card variant="highlight" label="2 · TRY IT" heading="Mutate vs. replace">
           <p class="mt-2 text-sm text-stone-400">
             Both cards receive the same <code class="text-gold-300">user</code> object. Mutating it keeps the same reference,
@@ -105,7 +114,13 @@ const NAMES = ['Ada', 'Grace', 'Linus', 'Margaret', 'Alan'];
             The parent now holds <strong class="text-stone-300">{{ user.name }}</strong>. If the OnPush card still shows an older name, that is the point.
           </p>
         </app-lesson-card>
+      </div>
+      </section>
+      </ng-template>
 
+      <ng-template appLessonSection="signals-cd">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <div class="mt-10 grid gap-5 md:grid-cols-2">
         <app-lesson-card class="md:col-span-2" label="3 · SIGNALS FIT OnPush" heading="Reading a signal marks the component for you">
           <p class="mt-2 text-sm text-stone-400">
             This OnPush component has no inputs at all, yet it updates when you click below, because its template reads a
@@ -119,12 +134,14 @@ const NAMES = ['Ada', 'Grace', 'Linus', 'Margaret', 'Alan'];
         </app-lesson-card>
       </div>
 
-      <app-recap [items]="recapItems" />
-      <app-topic-nav />
-    </section>
+      <app-knowledge-check [items]="checkItems" />
+      </section>
+      </ng-template>
+    </app-lesson-player>
   `,
 })
 export class ChangeDetectionComponent {
+  readonly section = input<string>();
   readonly ticks = inject(TickService);
 
   user: DemoUser = { name: NAMES[0] };
@@ -152,7 +169,7 @@ export class UserCardComponent {
   readonly user = input.required<User>();
 }`;
 
-  readonly recapItems: RecapItem[] = [
+  readonly checkItems: KnowledgeCheckItem[] = [
     {
       question: 'When is an OnPush component re-checked?',
       answer: 'When one of its inputs receives a new reference, when an event handler fires inside it, when an async pipe emits, or when a signal read in its template changes.',

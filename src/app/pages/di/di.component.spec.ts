@@ -15,6 +15,7 @@ describe('DiComponent', () => {
   it('shares one instance for root-provided counters and one per component for provided ones', () => {
     TestBed.configureTestingModule({ providers: [provideRouter([])] });
     const fixture = TestBed.createComponent(DiComponent);
+    fixture.componentRef.setInput('section', 'scope');
     fixture.detectChanges();
     const root: HTMLElement = fixture.nativeElement;
 

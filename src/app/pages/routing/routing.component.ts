@@ -1,11 +1,12 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
-import { RecapComponent, RecapItem } from '../../shared/recap.component';
-import { TopicNavComponent } from '../../shared/topic-nav.component';
+import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
+import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
+import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
 
 interface MockRoute {
   path: string;
@@ -15,9 +16,11 @@ interface MockRoute {
 
 @Component({
   standalone: true,
-  imports: [FormsModule, CodeBlockDirective, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
+  imports: [FormsModule, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
-    <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+    <app-lesson-player [topicId]="'routing'" [section]="section()">
+      <ng-template appLessonSection="basics">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <app-page-header title="Routing" illustration="routing">
         A Single Page Application never actually reloads the browser — Angular's <strong class="text-gold-300">Router</strong> lets one page
         swap components based on the URL, giving you real navigation, bookmarkable links, and a back button that works.
@@ -75,7 +78,11 @@ interface MockRoute {
         </div>
         <p class="mt-3 text-xs text-stone-500">Navigations so far: {{ navCount() }} — notice the nav bar itself never re-rendered.</p>
       </app-lesson-card>
+      </section>
+      </ng-template>
 
+      <ng-template appLessonSection="navigation">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <!-- 3 · TWO WAYS TO NAVIGATE -->
       <app-lesson-card class="mt-5" label="3 · Declarative vs. programmatic navigation" heading="routerLink vs. the Router service">
         <div class="mt-5 grid gap-4 sm:grid-cols-2">
@@ -97,7 +104,11 @@ goToLogin() &#123;
           </div>
         </div>
       </app-lesson-card>
+      </section>
+      </ng-template>
 
+      <ng-template appLessonSection="params">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <!-- 4 · ROUTE PARAMS -->
       <app-lesson-card class="mt-5" variant="highlight" label="4 · Try it — route parameters">
         <h2 class="mt-2 text-xl font-bold">Passing data through the URL with <code>:id</code></h2>
@@ -132,13 +143,27 @@ goToLogin() &#123;
           </div>
         }
       </app-lesson-card>
+      </section>
+      </ng-template>
 
-      <app-recap [items]="recapItems" />
-      <app-topic-nav />
-    </section>
+      <ng-template appLessonSection="guards-preview">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+        <app-lesson-card class="mt-10" label="GUARDS · PREVIEW" heading="Stop a route before it opens">
+          <p class="mt-2 text-sm text-stone-400">
+            A guard is a function the router runs before it activates a route. It can allow the navigation, or return a
+            <code class="text-gold-300">UrlTree</code> to redirect the user somewhere else. The next topic covers guards in detail.
+          </p>
+          <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">&#123; path: 'admin', canActivate: [adminGuard], component: AdminComponent &#125;</pre>
+        </app-lesson-card>
+
+      <app-knowledge-check [items]="checkItems" />
+      </section>
+      </ng-template>
+    </app-lesson-player>
   `,
 })
 export class RoutingComponent {
+  readonly section = input<string>();
   readonly mockRoutes: MockRoute[] = [
     { path: 'dashboard', label: 'Dashboard', icon: '📊' },
     { path: 'products', label: 'Products', icon: '🛒' },
@@ -177,7 +202,7 @@ export class RoutingComponent {
     this.visitedProductId.set(this.productId());
   }
 
-  readonly recapItems: RecapItem[] = [
+  readonly checkItems: KnowledgeCheckItem[] = [
     {
       question: 'What decides which component renders inside <router-outlet>?',
       answer: 'The Router — it matches the current URL against the routes array, top to bottom, and renders the first match into the outlet.',

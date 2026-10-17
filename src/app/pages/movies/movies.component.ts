@@ -1,23 +1,59 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, input } from '@angular/core';
 
 import { Movie } from '../../core/models/movie.model';
 import { MovieService } from '../../core/services/movie.service';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
-import { RecapComponent, RecapItem } from '../../shared/recap.component';
-import { TopicNavComponent } from '../../shared/topic-nav.component';
+import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
+import { LessonCardComponent } from '../../shared/lesson-card.component';
+import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
+import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
 
 @Component({
   standalone: true,
-  imports: [FlowDiagramComponent, RecapComponent, TopicNavComponent, PageHeaderComponent],
+  imports: [FlowDiagramComponent, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
-    <section class="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
+    <app-lesson-player [topicId]="'movies'" [section]="section()">
+      <ng-template appLessonSection="httpclient">
+      <section class="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
       <app-page-header title="Fetch API &amp; HTTP Client" illustration="http">
         Real apps get their data from a server, not a hardcoded array. Angular's <code class="text-gold-300">HttpClient</code> — injected
         into a service, not the component — makes that request and returns an Observable. These films come from a real public API. Type
         below to see property binding, event binding, a signal, and a computed value all working together on live data.
       </app-page-header>
 
+      <aside class="mt-10 rounded-2xl border border-gold-400/20 bg-gold-950/30 p-6 text-sm text-stone-300">
+        <h2 class="font-bold text-gold-200">Follow the data flow</h2>
+        <p class="mt-2">This component never calls the API directly — a service does, and hands back an Observable of values.</p>
+        <div class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-3">
+          <app-flow-diagram from="MovieService" to="HttpClient.get()" direction="right" />
+          <app-flow-diagram from="public API" to="Observable" direction="right" />
+          <app-flow-diagram from=".subscribe()" to="signal.set()" direction="right" />
+        </div>
+        <p class="mt-4 text-xs text-stone-400">
+          <code class="text-gold-300">signal.set()</code> triggers <code class="text-gold-300">computed()</code> to recalculate
+          <code class="text-gold-300">filteredMovies()</code>, and Angular re-renders only the cards that actually changed.
+        </p>
+      </aside>
+      </section>
+      </ng-template>
+
+      <ng-template appLessonSection="service-pattern">
+      <section class="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
+      <app-lesson-card class="mt-10" label="SERVICE PATTERN" heading="Keep HTTP in a service">
+        <p class="mt-2 text-sm text-stone-400">
+          The component asks a service for data and never builds the URL itself. The service wraps <code class="text-gold-300">HttpClient</code>
+          and returns an Observable, so the same call can be reused and tested on its own.
+        </p>
+        <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">getMovies(): Observable&lt;MoviesResponse&gt; &#123;
+  return this.http.get&lt;MoviesResponse&gt;(this.apiUrl);
+&#125;</pre>
+      </app-lesson-card>
+      </section>
+      </ng-template>
+
+      <ng-template appLessonSection="states">
+      <section class="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
       <label class="mt-8 block max-w-xl" for="movie-search">
         <span class="text-sm font-semibold text-stone-200">Filter loaded movies</span>
         <input
@@ -67,27 +103,26 @@ import { TopicNavComponent } from '../../shared/topic-nav.component';
           }
         </div>
       }
+      </section>
+      </ng-template>
 
-      <aside class="mt-10 rounded-2xl border border-gold-400/20 bg-gold-950/30 p-6 text-sm text-stone-300">
-        <h2 class="font-bold text-gold-200">Follow the data flow</h2>
-        <p class="mt-2">This component never calls the API directly — a service does, and hands back an Observable of values.</p>
-        <div class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-3">
-          <app-flow-diagram from="MovieService" to="HttpClient.get()" direction="right" />
-          <app-flow-diagram from="public API" to="Observable" direction="right" />
-          <app-flow-diagram from=".subscribe()" to="signal.set()" direction="right" />
-        </div>
-        <p class="mt-4 text-xs text-stone-400">
-          <code class="text-gold-300">signal.set()</code> triggers <code class="text-gold-300">computed()</code> to recalculate
-          <code class="text-gold-300">filteredMovies()</code>, and Angular re-renders only the cards that actually changed.
+      <ng-template appLessonSection="try-it">
+      <section class="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
+      <app-lesson-card class="mt-10" variant="highlight" label="TRY IT" heading="Add a rating filter">
+        <p class="mt-2 text-sm text-stone-400">
+          Add a <code class="text-gold-300">minRating</code> signal and extend <code class="text-gold-300">filteredMovies</code> so it also drops
+          films whose <code class="text-gold-300">rt_score</code> is below it. Convert <code class="text-gold-300">rt_score</code> to a number before you compare.
         </p>
-      </aside>
+      </app-lesson-card>
 
-      <app-recap [items]="recapItems" />
-      <app-topic-nav />
-    </section>
+      <app-knowledge-check [items]="checkItems" />
+      </section>
+      </ng-template>
+    </app-lesson-player>
   `,
 })
 export class MoviesComponent {
+  readonly section = input<string>();
   private readonly movieService = inject(MovieService);
 
   // Signals hold state that the template reads with parentheses, for example movies().
@@ -127,7 +162,7 @@ export class MoviesComponent {
     this.searchTerm.set(input.value);
   }
 
-  readonly recapItems: RecapItem[] = [
+  readonly checkItems: KnowledgeCheckItem[] = [
     {
       question: "Why does a Service's method usually return the Observable from http.get() instead of subscribing itself?",
       answer: 'So the caller controls when the request actually runs and can unsubscribe/cancel it — the Service just hands back the "recipe".',

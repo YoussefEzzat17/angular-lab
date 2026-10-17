@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
+import { Component, signal, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { HighlightDirective } from '../../directives/highlight.directive';
@@ -8,14 +8,17 @@ import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
-import { RecapComponent, RecapItem } from '../../shared/recap.component';
-import { TopicNavComponent } from '../../shared/topic-nav.component';
+import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
+import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
+import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule, HighlightDirective, NumbersOnlyDirective, FlowDiagramComponent, CodeBlockDirective, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
+  imports: [CommonModule, FormsModule, HighlightDirective, NumbersOnlyDirective, FlowDiagramComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
-    <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+    <app-lesson-player [topicId]="'directives'" [section]="section()">
+      <ng-template appLessonSection="structural">
+        <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <app-page-header title="Directives" illustration="directives">
         A directive is an Angular instruction attached to an element — without the overhead of writing a whole component
         for behavior you want to reuse. There are two flavors: <strong class="text-stone-200">structural</strong>
@@ -57,7 +60,13 @@ import { TopicNavComponent } from '../../shared/topic-nav.component';
           </ul>
           <p class="mt-4 text-xs text-stone-500"><code>*ngFor="let tip of tips"</code></p>
         </app-lesson-card>
+      </div>
+        </section>
+      </ng-template>
 
+      <ng-template appLessonSection="attribute">
+        <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <div class="mt-8 grid gap-5 md:grid-cols-2">
         <app-lesson-card
           class="md:col-span-2"
           label="ATTRIBUTE · YOUR OWN DIRECTIVE"
@@ -73,7 +82,32 @@ import { TopicNavComponent } from '../../shared/topic-nav.component';
           <p class="mt-4 cursor-pointer rounded-xl border border-gold-400/30 p-4 text-stone-200" appHighlight>Hover me — <code>appHighlight</code> changes my background.</p>
           <code class="mt-4 block rounded-lg bg-stone-950 p-3 text-xs text-gold-300">@Directive(&#123; selector: '[appHighlight]' &#125;)</code>
         </app-lesson-card>
+      </div>
+        </section>
+      </ng-template>
 
+      <ng-template appLessonSection="built-in">
+        <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <div class="mt-8 grid gap-5 md:grid-cols-2">
+        <app-lesson-card label="BUILT-IN · REFERENCE" heading="Other directives you will meet" headingSize="lg">
+          <p class="mt-2 text-sm text-stone-400">
+            Angular ships with directives you can use without writing any code. New templates prefer <code class="text-gold-300">&#64;if</code> and
+            <code class="text-gold-300">&#64;for</code>, but you will still see these in existing projects.
+          </p>
+          <ul class="mt-4 space-y-2 text-sm text-stone-300">
+            <li><code class="text-gold-300">[ngClass]</code> — adds or removes CSS classes from an object or string.</li>
+            <li><code class="text-gold-300">[ngStyle]</code> — sets inline styles from an object.</li>
+            <li><code class="text-gold-300">*ngSwitchCase</code> / <code class="text-gold-300">*ngSwitchDefault</code> — render one of several templates.</li>
+          </ul>
+          <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">&lt;p [ngClass]="&#123; 'text-rose-400': isLate &#125;"&gt;Due today&lt;/p&gt;</pre>
+        </app-lesson-card>
+      </div>
+        </section>
+      </ng-template>
+
+      <ng-template appLessonSection="try-it">
+        <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <div class="mt-8 grid gap-5 md:grid-cols-2">
         <app-lesson-card
           class="md:col-span-2"
           variant="highlight"
@@ -134,13 +168,14 @@ export class NumbersOnlyDirective &#123;
           </div>
         </app-lesson-card>
       </div>
-
-      <app-recap [items]="recapItems" />
-      <app-topic-nav />
-    </section>
+      <app-knowledge-check [items]="checkItems" />
+        </section>
+      </ng-template>
+    </app-lesson-player>
   `,
 })
 export class DirectivesComponent {
+  readonly section = input<string>();
   showTips = true;
   tips = ['*ngIf: show something conditionally', '*ngFor: repeat a list', 'appHighlight: our custom behavior'];
 
@@ -153,7 +188,7 @@ export class DirectivesComponent {
     this.lastBlocked.set(char);
   }
 
-  readonly recapItems: RecapItem[] = [
+  readonly checkItems: KnowledgeCheckItem[] = [
     {
       question: "What's the key difference between a structural and an attribute directive?",
       answer: 'Structural directives (*ngIf, *ngFor, @if, @for) add or remove elements from the DOM; attribute directives (ngClass, appHighlight) change an existing element without adding or removing it.',

@@ -1,12 +1,13 @@
 import { CurrencyPipe, DatePipe, LowerCasePipe, PercentPipe, UpperCasePipe } from '@angular/common';
-import { Component, Pipe, PipeTransform, computed, signal } from '@angular/core';
+import { Component, Pipe, PipeTransform, computed, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
-import { RecapComponent, RecapItem } from '../../shared/recap.component';
-import { TopicNavComponent } from '../../shared/topic-nav.component';
+import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
+import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
+import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
 
 @Pipe({ name: 'truncate', standalone: true })
 class TruncatePipe implements PipeTransform {
@@ -25,9 +26,11 @@ interface PipeOption {
 
 @Component({
   standalone: true,
-  imports: [FormsModule, CurrencyPipe, DatePipe, UpperCasePipe, LowerCasePipe, PercentPipe, TruncatePipe, CodeBlockDirective, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
+  imports: [FormsModule, CurrencyPipe, DatePipe, UpperCasePipe, LowerCasePipe, PercentPipe, TruncatePipe, CodeBlockDirective, KnowledgeCheckComponent, LessonPlayerComponent, LessonSectionDirective, PageHeaderComponent, LessonCardComponent],
   template: `
-    <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+    <app-lesson-player [topicId]="'pipes'" [section]="section()">
+      <ng-template appLessonSection="builtin">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <app-page-header title="Pipes" illustration="pipes">
         A pipe transforms a value <strong class="text-gold-300">right inside the template</strong>, using the <code class="text-gold-300">|</code> symbol —
         without touching the actual value stored in your component. Format dates, prices, and text for humans, in one keyword.
@@ -51,6 +54,69 @@ interface PipeOption {
         </div>
       </app-lesson-card>
 
+      <!-- 4 · CHEAT SHEET -->
+      <app-lesson-card class="mt-5" label="4 · Quick cheat sheet" heading="Built-in pipes you'll use every day">
+        <div class="mt-4 overflow-x-auto rounded-xl border border-stone-800">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-stone-800 text-stone-300">
+              <tr>
+                <th class="px-4 py-2 font-semibold">Pipe</th>
+                <th class="px-4 py-2 font-semibold">Example</th>
+                <th class="px-4 py-2 font-semibold">Result</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-stone-800 text-stone-400">
+              @for (row of cheatSheet; track row.op) {
+                <tr>
+                  <td class="whitespace-nowrap px-4 py-2 font-mono text-gold-300">{{ row.op }}</td>
+                  <td class="whitespace-nowrap px-4 py-2 font-mono text-xs text-stone-500">{{ row.use }}</td>
+                  <td class="px-4 py-2">{{ row.result }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </app-lesson-card>
+      </section>
+      </ng-template>
+
+      <ng-template appLessonSection="custom">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <!-- 3 · CUSTOM PIPE -->
+      <app-lesson-card class="mt-5" label="3 · Custom pipes" heading="When built-in pipes aren't enough">
+        <p class="mt-2 text-sm text-stone-400">A custom pipe is a class with a <code class="text-gold-300">transform()</code> method — reusable anywhere in the app. The truncate pipe above is a real one, defined right in this page:</p>
+        <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">&#64;Pipe(&#123; name: 'truncate' &#125;)
+export class TruncatePipe implements PipeTransform &#123;
+  transform(value: string, limit = 20) &#123;
+    return value.length &gt; limit
+      ? value.slice(0, limit) + '...'
+      : value;
+  &#125;
+&#125;</pre>
+      </app-lesson-card>
+      </section>
+      </ng-template>
+
+      <ng-template appLessonSection="pure-impure">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <!-- 5 · PURE VS IMPURE -->
+      <app-lesson-card class="mt-5" label="5 · Pure vs impure" heading="Angular only re-runs a pipe when it has to">
+        <p class="mt-2 text-sm text-stone-400">
+          A <strong class="text-gold-300">pure</strong> pipe (the default) runs only when its input or arguments change by reference.
+          Primitives such as numbers and strings compare by value, so a new string re-runs the pipe. For objects and arrays,
+          mutating the same reference does <em>not</em> re-run it.
+        </p>
+        <p class="mt-3 text-sm text-stone-400">
+          An <strong class="text-gold-300">impure</strong> pipe (<code class="text-gold-300">pure: false</code>) runs on every change-detection
+          cycle. It catches in-place mutations, but it costs performance, so reach for it only when you truly need it.
+        </p>
+        <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">&#64;Pipe(&#123; name: 'filterDone', pure: false &#125;)</pre>
+      </app-lesson-card>
+      </section>
+      </ng-template>
+
+      <ng-template appLessonSection="try-it">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <!-- 2 · INTERACTIVE PLAYGROUND -->
       <app-lesson-card
         class="mt-5"
@@ -138,50 +204,15 @@ interface PipeOption {
           </div>
         </div>
       </app-lesson-card>
-
-      <!-- 3 · CUSTOM PIPE -->
-      <app-lesson-card class="mt-5" label="3 · Custom pipes" heading="When built-in pipes aren't enough">
-        <p class="mt-2 text-sm text-stone-400">A custom pipe is a class with a <code class="text-gold-300">transform()</code> method — reusable anywhere in the app. The truncate pipe above is a real one, defined right in this page:</p>
-        <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">&#64;Pipe(&#123; name: 'truncate' &#125;)
-export class TruncatePipe implements PipeTransform &#123;
-  transform(value: string, limit = 20) &#123;
-    return value.length &gt; limit
-      ? value.slice(0, limit) + '...'
-      : value;
-  &#125;
-&#125;</pre>
-      </app-lesson-card>
-
-      <!-- 4 · CHEAT SHEET -->
-      <app-lesson-card class="mt-5" label="4 · Quick cheat sheet" heading="Built-in pipes you'll use every day">
-        <div class="mt-4 overflow-x-auto rounded-xl border border-stone-800">
-          <table class="w-full text-left text-sm">
-            <thead class="bg-stone-800 text-stone-300">
-              <tr>
-                <th class="px-4 py-2 font-semibold">Pipe</th>
-                <th class="px-4 py-2 font-semibold">Example</th>
-                <th class="px-4 py-2 font-semibold">Result</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-stone-800 text-stone-400">
-              @for (row of cheatSheet; track row.op) {
-                <tr>
-                  <td class="whitespace-nowrap px-4 py-2 font-mono text-gold-300">{{ row.op }}</td>
-                  <td class="whitespace-nowrap px-4 py-2 font-mono text-xs text-stone-500">{{ row.use }}</td>
-                  <td class="px-4 py-2">{{ row.result }}</td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      </app-lesson-card>
-
-      <app-recap [items]="recapItems" />
-      <app-topic-nav />
-    </section>
+      <app-knowledge-check [items]="checkItems" />
+      </section>
+      </ng-template>
+    </app-lesson-player>
   `,
 })
 export class PipesComponent {
+  readonly section = input<string>();
+
   readonly pipeOptions: PipeOption[] = [
     { mode: 'currency', label: 'currency', syntax: 'currency' },
     { mode: 'percent', label: 'percent', syntax: 'percent' },
@@ -216,7 +247,7 @@ export class PipesComponent {
     { op: 'json', use: '{{ obj | json }}', result: '{ "a": 1 } — handy for debugging' },
   ];
 
-  readonly recapItems: RecapItem[] = [
+  readonly checkItems: KnowledgeCheckItem[] = [
     {
       question: "What does a pipe change — the template's rendered output, or the component's stored value?",
       answer: 'Only what\'s rendered in the template — the underlying value in the component stays exactly as it was.',
@@ -228,6 +259,10 @@ export class PipesComponent {
     {
       question: 'What method does every custom pipe need to implement?',
       answer: 'transform() — it receives the input value (and any pipe arguments) and returns the formatted result.',
+    },
+    {
+      question: 'Why does a pure pipe not re-run when you mutate an array in place?',
+      answer: 'A pure pipe only re-runs when the input reference changes. Mutating the same array keeps the reference, so use a new array instead.',
     },
   ];
 }

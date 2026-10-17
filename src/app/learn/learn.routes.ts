@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { TOPICS } from '../core/data/topics';
 import type { TopicId } from '../core/models/learning.models';
+import { quizUnlockedGuard } from './learn.guards';
 
 // Map of topicId → lazy component loader.
 // Pilot topics (binding, guards) are multi-section LessonPlayers. The other topics render their existing page
@@ -38,6 +39,9 @@ export const LEARN_ROUTES: Routes = [
         loadComponent: () => import('./player/topic-overview.component').then((m) => m.TopicOverviewComponent),
         title: t.title,
       },
+      // Static child routes must stay BEFORE ':section', otherwise 'quiz' and 'complete' match as section ids.
+      { path: 'quiz', canActivate: [quizUnlockedGuard], loadComponent: () => import('./quiz/quiz.component').then((m) => m.QuizComponent), title: 'Quiz' },
+      { path: 'complete', loadComponent: () => import('./quiz/topic-complete.component').then((m) => m.TopicCompleteComponent), title: 'Complete' },
       // /learn/:topic/:section → the topic page (pilots receive 'section' via withComponentInputBinding)
       {
         path: ':section',

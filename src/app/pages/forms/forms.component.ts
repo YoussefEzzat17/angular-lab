@@ -1,15 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { NumbersOnlyDirective } from '../../directives/number-only.directive';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
-import { RecapComponent, RecapItem } from '../../shared/recap.component';
-import { TopicNavComponent } from '../../shared/topic-nav.component';
+import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
+import { LessonCardComponent } from '../../shared/lesson-card.component';
+import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
+import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
 
 @Component({
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, NumbersOnlyDirective, FlowDiagramComponent, RecapComponent, TopicNavComponent, PageHeaderComponent],
+  imports: [ReactiveFormsModule, FormsModule, NumbersOnlyDirective, FlowDiagramComponent, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   styles: `
     .field {
       width: 100%;
@@ -34,7 +36,9 @@ import { TopicNavComponent } from '../../shared/topic-nav.component';
     }
   `,
   template: `
-    <section class="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
+    <app-lesson-player [topicId]="'forms'" [section]="section()">
+      <ng-template appLessonSection="template-driven">
+      <section class="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
       <app-page-header title="Angular Forms" illustration="forms">
         Angular gives you two ways to build a form, and the difference is <strong class="text-stone-200">where the source of truth lives</strong>.
         Reactive forms define every field and validator in TypeScript first, then the template just binds to it — best for complex,
@@ -43,7 +47,99 @@ import { TopicNavComponent } from '../../shared/topic-nav.component';
       </app-page-header>
 
       <div class="mt-10 flex flex-col gap-8 lg:flex-row">
+        <!-- Template-driven form -->
+        <div class="min-w-0 flex-1">
+          <form
+            #contactForm="ngForm"
+            (ngSubmit)="submitContact(contactForm)"
+            class="rounded-3xl border border-stone-800 bg-stone-900 p-6 shadow-2xl shadow-black/20 sm:p-8"
+          >
+            <div class="flex items-center gap-2">
+              <span class="rounded-full bg-emerald-400/10 px-3 py-1 text-xs font-bold tracking-wider text-emerald-300">TEMPLATE-DRIVEN FORM</span>
+            </div>
+            <h2 class="mt-3 text-2xl font-bold text-stone-100">Contact us</h2>
+            <p class="mt-1 text-sm text-stone-400">Template-driven forms use directives like <code>ngModel</code> in the HTML.</p>
+            <app-flow-diagram class="mt-4 block" from="[(ngModel)] (HTML)" to="NgForm model" direction="right" />
+            <p class="mt-2 text-xs text-stone-500">The model is built for you here, from the template — Angular infers it from ngModel and #ngForm.</p>
 
+            <div class="mt-6">
+              <label for="contactName" class="mb-2 block text-sm font-medium text-stone-200">Name</label>
+              <input
+                id="contactName"
+                name="name"
+                [(ngModel)]="contact.name"
+                required
+                minlength="2"
+                #name="ngModel"
+                class="field"
+                [class.invalid]="name.invalid && name.touched"
+              />
+              @if (name.invalid && name.touched) {
+                <small class="error">
+                  @if (name.errors?.['required']) { Name is required. }
+                  @if (name.errors?.['minlength']) { At least 2 characters. }
+                </small>
+              }
+            </div>
+
+            <div class="mt-6">
+              <label for="contactEmail" class="mb-2 block text-sm font-medium text-stone-200">Email</label>
+              <input
+                id="contactEmail"
+                name="email"
+                type="email"
+                [(ngModel)]="contact.email"
+                required
+                email
+                #email="ngModel"
+                class="field"
+                [class.invalid]="email.invalid && email.touched"
+              />
+              @if (email.invalid && email.touched) {
+                <small class="error">
+                  @if (email.errors?.['required']) { Email is required. }
+                  @if (email.errors?.['email']) { Email is not valid. }
+                </small>
+              }
+            </div>
+
+            <div class="mt-6">
+              <label for="contactMessage" class="mb-2 block text-sm font-medium text-stone-200">Message</label>
+              <textarea
+                id="contactMessage"
+                name="message"
+                rows="3"
+                [(ngModel)]="contact.message"
+                required
+                minlength="10"
+                #message="ngModel"
+                class="field"
+                [class.invalid]="message.invalid && message.touched"
+              ></textarea>
+              @if (message.invalid && message.touched) {
+                <small class="error">
+                  @if (message.errors?.['required']) { Message is required. }
+                  @if (message.errors?.['minlength']) { At least 10 characters. }
+                </small>
+              }
+            </div>
+
+            <button type="submit" class="mt-8 w-full rounded-xl bg-emerald-500 px-4 py-3.5 font-semibold text-white hover:bg-emerald-400 sm:w-auto">
+              Send message
+            </button>
+
+            @if (contactSuccess) {
+              <p class="mt-5 text-sm font-medium text-emerald-300">Message sent!</p>
+            }
+          </form>
+        </div>
+      </div>
+      </section>
+      </ng-template>
+
+      <ng-template appLessonSection="reactive">
+      <section class="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
+      <div class="mt-10 flex flex-col gap-8 lg:flex-row">
         <!-- Reactive form -->
         <div class="min-w-0 flex-1">
           <form
@@ -267,106 +363,71 @@ import { TopicNavComponent } from '../../shared/topic-nav.component';
             }
           </form>
         </div>
-
-
-
-
-
-        <!-- Template-driven form -->
-        <div class="min-w-0 flex-1">
-          <form
-            #contactForm="ngForm"
-            (ngSubmit)="submitContact(contactForm)"
-            class="rounded-3xl border border-stone-800 bg-stone-900 p-6 shadow-2xl shadow-black/20 sm:p-8"
-          >
-            <div class="flex items-center gap-2">
-              <span class="rounded-full bg-emerald-400/10 px-3 py-1 text-xs font-bold tracking-wider text-emerald-300">TEMPLATE-DRIVEN FORM</span>
-            </div>
-            <h2 class="mt-3 text-2xl font-bold text-stone-100">Contact us</h2>
-            <p class="mt-1 text-sm text-stone-400">Template-driven forms use directives like <code>ngModel</code> in the HTML.</p>
-            <app-flow-diagram class="mt-4 block" from="[(ngModel)] (HTML)" to="NgForm model" direction="right" />
-            <p class="mt-2 text-xs text-stone-500">The model is built for you here, from the template — Angular infers it from ngModel and #ngForm.</p>
-
-            <div class="mt-6">
-              <label for="contactName" class="mb-2 block text-sm font-medium text-stone-200">Name</label>
-              <input
-                id="contactName"
-                name="name"
-                [(ngModel)]="contact.name"
-                required
-                minlength="2"
-                #name="ngModel"
-                class="field"
-                [class.invalid]="name.invalid && name.touched"
-              />
-              @if (name.invalid && name.touched) {
-                <small class="error">
-                  @if (name.errors?.['required']) { Name is required. }
-                  @if (name.errors?.['minlength']) { At least 2 characters. }
-                </small>
-              }
-            </div>
-
-            <div class="mt-6">
-              <label for="contactEmail" class="mb-2 block text-sm font-medium text-stone-200">Email</label>
-              <input
-                id="contactEmail"
-                name="email"
-                type="email"
-                [(ngModel)]="contact.email"
-                required
-                email
-                #email="ngModel"
-                class="field"
-                [class.invalid]="email.invalid && email.touched"
-              />
-              @if (email.invalid && email.touched) {
-                <small class="error">
-                  @if (email.errors?.['required']) { Email is required. }
-                  @if (email.errors?.['email']) { Email is not valid. }
-                </small>
-              }
-            </div>
-
-            <div class="mt-6">
-              <label for="contactMessage" class="mb-2 block text-sm font-medium text-stone-200">Message</label>
-              <textarea
-                id="contactMessage"
-                name="message"
-                rows="3"
-                [(ngModel)]="contact.message"
-                required
-                minlength="10"
-                #message="ngModel"
-                class="field"
-                [class.invalid]="message.invalid && message.touched"
-              ></textarea>
-              @if (message.invalid && message.touched) {
-                <small class="error">
-                  @if (message.errors?.['required']) { Message is required. }
-                  @if (message.errors?.['minlength']) { At least 10 characters. }
-                </small>
-              }
-            </div>
-
-            <button type="submit" class="mt-8 w-full rounded-xl bg-emerald-500 px-4 py-3.5 font-semibold text-white hover:bg-emerald-400 sm:w-auto">
-              Send message
-            </button>
-
-            @if (contactSuccess) {
-              <p class="mt-5 text-sm font-medium text-emerald-300">Message sent!</p>
-            }
-          </form>
-        </div>
       </div>
+      </section>
+      </ng-template>
 
-      <app-recap [items]="recapItems" />
-      <app-topic-nav />
-    </section>
+      <ng-template appLessonSection="validation">
+      <section class="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
+      <app-lesson-card class="mt-10" label="VALIDATION" heading="Rules first, messages second">
+        <p class="mt-2 text-sm text-stone-400">
+          Validators are plain functions attached to a control. Built-in ones include <code class="text-gold-300">Validators.required</code>,
+          <code class="text-gold-300">Validators.email</code> and <code class="text-gold-300">Validators.minLength(n)</code>. Each failing rule adds a key to
+          the control's <code class="text-gold-300">errors</code> object, and the template reads that key to show a message.
+        </p>
+        <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">email = new FormControl('', [Validators.required, Validators.email]);
+
+&lt;!-- template --&gt;
+&#64;if (email.touched &amp;&amp; email.hasError('email')) &#123;
+  &lt;p&gt;Enter a valid email.&lt;/p&gt;
+&#125;</pre>
+      </app-lesson-card>
+      </section>
+      </ng-template>
+
+      <ng-template appLessonSection="comparison">
+      <section class="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
+      <app-lesson-card class="mt-10" label="COMPARISON" heading="Template-driven or reactive?">
+        <div class="mt-4 overflow-x-auto rounded-xl border border-stone-800">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-stone-800 text-stone-300">
+              <tr>
+                <th class="px-4 py-2 font-semibold">Question</th>
+                <th class="px-4 py-2 font-semibold">Template-driven</th>
+                <th class="px-4 py-2 font-semibold">Reactive</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-stone-800 text-stone-400">
+              <tr><td class="px-4 py-2">Where does the form model live?</td><td class="px-4 py-2">In the template (ngModel)</td><td class="px-4 py-2">In the class (FormGroup)</td></tr>
+              <tr><td class="px-4 py-2">How do you test it?</td><td class="px-4 py-2">Needs the template and a fixture</td><td class="px-4 py-2">Unit-test the class directly</td></tr>
+              <tr><td class="px-4 py-2">How is validation written?</td><td class="px-4 py-2">Directives such as required and email</td><td class="px-4 py-2">Validator functions passed to the control</td></tr>
+              <tr><td class="px-4 py-2">Best for</td><td class="px-4 py-2">Small, simple forms</td><td class="px-4 py-2">Complex, dynamic or large forms</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </app-lesson-card>
+      </section>
+      </ng-template>
+
+      <ng-template appLessonSection="try-it">
+      <section class="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
+      <app-lesson-card class="mt-10" variant="highlight" label="TRY IT" heading="Break the forms on purpose">
+        <p class="mt-2 text-sm text-stone-400">
+          Submit both forms above with empty or invalid fields and watch which errors appear. Then add one new field to the reactive form,
+          give it a validator, and show its error message.
+        </p>
+      </app-lesson-card>
+
+      <app-knowledge-check [items]="checkItems" />
+      </section>
+      </ng-template>
+    </app-lesson-player>
   `,
 })
 export class FormsComponent {
-  readonly recapItems: RecapItem[] = [
+  readonly section = input<string>();
+
+  readonly checkItems: KnowledgeCheckItem[] = [
     {
       question: 'In Template-Driven forms, what does #nameField="ngModel" give you access to?',
       answer: 'The control\'s validation state (valid, invalid, touched, dirty) directly in the template, without touching the component class.',

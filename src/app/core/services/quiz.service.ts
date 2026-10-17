@@ -2,26 +2,22 @@ import { Injectable } from '@angular/core';
 import type { QuizBank, QuizAttempt, QuizQuestion, TopicId } from '../models/learning.models';
 import { QUIZ_RULES } from '../models/learning.models';
 
-// Loaders map — Phase 3 will populate these with real quiz banks.
-// For now every topic returns an empty bank so the service compiles and can be tested.
-const EMPTY_BANK = (id: TopicId): QuizBank => ({ topicId: id, version: 1, questions: [] });
-
 export const QUIZ_BANK_LOADERS: Record<TopicId, () => Promise<QuizBank>> = {
-  'binding':          () => Promise.resolve(EMPTY_BANK('binding')),
-  'pipes':            () => Promise.resolve(EMPTY_BANK('pipes')),
-  'directives':       () => Promise.resolve(EMPTY_BANK('directives')),
-  'communication':    () => Promise.resolve(EMPTY_BANK('communication')),
-  'forms':            () => Promise.resolve(EMPTY_BANK('forms')),
-  'routing':          () => Promise.resolve(EMPTY_BANK('routing')),
-  'guards':           () => Promise.resolve(EMPTY_BANK('guards')),
-  'signals':          () => Promise.resolve(EMPTY_BANK('signals')),
-  'rxjs':             () => Promise.resolve(EMPTY_BANK('rxjs')),
-  'di':               () => Promise.resolve(EMPTY_BANK('di')),
-  'movies':           () => Promise.resolve(EMPTY_BANK('movies')),
-  'interceptor':      () => Promise.resolve(EMPTY_BANK('interceptor')),
-  'facade':           () => Promise.resolve(EMPTY_BANK('facade')),
-  'change-detection': () => Promise.resolve(EMPTY_BANK('change-detection')),
-  'lazy-loading':     () => Promise.resolve(EMPTY_BANK('lazy-loading')),
+  'binding':          () => import('../data/quizzes/binding.quiz').then((m) => m.BINDING_QUIZ),
+  'pipes':            () => import('../data/quizzes/pipes.quiz').then((m) => m.PIPES_QUIZ),
+  'directives':       () => import('../data/quizzes/directives.quiz').then((m) => m.DIRECTIVES_QUIZ),
+  'communication':    () => import('../data/quizzes/communication.quiz').then((m) => m.COMMUNICATION_QUIZ),
+  'forms':            () => import('../data/quizzes/forms.quiz').then((m) => m.FORMS_QUIZ),
+  'routing':          () => import('../data/quizzes/routing.quiz').then((m) => m.ROUTING_QUIZ),
+  'guards':           () => import('../data/quizzes/guards.quiz').then((m) => m.GUARDS_QUIZ),
+  'signals':          () => import('../data/quizzes/signals.quiz').then((m) => m.SIGNALS_QUIZ),
+  'rxjs':             () => import('../data/quizzes/rxjs.quiz').then((m) => m.RXJS_QUIZ),
+  'di':               () => import('../data/quizzes/di.quiz').then((m) => m.DI_QUIZ),
+  'movies':           () => import('../data/quizzes/movies.quiz').then((m) => m.MOVIES_QUIZ),
+  'interceptor':      () => import('../data/quizzes/interceptor.quiz').then((m) => m.INTERCEPTOR_QUIZ),
+  'facade':           () => import('../data/quizzes/facade.quiz').then((m) => m.FACADE_QUIZ),
+  'change-detection': () => import('../data/quizzes/change-detection.quiz').then((m) => m.CHANGE_DETECTION_QUIZ),
+  'lazy-loading':     () => import('../data/quizzes/lazy-loading.quiz').then((m) => m.LAZY_LOADING_QUIZ),
 };
 
 @Injectable({ providedIn: 'root' })

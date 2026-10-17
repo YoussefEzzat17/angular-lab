@@ -1,18 +1,21 @@
-import { Component, OnDestroy, signal } from '@angular/core';
+import { Component, OnDestroy, signal, input } from '@angular/core';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
-import { RecapComponent, RecapItem } from '../../shared/recap.component';
-import { TopicNavComponent } from '../../shared/topic-nav.component';
+import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
+import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
+import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
 
 type Stage = 'idle' | 'built' | 'cloned' | 'sent' | 'response' | 'handled';
 
 @Component({
   standalone: true,
-  imports: [CodeBlockDirective, RecapComponent, TopicNavComponent, PageHeaderComponent, LessonCardComponent],
+  imports: [CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
-    <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+    <app-lesson-player [topicId]="'interceptor'" [section]="section()">
+      <ng-template appLessonSection="basics">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <app-page-header title="HttpInterceptor" illustration="interceptor">
         An <code class="text-gold-300">HttpInterceptor</code> is <strong class="text-gold-300">one function standing in the middle</strong> —
         every request your app sends passes through it on the way out, and every response passes through it on the way back, before your component ever sees it.
@@ -68,7 +71,119 @@ type Stage = 'idle' | 'built' | 'cloned' | 'sent' | 'response' | 'handled';
           The interceptor is exactly that guard — it inspects every HTTP request before it's allowed to reach the backend.
         </p>
       </app-lesson-card>
+      </section>
+      </ng-template>
 
+      <ng-template appLessonSection="auth-header">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <!-- 4 · THE CODE -->
+      <app-lesson-card class="mt-5" label="4 · The code" heading="authInterceptor — line by line">
+        <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">export const authInterceptor: HttpInterceptorFn = (req, next) =&gt; &#123;
+
+  const token = localStorage.getItem('token');
+
+  const clonedRequest = req.clone(&#123;
+    setHeaders: &#123; Authorization: &#96;Bearer $&#123;token&#125;&#96; &#125;
+  &#125;);
+
+  return next(clonedRequest);
+&#125;;</pre>
+        <div class="mt-4 grid gap-3 sm:grid-cols-2">
+          <div class="rounded-xl bg-stone-800 p-4">
+            <p class="text-xs font-bold text-gold-300"><code>req</code></p>
+            <p class="mt-1 text-xs text-stone-400">The current HTTP request — e.g. <code class="text-gold-300">GET /api/users</code>. It's read-only.</p>
+          </div>
+          <div class="rounded-xl bg-stone-800 p-4">
+            <p class="text-xs font-bold text-gold-300"><code>next</code></p>
+            <p class="mt-1 text-xs text-stone-400">Means "continue the request through the pipeline" — call it once you're done inspecting or modifying.</p>
+          </div>
+        </div>
+      </app-lesson-card>
+
+      <!-- 5 · WHY CLONE -->
+      <app-lesson-card class="mt-5" label="5 · Why clone()?" heading="HttpRequest objects are immutable">
+        <p class="mt-2 text-sm text-stone-400">
+          A common question: "why not just edit <code class="text-gold-300">req</code> directly?" — because in Angular, an
+          <code class="text-gold-300">HttpRequest</code> can't be changed in place. Instead, you create a modified <em>copy</em>:
+        </p>
+        <div class="mt-4 flex flex-wrap items-center justify-center gap-3 rounded-xl bg-stone-800 p-5 text-center text-sm">
+          <span class="rounded-lg bg-stone-950 px-4 py-2 text-stone-200">Original request</span>
+          <span class="text-gold-400">→</span>
+          <span class="rounded-lg border border-gold-400/50 bg-gold-500/10 px-4 py-2 font-semibold text-gold-300">req.clone(&#123; ... &#125;)</span>
+          <span class="text-gold-400">→</span>
+          <span class="rounded-lg bg-stone-950 px-4 py-2 text-stone-200">Modified request</span>
+        </div>
+        <div class="mt-4 grid gap-3 sm:grid-cols-2">
+          <div class="rounded-xl bg-gold-950/30 p-4">
+            <p class="text-xs font-bold text-emerald-300">✅ return next(clonedRequest)</p>
+            <p class="mt-1 text-xs text-stone-400">"I'm done editing — send the modified version onward."</p>
+          </div>
+          <div class="rounded-xl bg-stone-800 p-4">
+            <p class="text-xs font-bold text-rose-300">❌ return next(req)</p>
+            <p class="mt-1 text-xs text-stone-400">Sends the original, unmodified request — your token never gets attached.</p>
+          </div>
+        </div>
+      </app-lesson-card>
+      </section>
+      </ng-template>
+
+      <ng-template appLessonSection="error-handling">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <!-- 6 · RESPONSE HANDLING -->
+      <app-lesson-card class="mt-5" label="6 · Handling the response too" heading="Not just requests — the response flows through it as well">
+        <p class="mt-2 text-sm text-stone-400">
+          Imagine the backend replies with <code class="text-rose-300">401 Unauthorized</code> — usually meaning the token is invalid or expired.
+          The interceptor sees that status on the way back and reacts, before your component even gets the error:
+        </p>
+        <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">return next(clonedRequest).pipe(
+  catchError((error: HttpErrorResponse) =&gt; &#123;
+    if (error.status === 401) &#123;
+      localStorage.removeItem('token');
+      router.navigate(['/login']);
+    &#125;
+    return throwError(() =&gt; error);
+  &#125;)
+);</pre>
+        <p class="mt-3 text-sm text-stone-400">
+          Depending on the app's architecture, that reaction could be a token refresh, a forced logout, a redirect to
+          <code class="text-gold-300">/login</code>, or a shared error toast — decided in <strong class="text-stone-200">one place</strong>, instead of every component that calls the API.
+        </p>
+      </app-lesson-card>
+      </section>
+      </ng-template>
+
+      <ng-template appLessonSection="chaining">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <!-- 7 · NOT JUST AUTH -->
+      <app-lesson-card
+        class="mt-5"
+        label="7 · Not just for authentication"
+        heading="The same &quot;one checkpoint&quot; idea, reused for other things"
+      >
+        <div class="mt-4 overflow-x-auto rounded-xl border border-stone-800">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-stone-800 text-stone-300">
+              <tr>
+                <th class="px-4 py-2 font-semibold">Use case</th>
+                <th class="px-4 py-2 font-semibold">What it does</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-stone-800 text-stone-400">
+              @for (row of useCases; track row.title) {
+                <tr>
+                  <td class="whitespace-nowrap px-4 py-2 font-semibold text-gold-300">{{ row.title }}</td>
+                  <td class="px-4 py-2">{{ row.description }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </app-lesson-card>
+      </section>
+      </ng-template>
+
+      <ng-template appLessonSection="try-it">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <!-- 3 · INTERACTIVE DEMO -->
       <app-lesson-card
         class="mt-5"
@@ -145,108 +260,15 @@ Authorization: Bearer {{ tokenPreview() }}</pre>
         }
       </app-lesson-card>
 
-      <!-- 4 · THE CODE -->
-      <app-lesson-card class="mt-5" label="4 · The code" heading="authInterceptor — line by line">
-        <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">export const authInterceptor: HttpInterceptorFn = (req, next) =&gt; &#123;
-
-  const token = localStorage.getItem('token');
-
-  const clonedRequest = req.clone(&#123;
-    setHeaders: &#123; Authorization: &#96;Bearer $&#123;token&#125;&#96; &#125;
-  &#125;);
-
-  return next(clonedRequest);
-&#125;;</pre>
-        <div class="mt-4 grid gap-3 sm:grid-cols-2">
-          <div class="rounded-xl bg-stone-800 p-4">
-            <p class="text-xs font-bold text-gold-300"><code>req</code></p>
-            <p class="mt-1 text-xs text-stone-400">The current HTTP request — e.g. <code class="text-gold-300">GET /api/users</code>. It's read-only.</p>
-          </div>
-          <div class="rounded-xl bg-stone-800 p-4">
-            <p class="text-xs font-bold text-gold-300"><code>next</code></p>
-            <p class="mt-1 text-xs text-stone-400">Means "continue the request through the pipeline" — call it once you're done inspecting or modifying.</p>
-          </div>
-        </div>
-      </app-lesson-card>
-
-      <!-- 5 · WHY CLONE -->
-      <app-lesson-card class="mt-5" label="5 · Why clone()?" heading="HttpRequest objects are immutable">
-        <p class="mt-2 text-sm text-stone-400">
-          A common question: "why not just edit <code class="text-gold-300">req</code> directly?" — because in Angular, an
-          <code class="text-gold-300">HttpRequest</code> can't be changed in place. Instead, you create a modified <em>copy</em>:
-        </p>
-        <div class="mt-4 flex flex-wrap items-center justify-center gap-3 rounded-xl bg-stone-800 p-5 text-center text-sm">
-          <span class="rounded-lg bg-stone-950 px-4 py-2 text-stone-200">Original request</span>
-          <span class="text-gold-400">→</span>
-          <span class="rounded-lg border border-gold-400/50 bg-gold-500/10 px-4 py-2 font-semibold text-gold-300">req.clone(&#123; ... &#125;)</span>
-          <span class="text-gold-400">→</span>
-          <span class="rounded-lg bg-stone-950 px-4 py-2 text-stone-200">Modified request</span>
-        </div>
-        <div class="mt-4 grid gap-3 sm:grid-cols-2">
-          <div class="rounded-xl bg-gold-950/30 p-4">
-            <p class="text-xs font-bold text-emerald-300">✅ return next(clonedRequest)</p>
-            <p class="mt-1 text-xs text-stone-400">"I'm done editing — send the modified version onward."</p>
-          </div>
-          <div class="rounded-xl bg-stone-800 p-4">
-            <p class="text-xs font-bold text-rose-300">❌ return next(req)</p>
-            <p class="mt-1 text-xs text-stone-400">Sends the original, unmodified request — your token never gets attached.</p>
-          </div>
-        </div>
-      </app-lesson-card>
-
-      <!-- 6 · RESPONSE HANDLING -->
-      <app-lesson-card class="mt-5" label="6 · Handling the response too" heading="Not just requests — the response flows through it as well">
-        <p class="mt-2 text-sm text-stone-400">
-          Imagine the backend replies with <code class="text-rose-300">401 Unauthorized</code> — usually meaning the token is invalid or expired.
-          The interceptor sees that status on the way back and reacts, before your component even gets the error:
-        </p>
-        <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">return next(clonedRequest).pipe(
-  catchError((error: HttpErrorResponse) =&gt; &#123;
-    if (error.status === 401) &#123;
-      localStorage.removeItem('token');
-      router.navigate(['/login']);
-    &#125;
-    return throwError(() =&gt; error);
-  &#125;)
-);</pre>
-        <p class="mt-3 text-sm text-stone-400">
-          Depending on the app's architecture, that reaction could be a token refresh, a forced logout, a redirect to
-          <code class="text-gold-300">/login</code>, or a shared error toast — decided in <strong class="text-stone-200">one place</strong>, instead of every component that calls the API.
-        </p>
-      </app-lesson-card>
-
-      <!-- 7 · NOT JUST AUTH -->
-      <app-lesson-card
-        class="mt-5"
-        label="7 · Not just for authentication"
-        heading="The same &quot;one checkpoint&quot; idea, reused for other things"
-      >
-        <div class="mt-4 overflow-x-auto rounded-xl border border-stone-800">
-          <table class="w-full text-left text-sm">
-            <thead class="bg-stone-800 text-stone-300">
-              <tr>
-                <th class="px-4 py-2 font-semibold">Use case</th>
-                <th class="px-4 py-2 font-semibold">What it does</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-stone-800 text-stone-400">
-              @for (row of useCases; track row.title) {
-                <tr>
-                  <td class="whitespace-nowrap px-4 py-2 font-semibold text-gold-300">{{ row.title }}</td>
-                  <td class="px-4 py-2">{{ row.description }}</td>
-                </tr>
-              }
-            </tbody>
-          </table>
-        </div>
-      </app-lesson-card>
-
-      <app-recap [items]="recapItems" />
-      <app-topic-nav />
-    </section>
+      <app-knowledge-check [items]="checkItems" />
+      </section>
+      </ng-template>
+    </app-lesson-player>
   `,
 })
 export class InterceptorComponent implements OnDestroy {
+  readonly section = input<string>();
+
   readonly stage = signal<Stage>('idle');
   readonly simulateExpired = signal(false);
   readonly log = signal<string[]>([]);
@@ -320,7 +342,7 @@ export class InterceptorComponent implements OnDestroy {
     this.timers.forEach((timer) => clearTimeout(timer));
   }
 
-  readonly recapItems: RecapItem[] = [
+  readonly checkItems: KnowledgeCheckItem[] = [
     {
       question: 'Why does the interceptor call req.clone() instead of modifying req directly?',
       answer: "HttpRequest objects are immutable in Angular — you can't edit one in place, only create a modified copy.",
