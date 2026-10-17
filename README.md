@@ -27,24 +27,84 @@ It is built with modern Angular only: standalone components, signals, the `@if` 
 
 ## Features
 
-- **15 interactive lessons**, each split into short sections (concept, try-it or reference, with a minutes estimate) and an overview page that lists the objectives and your progress.
-- **Final quiz per topic** — 6 questions drawn at random from the topic's question bank, with shuffled answer choices. You need 75% to pass, your best score is kept, and the quiz stays locked until every section is done.
-- **Progress tracking** — finishing a section marks it done and quiz results are recorded, all saved in `localStorage`. Progress saved in the old format is migrated automatically.
-- **Dashboard** — welcome message with your name, a day streak, an overall progress ring and a per-topic progress map.
-- **Save for later** — bookmark any lesson section; saved sections are listed on the Saved Topics page, and saving or removing one shows a toast.
-- **Onboarding** — a first-visit dialog asks for an optional name, which appears as initials in the navbar avatar.
-- **Sidebar and mobile navigation** — on desktop, a collapsible sidebar holds the grouped curriculum and demo-app links, and collapses to an icon rail. On phones, a fixed bottom bar (Home / Topics / Demo / Saved) replaces it, and Topics opens the curriculum in a bottom sheet.
-- **Light and dark themes** built on CSS variables, so every colour follows the theme (toggle in the navbar; respects the system preference).
-- **Command palette** — press <kbd>⌘</kbd>/<kbd>Ctrl</kbd> + <kbd>K</kbd> to jump to any topic or demo page.
-- **Grouped navigation** — lessons are organised into five groups in the sidebar, the Topics menu and on the home page.
-- **Demo app** — browse titles, keep a persistent **Watchlist** (with duplicate detection and a remove / clear-all page) and a **My List** of favourites; both survive a refresh.
-- **Toast notifications** with success / error / info styles, a countdown bar and pause-on-hover.
-- **Feedback form** that sends a real email through [EmailJS](https://www.emailjs.com/) (client-side, public key only).
-- **Accessible and responsive** — keyboard navigable, `prefers-reduced-motion` respected, works down to phone width.
+<table>
+  <tr>
+    <td width="33%" valign="top">
+      <b>📚 Interactive lessons</b><br>
+      15 lessons in short sections (concept / try-it / reference), with an overview, objectives and animated diagrams.
+    </td>
+    <td width="33%" valign="top">
+      <b>✅ Final quiz per topic</b><br>
+      6 random questions, shuffled choices, 75% to pass, best score kept. Unlocks when every section is done.
+    </td>
+    <td width="33%" valign="top">
+      <b>📈 Progress tracking</b><br>
+      Sections and quiz results saved in <code>localStorage</code>; old-format progress is migrated.
+    </td>
+  </tr>
+  <tr>
+    <td width="33%" valign="top">
+      <b>🔥 Dashboard</b><br>
+      Welcome by name, day streak, overall progress ring and a per-topic progress map.
+    </td>
+    <td width="33%" valign="top">
+      <b>🔖 Save for later</b><br>
+      Bookmark any section and find it on the Saved Topics page. Toasts confirm saves and removals.
+    </td>
+    <td width="33%" valign="top">
+      <b>👋 Onboarding</b><br>
+      A first-visit dialog asks for an optional name, shown as initials in the navbar avatar.
+    </td>
+  </tr>
+  <tr>
+    <td width="33%" valign="top">
+      <b>🧭 Sidebar &amp; mobile nav</b><br>
+      Curriculum in five groups, in a collapsible sidebar (icon rail when collapsed). On phones, a bottom bar with Topics as a bottom sheet.
+    </td>
+    <td width="33%" valign="top">
+      <b>🌗 Light &amp; dark themes</b><br>
+      Built on CSS variables. Toggle in the navbar, or follow the system preference.
+    </td>
+    <td width="33%" valign="top">
+      <b>⌘ Command palette</b><br>
+      <kbd>⌘</kbd>/<kbd>Ctrl</kbd> + <kbd>K</kbd> jumps to any topic or demo page.
+    </td>
+  </tr>
+  <tr>
+    <td width="33%" valign="top">
+      <b>🎬 Demo app</b><br>
+      Browse titles, a persistent Watchlist (duplicate detection, remove, clear all) and My List. Both survive a refresh.
+    </td>
+    <td width="33%" valign="top">
+      <b>✉️ Feedback form</b><br>
+      Sends a real email through <a href="https://www.emailjs.com/">EmailJS</a>, client-side with only the public key.
+    </td>
+    <td width="33%" valign="top">
+      <b>♿ Accessible &amp; responsive</b><br>
+      Keyboard navigable, respects <code>prefers-reduced-motion</code>, works down to phone width.
+    </td>
+  </tr>
+</table>
 
 <div align="center">
+<img src="docs/screenshots/dashboard.png" alt="Dashboard with welcome message, streak and progress ring" width="49%" />
+<img src="docs/screenshots/quiz.png" alt="Final quiz question with shuffled choices" width="49%" />
+<br />
+<sub><i>Dashboard · Final quiz</i></sub>
+</div>
+
+<div align="center">
+<img src="docs/screenshots/save-for-later.png" alt="Saving a section for later with a confirmation toast" width="49%" />
 <img src="docs/screenshots/communication.png" alt="Component Communication lesson" width="49%" />
-<img src="docs/screenshots/lazy-loading.png" alt="Lazy Loading lesson" width="49%" />
+<br />
+<sub><i>Save for later · Component Communication lesson</i></sub>
+</div>
+
+<div align="center">
+<img src="docs/screenshots/mobile-home.png" alt="Home page on a phone with the bottom navigation bar" width="24%" />
+<img src="docs/screenshots/mobile-topics.png" alt="Course Topics bottom sheet on a phone" width="24%" />
+<br />
+<sub><i>Mobile home · Mobile topics sheet</i></sub>
 </div>
 
 ## Lessons
