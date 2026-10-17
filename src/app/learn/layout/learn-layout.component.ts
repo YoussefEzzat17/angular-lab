@@ -1,5 +1,6 @@
-import { Component, HostListener, computed, inject } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Component, HostListener, OnDestroy, computed, inject } from '@angular/core';
+import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { filter, Subscription } from 'rxjs';
 import { A11yModule } from '@angular/cdk/a11y';
 import { SidebarStateService } from '../../core/services/sidebar-state.service';
 import { ProfileService } from '../../core/services/profile.service';
@@ -163,12 +164,23 @@ import { TOPICS } from '../../core/data/topics';
     </div>
   `,
 })
-export class LearnLayoutComponent {
+export class LearnLayoutComponent implements OnDestroy {
   readonly sidebarState = inject(SidebarStateService);
   private readonly profile = inject(ProfileService);
   private readonly router = inject(Router);
   readonly showOnboarding = computed(() => !this.profile.onboardingDone());
   readonly topics = TOPICS;
+
+  private readonly navSub: Subscription;
+
+  constructor() {
+    // Auto-close the mobile bottom sheet on every navigation
+    this.navSub = this.router.events
+      .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
+      .subscribe(() => this.sidebarState.closeDrawer());
+  }
+
+  ngOnDestroy(): void { this.navSub.unsubscribe(); }
 
   onOnboardingClosed(): void {}
 
