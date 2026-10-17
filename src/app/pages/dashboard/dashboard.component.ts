@@ -111,7 +111,7 @@ import { LearningFacade } from '../../core/services/learning.facade';
       </div>
 
       <!-- ── Quick stats ─────────────────────────────────────────────────── -->
-      <div class="theme-dark-scope mt-6 grid grid-cols-3 gap-3 sm:gap-4">
+      <div class="mt-6 grid grid-cols-3 gap-3 sm:gap-4">
         <div class="rounded-2xl border border-stone-800 bg-stone-900 p-4 text-center">
           <p class="text-2xl font-bold text-emerald-400">{{ facade.completedCount() }}</p>
           <p class="mt-1 text-xs text-stone-400">Completed</p>
@@ -127,7 +127,7 @@ import { LearningFacade } from '../../core/services/learning.facade';
       </div>
 
       <!-- ── Progress by group ─────────────────────────────────────────── -->
-      <div class="theme-dark-scope mt-10">
+      <div class="mt-10">
         <h2 class="text-lg font-bold text-stone-100">Progress by Group</h2>
         <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           @for (group of facade.groups(); track group.id) {
@@ -162,7 +162,7 @@ import { LearningFacade } from '../../core/services/learning.facade';
 
       <!-- ── Recent activity ───────────────────────────────────────────── -->
       @if (facade.recentActivity().length) {
-        <div class="theme-dark-scope mt-10">
+        <div class="mt-10">
           <h2 class="text-lg font-bold text-stone-100">Recent Activity</h2>
           <div class="mt-4 space-y-2">
             @for (entry of facade.recentActivity(); track entry.at) {
