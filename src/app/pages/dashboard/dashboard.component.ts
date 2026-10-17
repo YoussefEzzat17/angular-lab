@@ -10,10 +10,15 @@ import { SignalNetworkComponent } from '../home/signal-network.component';
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
 
       <!-- ── Hero banner ─────────────────────────────────────────── -->
-      <div class="grid items-center gap-8 overflow-hidden rounded-3xl bg-gradient-to-br from-gold-950 via-stone-900 to-stone-950 px-5 py-10 text-stone-100 ring-1 ring-gold-500/30 sm:gap-10 sm:px-12 sm:py-12 lg:grid-cols-2">
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gold-950 via-stone-900 to-stone-950 px-6 py-10 text-stone-100 ring-1 ring-gold-500/30 sm:px-12 sm:py-12">
 
-        <!-- Left: copy + progress -->
-        <div>
+        <!-- Signal Network — decorative background, right side -->
+        <div class="pointer-events-none absolute inset-y-0 right-0 w-1/2 opacity-30 sm:opacity-40">
+          <app-signal-network class="block h-full w-full" />
+        </div>
+
+        <!-- Content — sits above the SVG -->
+        <div class="relative z-10 max-w-xl">
           <p class="mb-3 text-sm font-semibold uppercase tracking-[.2em] text-gold-300">Angular Lab</p>
           <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">
             @if (facade.name()) {
@@ -22,7 +27,7 @@ import { SignalNetworkComponent } from '../home/signal-network.component';
               Learn Angular by building.
             }
           </h1>
-          <p class="mt-4 max-w-lg text-stone-300">
+          <p class="mt-4 text-stone-300">
             @if (facade.completedCount() === 0) {
               A hands-on playground for Angular's core concepts. Every topic is a real, interactive page.
             } @else {
@@ -53,11 +58,6 @@ import { SignalNetworkComponent } from '../home/signal-network.component';
               <div class="h-full rounded-full bg-gold-500 transition-all duration-500" [style.width.%]="facade.percent()"></div>
             </div>
           </div>
-        </div>
-
-        <!-- Right: Signal Network SVG -->
-        <div class="theme-dark-scope relative overflow-hidden rounded-2xl border border-gold-500/15 bg-gradient-to-br from-gold-950 via-stone-900 to-stone-950 p-4">
-          <app-signal-network class="block h-[240px] w-full sm:h-[300px]" />
         </div>
       </div>
 
