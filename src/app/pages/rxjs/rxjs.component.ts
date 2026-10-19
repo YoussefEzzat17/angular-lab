@@ -1,9 +1,10 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, OnDestroy, signal, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, OnDestroy, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
+import { SubjectRadioDemoComponent } from './subject-radio-demo.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
@@ -25,8 +26,9 @@ import {
 } from 'rxjs';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [FormsModule, AsyncPipe, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [FormsModule, AsyncPipe, SubjectRadioDemoComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'rxjs'" [section]="section()">
       <ng-template appLessonSection="observables">
@@ -217,14 +219,102 @@ ngOnDestroy() &#123;
 
       <ng-template appLessonSection="subjects">
       <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <app-lesson-card class="mt-10" label="SUBJECTS" heading="An Observable you can push into">
+      <app-lesson-card class="mt-10" label="SUBJECTS · WHY THEY EXIST" heading="Sometimes you are the one who has to push the values">
         <p class="mt-2 text-sm text-stone-400">
-          A <code class="text-gold-300">Subject</code> lets you call <code class="text-gold-300">next(value)</code> yourself and sends that value to every
-          current subscriber. A <code class="text-gold-300">BehaviorSubject</code> also remembers its latest value and gives it to new subscribers at once.
+          A normal Observable <em>produces</em> its own values — a timer ticks, an HTTP call answers. But some values come from <strong class="text-stone-200">your own code</strong>:
+          a button in one component that another, unrelated component must react to. There is nothing for an Observable to "wrap" there.
         </p>
-        <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">private readonly count$ = new BehaviorSubject(0);
+        <p class="mt-3 text-sm text-stone-400">
+          A <code class="text-gold-300">Subject</code> solves it. It is an Observable <strong class="text-stone-200">plus</strong> a
+          <code class="text-gold-300">next(value)</code> method: anyone can <code class="text-gold-300">subscribe()</code> to listen, and you call
+          <code class="text-gold-300">next()</code> to broadcast.
+        </p>
+      </app-lesson-card>
 
-increment() &#123; this.count$.next(this.count$.value + 1); &#125;</pre>
+      <app-lesson-card class="mt-5" label="THE MENTAL MODEL" heading="A live radio station" tone="amber">
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+          <li><strong class="text-stone-100">The station</strong> is the Subject. <code class="text-gold-300">next(song)</code> plays a song on air.</li>
+          <li><strong class="text-stone-100">Listeners</strong> are subscribers. <code class="text-gold-300">subscribe()</code> tunes in, <code class="text-gold-300">unsubscribe()</code> switches off.</li>
+          <li><strong class="text-stone-100">Everyone tuned in hears the same song at the same moment.</strong> That is called multicasting.</li>
+          <li><strong class="text-stone-100">Live means live:</strong> if you tune in late, the songs that already played are gone — unless the station keeps a memory.</li>
+        </ul>
+        <p class="mt-3 text-sm text-stone-400">
+          A plain Observable is the opposite: a recorded show where every listener gets their own copy, starting from the beginning.
+        </p>
+      </app-lesson-card>
+
+      <app-lesson-card
+        class="mt-5"
+        variant="highlight"
+        label="TRY IT · THE RADIO STATION"
+        heading="Broadcast, tune in late, and see what each Subject remembers"
+      >
+        <ol class="mt-2 list-decimal space-y-1 pl-5 text-sm text-stone-400">
+          <li>Press <strong class="text-stone-200">subscribe()</strong> on Ali, then broadcast two songs. Ali hears both.</li>
+          <li>Now subscribe Sara. She joined late — what does she hear?</li>
+          <li>Switch to <strong class="text-stone-200">BehaviorSubject</strong>, then <strong class="text-stone-200">ReplaySubject</strong>, and repeat steps 1–2.</li>
+        </ol>
+        <app-subject-radio-demo />
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" label="THE FAMILY" heading="Which one should I pick?">
+        <div class="mt-3 grid gap-3 sm:grid-cols-2">
+          <div class="rounded-xl bg-stone-950 p-4">
+            <p class="font-bold text-stone-100">Subject</p>
+            <p class="mt-1 text-xs text-stone-400">New subscriber gets: <strong class="text-stone-200">nothing from the past</strong></p>
+            <p class="mt-2 text-sm text-stone-300">Events: a click, a "saved!" notification, a message that only matters right now.</p>
+          </div>
+          <div class="rounded-xl bg-stone-950 p-4">
+            <p class="font-bold text-stone-100">BehaviorSubject</p>
+            <p class="mt-1 text-xs text-stone-400">New subscriber gets: <strong class="text-stone-200">the current value, instantly</strong></p>
+            <p class="mt-2 text-sm text-stone-300">State: the logged-in user, the cart count, the selected theme. Needs a starting value.</p>
+          </div>
+          <div class="rounded-xl bg-stone-950 p-4">
+            <p class="font-bold text-stone-100">ReplaySubject(n)</p>
+            <p class="mt-1 text-xs text-stone-400">New subscriber gets: <strong class="text-stone-200">the last n values</strong></p>
+            <p class="mt-2 text-sm text-stone-300">History: the last 3 notifications, a chat catch-up, a recent-searches list.</p>
+          </div>
+          <div class="rounded-xl bg-stone-950 p-4">
+            <p class="font-bold text-stone-100">Observable</p>
+            <p class="mt-1 text-xs text-stone-400">New subscriber gets: <strong class="text-stone-200">its own fresh run</strong></p>
+            <p class="mt-2 text-sm text-stone-300">Producers: HTTP calls, timers, Router events. You cannot call next() on it.</p>
+          </div>
+        </div>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" label="THE REAL-WORLD PATTERN" heading="A BehaviorSubject inside a service">
+        <p class="mt-2 text-sm text-stone-400">
+          Keep the Subject <strong class="text-stone-200">private</strong> and give everyone else a read-only view with
+          <code class="text-gold-300">asObservable()</code>. Only the service can change the value.
+        </p>
+        <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">&#64;Injectable(&#123; providedIn: 'root' &#125;)
+export class CartCountService &#123;
+  private readonly count = new BehaviorSubject&lt;number&gt;(0);
+  readonly count$ = this.count.asObservable();   // read-only for everyone else
+
+  add(): void &#123; this.count.next(this.count.value + 1); &#125;
+&#125;</pre>
+        <pre ngNonBindable class="mt-3 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">&lt;!-- any component, anywhere in the app --&gt;
+&lt;span&gt;Cart: {{ cart.count$ | async }}&lt;/span&gt;</pre>
+        <p class="mt-3 text-sm text-stone-400">
+          The navbar badge and the product page never talk to each other, yet they always show the same number — because both listen to one station.
+        </p>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Where Subjects bite beginners">
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+          <li><strong class="text-stone-100">Exposing the Subject itself.</strong> If a component can call <code class="text-gold-300">next()</code> on your service's Subject, anyone can change shared state. Expose <code class="text-gold-300">asObservable()</code>.</li>
+          <li><strong class="text-stone-100">Using a plain Subject for state.</strong> A component that loads later sees nothing and looks empty. State needs a BehaviorSubject.</li>
+          <li><strong class="text-stone-100">Forgetting to unsubscribe.</strong> A Subject lives as long as the service, so a manual <code class="text-gold-300">subscribe()</code> in a component leaks. Prefer the <code class="text-gold-300">async</code> pipe.</li>
+        </ul>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="success" label="MODERN ANGULAR NOTE" heading="Subjects or signals?">
+        <p class="mt-2 text-sm text-stone-300">
+          For simple state that lives in one place, a <code class="text-gold-300">signal()</code> is usually less code than a BehaviorSubject. Reach for a Subject when the
+          value is an <strong class="text-stone-100">event stream</strong> that you want to shape with operators like <code class="text-gold-300">debounceTime</code> or
+          <code class="text-gold-300">switchMap</code> — like the search box in the next section. You can always bridge the two with <code class="text-gold-300">toSignal()</code>.
+        </p>
       </app-lesson-card>
       </section>
       </ng-template>

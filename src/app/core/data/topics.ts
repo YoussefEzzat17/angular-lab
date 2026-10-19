@@ -174,7 +174,7 @@ export const TOPICS: Topic[] = [
       { id: 'observables', title: 'Observables', kind: 'concept', minutes: 5 },
       { id: 'operators', title: 'Operators', kind: 'concept', minutes: 6 },
       { id: 'async-pipe', title: 'async Pipe', kind: 'concept', minutes: 4 },
-      { id: 'subjects', title: 'Subjects', kind: 'concept', minutes: 4 },
+      { id: 'subjects', title: 'Subjects', kind: 'concept', minutes: 8 },
       { id: 'memory-leaks', title: 'Memory Leaks', kind: 'concept', minutes: 4 },
       { id: 'try-it', title: 'Try It', kind: 'try-it', minutes: 6 },
     ],

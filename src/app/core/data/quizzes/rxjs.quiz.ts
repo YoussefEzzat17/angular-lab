@@ -2,7 +2,7 @@ import type { QuizBank } from '../../../core/models/learning.models';
 
 export const RXJS_QUIZ: QuizBank = {
   topicId: 'rxjs',
-  version: 1,
+  version: 2,
   questions: [
     {
       id: 'rxjs-01',
@@ -108,6 +108,35 @@ export const RXJS_QUIZ: QuizBank = {
       correct: ['a'],
       explanation: 'Debouncing limits the number of requests, distinctUntilChanged skips repeats, and switchMap cancels outdated requests. The other pipelines miss at least one of these.',
       sectionId: 'try-it',
+    },
+    {
+      id: 'rxjs-11',
+      type: 'single',
+      prompt: 'A service keeps its state in a BehaviorSubject. How should it share that state with components?',
+      choices: [
+        { id: 'a', text: 'Expose count$ = this.count.asObservable() and keep the Subject private' },
+        { id: 'b', text: 'Make the BehaviorSubject public so components can call next() themselves' },
+        { id: 'c', text: 'Create a new BehaviorSubject inside every component' },
+        { id: 'd', text: 'Return a plain Subject so late components start empty' },
+      ],
+      correct: ['a'],
+      explanation: 'asObservable() gives components a read-only view, so only the service can change the shared value. A public Subject lets any component overwrite it.',
+      sectionId: 'subjects',
+    },
+    {
+      id: 'rxjs-12',
+      type: 'single',
+      code: "const s = new Subject<number>();\ns.next(1);\ns.next(2);\ns.subscribe(v => console.log(v));\ns.next(3);",
+      prompt: 'What does this code log?',
+      choices: [
+        { id: 'a', text: '3' },
+        { id: 'b', text: '1, 2, 3' },
+        { id: 'c', text: '2, 3' },
+        { id: 'd', text: 'Nothing — a Subject never emits' },
+      ],
+      correct: ['a'],
+      explanation: 'A plain Subject does not remember anything. The subscriber joined after next(1) and next(2) had already happened, so it only receives 3.',
+      sectionId: 'subjects',
     },
   ],
 };
