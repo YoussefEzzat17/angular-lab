@@ -166,13 +166,14 @@ export const TOPICS: Topic[] = [
     icon: '🌊', title: 'RxJS', description: 'Observables, operators like switchMap and debounceTime, and the async pipe.',
     objectives: [
       { text: 'Understand what an Observable is and how to subscribe', sectionId: 'observables' },
-      { text: 'Use operators: map, filter, switchMap, debounceTime', sectionId: 'operators' },
+      { text: 'Use operators: map, filter, debounceTime, and choose between switchMap, mergeMap and concatMap', sectionId: 'operators' },
       { text: 'Use the async pipe to handle subscriptions in templates', sectionId: 'async-pipe' },
+      { text: 'Share values between components with Subject, BehaviorSubject and ReplaySubject', sectionId: 'subjects' },
       { text: 'Avoid memory leaks with takeUntilDestroyed', sectionId: 'memory-leaks' },
     ],
     sections: [
       { id: 'observables', title: 'Observables', kind: 'concept', minutes: 5 },
-      { id: 'operators', title: 'Operators', kind: 'concept', minutes: 6 },
+      { id: 'operators', title: 'Operators', kind: 'concept', minutes: 9 },
       { id: 'async-pipe', title: 'async Pipe', kind: 'concept', minutes: 4 },
       { id: 'subjects', title: 'Subjects', kind: 'concept', minutes: 8 },
       { id: 'memory-leaks', title: 'Memory Leaks', kind: 'concept', minutes: 4 },

@@ -2,7 +2,7 @@ import type { QuizBank } from '../../../core/models/learning.models';
 
 export const RXJS_QUIZ: QuizBank = {
   topicId: 'rxjs',
-  version: 2,
+  version: 3,
   questions: [
     {
       id: 'rxjs-01',
@@ -137,6 +137,20 @@ export const RXJS_QUIZ: QuizBank = {
       correct: ['a'],
       explanation: 'A plain Subject does not remember anything. The subscriber joined after next(1) and next(2) had already happened, so it only receives 3.',
       sectionId: 'subjects',
+    },
+    {
+      id: 'rxjs-13',
+      type: 'single',
+      prompt: 'Which operator should you use so that saved edits are sent to the server one at a time, in the order the user made them?',
+      choices: [
+        { id: 'a', text: 'concatMap' },
+        { id: 'b', text: 'switchMap' },
+        { id: 'c', text: 'mergeMap' },
+        { id: 'd', text: 'filter' },
+      ],
+      correct: ['a'],
+      explanation: 'concatMap queues the inner requests and runs them one after another. switchMap would cancel earlier saves, and mergeMap would run them all at once with no guaranteed order.',
+      sectionId: 'operators',
     },
   ],
 };

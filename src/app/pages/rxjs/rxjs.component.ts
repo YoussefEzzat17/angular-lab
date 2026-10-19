@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
+import { FlattenDemoComponent } from './flatten-demo.component';
 import { SubjectRadioDemoComponent } from './subject-radio-demo.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
@@ -28,7 +29,7 @@ import {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [FormsModule, AsyncPipe, SubjectRadioDemoComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [FormsModule, AsyncPipe, FlattenDemoComponent, SubjectRadioDemoComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'rxjs'" [section]="section()">
       <ng-template appLessonSection="observables">
@@ -135,6 +136,20 @@ take(3):         20───40───60|  (completes after 3 values)</pre>
         <div class="mt-4 rounded-xl bg-stone-800 p-4 text-sm text-stone-300">
           Result: <span class="text-gold-300">{{ operatorsResult().join(', ') || '—' }}</span>
         </div>
+      </app-lesson-card>
+
+      <!-- 4 · FLATTENING OPERATORS -->
+      <app-lesson-card class="mt-5" label="4 · FLATTENING OPERATORS" heading="switchMap, mergeMap, concatMap — what happens when a new request arrives?">
+        <p class="mt-2 text-sm text-stone-400">
+          Some operators start a <strong class="text-stone-200">new async job for every value</strong> — for example, one HTTP call per keystroke. The question is what to do when a new
+          job starts while the previous one is still running. The three operators answer it differently:
+        </p>
+        <ul class="mt-3 list-disc space-y-1 pl-5 text-sm text-stone-300">
+          <li><code class="text-gold-300">switchMap</code> — <strong class="text-stone-100">cancel the old one</strong>. Use it for search boxes and "load the selected item".</li>
+          <li><code class="text-gold-300">mergeMap</code> — <strong class="text-stone-100">run them all in parallel</strong>. Use it when the jobs are independent.</li>
+          <li><code class="text-gold-300">concatMap</code> — <strong class="text-stone-100">queue them</strong>. Use it when order matters, like saving edits one by one.</li>
+        </ul>
+        <app-flatten-demo />
       </app-lesson-card>
 
       <!-- 7 · CHEAT SHEET -->

@@ -128,7 +128,7 @@ placeOrder() {
       <ng-template appLessonSection="building">
       <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <div class="mt-10 grid gap-5 md:grid-cols-2">
-        <app-lesson-card class="md:col-span-2" label="5 · BUILD ONE" heading="Five steps to your own facade">
+        <app-lesson-card class="md:col-span-2" label="4 · BUILD ONE" heading="Five steps to your own facade">
           <ol class="mt-4 grid gap-3 md:grid-cols-5">
             @for (step of buildSteps; track step.title; let i = $index) {
               <li class="rounded-xl bg-stone-800 p-4">
@@ -147,7 +147,7 @@ placeOrder() {
       <ng-template appLessonSection="wiring">
       <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <div class="mt-10 grid gap-5 md:grid-cols-2">
-        <app-lesson-card label="6 · USING IT" heading="The component gets tiny">
+        <app-lesson-card label="5 · USING IT" heading="The component gets tiny">
           <p class="mt-2 text-sm text-stone-400">
             Components inject only the facade and read its signals. They never import the subsystem services, so those can change
             freely behind the facade.
@@ -155,7 +155,7 @@ placeOrder() {
           <pre class="mt-3 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ usageCode }}</pre>
         </app-lesson-card>
 
-        <app-lesson-card label="7 · WHERE IT LIVES" heading="Folder and naming">
+        <app-lesson-card label="6 · WHERE IT LIVES" heading="Folder and naming">
           <pre class="mt-3 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ folderCode }}</pre>
           <ul class="mt-3 space-y-1.5 text-sm text-stone-400">
             <li>• One facade per <b class="text-stone-200">feature</b> (checkout, products, auth) — not one for the whole app.</li>
@@ -170,7 +170,7 @@ placeOrder() {
       <ng-template appLessonSection="try-it">
       <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <div class="mt-10 grid gap-5 md:grid-cols-2">
-        <app-lesson-card variant="highlight" class="md:col-span-2" label="4 · TRY IT" heading="Place the same order both ways">
+        <app-lesson-card variant="highlight" class="md:col-span-2" label="7 · TRY IT" heading="Place the same order both ways">
           <p class="mt-2 text-sm text-stone-400">
             Both versions do <b class="text-stone-200">exactly the same work</b> and produce the same log. The difference is where the
             knowledge lives. Turn on "decline the card" to watch the rollback.
