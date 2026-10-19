@@ -140,6 +140,14 @@ export class DiPrivateCounterComponent {
       </div>
 
       <app-knowledge-check [items]="checkItems" />
+
+      <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Dependency injection mistakes to avoid">
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+          <li><strong class="text-stone-100">Expecting shared state but getting copies.</strong> A service listed in a component's <code class="text-gold-300">providers</code> is created again for that component. Use <code class="text-gold-300">providedIn: 'root'</code> when everyone should share one.</li>
+          <li><strong class="text-stone-100">Creating a service with new.</strong> <code class="text-gold-300">new CartService()</code> skips DI, so it cannot get its own dependencies and is hard to replace in tests. Use <code class="text-gold-300">inject(CartService)</code>.</li>
+          <li><strong class="text-stone-100">Two services that need each other.</strong> A circular dependency is a design smell. Move the shared part into a third service.</li>
+        </ul>
+      </app-lesson-card>
       </section>
       </ng-template>
     </app-lesson-player>

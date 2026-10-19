@@ -180,6 +180,15 @@ type Stage = 'idle' | 'built' | 'cloned' | 'sent' | 'response' | 'handled';
           </table>
         </div>
       </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Interceptor mistakes to avoid">
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+          <li><strong class="text-stone-100">Changing the request directly.</strong> An <code class="text-gold-300">HttpRequest</code> is immutable. Use <code class="text-gold-300">req.clone(...)</code> and pass the clone on.</li>
+          <li><strong class="text-stone-100">Forgetting to call next().</strong> If you never call <code class="text-gold-300">next(req)</code>, the request is never sent and the call just hangs.</li>
+          <li><strong class="text-stone-100">Sending your token to every URL.</strong> Check the URL first, or a third-party API will receive your users' access token.</li>
+          <li><strong class="text-stone-100">Ignoring the order.</strong> Interceptors run in the order they are registered for the request, and in reverse for the response.</li>
+        </ul>
+      </app-lesson-card>
       </section>
       </ng-template>
 

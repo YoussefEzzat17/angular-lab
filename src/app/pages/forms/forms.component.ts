@@ -383,6 +383,15 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
   &lt;p&gt;Enter a valid email.&lt;/p&gt;
 &#125;</pre>
       </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Validation mistakes to avoid">
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+          <li><strong class="text-stone-100">Showing errors before the user has typed anything.</strong> Check <code class="text-gold-300">control.touched || control.dirty</code> before you show a message.</li>
+          <li><strong class="text-stone-100">Forgetting the forms module.</strong> <code class="text-gold-300">FormsModule</code> is needed for <code class="text-gold-300">ngModel</code>, and <code class="text-gold-300">ReactiveFormsModule</code> for <code class="text-gold-300">formGroup</code> and <code class="text-gold-300">formControlName</code>.</li>
+          <li><strong class="text-stone-100">No name on an ngModel inside a form.</strong> Angular needs <code class="text-gold-300">name="email"</code> on every <code class="text-gold-300">ngModel</code> control inside a <code class="text-gold-300">&lt;form&gt;</code>.</li>
+          <li><strong class="text-stone-100">Trusting client-side validation alone.</strong> Anyone can bypass the browser, so the server must validate again.</li>
+        </ul>
+      </app-lesson-card>
       </section>
       </ng-template>
 

@@ -186,6 +186,14 @@ provideRouter(routes, withPreloading(PreloadAllModules));</pre>
         </app-lesson-card>
 
       <app-knowledge-check [items]="checkItems" />
+
+      <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Lazy loading mistakes to avoid">
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+          <li><strong class="text-stone-100">Importing a lazy component somewhere else.</strong> One normal <code class="text-gold-300">import</code> of it in the main bundle pulls it back in, and the lazy chunk is no longer separate.</li>
+          <li><strong class="text-stone-100">Lazy loading everything.</strong> Each chunk is an extra request. Split by route or big feature, not by tiny component.</li>
+          <li><strong class="text-stone-100">Not checking the build output.</strong> Run <code class="text-gold-300">ng build</code> and read the chunk sizes — that is the only way to know it worked.</li>
+        </ul>
+      </app-lesson-card>
       </section>
       </ng-template>
     </app-lesson-player>

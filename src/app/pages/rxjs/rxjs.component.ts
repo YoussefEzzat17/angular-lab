@@ -111,6 +111,14 @@ import {
           <p class="mt-2 text-xs text-stone-500">Click subscribe, let a few numbers come in, then click unsubscribe — notice it stops instantly, just like pausing the show.</p>
         </div>
       </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Observable mistakes to avoid">
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+          <li><strong class="text-stone-100">Expecting something to happen without subscribe().</strong> A cold Observable does nothing until someone subscribes.</li>
+          <li><strong class="text-stone-100">Subscribing inside a subscribe.</strong> Nested subscriptions are hard to cancel and easy to leak. Combine them with <code class="text-gold-300">switchMap</code> instead.</li>
+          <li><strong class="text-stone-100">Using an Observable for simple local state.</strong> A <code class="text-gold-300">signal()</code> is less code for a counter or a toggle. Save Observables for streams of events over time.</li>
+        </ul>
+      </app-lesson-card>
       </section>
       </ng-template>
 

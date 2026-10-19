@@ -113,6 +113,14 @@ export class TruncatePipe implements PipeTransform &#123;
         </p>
         <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">&#64;Pipe(&#123; name: 'filterDone', pure: false &#125;)</pre>
       </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Why a pipe may not update">
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+          <li><strong class="text-stone-100">Mutating an array and expecting a pure pipe to re-run.</strong> A pure pipe runs only when its input <em>reference</em> changes. Pass a new array instead of pushing into the old one.</li>
+          <li><strong class="text-stone-100">Making a pipe impure to fix that.</strong> An impure pipe runs on every change-detection pass, so filtering a big list this way gets slow. Filter in a <code class="text-gold-300">computed()</code> instead.</li>
+          <li><strong class="text-stone-100">Forgetting to list the pipe in imports.</strong> In a standalone component, a pipe you do not import is an error in the template.</li>
+        </ul>
+      </app-lesson-card>
       </section>
       </ng-template>
 

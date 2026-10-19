@@ -103,6 +103,14 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
           <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">&lt;p [ngClass]="&#123; 'text-rose-400': isLate &#125;"&gt;Due today&lt;/p&gt;</pre>
         </app-lesson-card>
       </div>
+
+      <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Where control flow and directives go wrong">
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+          <li><strong class="text-stone-100">Using a changing index as the track key.</strong> <code class="text-gold-300">track $index</code> is fine for a static list, but if items are reordered or removed, use a stable id such as <code class="text-gold-300">track item.id</code>.</li>
+          <li><strong class="text-stone-100">Writing two opposite checks.</strong> Instead of two separate <code class="text-gold-300">&#64;if</code> blocks that are the inverse of each other, use one <code class="text-gold-300">&#64;if</code> with an <code class="text-gold-300">&#64;else</code>.</li>
+          <li><strong class="text-stone-100">Not importing your attribute directive.</strong> A plain attribute like <code class="text-gold-300">appHighlight</code> is silently ignored when the directive is missing from <code class="text-gold-300">imports</code> — no error, just no effect.</li>
+        </ul>
+      </app-lesson-card>
         </section>
       </ng-template>
 

@@ -155,6 +155,15 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
 
           <app-knowledge-check [items]="recapItems" />
           <app-topic-nav />
+
+      <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Four things that trip up every beginner">
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+          <li><strong class="text-stone-100">Using interpolation for a boolean property.</strong> <code ngNonBindable class="text-gold-300">disabled="{{ isLoading }}"</code> sets the text "false", which still disables the button. Write <code class="text-gold-300">[disabled]="isLoading"</code>.</li>
+          <li><strong class="text-stone-100">Getting the banana-in-a-box backwards.</strong> It is <code class="text-gold-300">[(ngModel)]</code> — square brackets on the outside, round on the inside.</li>
+          <li><strong class="text-stone-100">Forgetting FormsModule.</strong> Without it in the component's <code class="text-gold-300">imports</code>, Angular says it can't bind to <code class="text-gold-300">ngModel</code>.</li>
+          <li><strong class="text-stone-100">Calling a heavy method inside interpolation.</strong> It runs on every change-detection pass. Compute it once with <code class="text-gold-300">computed()</code> or a pipe.</li>
+        </ul>
+      </app-lesson-card>
         </section>
       </ng-template>
 

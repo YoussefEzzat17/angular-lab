@@ -144,6 +144,14 @@ goToLogin() &#123;
           </div>
         }
       </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Routing mistakes to avoid">
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+          <li><strong class="text-stone-100">Reading the route parameter only once.</strong> Going from <code class="text-gold-300">/product/1</code> to <code class="text-gold-300">/product/2</code> reuses the same component, so a one-time <code class="text-gold-300">snapshot</code> read goes stale. Use a signal input or the <code class="text-gold-300">paramMap</code> observable.</li>
+          <li><strong class="text-stone-100">Using a plain link.</strong> <code class="text-gold-300">&lt;a href="/products"&gt;</code> reloads the whole app. Use <code class="text-gold-300">routerLink</code> so only the page changes.</li>
+          <li><strong class="text-stone-100">Putting the wildcard route first.</strong> The <code class="text-gold-300">**</code> route matches everything, so it must be the last one in the list.</li>
+        </ul>
+      </app-lesson-card>
       </section>
       </ng-template>
 

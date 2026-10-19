@@ -104,6 +104,15 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
           }
         </div>
       }
+
+      <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="HTTP mistakes to avoid">
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+          <li><strong class="text-stone-100">Calling http.get() and never subscribing.</strong> An Observable is lazy — no subscription, no request.</li>
+          <li><strong class="text-stone-100">Only handling the success case.</strong> Real users see loading, empty and error states too. Without them the page just looks broken.</li>
+          <li><strong class="text-stone-100">Subscribing twice by accident.</strong> Using the same Observable in an <code class="text-gold-300">async</code> pipe and in a manual <code class="text-gold-300">subscribe()</code> sends the request two times.</li>
+          <li><strong class="text-stone-100">Hard-coding URLs in components.</strong> Keep them in the service so there is one place to change.</li>
+        </ul>
+      </app-lesson-card>
       </section>
       </ng-template>
 

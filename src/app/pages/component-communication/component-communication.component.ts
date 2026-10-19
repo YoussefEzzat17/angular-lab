@@ -61,6 +61,14 @@ onAdd() &#123; this.addToWatchlist.emit(this.title); &#125;</pre>
           can see exactly what flows in and out — no hunting through a service to find who else is listening.
         </p>
       </div>
+
+      <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Where parent and child communication goes wrong">
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+          <li><strong class="text-stone-100">A child changing an object it received.</strong> Mutating an input breaks one-way data flow and makes bugs hard to trace. Send an event up with <code class="text-gold-300">output()</code> and let the parent change its own data.</li>
+          <li><strong class="text-stone-100">Passing data through four or five levels.</strong> If middle components only forward a value, that is the signal to use a shared service instead.</li>
+          <li><strong class="text-stone-100">Injecting the parent to call its methods.</strong> It works, but the child can now only live inside that one parent. An output keeps it reusable.</li>
+        </ul>
+      </app-lesson-card>
       </section>
       </ng-template>
 

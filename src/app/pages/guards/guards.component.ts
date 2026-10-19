@@ -113,6 +113,14 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
 
           <app-knowledge-check [items]="recapItems" />
           <app-topic-nav />
+
+      <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Guard mistakes to avoid">
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+          <li><strong class="text-stone-100">Treating a guard as security.</strong> A guard only controls the browser. Anyone can call your API directly, so the server must check permissions too.</li>
+          <li><strong class="text-stone-100">Returning false and leaving the user stuck.</strong> <code class="text-gold-300">false</code> just cancels the navigation. Return a <code class="text-gold-300">UrlTree</code> to send the user somewhere useful, like the login page.</li>
+          <li><strong class="text-stone-100">Checking inside the component instead.</strong> By then the component has already been created, so protected content can flash on screen first.</li>
+        </ul>
+      </app-lesson-card>
         </section>
       </ng-template>
 
