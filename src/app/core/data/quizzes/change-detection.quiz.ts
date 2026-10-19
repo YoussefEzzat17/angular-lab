@@ -2,7 +2,7 @@ import type { QuizBank } from '../../../core/models/learning.models';
 
 export const CHANGE_DETECTION_QUIZ: QuizBank = {
   topicId: 'change-detection',
-  version: 1,
+  version: 2,
   questions: [
     {
       id: 'change-detection-01',
@@ -133,6 +133,29 @@ export const CHANGE_DETECTION_QUIZ: QuizBank = {
       correct: ['a'],
       explanation: 'OnPush limits checks to real triggers, and signals provide those triggers when state changes. The other options add work instead of removing it.',
       sectionId: 'signals-cd',
+    },
+    {
+      id: 'change-detection-11',
+      type: 'single',
+      prompt: 'An OnPush component shows `count`, a plain field. A setTimeout callback increments it. What happens on screen?',
+      choices: [
+        { id: 'a', text: 'Nothing visible changes, because nothing marked the component dirty' },
+        { id: 'b', text: 'The number updates, because timers always refresh the whole app' },
+        { id: 'c', text: 'Angular throws an error' },
+        { id: 'd', text: 'The number updates only on the first timer tick' },
+      ],
+      correct: ['a'],
+      explanation: 'A timer is not an input change, an event inside the component, or a signal read. Store the value in a signal() and the template updates.',
+      sectionId: 'onpush',
+    },
+    {
+      id: 'change-detection-12',
+      type: 'true-false',
+      prompt: 'When an event fires inside an OnPush component, Angular also marks its parent components so the path down to it gets checked.',
+      choices: [{ id: 'true', text: 'True' }, { id: 'false', text: 'False' }],
+      correct: ['true'],
+      explanation: 'The event marks the component and every ancestor above it as dirty, so the tree is walked down to the component that needs to update.',
+      sectionId: 'onpush',
     },
   ],
 };

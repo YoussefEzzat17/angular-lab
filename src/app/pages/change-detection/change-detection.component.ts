@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Injectable, inject, input, signal } from '@angular/core';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
+import { CdTreeDemoComponent } from './cd-tree-demo.component';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
@@ -12,6 +13,7 @@ export interface DemoUser {
   name: string;
 }
 
+// Deliberately left on the Default strategy: this card is the "before" in the OnPush comparison lesson.
 @Component({
   selector: 'app-cd-default-card',
   standalone: true,
@@ -67,8 +69,9 @@ export class CdSignalReaderComponent {
 const NAMES = ['Ada', 'Grace', 'Linus', 'Margaret', 'Alan'];
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CdDefaultCardComponent, CdOnPushCardComponent, CdSignalReaderComponent, FlowDiagramComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [CdTreeDemoComponent, CdDefaultCardComponent, CdOnPushCardComponent, CdSignalReaderComponent, FlowDiagramComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'change-detection'" [section]="section()">
       <ng-template appLessonSection="default">
@@ -91,13 +94,42 @@ const NAMES = ['Ada', 'Grace', 'Linus', 'Margaret', 'Alan'];
           <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ onPushCode }}</pre>
         </app-lesson-card>
       </div>
+
+      <app-lesson-card class="mt-5" label="THE MENTAL MODEL" heading="A building inspector" tone="amber">
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+          <li><strong class="text-stone-100">Change detection</strong> is an inspector who walks the building and updates the sign on every door that has changed.</li>
+          <li><strong class="text-stone-100">Default:</strong> after <em>any</em> noise, the inspector re-checks every single room — safe, but slow in a big building.</li>
+          <li><strong class="text-stone-100">OnPush:</strong> the inspector only visits rooms that have a reason: someone knocked from inside, a new package arrived, or a signal rang.</li>
+        </ul>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" label="WHAT STARTS A CHECK" heading="Angular re-checks after these things">
+        <p class="mt-2 text-sm text-stone-400">
+          A library called <strong class="text-stone-200">zone.js</strong> watches for work that finishes and tells Angular "something may have changed":
+        </p>
+        <ul class="mt-3 list-disc space-y-1 pl-5 text-sm text-stone-300">
+          <li>a DOM event such as <code class="text-gold-300">(click)</code> or <code class="text-gold-300">(input)</code></li>
+          <li>a timer: <code class="text-gold-300">setTimeout</code> or <code class="text-gold-300">setInterval</code></li>
+          <li>an HTTP response or a resolved Promise</li>
+        </ul>
+        <p class="mt-3 text-sm text-stone-400">The strategy decides <em>how much</em> of the tree gets re-checked each time. That is the whole difference between Default and OnPush.</p>
+      </app-lesson-card>
       </section>
       </ng-template>
 
       <ng-template appLessonSection="onpush">
       <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <div class="mt-10 grid gap-5 md:grid-cols-2">
-        <app-lesson-card variant="highlight" label="2 · TRY IT" heading="Mutate vs. replace">
+      <app-lesson-card class="mt-10" variant="highlight" label="2 · SEE IT" heading="Which components get re-checked?">
+        <ol class="mt-2 list-decimal space-y-1 pl-5 text-sm text-stone-400">
+          <li>Fire <strong class="text-stone-200">Click inside Card #2</strong> while everything is Default — all 5 are checked.</li>
+          <li>Switch the cards and the header to <strong class="text-stone-200">OnPush</strong> and fire it again. Fewer components are checked, but Card #2 still updates.</li>
+          <li>Now switch <strong class="text-stone-200">AppComponent</strong> to OnPush and fire <strong class="text-stone-200">A timer fires</strong>. What happens to the whole tree?</li>
+        </ol>
+        <app-cd-tree-demo />
+      </app-lesson-card>
+
+      <div class="mt-5 grid gap-5 md:grid-cols-2">
+        <app-lesson-card variant="highlight" label="3 · TRY IT" heading="Mutate vs. replace">
           <p class="mt-2 text-sm text-stone-400">
             Both cards receive the same <code class="text-gold-300">user</code> object. Mutating it keeps the same reference,
             so the OnPush card does not notice. Replacing it with a new object does.
@@ -115,6 +147,14 @@ const NAMES = ['Ada', 'Grace', 'Linus', 'Margaret', 'Alan'];
           </p>
         </app-lesson-card>
       </div>
+
+      <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Why OnPush sometimes looks broken">
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+          <li><strong class="text-stone-100">Mutating an object.</strong> <code class="text-gold-300">user.name = 'x'</code> keeps the same reference, so an OnPush child sees no change. Replace the object: <code class="text-gold-300">user = &#123; ...user, name: 'x' &#125;</code>.</li>
+          <li><strong class="text-stone-100">Changing a plain field from a timer or a callback.</strong> Nothing marks the component dirty, so the screen stays stale. Store the value in a <code class="text-gold-300">signal()</code> instead.</li>
+          <li><strong class="text-stone-100">Reaching for <code class="text-gold-300">markForCheck()</code> everywhere.</strong> It is a sign the state should be a signal or come through an <code class="text-gold-300">async</code> pipe.</li>
+        </ul>
+      </app-lesson-card>
       </section>
       </ng-template>
 

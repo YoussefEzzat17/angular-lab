@@ -252,8 +252,8 @@ export const TOPICS: Topic[] = [
       { text: 'Use Signals as an alternative to manual change detection', sectionId: 'signals-cd' },
     ],
     sections: [
-      { id: 'default', title: 'Default Change Detection', kind: 'concept', minutes: 5 },
-      { id: 'onpush', title: 'OnPush Strategy', kind: 'concept', minutes: 6 },
+      { id: 'default', title: 'Default Change Detection', kind: 'concept', minutes: 6 },
+      { id: 'onpush', title: 'OnPush Strategy', kind: 'concept', minutes: 9 },
       { id: 'signals-cd', title: 'Signals & Change Detection', kind: 'concept', minutes: 4 },
     ],
   },
