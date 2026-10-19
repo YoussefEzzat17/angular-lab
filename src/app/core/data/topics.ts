@@ -155,7 +155,7 @@ export const TOPICS: Topic[] = [
     sections: [
       { id: 'basics', title: 'signal() Basics', kind: 'concept', minutes: 5 },
       { id: 'computed', title: 'computed()', kind: 'concept', minutes: 4 },
-      { id: 'effects', title: 'effect()', kind: 'concept', minutes: 4 },
+      { id: 'effects', title: 'effect()', kind: 'concept', minutes: 6 },
       { id: 'component-signals', title: 'input() and output()', kind: 'concept', minutes: 4 },
       { id: 'interop', title: 'toSignal() Interop', kind: 'concept', minutes: 4 },
       { id: 'try-it', title: 'Try It', kind: 'try-it', minutes: 6 },

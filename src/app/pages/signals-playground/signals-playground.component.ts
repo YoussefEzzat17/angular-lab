@@ -1,5 +1,5 @@
 import { CurrencyPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, input, signal, untracked } from '@angular/core';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
@@ -23,7 +23,16 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
         actually depends on it. Change the product and quantity below and watch every dependent value update automatically.
       </app-page-header>
 
-      <div class="mt-10 grid gap-5 md:grid-cols-2">
+      <app-lesson-card class="mt-10" label="THE MENTAL MODEL" heading="Signals work like spreadsheet cells" tone="amber">
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+          <li><strong class="text-stone-100">signal()</strong> is a cell that holds a value, like <code class="text-gold-300">A1 = 50</code>.</li>
+          <li><strong class="text-stone-100">computed()</strong> is a formula cell, like <code class="text-gold-300">C1 = A1 * B1</code>. Change A1 and C1 fixes itself — you never update it by hand.</li>
+          <li><strong class="text-stone-100">effect()</strong> is an alert that fires whenever a cell it watches changes: save a file, send a log, ping a server.</li>
+          <li><strong class="text-stone-100">Calling <code class="text-gold-300">price()</code></strong> is like pointing at a cell inside a formula. That is how Angular learns who depends on what.</li>
+        </ul>
+      </app-lesson-card>
+
+      <div class="mt-5 grid gap-5 md:grid-cols-2">
         <app-lesson-card label="1 · SIGNAL()" heading="Reactive state">
           <p class="mt-2 text-sm text-stone-400">
             <code class="text-gold-300">signal()</code> creates reactive state. Read a signal by calling it with <code class="text-gold-300">()</code>.
@@ -90,10 +99,54 @@ subtotal changes → discount changes → finalPrice changes</pre>
 
       <ng-template appLessonSection="effects">
       <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <app-lesson-card class="mt-5" label="6 · EFFECT()" heading="Run a side effect">
-        <p class="mt-2 text-sm text-stone-400"><code class="text-gold-300">effect()</code> runs side effects when the Signals it reads change. Open the browser console and change quantity to see <code class="text-gold-300">Cart changed:</code>.</p>
+      <app-lesson-card class="mt-5" label="6 · EFFECT()" heading="Run code whenever a signal changes">
+        <p class="mt-2 text-sm text-stone-400">
+          <code class="text-gold-300">effect()</code> says: "whenever any signal I read changes, run this code again." It runs <strong class="text-stone-200">once straight away</strong>,
+          then after every change. Use it for things that happen <em>outside</em> the template: logging, saving to <code class="text-gold-300">localStorage</code>, analytics, or talking to a
+          non-Angular library.
+        </p>
         <app-flow-diagram class="mt-4 block" from="finalPrice() changes" to="effect() re-runs" direction="right" />
-        <p class="mt-4 text-sm text-stone-300"><strong>Remember:</strong> <code class="text-gold-300">computed()</code> derives data for the UI; <code class="text-gold-300">effect()</code> performs a side effect such as logging.</p>
+        <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">constructor() &#123;
+  effect(() =&gt; &#123;
+    // reading finalPrice() tells Angular: "re-run me when this changes"
+    console.log('Cart changed:', this.finalPrice());
+  &#125;);
+&#125;</pre>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="TRY IT · WATCH THE EFFECT RUN" heading="Change the quantity and read the log">
+        <p class="mt-2 text-sm text-stone-400">The first line appeared when the page loaded. Then every change adds a new line. Below quantity 5 there is no discount; at 5 or more there is a $10 one.</p>
+        <div class="mt-4 flex flex-wrap items-center gap-3">
+          <button type="button" data-testid="effect-qty-down" (click)="decreaseQuantity()" class="grid h-10 w-10 place-items-center rounded-xl border border-stone-600 text-xl hover:bg-stone-800" aria-label="Decrease quantity">−</button>
+          <span class="min-w-24 text-center">Quantity: <strong data-testid="effect-qty">{{ quantity() }}</strong></span>
+          <button type="button" data-testid="effect-qty-up" (click)="increaseQuantity()" class="grid h-10 w-10 place-items-center rounded-xl border border-stone-600 text-xl hover:bg-stone-800" aria-label="Increase quantity">+</button>
+          <span class="text-sm text-stone-400">Final price: <strong class="text-gold-200">{{ finalPrice() | currency }}</strong></span>
+        </div>
+        <div class="mt-4 rounded-xl bg-stone-950 p-4">
+          <div class="flex items-center justify-between">
+            <p class="text-xs font-bold tracking-wider text-stone-500">EFFECT LOG</p>
+            <button type="button" data-testid="effect-clear" (click)="clearEffectLog()" class="text-xs font-semibold text-stone-400 hover:text-stone-200">Clear</button>
+          </div>
+          <ul class="mt-2 space-y-1 text-sm text-emerald-300" data-testid="effect-log" aria-live="polite">
+            @for (line of effectLog(); track $index) {
+              <li>{{ line }}</li>
+            } @empty {
+              <li class="text-stone-600">Log cleared — change the quantity to see the effect run again.</li>
+            }
+          </ul>
+        </div>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="danger" label="THE #1 MISTAKE" heading="Do not use effect() to calculate a value">
+        <p class="mt-2 text-sm text-stone-300">Copying one signal into another inside an effect works at first, but it is slower, easy to get stuck in loops, and a formula is clearer.</p>
+        <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-rose-300">// ❌ an effect used to derive a value
+effect(() =&gt; this.finalPrice.set(this.price() * this.quantity()));</pre>
+        <pre class="mt-3 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-emerald-300">// ✅ a formula cell: always correct, nothing to forget
+readonly finalPrice = computed(() =&gt; this.price() * this.quantity());</pre>
+        <p class="mt-4 text-sm text-stone-300">
+          <strong class="text-stone-100">Rule of thumb:</strong> need a value to show in the template? Use <code class="text-gold-300">computed()</code>.
+          Need to <em>do</em> something — save, log, call an API? Use <code class="text-gold-300">effect()</code>.
+        </p>
       </app-lesson-card>
       </section>
       </ng-template>
@@ -157,10 +210,19 @@ export class SignalsPlaygroundComponent {
   readonly discount = computed(() => (this.quantity() >= 5 ? 10 : 0));
   readonly finalPrice = computed(() => this.subtotal() - this.discount());
 
+  // Visible log of every effect run, so the lesson does not depend on the browser console.
+  readonly effectLog = signal<string[]>([]);
+
   constructor() {
     effect(() => {
+      const message = `Effect ran → final price is $${this.finalPrice()}`;
       console.log('Cart changed:', this.finalPrice());
+      untracked(() => this.effectLog.update((log) => [...log, message].slice(-6)));
     });
+  }
+
+  clearEffectLog(): void {
+    this.effectLog.set([]);
   }
 
   changeProduct(): void {
