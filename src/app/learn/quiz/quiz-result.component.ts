@@ -1,10 +1,11 @@
-import { Component, computed, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ProgressRingComponent } from '../../shared/progress-ring.component';
 import type { QuizAttempt, QuizQuestion, TopicId } from '../../core/models/learning.models';
 import { TOPICS } from '../../core/data/topics';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-quiz-result',
   standalone: true,
   imports: [RouterLink, ProgressRingComponent],

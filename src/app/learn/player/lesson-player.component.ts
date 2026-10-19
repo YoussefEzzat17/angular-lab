@@ -1,4 +1,4 @@
-import { Component, contentChildren, effect, inject, input, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, contentChildren, effect, inject, input, untracked } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgTemplateOutlet } from '@angular/common';
 import { TOPICS } from '../../core/data/topics';
@@ -11,6 +11,7 @@ import { SectionNavBarComponent, SectionNavItem } from './section-nav-bar.compon
 import type { TopicId } from '../../core/models/learning.models';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-lesson-player',
   standalone: true,
   imports: [NgTemplateOutlet, SectionNavBarComponent],

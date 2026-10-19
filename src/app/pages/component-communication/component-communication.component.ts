@@ -1,4 +1,4 @@
-import { Component, input, signal, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, signal, WritableSignal } from '@angular/core';
 
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
 import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
@@ -10,6 +10,7 @@ import { PageHeaderComponent } from '../../shared/page-header.component';
 import { TitlePreviewComponent } from '../../shared/title-preview.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [TitlePreviewComponent, FlowArrowComponent, FlowDiagramComponent, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `

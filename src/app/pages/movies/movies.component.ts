@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 
 import { Movie } from '../../core/models/movie.model';
 import { MovieService } from '../../core/services/movie.service';
@@ -10,6 +10,7 @@ import { LessonPlayerComponent } from '../../learn/player/lesson-player.componen
 import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [FlowDiagramComponent, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `

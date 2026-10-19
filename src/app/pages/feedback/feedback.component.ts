@@ -1,4 +1,4 @@
-import { Component, OnDestroy, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { TOPICS } from '../../core/data/topics';
@@ -10,6 +10,7 @@ import { PageHeaderComponent } from '../../shared/page-header.component';
 const COOLDOWN_SECONDS = 10;
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [IconComponent, PageHeaderComponent, ReactiveFormsModule],
   styles: `

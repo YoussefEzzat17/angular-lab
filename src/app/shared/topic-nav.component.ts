@@ -1,10 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 
 import { TOPICS } from '../core/data/topics';
 import { ProgressService } from '../core/services/progress.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-topic-nav',
   standalone: true,
   imports: [RouterLink],

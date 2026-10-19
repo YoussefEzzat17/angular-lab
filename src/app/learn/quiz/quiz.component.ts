@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TOPICS } from '../../core/data/topics';
 import { QuizService } from '../../core/services/quiz.service';
@@ -10,6 +10,7 @@ import type { TopicId, QuizQuestion, QuizAttempt } from '../../core/models/learn
 type QuizPhase = 'loading' | 'answering' | 'result';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [QuizQuestionComponent, QuizResultComponent, RouterLink],
   template: `

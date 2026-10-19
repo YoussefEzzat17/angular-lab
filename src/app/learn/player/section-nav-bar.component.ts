@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 
 export interface SectionNavItem {
   id: string;
@@ -7,6 +7,7 @@ export interface SectionNavItem {
 }
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-section-nav-bar',
   standalone: true,
   template: `

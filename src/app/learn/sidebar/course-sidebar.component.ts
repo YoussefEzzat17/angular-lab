@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CurriculumTreeComponent } from './curriculum-tree.component';
 import { SidebarStateService } from '../../core/services/sidebar-state.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-course-sidebar',
   standalone: true,
   imports: [RouterLink, RouterLinkActive, CurriculumTreeComponent],

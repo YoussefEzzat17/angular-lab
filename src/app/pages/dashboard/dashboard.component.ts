@@ -1,10 +1,11 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { GROUPED_TOPICS } from '../../core/data/topics';
 import { LearningFacade } from '../../core/services/learning.facade';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [RouterLink],
   template: `
@@ -165,7 +166,7 @@ import { LearningFacade } from '../../core/services/learning.facade';
         <div class="mt-10">
           <h2 class="text-lg font-bold text-stone-100">Recent Activity</h2>
           <div class="mt-4 space-y-2">
-            @for (entry of facade.recentActivity(); track entry.at) {
+            @for (entry of facade.recentActivity(); track entry.at + entry.kind + entry.topicId + (entry.sectionId ?? '')) {
               <div class="flex items-center gap-3 rounded-xl border border-stone-800 bg-stone-900 px-4 py-3 text-sm">
                 <span class="text-lg">{{ entry.kind === 'quiz-passed' ? '🎉' : entry.kind === 'quiz-failed' ? '📝' : '✓' }}</span>
                 <span class="flex-1 text-stone-300">

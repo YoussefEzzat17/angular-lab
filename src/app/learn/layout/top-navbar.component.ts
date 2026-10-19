@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 import { LearningFacade } from '../../core/services/learning.facade';
@@ -7,6 +7,7 @@ import { ThemeService } from '../../core/services/theme.service';
 import { IconComponent } from '../../shared/icon.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-top-navbar',
   standalone: true,
   imports: [RouterLink, RouterLinkActive, IconComponent],

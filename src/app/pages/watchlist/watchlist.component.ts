@@ -1,15 +1,17 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { CartService } from '../../core/services/cart.service';
+import { EmptyStateComponent } from '../../shared/empty-state.component';
 import { ProductService } from '../../core/services/product.service';
 import { ToastService } from '../../core/services/toast.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-watchlist',
   standalone: true,
-  imports: [RouterLink, CurrencyPipe],
+  imports: [RouterLink, CurrencyPipe, EmptyStateComponent],
   template: `
     <section class="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12">
       <div class="flex flex-wrap items-end justify-between gap-4">
@@ -48,11 +50,13 @@ import { ToastService } from '../../core/services/toast.service';
           }
         </div>
       } @else {
-        <div class="mt-8 rounded-3xl bg-stone-900 p-10 text-center ring-1 ring-stone-800">
-          <h2 class="text-2xl font-bold">Your watchlist is empty</h2>
-          <p class="mt-2 text-stone-400">Tap “Add to watchlist” on any title and it will show up here.</p>
-          <a routerLink="/products" class="mt-6 inline-block rounded-xl bg-gold-500 px-5 py-3 font-semibold text-white">Browse titles</a>
-        </div>
+        <app-empty-state
+          class="mt-8"
+          heading="Your watchlist is empty"
+          message="Tap “Add to watchlist” on any title and it will show up here."
+          ctaLabel="Browse titles"
+          ctaLink="/products"
+        />
       }
     </section>
   `,

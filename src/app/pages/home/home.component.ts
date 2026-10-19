@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { GROUPED_TOPICS, TOPIC_GROUPS, TOPICS } from '../../core/data/topics';
@@ -6,6 +6,7 @@ import { ProgressService } from '../../core/services/progress.service';
 import { SignalNetworkComponent } from './signal-network.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [RouterLink, SignalNetworkComponent],
   template: `

@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
@@ -10,6 +10,7 @@ import { LessonPlayerComponent } from '../../learn/player/lesson-player.componen
 import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
     FormsModule,

@@ -1,10 +1,11 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TOPICS } from '../../core/data/topics';
 import { ProgressService } from '../../core/services/progress.service';
 import { QUIZ_RULES, type TopicId } from '../../core/models/learning.models';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [RouterLink],
   template: `

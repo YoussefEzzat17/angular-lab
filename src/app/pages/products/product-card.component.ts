@@ -1,4 +1,4 @@
-import { Component, Input, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { CurrencyPipe, DatePipe, LowerCasePipe, UpperCasePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { Product } from '../../core/models/product.model';
@@ -8,6 +8,7 @@ import { ToastService } from '../../core/services/toast.service';
 import { StockStatusPipe } from '../../pipes/stock-status.pipe';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-product-card',
   standalone: true,
   imports: [CurrencyPipe, DatePipe, LowerCasePipe, UpperCasePipe, StockStatusPipe],

@@ -1,6 +1,6 @@
 # Angular Fundamentals Workshop — Implementation & Teaching Plan
 
-*Planning document · not yet implemented*
+*Archived planning document · not yet implemented.* This blueprint describes an earlier "Nimbus Shop" workshop concept and no longer matches the current Angular Lab app (15 lessons under `/learn/<id>`). Kept for reference only; see the README for the current structure.
 
 A single blueprint for two connected deliverables — a slide deck and a working Angular app — built so every taught concept has one exact, named place it lives in the code. Nothing below has been built yet; this plan is for review and approval.
 

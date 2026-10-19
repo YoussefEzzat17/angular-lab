@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, inject, OnDestroy } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import { A11yModule } from '@angular/cdk/a11y';
@@ -8,6 +8,7 @@ import { CourseSidebarComponent } from '../../learn/sidebar/course-sidebar.compo
 import { SidebarStateService } from '../services/sidebar-state.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-site-layout',
   standalone: true,
   imports: [RouterOutlet, RouterLink, TopNavbarComponent, LearnFooterComponent, CourseSidebarComponent, A11yModule],

@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, HostListener, inject, OnDestroy } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import { A11yModule } from '@angular/cdk/a11y';
@@ -11,6 +11,7 @@ import { TopNavbarComponent } from './top-navbar.component';
 import { LearnFooterComponent } from './learn-footer.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-learn-layout',
   standalone: true,
   imports: [RouterOutlet, RouterLink, CourseSidebarComponent, A11yModule, OnboardingDialogComponent, TopNavbarComponent, LearnFooterComponent],

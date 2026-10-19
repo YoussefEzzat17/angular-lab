@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { LearningFacade } from '../../core/services/learning.facade';
 import { ProgressService } from '../../core/services/progress.service';
@@ -6,6 +6,7 @@ import { TopicStatusIconComponent } from './topic-status-icon.component';
 import type { TopicId } from '../../core/models/learning.models';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-curriculum-tree',
   standalone: true,
   imports: [RouterLink, RouterLinkActive, TopicStatusIconComponent],

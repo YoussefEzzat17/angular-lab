@@ -193,7 +193,7 @@ src/app/
 ├── pages/             one folder per lesson, plus the home, dashboard, bookmarks,
 │                      demo (products, product-details, watchlist, favorites, movies, feedback),
 │                      guards/members and not-found pages
-├── shared/            reusable UI: page-header, lesson-card, recap, knowledge-check, topic-nav,
+├── shared/            reusable UI: page-header, lesson-card, empty-state, knowledge-check, topic-nav,
 │                      topic-illustration, progress-ring, flow-arrow, flow-diagram, icon,
 │                      code-block directive
 ├── directives/        custom attribute directives used in the lessons

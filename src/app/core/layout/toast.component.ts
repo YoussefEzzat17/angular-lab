@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { IconComponent, IconName } from '../../shared/icon.component';
 import { ToastKind, ToastService } from '../services/toast.service';
@@ -30,6 +30,7 @@ const KINDS: Record<ToastKind, { card: string; badge: string; bar: string; icon:
 };
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-toast',
   standalone: true,
   imports: [IconComponent],

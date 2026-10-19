@@ -1,4 +1,4 @@
-import { Component, OnDestroy, signal, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, OnDestroy, signal } from '@angular/core';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
@@ -10,6 +10,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
 type Stage = 'idle' | 'built' | 'cloned' | 'sent' | 'response' | 'handled';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `

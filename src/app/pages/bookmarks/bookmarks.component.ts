@@ -1,12 +1,14 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { BookmarkService } from '../../core/services/bookmark.service';
+import { EmptyStateComponent } from '../../shared/empty-state.component';
 import { TOPICS } from '../../core/data/topics';
 import type { TopicId } from '../../core/models/learning.models';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, EmptyStateComponent],
   template: `
     <section class="mx-auto max-w-3xl px-4 py-10 sm:px-6">
       <p class="text-sm font-semibold text-gold-400">MY BOOKMARKS</p>
@@ -41,14 +43,14 @@ import type { TopicId } from '../../core/models/learning.models';
           }
         </div>
       } @else {
-        <div class="mt-10 rounded-3xl border border-stone-800 bg-stone-900 p-10 text-center">
-          <p class="text-4xl">🔖</p>
-          <h2 class="mt-3 text-xl font-bold">No bookmarks yet</h2>
-          <p class="mt-2 text-stone-400">Tap the bookmark icon on any section to save it here.</p>
-          <a routerLink="/learn" class="mt-6 inline-block rounded-xl bg-gold-500 px-5 py-3 font-semibold text-white transition hover:bg-gold-400">
-            Start learning →
-          </a>
-        </div>
+        <app-empty-state
+          class="mt-10"
+          icon="🔖"
+          heading="No bookmarks yet"
+          message="Tap the bookmark icon on any section to save it here."
+          ctaLabel="Start learning →"
+          ctaLink="/learn"
+        />
       }
     </section>
   `,

@@ -1,4 +1,4 @@
-import { Component, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
 
 export interface KnowledgeCheckItem {
   question: string;
@@ -6,6 +6,7 @@ export interface KnowledgeCheckItem {
 }
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-knowledge-check',
   standalone: true,
   template: `

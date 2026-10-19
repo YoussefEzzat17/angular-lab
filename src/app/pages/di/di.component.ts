@@ -1,4 +1,4 @@
-import { Component, Injectable, inject, signal, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Injectable, input, signal } from '@angular/core';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
@@ -31,6 +31,7 @@ export class PrivateCounter {
 }
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-di-shared-counter',
   standalone: true,
   template: `
