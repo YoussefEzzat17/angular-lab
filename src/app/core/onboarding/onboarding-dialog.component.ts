@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject, output, signal } from '@angular/core';
 import { A11yModule } from '@angular/cdk/a11y';
 import { ProfileService } from '../services/profile.service';
 
@@ -7,7 +6,7 @@ import { ProfileService } from '../services/profile.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-onboarding-dialog',
   standalone: true,
-  imports: [FormsModule, A11yModule],
+  imports: [A11yModule],
   template: `
     <!-- Backdrop -->
     <div class="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/80 backdrop-blur-sm p-4">
@@ -34,7 +33,8 @@ import { ProfileService } from '../services/profile.service';
           <input
             id="onboarding-name"
             type="text"
-            [(ngModel)]="name"
+            [value]="name()"
+            (input)="onNameInput($event)"
             (keydown.enter)="done()"
             placeholder="Your name"
             maxlength="40"
@@ -66,10 +66,15 @@ export class OnboardingDialogComponent {
   private readonly profile = inject(ProfileService);
   readonly closed = output<void>();
 
-  name = '';
+  readonly name = signal('');
+
+  onNameInput(event: Event): void {
+    this.name.set((event.target as HTMLInputElement).value);
+  }
 
   done(): void {
-    if (this.name.trim()) { this.profile.setName(this.name); }
+    const name = this.name();
+    if (name.trim()) { this.profile.setName(name); }
     this.profile.finishOnboarding();
     this.closed.emit();
   }

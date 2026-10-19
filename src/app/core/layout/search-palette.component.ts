@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, computed, HostListener, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { DEMO_LINKS, TOPICS } from '../data/topics';
@@ -18,7 +17,6 @@ interface ResultItem {
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-search-palette',
   standalone: true,
-  imports: [FormsModule],
   template: `
     @if (palette.open()) {
       <div class="fixed inset-0 z-50 flex items-start justify-center bg-stone-950/80 px-4 pt-[12vh] backdrop-blur-sm" (click)="close()">
@@ -31,8 +29,8 @@ interface ResultItem {
             <input
               type="text"
               autofocus
-              [ngModel]="query()"
-              (ngModelChange)="onQueryChange($event)"
+              [value]="query()"
+              (input)="onQueryInput($event)"
               placeholder="Search topics… (e.g. signals, forms, interceptor)"
               class="flex-1 bg-transparent text-sm text-stone-100 placeholder:text-stone-500 focus:outline-none"
               autocomplete="off"
@@ -120,6 +118,10 @@ export class SearchPaletteComponent {
         this.go(item.path);
       }
     }
+  }
+
+  onQueryInput(event: Event): void {
+    this.onQueryChange((event.target as HTMLInputElement).value);
   }
 
   onQueryChange(value: string): void {
