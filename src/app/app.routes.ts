@@ -27,6 +27,7 @@ export const routes: Routes = [
     loadComponent: () => import('./learn/layout/learn-layout.component').then((m) => m.LearnLayoutComponent),
     children: [
       { path: 'dashboard',    loadComponent: () => import('./pages/dashboard/dashboard.component').then((m) => m.DashboardComponent),            title: 'Dashboard' },
+      { path: 'journey',      loadComponent: () => import('./pages/journey/journey.component').then((m) => m.JourneyComponent),                  title: 'My Journey' },
       { path: 'history',      loadComponent: () => import('./pages/history/history.component').then((m) => m.HistoryComponent),                  title: 'History' },
       { path: 'bookmarks',    loadComponent: () => import('./pages/bookmarks/bookmarks.component').then((m) => m.BookmarksComponent),            title: 'My Bookmarks' },
       { path: 'learn',        loadChildren: () => import('./learn/learn.routes').then((m) => m.LEARN_ROUTES) },

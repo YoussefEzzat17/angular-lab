@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CurriculumTreeComponent } from './curriculum-tree.component';
+import { SidebarUserComponent } from './sidebar-user.component';
 import { SidebarStateService } from '../../core/services/sidebar-state.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-course-sidebar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, CurriculumTreeComponent],
+  imports: [RouterLink, RouterLinkActive, CurriculumTreeComponent, SidebarUserComponent],
   host: { class: 'flex flex-col h-full' },
   template: `
     <!-- Sidebar header: Topics label + collapse chevron -->
@@ -26,6 +27,9 @@ import { SidebarStateService } from '../../core/services/sidebar-state.service';
     </div>
 
     <app-curriculum-tree class="flex-1 overflow-y-auto" />
+
+    <!-- You: name, streak, level and XP -->
+    <app-sidebar-user />
 
     <!-- Demo App links -->
     <div class="border-t border-stone-800 px-3 py-3">

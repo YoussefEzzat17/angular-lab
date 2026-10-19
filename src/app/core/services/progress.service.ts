@@ -11,6 +11,8 @@ const PROGRESS_KEY = 'angular-lab:progress';
 export class ProgressService {
   private readonly state = signal<ProgressStateV2>(this.load());
 
+  /** Read-only view of every topic's saved progress (used to work out XP and badges). */
+  readonly topics = computed(() => this.state().topics);
   readonly totalCount = TOPICS.length;
   readonly completedCount = computed(() =>
     Object.values(this.state().topics).filter((t) => t?.completedAt).length

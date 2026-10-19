@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { GROUPED_TOPICS } from '../../core/data/topics';
 import { activityIcon, activityLabel, dayLabel, topicTitleOf } from '../../core/services/activity-history';
 import { CLOCK } from '../../core/services/clock';
+import { GamificationService } from '../../core/services/gamification.service';
 import { LearningFacade } from '../../core/services/learning.facade';
 
 @Component({
@@ -164,6 +165,24 @@ import { LearningFacade } from '../../core/services/learning.facade';
       </div>
 
       <!-- ── Recent activity ───────────────────────────────────────────── -->
+      <!-- ── Level and badges ──────────────────────────────────────────── -->
+      <a
+        routerLink="/journey"
+        data-testid="open-journey"
+        class="mt-10 block rounded-2xl border border-gold-500/30 bg-gold-950/20 p-5 transition hover:bg-gold-950/30"
+      >
+        <div class="flex flex-wrap items-baseline justify-between gap-2">
+          <p class="text-lg font-bold text-stone-100">
+            Level {{ game.level().level.number }} · <span class="text-gold-300">{{ game.level().level.title }}</span>
+          </p>
+          <p class="text-sm text-stone-400">{{ game.xp() }} XP · 🏅 {{ game.earnedCount() }}/{{ game.badges().length }} badges</p>
+        </div>
+        <div class="mt-3 h-2.5 overflow-hidden rounded-full bg-stone-800" aria-hidden="true">
+          <div class="h-full rounded-full bg-gold-400" [style.width.%]="game.level().percent"></div>
+        </div>
+        <p class="mt-3 text-sm font-semibold text-gold-400">Open your journey →</p>
+      </a>
+
       @if (facade.recentActivity().length) {
         <div class="mt-10">
           <div class="flex items-center justify-between gap-3">
@@ -190,6 +209,7 @@ import { LearningFacade } from '../../core/services/learning.facade';
 })
 export class DashboardComponent {
   readonly facade = inject(LearningFacade);
+  readonly game = inject(GamificationService);
   private readonly clock = inject(CLOCK);
   readonly groups = GROUPED_TOPICS;
 
