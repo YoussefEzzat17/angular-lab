@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { GROUPED_TOPICS } from '../../core/data/topics';
+import { activityIcon, activityLabel, dayLabel, topicTitleOf } from '../../core/services/activity-history';
+import { CLOCK } from '../../core/services/clock';
 import { LearningFacade } from '../../core/services/learning.facade';
 
 @Component({
@@ -164,16 +166,19 @@ import { LearningFacade } from '../../core/services/learning.facade';
       <!-- ── Recent activity ───────────────────────────────────────────── -->
       @if (facade.recentActivity().length) {
         <div class="mt-10">
-          <h2 class="text-lg font-bold text-stone-100">Recent Activity</h2>
+          <div class="flex items-center justify-between gap-3">
+            <h2 class="text-lg font-bold text-stone-100">Recent Activity</h2>
+            <a routerLink="/history" data-testid="view-history" class="text-sm font-semibold text-gold-400 hover:text-gold-300">View full history →</a>
+          </div>
           <div class="mt-4 space-y-2">
             @for (entry of facade.recentActivity(); track entry.at + entry.kind + entry.topicId + (entry.sectionId ?? '')) {
               <div class="flex items-center gap-3 rounded-xl border border-stone-800 bg-stone-900 px-4 py-3 text-sm">
-                <span class="text-lg">{{ entry.kind === 'quiz-passed' ? '🎉' : entry.kind === 'quiz-failed' ? '📝' : '✓' }}</span>
+                <span class="text-lg" aria-hidden="true">{{ activityIcon(entry.kind) }}</span>
                 <span class="flex-1 text-stone-300">
                   {{ activityLabel(entry.kind) }}
-                  <span class="font-semibold text-stone-100">{{ topicTitle(entry.topicId) }}</span>
+                  <span class="font-semibold text-stone-100">{{ topicTitleOf(entry.topicId) }}</span>
                 </span>
-                <span class="shrink-0 text-stone-500">{{ formatDate(entry.at) }}</span>
+                <span class="shrink-0 text-stone-500">{{ dayOf(entry.at) }}</span>
               </div>
             }
           </div>
@@ -185,6 +190,7 @@ import { LearningFacade } from '../../core/services/learning.facade';
 })
 export class DashboardComponent {
   readonly facade = inject(LearningFacade);
+  private readonly clock = inject(CLOCK);
   readonly groups = GROUPED_TOPICS;
 
   // SVG ring: radius 68, circumference = 2π × 68 ≈ 427.3
@@ -194,18 +200,12 @@ export class DashboardComponent {
     return this.circumference * (1 - this.facade.percent() / 100);
   }
 
-  activityLabel(kind: string): string {
-    if (kind === 'quiz-passed') return 'Passed quiz — ';
-    if (kind === 'quiz-failed') return 'Attempted quiz — ';
-    return 'Completed section in ';
-  }
+  readonly activityLabel = activityLabel;
+  readonly activityIcon = activityIcon;
+  readonly topicTitleOf = topicTitleOf;
 
-  topicTitle(topicId: string): string {
-    return this.facade.groups().flatMap(g => g.topics).find(t => t.id === topicId)?.title ?? topicId;
-  }
-
-  formatDate(iso: string): string {
-    try { return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); }
-    catch { return ''; }
+  dayOf(iso: string): string {
+    const date = new Date(iso);
+    return Number.isNaN(date.getTime()) ? '' : dayLabel(date, this.clock.now());
   }
 }
