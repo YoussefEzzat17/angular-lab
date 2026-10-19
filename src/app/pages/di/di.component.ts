@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, inject, Injectable, input, signal }
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
+import { TermComponent } from '../../shared/term.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
@@ -70,7 +71,7 @@ export class DiPrivateCounterComponent {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [DiSharedCounterComponent, DiPrivateCounterComponent, FlowDiagramComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [TermComponent, DiSharedCounterComponent, DiPrivateCounterComponent, FlowDiagramComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'di'" [section]="section()">
       <ng-template appLessonSection="basics">
@@ -78,7 +79,7 @@ export class DiPrivateCounterComponent {
       <app-page-header title="Dependency Injection" illustration="di">
         Components should not build the things they depend on — a component that does
         <code class="text-gold-300">new CartService()</code> can never share that cart with another component, and is painful to
-        test. Instead it <em>asks</em> Angular for one with <code class="text-gold-300">inject()</code>, and Angular's injector
+        test. Instead it <em>asks</em> Angular for one with <code class="text-gold-300">inject()</code>, and Angular's <app-term term="injector">injector</app-term>
         decides whether to hand over a shared instance or create a fresh one. Click the counters below to see the difference.
       </app-page-header>
 

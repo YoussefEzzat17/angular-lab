@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
+import { TermComponent } from '../../shared/term.component';
 import { FlattenDemoComponent } from './flatten-demo.component';
 import { SubjectRadioDemoComponent } from './subject-radio-demo.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
@@ -29,14 +30,14 @@ import {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [FormsModule, AsyncPipe, FlattenDemoComponent, SubjectRadioDemoComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [TermComponent, FormsModule, AsyncPipe, FlattenDemoComponent, SubjectRadioDemoComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'rxjs'" [section]="section()">
       <ng-template appLessonSection="observables">
       <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <app-page-header title="RxJS from Scratch" illustration="rxjs">
         RxJS is a library that helps you deal with anything that happens "over time" — a click, typing in an input, an API response — as one
-        <strong class="text-gold-300">data stream</strong> you can filter, transform and control, instead of handling each as a separate event.
+        <strong class="text-gold-300"><app-term term="stream">data stream</app-term></strong> you can filter, transform and control, instead of handling each as a separate event.
         Try the examples below, and open the console to see what's happening under the hood.
       </app-page-header>
 
@@ -258,7 +259,7 @@ ngOnDestroy() &#123;
         <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
           <li><strong class="text-stone-100">The station</strong> is the Subject. <code class="text-gold-300">next(song)</code> plays a song on air.</li>
           <li><strong class="text-stone-100">Listeners</strong> are subscribers. <code class="text-gold-300">subscribe()</code> tunes in, <code class="text-gold-300">unsubscribe()</code> switches off.</li>
-          <li><strong class="text-stone-100">Everyone tuned in hears the same song at the same moment.</strong> That is called multicasting.</li>
+          <li><strong class="text-stone-100">Everyone tuned in hears the same song at the same moment.</strong> That is called <app-term term="multicasting">multicasting</app-term>.</li>
           <li><strong class="text-stone-100">Live means live:</strong> if you tune in late, the songs that already played are gone — unless the station keeps a memory.</li>
         </ul>
         <p class="mt-3 text-sm text-stone-400">

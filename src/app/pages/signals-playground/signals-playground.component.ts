@@ -4,6 +4,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, input, signal, un
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
+import { TermComponent } from '../../shared/term.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
@@ -12,7 +13,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CurrencyPipe, FlowDiagramComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [TermComponent, CurrencyPipe, FlowDiagramComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'signals'" [section]="section()">
       <ng-template appLessonSection="basics">
@@ -27,7 +28,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
         <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
           <li><strong class="text-stone-100">signal()</strong> is a cell that holds a value, like <code class="text-gold-300">A1 = 50</code>.</li>
           <li><strong class="text-stone-100">computed()</strong> is a formula cell, like <code class="text-gold-300">C1 = A1 * B1</code>. Change A1 and C1 fixes itself — you never update it by hand.</li>
-          <li><strong class="text-stone-100">effect()</strong> is an alert that fires whenever a cell it watches changes: save a file, send a log, ping a server.</li>
+          <li><strong class="text-stone-100">effect()</strong> is an alert that fires whenever a cell it watches changes. It is how you run a <app-term term="side-effect">side effect</app-term>: save a file, send a log, ping a server.</li>
           <li><strong class="text-stone-100">Calling <code class="text-gold-300">price()</code></strong> is like pointing at a cell inside a formula. That is how Angular learns who depends on what.</li>
         </ul>
       </app-lesson-card>

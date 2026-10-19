@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
+import { TermComponent } from '../../shared/term.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
@@ -16,14 +17,14 @@ interface RouteChunk {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [TermComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'lazy-loading'" [section]="section()">
       <ng-template appLessonSection="basics">
       <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <app-page-header title="Lazy Loading" illustration="lazy">
         Lazy loading means a route's code is downloaded only <strong class="text-gold-300">when the user actually visits it</strong>, instead of
-        shipping every page's component inside the main JavaScript bundle from the very first load.
+        shipping every page's component inside the main JavaScript <app-term term="bundle">bundle</app-term> from the very first load.
       </app-page-header>
 
       <!-- 1 · THE PROBLEM -->

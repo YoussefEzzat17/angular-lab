@@ -4,6 +4,7 @@ import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { CdTreeDemoComponent } from './cd-tree-demo.component';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
+import { TermComponent } from '../../shared/term.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
@@ -71,7 +72,7 @@ const NAMES = ['Ada', 'Grace', 'Linus', 'Margaret', 'Alan'];
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CdTreeDemoComponent, CdDefaultCardComponent, CdOnPushCardComponent, CdSignalReaderComponent, FlowDiagramComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [TermComponent, CdTreeDemoComponent, CdDefaultCardComponent, CdOnPushCardComponent, CdSignalReaderComponent, FlowDiagramComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'change-detection'" [section]="section()">
       <ng-template appLessonSection="default">
@@ -79,7 +80,7 @@ const NAMES = ['Ada', 'Grace', 'Linus', 'Margaret', 'Alan'];
       <app-page-header title="Change Detection" illustration="change-detection">
         After something happens (a click, a response, a timer), Angular walks the component tree and re-checks what each
         template shows. By default it checks <em>every</em> component, every time. With
-        <code class="text-gold-300">OnPush</code> a component is only re-checked when something it depends on actually changed —
+        <app-term term="onpush"><code class="text-gold-300">OnPush</code></app-term> a component is only re-checked when something it depends on actually changed —
         so a big app does far less work.
       </app-page-header>
 

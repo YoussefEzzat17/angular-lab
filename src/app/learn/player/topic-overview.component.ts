@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { TOPICS } from '../../core/data/topics';
+import { LEVEL_LABEL, TOPICS } from '../../core/data/topics';
 import { ProgressService } from '../../core/services/progress.service';
 import { ProgressRingComponent } from '../../shared/progress-ring.component';
 import type { TopicId } from '../../core/models/learning.models';
@@ -19,8 +19,32 @@ import type { TopicId } from '../../core/models/learning.models';
             <p class="text-sm font-semibold text-gold-400">{{ groupTitle() }}</p>
             <h1 class="mt-1 text-3xl font-bold sm:text-4xl">{{ t.title }}</h1>
             <p class="mt-2 text-stone-400">{{ t.description }}</p>
+            <p class="mt-3">
+              <span class="rounded-full border border-stone-700 px-3 py-1 text-xs font-semibold text-stone-300" data-testid="topic-level">{{ levelLabel[t.level] }}</span>
+            </p>
           </div>
         </div>
+
+        <!-- Before you start -->
+        @if (prerequisites().length) {
+          <div class="mt-6 rounded-2xl border border-stone-800 bg-stone-900 p-5" data-testid="prerequisites">
+            <p class="font-semibold text-stone-100">Before you start</p>
+            <p class="mt-0.5 text-sm text-stone-400">
+              {{ allPrerequisitesDone() ? 'You have finished the topics this one builds on.' : 'This topic builds on these. Finishing them first makes it easier (you can still start now).' }}
+            </p>
+            <ul class="mt-3 flex flex-wrap gap-2">
+              @for (pre of prerequisites(); track pre.topic.id) {
+                <li>
+                  <a [routerLink]="pre.topic.path" [attr.data-testid]="'prereq-' + pre.topic.id"
+                     class="inline-flex min-h-9 items-center gap-1.5 rounded-full border px-3 text-sm transition hover:bg-stone-800"
+                     [class]="pre.done ? 'border-emerald-500/40 text-emerald-300' : 'border-stone-700 text-stone-300'">
+                    <span aria-hidden="true">{{ pre.done ? '✓' : pre.topic.icon }}</span> {{ pre.topic.title }}
+                  </a>
+                </li>
+              }
+            </ul>
+          </div>
+        }
 
         <!-- Progress ring + stats -->
         <div class="mt-8 flex flex-wrap items-center gap-4 rounded-2xl border border-stone-800 bg-stone-900 p-5">
@@ -105,12 +129,21 @@ export class TopicOverviewComponent {
   /** Set on the parent route in learn.routes.ts. */
   private readonly topicId = this.route.snapshot.data['topicId'] as TopicId;
 
+  protected readonly levelLabel = LEVEL_LABEL;
+
   protected readonly topic = computed(() => TOPICS.find((t) => t.id === this.topicId) ?? null);
 
   protected readonly groupTitle = computed(() => {
     const group = this.topic()?.group ?? '';
     return group.replace(/-/g, ' ').toUpperCase();
   });
+  protected readonly prerequisites = computed(() =>
+    (this.topic()?.prerequisites ?? []).flatMap((id) => {
+      const topic = TOPICS.find((t) => t.id === id);
+      return topic ? [{ topic, done: this.progress.status(id) === 'completed' }] : [];
+    }),
+  );
+  protected readonly allPrerequisitesDone = computed(() => this.prerequisites().every((p) => p.done));
   protected readonly totalMinutes = computed(() => this.topic()?.sections.reduce((s, x) => s + x.minutes, 0) ?? 0);
   protected readonly doneSections = computed(() => {
     const t = this.topic();

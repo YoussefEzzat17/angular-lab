@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { GROUPED_TOPICS, TOPIC_GROUPS, TOPICS } from '../../core/data/topics';
+import { GROUPED_TOPICS, LEVEL_LABEL, TOPIC_GROUPS, TOPICS, topicMinutes } from '../../core/data/topics';
 import { ProgressService } from '../../core/services/progress.service';
 import { SignalNetworkComponent } from './signal-network.component';
 
@@ -28,11 +28,11 @@ import { SignalNetworkComponent } from './signal-network.component';
 
             <div class="mt-8 flex flex-wrap gap-3">
               <a [routerLink]="continuePath()"
-                 class="rounded-xl bg-gold-500 px-6 py-3 font-semibold text-white shadow-lg shadow-gold-500/20 transition hover:bg-gold-400">
+                 class="w-full rounded-xl bg-gold-500 px-6 py-3 text-center font-semibold text-white shadow-lg shadow-gold-500/20 transition hover:bg-gold-400 sm:w-auto">
                 {{ progress.completedCount() === 0 ? 'Start Learning →' : 'Continue Learning →' }}
               </a>
               <a routerLink="/dashboard"
-                 class="rounded-xl border border-stone-700 px-6 py-3 font-semibold text-stone-300 transition hover:bg-stone-800">
+                 class="w-full rounded-xl border border-stone-700 px-6 py-3 text-center font-semibold text-stone-300 transition hover:bg-stone-800 sm:w-auto">
                 View Dashboard
               </a>
             </div>
@@ -112,6 +112,7 @@ import { SignalNetworkComponent } from './signal-network.component';
                         }
                       </div>
                       <p class="mt-0.5 text-xs text-stone-500 line-clamp-2">{{ topic.description }}</p>
+                      <p class="mt-1 text-[11px] font-semibold text-stone-500">{{ levelLabel[topic.level] }} · {{ minutes(topic) }} min</p>
                     </div>
                   </a>
                 }
@@ -144,6 +145,8 @@ export class HomeComponent {
   readonly progress = inject(ProgressService);
   readonly topics = TOPICS;
   readonly groups = GROUPED_TOPICS;
+  readonly levelLabel = LEVEL_LABEL;
+  readonly minutes = topicMinutes;
 
   continuePath(): string {
     const firstIncomplete = this.topics.find((t) => !this.progress.isCompleted(t.path));

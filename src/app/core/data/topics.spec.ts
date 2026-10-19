@@ -35,4 +35,19 @@ describe('topics data', () => {
     expect(grouped).toEqual(TOPICS.map((t) => t.path));
     expect(GROUPED_TOPICS.every((g) => g.topics.length > 0)).toBeTrue();
   });
+
+  it('lists prerequisites that exist and come earlier in the learning path', () => {
+    const order = TOPICS.map((t) => t.id);
+    for (const topic of TOPICS) {
+      for (const pre of topic.prerequisites) {
+        expect(order.indexOf(pre)).withContext(`${topic.id} needs ${pre}`).toBeGreaterThanOrEqual(0);
+        expect(order.indexOf(pre)).withContext(`${topic.id} needs ${pre}`).toBeLessThan(order.indexOf(topic.id));
+      }
+    }
+  });
+
+  it('starts the path with a beginner topic that needs nothing first', () => {
+    expect(TOPICS[0].level).toBe('beginner');
+    expect(TOPICS[0].prerequisites).toEqual([]);
+  });
 });

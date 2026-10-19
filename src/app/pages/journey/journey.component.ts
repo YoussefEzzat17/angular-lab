@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { LEVEL_LABEL } from '../../core/data/topics';
 import { GamificationService } from '../../core/services/gamification.service';
 import { LearningFacade } from '../../core/services/learning.facade';
 import type { TopicStatus } from '../../core/models/learning.models';
@@ -65,7 +66,7 @@ import type { TopicStatus } from '../../core/models/learning.models';
                   <span class="text-2xl" aria-hidden="true">{{ topic.icon }}</span>
                   <span class="min-w-0 flex-1">
                     <span class="block font-semibold text-stone-100">{{ topic.title }}</span>
-                    <span class="block truncate text-xs text-stone-500">{{ statusText(topic.status) }}</span>
+                    <span class="block truncate text-xs text-stone-500">{{ levelLabel[topic.level] }} · {{ statusText(topic.status) }}</span>
                   </span>
                   @if (topic.id === nextTopicId()) {
                     <span class="shrink-0 rounded-full bg-gold-500/20 px-2.5 py-1 text-xs font-bold text-gold-300">You are here</span>
@@ -112,6 +113,7 @@ export class JourneyComponent {
   private readonly facade = inject(LearningFacade);
   readonly game = inject(GamificationService);
 
+  readonly levelLabel = LEVEL_LABEL;
   readonly worlds = this.facade.groups;
 
   /** The first topic that is not complete yet: where the learner should go next. */

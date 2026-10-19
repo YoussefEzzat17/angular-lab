@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, signal } f
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
+import { TermComponent } from '../../shared/term.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
@@ -45,13 +46,13 @@ placeOrder() {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [TermComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'facade'" [section]="section()">
       <ng-template appLessonSection="problem">
       <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <app-page-header title="Facade Pattern" illustration="facade">
-        A <strong class="text-stone-200">facade</strong> is one simple front door in front of a messy set of services. Instead of
+        A <strong class="text-stone-200">facade</strong> is one simple front door in front of a messy set of <app-term term="service">services</app-term>. Instead of
         every component learning how the cart, the stock, the payment and the email services fit together, they ask a single
         class — <code class="text-gold-300">CheckoutFacade</code> — to "place the order". The facade knows the steps, the order,
         and what to undo when something fails. Try both versions below and compare what the component has to know.

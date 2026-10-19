@@ -2,6 +2,14 @@ import type { TopicId, LessonSection, TopicObjective } from '../models/learning.
 
 export type TopicGroup = 'fundamentals' | 'forms-navigation' | 'reactivity' | 'services-data' | 'performance';
 
+export type TopicLevel = 'beginner' | 'intermediate' | 'advanced';
+
+export const LEVEL_LABEL: Record<TopicLevel, string> = {
+  beginner: 'Beginner',
+  intermediate: 'Intermediate',
+  advanced: 'Advanced',
+};
+
 export interface Topic {
   id: TopicId;
   /** Current route, e.g. '/learn/binding'. */
@@ -12,6 +20,10 @@ export interface Topic {
   title: string;
   description: string;
   group: TopicGroup;
+  /** How much Angular you should already know. */
+  level: TopicLevel;
+  /** Topics worth finishing first. Every entry comes earlier in the learning path. */
+  prerequisites: TopicId[];
   sections: LessonSection[];
   objectives: TopicObjective[];
 }
@@ -35,6 +47,7 @@ export const TOPIC_GROUPS: TopicGroupInfo[] = [
 export const TOPICS: Topic[] = [
   {
     id: 'binding', group: 'fundamentals', legacyPath: '/binding', path: '/learn/binding',
+    level: 'beginner', prerequisites: [],
     icon: '🔗', title: 'Data Binding', description: 'Interpolation, property binding, event binding and two-way binding, side by side.',
     objectives: [
       { text: 'Use {{ }} to display component data in the template', sectionId: 'interpolation' },
@@ -51,6 +64,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: 'pipes', group: 'fundamentals', legacyPath: '/pipes', path: '/learn/pipes',
+    level: 'beginner', prerequisites: ['binding'],
     icon: '🧪', title: 'Pipes', description: 'Format dates, prices and text right in the template with | pipeName.',
     objectives: [
       { text: 'Format values in templates using built-in pipes', sectionId: 'builtin' },
@@ -67,6 +81,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: 'directives', group: 'fundamentals', legacyPath: '/directives', path: '/learn/directives',
+    level: 'beginner', prerequisites: ['binding'],
     icon: '⚙️', title: 'Directives', description: 'Give plain HTML extra behavior with structural and attribute directives.',
     objectives: [
       { text: 'Use @if and @for in templates', sectionId: 'structural' },
@@ -82,6 +97,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: 'communication', group: 'fundamentals', legacyPath: '/communication', path: '/learn/communication',
+    level: 'beginner', prerequisites: ['binding'],
     icon: '↔️', title: 'Component Communication', description: '@Input() and @Output() — how a parent and child component talk to each other.',
     objectives: [
       { text: 'Pass data from parent to child with @Input()', sectionId: 'input' },
@@ -97,6 +113,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: 'forms', group: 'forms-navigation', legacyPath: '/forms', path: '/learn/forms',
+    level: 'intermediate', prerequisites: ['binding'],
     icon: '📝', title: 'Angular Forms', description: 'Template-driven and reactive forms, with validation, side by side.',
     objectives: [
       { text: 'Build a form with template-driven approach using ngModel', sectionId: 'template-driven' },
@@ -114,6 +131,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: 'routing', group: 'forms-navigation', legacyPath: '/routing', path: '/learn/routing',
+    level: 'intermediate', prerequisites: ['binding'],
     icon: '🧭', title: 'Routing', description: 'Routes, router-outlet, routerLink and reading route parameters.',
     objectives: [
       { text: 'Define routes and render them with router-outlet', sectionId: 'basics' },
@@ -130,6 +148,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: 'guards', group: 'forms-navigation', legacyPath: '/guards', path: '/learn/guards',
+    level: 'intermediate', prerequisites: ['routing'],
     icon: '🚧', title: 'Route Guards', description: 'canActivate — decide whether a user may open a page, and where to send them if not.',
     objectives: [
       { text: 'Write a canActivate guard function', sectionId: 'can-activate' },
@@ -144,6 +163,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: 'signals', group: 'reactivity', legacyPath: '/signals', path: '/learn/signals',
+    level: 'intermediate', prerequisites: ['binding'],
     icon: '📡', title: 'Signals', description: "signal(), computed() and effect() — Angular's modern reactive state.",
     objectives: [
       { text: 'Create and update a signal with signal() and .set()/.update()', sectionId: 'basics' },
@@ -163,6 +183,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: 'rxjs', group: 'reactivity', legacyPath: '/rxjs', path: '/learn/rxjs',
+    level: 'advanced', prerequisites: ['signals'],
     icon: '🌊', title: 'RxJS', description: 'Observables, operators like switchMap and debounceTime, and the async pipe.',
     objectives: [
       { text: 'Understand what an Observable is and how to subscribe', sectionId: 'observables' },
@@ -182,6 +203,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: 'di', group: 'services-data', legacyPath: '/di', path: '/learn/di',
+    level: 'intermediate', prerequisites: ['communication'],
     icon: '💉', title: 'Dependency Injection', description: 'inject(), providers and scope — who creates a service, and who shares it.',
     objectives: [
       { text: 'Inject a service into a component with inject()', sectionId: 'basics' },
@@ -196,6 +218,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: 'movies', group: 'services-data', legacyPath: '/movies', path: '/learn/movies',
+    level: 'intermediate', prerequisites: ['di', 'rxjs'],
     icon: '🌐', title: 'Fetch API & HTTP', description: 'HttpClient and services, fetching real data from a public API.',
     objectives: [
       { text: 'Inject HttpClient and make a GET request', sectionId: 'httpclient' },
@@ -211,6 +234,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: 'interceptor', group: 'services-data', legacyPath: '/interceptor', path: '/learn/interceptor',
+    level: 'advanced', prerequisites: ['movies'],
     icon: '🛡️', title: 'HttpInterceptor', description: 'One checkpoint that every outgoing request and incoming response passes through.',
     objectives: [
       { text: 'Write a functional interceptor', sectionId: 'basics' },
@@ -228,6 +252,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: 'facade', group: 'services-data', legacyPath: '/facade', path: '/learn/facade',
+    level: 'advanced', prerequisites: ['di'],
     icon: '🏛️', title: 'Facade Pattern', description: 'One simple front door over several services — how to keep components small and logic in one place.',
     objectives: [
       { text: 'Explain the problem the Facade pattern solves', sectionId: 'problem' },
@@ -246,6 +271,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: 'change-detection', group: 'performance', legacyPath: '/change-detection', path: '/learn/change-detection',
+    level: 'advanced', prerequisites: ['signals', 'communication'],
     icon: '🔄', title: 'Change Detection', description: 'Default vs OnPush — when Angular re-checks a component, and how to make it do less.',
     objectives: [
       { text: "Explain how Angular's Default change detection works", sectionId: 'default' },
@@ -260,6 +286,7 @@ export const TOPICS: Topic[] = [
   },
   {
     id: 'lazy-loading', group: 'performance', legacyPath: '/lazy-loading', path: '/learn/lazy-loading',
+    level: 'intermediate', prerequisites: ['routing'],
     icon: '📦', title: 'Lazy Loading', description: 'loadComponent and smaller initial bundles for a faster first load.',
     objectives: [
       { text: 'Configure a route with loadComponent for lazy loading', sectionId: 'basics' },
@@ -277,6 +304,11 @@ export const TOPICS: Topic[] = [
 ];
 
 /** Topics bucketed by group, in display order — what the navbar and home page render. */
+/** Total reading and practice time of a topic, in minutes. */
+export function topicMinutes(topic: Topic): number {
+  return topic.sections.reduce((sum, section) => sum + section.minutes, 0);
+}
+
 export const GROUPED_TOPICS = TOPIC_GROUPS.map((group) => ({
   ...group,
   topics: TOPICS.filter((topic) => topic.group === group.id),
