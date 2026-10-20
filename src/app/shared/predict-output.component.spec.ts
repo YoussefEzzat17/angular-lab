@@ -86,4 +86,18 @@ describe('PredictOutputComponent', () => {
 
     expect(root.querySelector('[data-testid="predict-error"]')).toBeNull();
   });
+
+  it('shows no code block for a question that has no code', () => {
+    const fixture = TestBed.createComponent(PredictOutputComponent);
+    fixture.componentRef.setInput('challenge', {
+      question: 'Which tool fits?',
+      options: [{ id: 'a', text: 'A' }, { id: 'b', text: 'B' }],
+      correct: 'b',
+      explanation: 'Because B.',
+    });
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('pre')).toBeNull();
+    expect(fixture.nativeElement.querySelectorAll('[role="radio"]').length).toBe(2);
+  });
 });

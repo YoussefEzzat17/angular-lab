@@ -6,14 +6,17 @@ import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowle
 import { LessonCardComponent } from '../../shared/lesson-card.component';
 import type { PredictChallenge } from '../../shared/predict-output.component';
 import { PredictOutputComponent } from '../../shared/predict-output.component';
+import { OrderStepsComponent } from '../../shared/order-steps.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
+import { AttributePropertyDemoComponent } from './attribute-property-demo.component';
+import { BindingDecoderDemoComponent } from './binding-decoder-demo.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
 import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [PredictOutputComponent, 
+  imports: [AttributePropertyDemoComponent, BindingDecoderDemoComponent, OrderStepsComponent, PredictOutputComponent,
     FormsModule,
     FlowDiagramComponent,
     PageHeaderComponent,
@@ -25,8 +28,8 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
   template: `
     <app-lesson-player [topicId]="'binding'" [section]="section()">
 
-      <!-- ── Section 1 · Interpolation ── -->
-      <ng-template appLessonSection="interpolation">
+      <!-- ── Section 0 · Overview ── -->
+      <ng-template appLessonSection="overview">
         <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
           <app-page-header title="Data Binding" illustration="binding">
             Binding is how a component's TypeScript class and its HTML template stay in sync, without you writing
@@ -34,6 +37,32 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
             binding, event binding, and two-way binding — each with a different direction of data flow, shown in the diagram on every card
             below. Edit this component file, save it, and watch the results update in the browser.
           </app-page-header>
+
+          <app-lesson-card class="mt-10" label="1 · THE PROBLEM" heading="Keeping the screen and the data in step">
+            <p class="mt-2 text-sm text-stone-400">
+              Your component holds data: a title, a count, whether a button is available. The page has to show it, and has to tell the component when the user does something. Doing that by hand
+              means finding elements, copying values in, and copying them back out, every single time anything changes. Binding is Angular doing that for you.
+            </p>
+          </app-lesson-card>
+
+          <app-lesson-card class="mt-5" label="2 · THE MENTAL MODEL" heading="A TV and its remote" tone="amber">
+            <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+              <li><strong class="text-stone-100">The screen</strong> shows whatever the component knows. That is interpolation and property binding: data flows <strong class="text-stone-100">down</strong>, from the class to the template.</li>
+              <li><strong class="text-stone-100">The remote</strong> tells the component what the user did. That is event binding: events flow <strong class="text-stone-100">up</strong>, from the template to the class.</li>
+              <li><strong class="text-stone-100">A shared whiteboard</strong> is two-way binding: either side can write on it, and both always see the same thing.</li>
+            </ul>
+          </app-lesson-card>
+
+          <app-lesson-card class="mt-5" variant="highlight" label="3 · TRY IT" heading="Read the four kinds of binding">
+            <p class="mt-2 text-sm text-stone-400">Press each syntax and watch which way the arrow points.</p>
+            <app-binding-decoder-demo />
+          </app-lesson-card>
+        </section>
+      </ng-template>
+
+      <!-- ── Section 1 · Interpolation ── -->
+      <ng-template appLessonSection="interpolation">
+        <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
 
           <!-- 01 · INTERPOLATION -->
           <div class="mt-10 grid gap-5 md:grid-cols-2">
@@ -92,6 +121,14 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
               </p>
             </app-lesson-card>
           </div>
+
+          <app-lesson-card class="mt-5" label="WHY PROPERTY, NOT ATTRIBUTE" heading="The attribute is the start, the property is the live value">
+            <p class="mt-2 text-sm text-stone-400">
+              In HTML, <code class="text-gold-300">value="Castle in the Sky"</code> is an <strong class="text-stone-200">attribute</strong>: the starting value written in the markup.
+              The element also has a <strong class="text-stone-200">property</strong>, <code class="text-gold-300">input.value</code>, which changes as the user types. Property binding sets the live one.
+            </p>
+            <app-attribute-property-demo />
+          </app-lesson-card>
         </section>
       </ng-template>
 
@@ -120,6 +157,14 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
               </p>
             </app-lesson-card>
           </div>
+
+          <app-lesson-card class="mt-5" label="THE EVENT OBJECT" heading="$event carries the details">
+            <p class="mt-2 text-sm text-stone-400">
+              Inside an event binding, <code class="text-gold-300">$event</code> is what the browser sent: for a click, the mouse details; for typing, the input element.
+              You can also bind to one specific key.
+            </p>
+            <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ eventCode }}</pre>
+          </app-lesson-card>
         </section>
       </ng-template>
 
@@ -159,6 +204,27 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
           </div>
 
 
+</section>
+      </ng-template>
+
+          <!-- ── Section 5 · Practice ── -->
+      <ng-template appLessonSection="practice">
+        <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+          <app-lesson-card class="mt-10" variant="highlight" label="CHOOSE" heading="Which binding does this job?">
+            <app-predict-output [challenge]="showChallenge" />
+          </app-lesson-card>
+
+          <app-lesson-card class="mt-5" variant="highlight" label="CHOOSE AGAIN" heading="And this one?">
+            <app-predict-output [challenge]="reactChallenge" />
+          </app-lesson-card>
+
+          <app-lesson-card class="mt-5" variant="highlight" label="PUT IT IN ORDER" heading="What happens when you type in a two-way bound field?">
+            <app-order-steps
+              [steps]="typingSteps"
+              explanation="The event goes up into the class, then the new value goes back down into the page. Two-way binding is just those two trips wired together."
+            />
+          </app-lesson-card>
+
       <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Four things that trip up every beginner">
         <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
           <li><strong class="text-stone-100">Using interpolation for a boolean property.</strong> <code ngNonBindable class="text-gold-300">disabled="{{ isLoading }}"</code> sets the text "false", which still disables the button. Write <code class="text-gold-300">[disabled]="isLoading"</code>.</li>
@@ -169,9 +235,8 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
       </app-lesson-card>
 
           <app-knowledge-check [items]="recapItems" />
-</section>
+        </section>
       </ng-template>
-
     </app-lesson-player>
   `,
 })
@@ -191,6 +256,46 @@ export class BindingComponent {
     correct: 'a',
     explanation: "Template expressions follow JavaScript rules. '2' + 3 joins text, so it shows 23. 2 + 3 adds numbers, so it shows 5.",
   };
+
+  protected readonly eventCode = `<button (click)="save()">Save</button>
+<input (input)="onType($event)" />             <!-- $event is the input event -->
+<input (keyup.enter)="search()" />             <!-- only when Enter is pressed -->
+
+onType(event: Event) {
+  this.text = (event.target as HTMLInputElement).value;
+}`;
+
+  protected readonly showChallenge: PredictChallenge = {
+    question: "A page must show the user's name inside a heading. Which binding fits?",
+    options: [
+      { id: 'event', text: '(click)="..."' },
+      { id: 'two-way', text: '[(ngModel)]="name"' },
+      { id: 'interp', text: '{{ name }}' },
+      { id: 'prop', text: '[disabled]="name"' },
+    ],
+    correct: 'interp',
+    explanation: 'Showing a value as text is exactly what interpolation is for. Data goes down from the class to the template, and nothing needs to come back.',
+  };
+
+  protected readonly reactChallenge: PredictChallenge = {
+    question: 'A "Save" button must run a method when it is pressed. Which binding fits?',
+    options: [
+      { id: 'interp', text: '{{ save() }}' },
+      { id: 'prop', text: '[click]="save()"' },
+      { id: 'two-way', text: '[(ngModel)]="save"' },
+      { id: 'event', text: '(click)="save()"' },
+    ],
+    correct: 'event',
+    explanation: 'Reacting to the user is event binding. Parentheses mean "listen for this event", and the method runs when it fires.',
+  };
+
+  protected readonly typingSteps = [
+    'The user types a character in the field',
+    'The browser fires an input event',
+    'ngModel writes the new text into the class property',
+    'Angular checks the template again',
+    'The paragraph below the field shows the new text',
+  ];
 
   // Student task: replace this starter value with a title you enjoy.
   practiceTitle = 'The Last Horizon';

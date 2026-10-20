@@ -2,7 +2,7 @@ import type { QuizBank } from '../../../core/models/learning.models';
 
 export const DIRECTIVES_QUIZ: QuizBank = {
   topicId: 'directives',
-  version: 1,
+  version: 2,
   questions: [
     {
       id: 'directives-01',
@@ -108,6 +108,48 @@ export const DIRECTIVES_QUIZ: QuizBank = {
       correct: ['b'],
       explanation: 'The directive listens to keydown and calls preventDefault() on keys that are not digits, so the character never reaches the input.',
       sectionId: 'try-it',
+    },
+    {
+      id: 'directives-11',
+      type: 'single',
+      prompt: 'A list is tracked by $index and you remove the first item. What goes wrong for a row that contains an input the user typed in?',
+      choices: [
+        { id: 'a', text: 'Nothing, Angular always moves the row with its item' },
+        { id: 'b', text: 'The typed text stays in its position, so it now sits next to a different item' },
+        { id: 'c', text: 'Angular throws an error' },
+        { id: 'd', text: 'Every row in the list is rebuilt from scratch' },
+      ],
+      correct: ['b'],
+      explanation: 'With track $index, Angular identifies a row by its position, so it reuses the row at that position and only updates the bound values. State inside the row, like typed text, stays where it was.',
+      sectionId: 'track',
+    },
+    {
+      id: 'directives-12',
+      type: 'single',
+      prompt: 'Which track expression is the best default for items that come from a server with an id?',
+      choices: [
+        { id: 'a', text: 'track $index' },
+        { id: 'b', text: 'track item.id' },
+        { id: 'c', text: 'track item.name, even if the user can edit it' },
+        { id: 'd', text: 'There is no need to write track' },
+      ],
+      correct: ['b'],
+      explanation: 'A stable unique id lets Angular match each row to its item across reorders, removals and refetches. And @for requires a track expression, so it cannot be skipped.',
+      sectionId: 'track',
+    },
+    {
+      id: 'directives-13',
+      type: 'single',
+      prompt: 'What is the benefit of @else over writing a second @if with the opposite condition?',
+      choices: [
+        { id: 'a', text: 'It makes the page load faster' },
+        { id: 'b', text: 'There is one condition to maintain, so the two branches can never disagree' },
+        { id: 'c', text: 'It keeps both blocks in the DOM' },
+        { id: 'd', text: 'It is the only way to hide an element' },
+      ],
+      correct: ['b'],
+      explanation: 'Two separate opposite checks can drift apart when one is edited. One @if with an @else expresses a single decision.',
+      sectionId: 'structural',
     },
   ],
 };

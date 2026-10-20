@@ -9,7 +9,8 @@ export interface PredictOption {
 
 export interface PredictChallenge {
   question: string;
-  code: string;
+  /** The snippet to read. Leave it out for a question that has no code, such as choosing the right tool. */
+  code?: string;
   options: PredictOption[];
   /** The id of the right option. */
   correct: string;
@@ -27,7 +28,9 @@ export interface PredictChallenge {
   imports: [CodeBlockDirective],
   template: `
     <p class="mt-3 text-sm font-semibold text-stone-100" data-testid="predict-question">{{ challenge().question }}</p>
-    <pre class="mt-3 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ challenge().code }}</pre>
+    @if (challenge().code) {
+      <pre class="mt-3 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ challenge().code }}</pre>
+    }
 
     <div class="mt-4 grid gap-2" role="radiogroup" [attr.aria-label]="challenge().question">
       @for (option of challenge().options; track option.id) {

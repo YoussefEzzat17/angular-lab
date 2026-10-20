@@ -3,6 +3,9 @@ import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
 import { OrderStepsComponent } from '../../shared/order-steps.component';
+import { PredictOutputComponent } from '../../shared/predict-output.component';
+import type { PredictChallenge } from '../../shared/predict-output.component';
+import { PreloadingDemoComponent } from './preloading-demo.component';
 import { TermComponent } from '../../shared/term.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
@@ -18,7 +21,7 @@ interface RouteChunk {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [OrderStepsComponent, TermComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [PreloadingDemoComponent, PredictOutputComponent, OrderStepsComponent, TermComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'lazy-loading'" [section]="section()">
       <ng-template appLessonSection="basics">
@@ -27,6 +30,14 @@ interface RouteChunk {
         Lazy loading means a route's code is downloaded only <strong class="text-gold-300">when the user actually visits it</strong>, instead of
         shipping every page's component inside the main JavaScript <app-term term="bundle">bundle</app-term> from the very first load.
       </app-page-header>
+
+      <app-lesson-card class="mt-8" tone="amber" label="MENTAL MODEL" heading="A restaurant that cooks to order">
+        <p class="mt-2 text-sm text-stone-400">
+          An eager app is a buffet: every dish is cooked and set out before the first guest sits down, so opening takes long. A lazy app cooks a dish when
+          someone orders it, so the doors open quickly and the first plate of each kind takes a little longer.
+          <strong class="text-stone-200">Preloading</strong> is the kitchen prepping the popular dishes during a quiet moment.
+        </p>
+      </app-lesson-card>
 
       <!-- 1 · THE PROBLEM -->
       <app-lesson-card class="mt-10" label="1 · The problem" heading="Every route ships eagerly, whether it's visited or not">
@@ -167,7 +178,7 @@ export const routes: Routes = [
 
       <ng-template appLessonSection="preloading">
       <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-        <app-lesson-card class="mt-10" label="PRELOADING · STRATEGIES" heading="Fetch lazy chunks in the background">
+        <app-lesson-card class="mt-8" label="PRELOADING · STRATEGIES" heading="Fetch lazy chunks in the background">
           <p class="mt-2 text-sm text-stone-400">
             Lazy loading delays a route's code until the user opens it. Preloading downloads those chunks in the background after the
             first screen renders, so the next navigation feels instant. Angular's default is <code class="text-gold-300">NoPreloading</code>.
@@ -175,6 +186,17 @@ export const routes: Routes = [
           <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">import &#123; provideRouter, withPreloading, PreloadAllModules &#125; from '@angular/router';
 
 provideRouter(routes, withPreloading(PreloadAllModules));</pre>
+        </app-lesson-card>
+
+        <app-lesson-card class="mt-5" variant="highlight" label="TRY IT" heading="Pick a strategy and click the pages" headingSize="lg">
+          <p class="mt-2 text-sm text-stone-400">
+            Compare the waiting time on the first click with the data spent in the background. There is no free option: you trade one against the other.
+          </p>
+          <app-preloading-demo />
+        </app-lesson-card>
+
+        <app-lesson-card class="mt-5" variant="highlight" label="PREDICT" heading="When does the admin chunk download?">
+          <app-predict-output [challenge]="preloadChallenge" />
         </app-lesson-card>
       </section>
       </ng-template>
@@ -209,6 +231,17 @@ provideRouter(routes, withPreloading(PreloadAllModules));</pre>
 })
 export class LazyLoadingComponent {
   readonly section = input<string>();
+
+  readonly preloadChallenge: PredictChallenge = {
+    question: 'The app uses withPreloading(PreloadAllModules) and /admin is a lazy route. A user opens the home page and never clicks anything. Is the admin chunk downloaded?',
+    options: [
+      { id: 'yes', text: 'Yes, in the background after the first screen is ready' },
+      { id: 'no', text: 'No, lazy routes only download on navigation' },
+      { id: 'login', text: 'Only after the user logs in' },
+    ],
+    correct: 'yes',
+    explanation: 'PreloadAllModules fetches every lazy chunk once the app is stable, without waiting for a click. The route is still lazy for the first load, but by the time the user clicks it the code is usually already there. If you want to save data, use a selective strategy.',
+  };
 
   readonly lazySteps = [
     'The visitor clicks a link to /admin',

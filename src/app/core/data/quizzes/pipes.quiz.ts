@@ -2,7 +2,7 @@ import type { QuizBank } from '../../../core/models/learning.models';
 
 export const PIPES_QUIZ: QuizBank = {
   topicId: 'pipes',
-  version: 1,
+  version: 2,
   questions: [
     {
       id: 'pipes-01',
@@ -113,6 +113,48 @@ export const PIPES_QUIZ: QuizBank = {
       correct: ['a'],
       explanation: 'Pipe arguments follow a colon, as in truncate: 15. Parentheses and brackets are not pipe-argument syntax.',
       sectionId: 'try-it',
+    },
+    {
+      id: 'pipes-11',
+      type: 'single',
+      prompt: "title is 'Castle'. What does {{ title | uppercase | lowercase }} show?",
+      choices: [
+        { id: 'a', text: 'CASTLE' },
+        { id: 'b', text: 'castle' },
+        { id: 'c', text: 'Castle' },
+        { id: 'd', text: 'An error: pipes cannot be chained' },
+      ],
+      correct: ['b'],
+      explanation: 'Chained pipes run left to right and each one gets the result of the one before. uppercase gives CASTLE and lowercase turns that into castle.',
+      sectionId: 'chain',
+    },
+    {
+      id: 'pipes-12',
+      type: 'single',
+      prompt: 'Why is a pure pipe usually cheaper than calling a formatting method in the template?',
+      choices: [
+        { id: 'a', text: 'A pure pipe is only called again when its input changes; the method runs on every check' },
+        { id: 'b', text: 'Pipes run on the server' },
+        { id: 'c', text: 'Methods cannot return strings in a template' },
+        { id: 'd', text: 'A pipe changes the original value so it never has to run again' },
+      ],
+      correct: ['a'],
+      explanation: 'Angular evaluates every binding when it checks a component. A pure pipe remembers its last input and skips the work if nothing changed.',
+      sectionId: 'pure-impure',
+    },
+    {
+      id: 'pipes-13',
+      type: 'single',
+      prompt: 'How do you give a pipe an option, such as the currency?',
+      choices: [
+        { id: 'a', text: "{{ price | currency:'EUR' }}" },
+        { id: 'b', text: "{{ price | currency('EUR') }}" },
+        { id: 'c', text: "{{ price | currency = 'EUR' }}" },
+        { id: 'd', text: "{{ currency(price, 'EUR') }}" },
+      ],
+      correct: ['a'],
+      explanation: 'Arguments go after the pipe name, each introduced by a colon. Extra arguments are chained the same way, as in date:\'short\':\'UTC\'.',
+      sectionId: 'builtin',
     },
   ],
 };

@@ -5,6 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
+import { PredictOutputComponent } from '../../shared/predict-output.component';
+import type { PredictChallenge } from '../../shared/predict-output.component';
+import { CallCounterDemoComponent } from './call-counter-demo.component';
+import { PipeChainDemoComponent } from './pipe-chain-demo.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
 import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
@@ -27,7 +31,7 @@ interface PipeOption {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [FormsModule, CurrencyPipe, DatePipe, UpperCasePipe, LowerCasePipe, PercentPipe, TruncatePipe, CodeBlockDirective, KnowledgeCheckComponent, LessonPlayerComponent, LessonSectionDirective, PageHeaderComponent, LessonCardComponent],
+  imports: [CallCounterDemoComponent, PipeChainDemoComponent, PredictOutputComponent, FormsModule, CurrencyPipe, DatePipe, UpperCasePipe, LowerCasePipe, PercentPipe, TruncatePipe, CodeBlockDirective, KnowledgeCheckComponent, LessonPlayerComponent, LessonSectionDirective, PageHeaderComponent, LessonCardComponent],
   template: `
     <app-lesson-player [topicId]="'pipes'" [section]="section()">
       <ng-template appLessonSection="builtin">
@@ -55,6 +59,21 @@ interface PipeOption {
         </div>
       </app-lesson-card>
 
+      <app-lesson-card class="mt-5" label="2 · THE MENTAL MODEL" heading="A conveyor belt with stations" tone="amber">
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+          <li><strong class="text-stone-100">Your data</strong> sits in the warehouse (the class) and never changes.</li>
+          <li><strong class="text-stone-100">A copy</strong> rides the belt to the page. Each <code class="text-gold-300">|</code> is a station that changes how the copy looks: <code class="text-gold-300">uppercase</code>, <code class="text-gold-300">currency</code>, <code class="text-gold-300">date</code>.</li>
+          <li><strong class="text-stone-100">The page</strong> shows what comes off the end. The original is untouched, so the same value can look different in different places.</li>
+        </ul>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" label="3 · ARGUMENTS" heading="Give a pipe options with a colon">
+        <p class="mt-2 text-sm text-stone-400">
+          Most pipes accept settings after the name, each separated by a colon. The first one is usually the most important (the format, the currency, the length).
+        </p>
+        <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ argsCode }}</pre>
+      </app-lesson-card>
+
       <!-- 4 · CHEAT SHEET -->
       <app-lesson-card class="mt-5" label="4 · Quick cheat sheet" heading="Built-in pipes you'll use every day">
         <div class="mt-4 overflow-x-auto rounded-xl border border-stone-800">
@@ -77,6 +96,29 @@ interface PipeOption {
             </tbody>
           </table>
         </div>
+      </app-lesson-card>
+      </section>
+      </ng-template>
+
+      <ng-template appLessonSection="chain">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <app-lesson-card class="mt-10" label="CHAINING" heading="Pipes can be stacked, and the order matters">
+        <p class="mt-2 text-sm text-stone-400">
+          Put one pipe after another: each takes the result of the one before it. <code class="text-gold-300">title | uppercase | slice:0:8</code> first makes the text capitals, then keeps the first eight characters.
+          Swap two pipes and you can get a different result.
+        </p>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="TRY IT" heading="Build a chain and read it station by station">
+        <ol class="mt-2 list-decimal space-y-1 pl-5 text-sm text-stone-400">
+          <li>Click <strong class="text-stone-200">uppercase</strong>, then <strong class="text-stone-200">slice:0:8</strong>. See the value at every step.</li>
+          <li>Click <strong class="text-stone-200">uppercase</strong> and <strong class="text-stone-200">lowercase</strong> in both orders. Which one wins?</li>
+        </ol>
+        <app-pipe-chain-demo />
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="PREDICT" heading="What does this chain show?">
+        <app-predict-output [challenge]="chainChallenge" />
       </app-lesson-card>
       </section>
       </ng-template>
@@ -112,6 +154,18 @@ export class TruncatePipe implements PipeTransform &#123;
           cycle. It catches in-place mutations, but it costs performance, so reach for it only when you truly need it.
         </p>
         <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">&#64;Pipe(&#123; name: 'filterDone', pure: false &#125;)</pre>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" label="WHY NOT A METHOD?" heading="A pure pipe is skipped when nothing changed">
+        <p class="mt-2 text-sm text-stone-400">
+          You could format a value with a method in the template, like <code class="text-gold-300">shout(name())</code>. But Angular runs every binding in a component's template each time it
+          checks that component. A pure pipe is only called again when its input changes.
+        </p>
+        <ol class="mt-3 list-decimal space-y-1 pl-5 text-sm text-stone-400">
+          <li>Press <strong class="text-stone-200">Re-render the page</strong> five times, then <strong class="text-stone-200">Show the counts</strong>.</li>
+          <li>Press <strong class="text-stone-200">Change the name</strong>, and show the counts again.</li>
+        </ol>
+        <app-call-counter-demo />
       </app-lesson-card>
 
       <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Why a pipe may not update">
@@ -224,6 +278,24 @@ export class TruncatePipe implements PipeTransform &#123;
 })
 export class PipesComponent {
   readonly section = input<string>();
+
+  readonly argsCode = `{{ price | currency:'EUR' }}                  <!-- €49.90 -->
+{{ today | date:'longDate' }}                    <!-- October 20, 2026 -->
+{{ ratio | percent:'1.0-1' }}                    <!-- 85.5% -->
+{{ title | slice:0:5 }}                          <!-- Castl -->`;
+
+  readonly chainChallenge: PredictChallenge = {
+    question: 'What does the page show for this template, when title is "Castle"?',
+    code: "<p>{{ title | uppercase | lowercase }}</p>",
+    options: [
+      { id: 'upper', text: 'CASTLE' },
+      { id: 'mixed', text: 'CaStLe' },
+      { id: 'lower', text: 'castle' },
+      { id: 'orig', text: 'Castle' },
+    ],
+    correct: 'lower',
+    explanation: 'The pipes run left to right. uppercase turns it into CASTLE, then lowercase takes that result and turns it into castle. The last pipe has the final say.',
+  };
 
   readonly pipeOptions: PipeOption[] = [
     { mode: 'currency', label: 'currency', syntax: 'currency' },

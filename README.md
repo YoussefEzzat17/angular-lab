@@ -101,7 +101,7 @@ It is built with modern Angular only: standalone components, signals, the `@if` 
   <tr>
     <td width="33%" valign="top">
       <b>🧪 Practice widgets</b><br>
-      Predict the output, put the steps in order, and live visualisers: change detection tree, DI tree, Subject radio station, switchMap vs. mergeMap vs. concatMap lanes, a real <code>resource()</code>.
+      Predict the output, put the steps in order, and live visualisers: change detection tree, DI tree and provider recipes, Subject radio station, switchMap vs. mergeMap vs. concatMap lanes, RxJS marble timelines, an interceptor chain trace, a <code>track</code> demo, and a real <code>resource()</code>.
     </td>
     <td width="33%" valign="top">
       <b>📖 Glossary</b><br>
@@ -142,22 +142,22 @@ The lessons are grouped, and the order below is the recommended learning path (i
 | Group | Topic | Route | What you learn |
 | --- | --- | --- | --- |
 | **Fundamentals** | Data Binding | `/learn/binding` | Interpolation, property, event and two-way binding |
-| | Pipes | `/learn/pipes` | Formatting dates, prices and text in templates, plus a custom pipe |
-| | Directives | `/learn/directives` | `@if` / `@for` (and the older `*ngIf` / `*ngFor`), custom attribute directives |
+| | Pipes | `/learn/pipes` | Formatting dates, prices and text, chaining pipes, a custom pipe, and why a pure pipe beats a method call (live call counter) |
+| | Directives | `/learn/directives` | `@if` / `@else` / `@for`, why `track` matters (type in a row, then remove one), custom attribute directives |
 | | Component Communication | `/learn/communication` | `@Input()` / `@Output()`, parent ↔ child with animated data-flow arrows |
 | | Content Projection & Queries | `/learn/content-projection` | `ng-content` slots, `viewChild`, `contentChild` and a tabs component that builds itself |
-| **Forms & Navigation** | Angular Forms | `/learn/forms` | Template-driven vs. reactive forms, validation |
+| **Forms & Navigation** | Angular Forms | `/learn/forms` | Template-driven vs. reactive forms, validation, custom validators, and `touched` / `dirty` / `errors` live on a real control |
 | | Routing | `/learn/routing` | Routes, `router-outlet`, `routerLink`, route parameters |
 | | Route Guards | `/learn/guards` | `canActivate`, redirecting with a `UrlTree`, and the other guard kinds (live login demo) |
-| **Reactivity** | Signals | `/learn/signals` | `signal()`, `computed()`, `effect()` |
-| | RxJS | `/learn/rxjs` | Observables, operators (`map`, `filter`, `switchMap`, `debounceTime`), memory leaks, the `async` pipe |
-| **Services & Data** | Dependency Injection | `/learn/di` | `inject()`, `providedIn: 'root'` vs. component `providers` — one shared instance vs. one each |
+| **Reactivity** | Signals | `/learn/signals` | `signal()`, `computed()` (lazy and cached, with a run counter), `effect()`, `toSignal()` / `toObservable()` |
+| | RxJS | `/learn/rxjs` | Observables, marble diagrams for `map` / `filter` / `debounceTime` / `take` / `scan`, `switchMap` vs. `mergeMap` vs. `concatMap`, subjects, memory leaks and `takeUntilDestroyed` |
+| **Services & Data** | Dependency Injection | `/learn/di` | `inject()`, `providedIn: 'root'` vs. component `providers`, `InjectionToken` and `useClass` / `useValue` / `useFactory` on a real injector |
 | | Fetch API & HTTP | `/learn/movies` | `HttpClient`, services, a real public API |
 | | Resource API | `/learn/resource` | `resource()`, `rxResource()` and `httpResource()`: loading, error and cancelled requests as signals (experimental in Angular 20) |
-| | HttpInterceptor | `/learn/interceptor` | One checkpoint for every request and response (e.g. attaching a token) |
+| | HttpInterceptor | `/learn/interceptor` | One checkpoint for every request and response: reorder three real interceptors and read the trace |
 | | Facade Pattern | `/learn/facade` | One simple front door over several services: build one, use it, test it, and when *not* to (live checkout demo with rollback) |
 | **Performance** | Change Detection | `/learn/change-detection` | Default vs. `OnPush`, mutating vs. replacing, and why signals fit `OnPush` |
-| | Lazy Loading | `/learn/lazy-loading` | `loadComponent` and smaller initial bundles |
+| | Lazy Loading | `/learn/lazy-loading` | `loadComponent`, smaller initial bundles, and preloading strategies compared by waiting time and background data |
 | | `@defer` Blocks | `/learn/defer` | Placeholders, triggers (`viewport`, `interaction`, `timer`) and prefetching for parts of a page |
 
 Each lesson has its own overview at `/learn/<id>`, and its sections at `/learn/<id>/<section>`. The quiz is at `/learn/<id>/quiz` and opens only after all sections are done. `/learn` opens the first lesson, and the old paths (such as `/binding`) redirect to `/learn/<id>`.

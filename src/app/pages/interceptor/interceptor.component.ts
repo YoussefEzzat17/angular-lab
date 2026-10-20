@@ -4,6 +4,9 @@ import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
 import { OrderStepsComponent } from '../../shared/order-steps.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
+import { PredictOutputComponent } from '../../shared/predict-output.component';
+import type { PredictChallenge } from '../../shared/predict-output.component';
+import { InterceptorChainDemoComponent } from './interceptor-chain-demo.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
 import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
@@ -13,7 +16,7 @@ type Stage = 'idle' | 'built' | 'cloned' | 'sent' | 'response' | 'handled';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [OrderStepsComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [InterceptorChainDemoComponent, PredictOutputComponent, OrderStepsComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'interceptor'" [section]="section()">
       <ng-template appLessonSection="basics">
@@ -22,6 +25,14 @@ type Stage = 'idle' | 'built' | 'cloned' | 'sent' | 'response' | 'handled';
         An <code class="text-gold-300">HttpInterceptor</code> is <strong class="text-gold-300">one function standing in the middle</strong> —
         every request your app sends passes through it on the way out, and every response passes through it on the way back, before your component ever sees it.
       </app-page-header>
+
+      <app-lesson-card class="mt-8" variant="danger" label="THE PROBLEM" heading="The same header, copied into every call">
+        <p class="mt-2 text-sm text-stone-400">
+          Without an interceptor, every service that talks to the API must remember to add the token, handle a 401 and log the failure.
+          Forget it in one of forty places and that one call breaks, or leaks. An interceptor puts the rule in <strong class="text-stone-200">one place</strong>
+          that every request has to pass through.
+        </p>
+      </app-lesson-card>
 
       <!-- 1 · STANDING IN THE MIDDLE -->
       <app-lesson-card class="mt-10" label="1 · What is an interceptor?" heading="One function standing in the middle">
@@ -100,6 +111,10 @@ type Stage = 'idle' | 'built' | 'cloned' | 'sent' | 'response' | 'handled';
             <p class="mt-1 text-xs text-stone-400">Means "continue the request through the pipeline" — call it once you're done inspecting or modifying.</p>
           </div>
         </div>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="PREDICT" heading="What reaches the server?">
+        <app-predict-output [challenge]="nextChallenge" />
       </app-lesson-card>
 
       <!-- 5 · WHY CLONE -->
@@ -189,6 +204,14 @@ type Stage = 'idle' | 'built' | 'cloned' | 'sent' | 'response' | 'handled';
           <li><strong class="text-stone-100">Sending your token to every URL.</strong> Check the URL first, or a third-party API will receive your users' access token.</li>
           <li><strong class="text-stone-100">Ignoring the order.</strong> Interceptors run in the order they are registered for the request, and in reverse for the response.</li>
         </ul>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="TRY IT" heading="Reorder the chain and read the trace" headingSize="lg">
+        <p class="mt-2 text-sm text-stone-400">
+          These are three real interceptors on a real <code class="text-gold-300">HttpClient</code> with a fake server. Look at what the logger sees in each order,
+          and at the order of the arrows on the way back. Then make the server fail.
+        </p>
+        <app-interceptor-chain-demo />
       </app-lesson-card>
 
       <app-lesson-card class="mt-5" variant="highlight" label="PUT IT IN ORDER" heading="Follow one request through two interceptors">
@@ -284,6 +307,18 @@ Authorization: Bearer {{ tokenPreview() }}</pre>
 })
 export class InterceptorComponent implements OnDestroy {
   readonly section = input<string>();
+
+  readonly nextChallenge: PredictChallenge = {
+    question: 'The auth interceptor builds a clone with the Authorization header, but its last line is return next(req). Does the server receive the header?',
+    code: 'const cloned = req.clone({ setHeaders: { Authorization: token } });\nreturn next(req);',
+    options: [
+      { id: 'yes', text: 'Yes, the clone modifies req in place' },
+      { id: 'no', text: 'No, the original request without the header is sent' },
+      { id: 'error', text: 'It throws because req is immutable' },
+    ],
+    correct: 'no',
+    explanation: 'clone() returns a new request and leaves req untouched. next(req) hands the original on, so the clone is thrown away and the server never sees the header. Pass the clone: return next(cloned).',
+  };
 
   readonly chainSteps = [
     "The component calls http.get('/api/users')",

@@ -2,7 +2,7 @@ import type { QuizBank } from '../../../core/models/learning.models';
 
 export const COMMUNICATION_QUIZ: QuizBank = {
   topicId: 'communication',
-  version: 1,
+  version: 2,
   questions: [
     {
       id: 'communication-01',
@@ -123,6 +123,48 @@ export const COMMUNICATION_QUIZ: QuizBank = {
       correct: ['a'],
       explanation: 'The child raises its @Output, and the parent receives the value in receiveTitle($event). The child does not need to know who is listening.',
       sectionId: 'try-it',
+    },
+    {
+      id: 'communication-11',
+      type: 'single',
+      prompt: 'A child declares title = input.required<string>(). How does its template show the value?',
+      choices: [
+        { id: 'a', text: '{{ title }}' },
+        { id: 'b', text: '{{ title() }}' },
+        { id: 'c', text: '{{ title.value }}' },
+        { id: 'd', text: '{{ @title }}' },
+      ],
+      correct: ['b'],
+      explanation: 'input() returns a signal, and a signal is read by calling it. title alone is the signal object, not the string inside.',
+      sectionId: 'input',
+    },
+    {
+      id: 'communication-12',
+      type: 'single',
+      prompt: 'A child is meant to edit a value its parent owns, such as a star rating. Which API fits best?',
+      choices: [
+        { id: 'a', text: 'input() only' },
+        { id: 'b', text: 'output() only' },
+        { id: 'c', text: 'model()' },
+        { id: 'd', text: 'ng-content' },
+      ],
+      correct: ['c'],
+      explanation: 'model() is an input and an output in one, so the parent can write [(rating)]="r" and both sides stay in sync.',
+      sectionId: 'model',
+    },
+    {
+      id: 'communication-13',
+      type: 'single',
+      prompt: 'Which name is the best for an output that fires when the user saves a form?',
+      choices: [
+        { id: 'a', text: 'saved' },
+        { id: 'b', text: 'onSaved' },
+        { id: 'c', text: 'click' },
+        { id: 'd', text: 'change' },
+      ],
+      correct: ['a'],
+      explanation: 'Name an output after what happened. Leave "on" for the parent\'s handler, and avoid names like click or change that a native browser event already uses.',
+      sectionId: 'output',
     },
   ],
 };

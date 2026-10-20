@@ -2,7 +2,7 @@ import type { QuizBank } from '../../../core/models/learning.models';
 
 export const BINDING_QUIZ: QuizBank = {
   topicId: 'binding',
-  version: 1,
+  version: 2,
   questions: [
     {
       id: 'binding-01',
@@ -108,6 +108,48 @@ export const BINDING_QUIZ: QuizBank = {
       correct: ['a'],
       explanation: 'ngModel is provided by FormsModule. A standalone component has to list it in its imports array.',
       sectionId: 'two-way',
+    },
+    {
+      id: 'binding-11',
+      type: 'single',
+      prompt: 'A text field starts with value="Castle in the Sky" in the HTML. The user types "Spirited Away". What do getAttribute("value") and input.value return?',
+      choices: [
+        { id: 'a', text: 'Both return "Spirited Away"' },
+        { id: 'b', text: 'getAttribute returns "Castle in the Sky", input.value returns "Spirited Away"' },
+        { id: 'c', text: 'Both return "Castle in the Sky"' },
+        { id: 'd', text: 'getAttribute returns "Spirited Away", input.value returns "Castle in the Sky"' },
+      ],
+      correct: ['b'],
+      explanation: 'The attribute is the starting value written in the markup and does not change. The property is the live value. That is why Angular binds properties.',
+      sectionId: 'property-binding',
+    },
+    {
+      id: 'binding-12',
+      type: 'single',
+      prompt: 'Which way does data flow in an event binding such as (click)="save()"?',
+      choices: [
+        { id: 'a', text: 'From the class to the template' },
+        { id: 'b', text: 'From the template to the class' },
+        { id: 'c', text: 'Both ways at once' },
+        { id: 'd', text: 'It does not flow: it only runs code' },
+      ],
+      correct: ['b'],
+      explanation: 'The user does something in the page, and the event reaches your class. Interpolation and property binding go the other way.',
+      sectionId: 'overview',
+    },
+    {
+      id: 'binding-13',
+      type: 'single',
+      prompt: 'What is $event inside (input)="onType($event)"?',
+      choices: [
+        { id: 'a', text: 'The event object the browser sent' },
+        { id: 'b', text: 'The text the user typed' },
+        { id: 'c', text: 'The component instance' },
+        { id: 'd', text: 'A promise of the next event' },
+      ],
+      correct: ['a'],
+      explanation: '$event is the browser event. For typing it carries the input element in event.target, so you read the text from (event.target as HTMLInputElement).value.',
+      sectionId: 'event-binding',
     },
   ],
 };

@@ -6,6 +6,9 @@ import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
 import type { PredictChallenge } from '../../shared/predict-output.component';
 import { PredictOutputComponent } from '../../shared/predict-output.component';
+import { OrderStepsComponent } from '../../shared/order-steps.component';
+import { ComputedCacheDemoComponent } from './computed-cache-demo.component';
+import { InteropDemoComponent } from './interop-demo.component';
 import { TermComponent } from '../../shared/term.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
@@ -15,7 +18,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [PredictOutputComponent, TermComponent, CurrencyPipe, FlowDiagramComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [ComputedCacheDemoComponent, InteropDemoComponent, OrderStepsComponent, PredictOutputComponent, TermComponent, CurrencyPipe, FlowDiagramComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'signals'" [section]="section()">
       <ng-template appLessonSection="basics">
@@ -101,6 +104,15 @@ subtotal changes → discount changes → finalPrice changes</pre>
       <app-lesson-card class="mt-5" variant="highlight" label="PREDICT THE OUTPUT" heading="What does computed() give back?">
         <app-predict-output [challenge]="computedChallenge" />
       </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="TRY IT" heading="When does a computed really run?" headingSize="lg">
+        <p class="mt-2 text-sm text-stone-400">
+          Change <strong class="text-stone-200">price</strong> and <strong class="text-stone-200">quantity</strong> and watch the run counter. Then change the note, and finally
+          untick "Show total" and change the price a few times.
+        </p>
+        <app-computed-cache-demo />
+        <p class="mt-3 text-xs text-stone-500">Rules to remember: it is lazy (no read, no work), cached (same answer without work) and only reruns when a signal it read changes.</p>
+      </app-lesson-card>
       </section>
       </ng-template>
 
@@ -160,7 +172,14 @@ readonly finalPrice = computed(() =&gt; this.price() * this.quantity());</pre>
 
       <ng-template appLessonSection="component-signals">
       <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-        <app-lesson-card class="mt-10" label="COMPONENT SIGNALS" heading="input() and output() as signals">
+        <app-lesson-card class="mt-8" variant="danger" label="THE PROBLEM" heading="Decorators hide the reactive part">
+          <p class="mt-2 text-sm text-stone-400">
+            With <code class="text-gold-300">&#64;Input()</code> a parent value is a plain property, so a component cannot react to it without <code class="text-gold-300">ngOnChanges</code>.
+            With <code class="text-gold-300">input()</code> the value is a signal, so a <code class="text-gold-300">computed()</code> or an <code class="text-gold-300">effect()</code> can depend on it directly.
+          </p>
+        </app-lesson-card>
+
+        <app-lesson-card class="mt-5" label="COMPONENT SIGNALS" heading="input() and output() as signals">
           <p class="mt-2 text-sm text-stone-400">
             Components can use signals for their API too. <code class="text-gold-300">input()</code> reads a value from the parent and
             returns a signal you read with <code class="text-gold-300">()</code>. <code class="text-gold-300">output()</code> replaces
@@ -185,6 +204,18 @@ this.added.emit(this.price() * 2);</pre>
           <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">readonly products = toSignal(this.http.get&lt;Product[]&gt;('/api/products'), &#123; initialValue: [] &#125;);</pre>
           <p class="mt-3 text-sm text-stone-400">In the other direction, <code class="text-gold-300">toObservable()</code> turns a signal into an Observable.</p>
         </app-lesson-card>
+
+        <app-lesson-card class="mt-5" tone="amber" label="MENTAL MODEL" heading="A whiteboard and a news ticker">
+          <p class="mt-2 text-sm text-stone-400">
+            A signal is a whiteboard: it always shows the current value and has no history. An Observable is a news ticker: it announces each event as it happens.
+            <code class="text-gold-300">toSignal()</code> copies the latest headline onto a whiteboard. <code class="text-gold-300">toObservable()</code> reads the whiteboard
+            and announces it once things settle, so changes made in a burst are announced together as the final value.
+          </p>
+        </app-lesson-card>
+
+        <app-lesson-card class="mt-5" variant="highlight" label="TRY IT" heading="Cross the bridge both ways" headingSize="lg">
+          <app-interop-demo />
+        </app-lesson-card>
       </section>
       </ng-template>
 
@@ -197,6 +228,14 @@ this.added.emit(this.price() * 2);</pre>
             <code class="text-gold-300">{{ '{{ total() | currency }}' }}</code>.
           </p>
         </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="PUT IT IN ORDER" heading="What happens when a signal changes">
+        <p class="mt-2 text-sm text-stone-400">Put the steps in the order Angular performs them after <code class="text-gold-300">quantity.set(5)</code>.</p>
+        <app-order-steps
+          [steps]="updateSteps"
+          explanation="A set() only marks things stale. A computed does its work later, when something reads it, and the template (or an effect) is what reads it, so the screen always gets the fresh derived value."
+        />
+      </app-lesson-card>
 
       <app-knowledge-check [items]="checkItems" />
       </section>
@@ -219,6 +258,13 @@ export class SignalsPlaygroundComponent {
     correct: 'b',
     explanation: 'A computed signal is always worked out from the current value of the signals it reads. price is 25 by the time double() is read, so the answer is 50.',
   };
+  readonly updateSteps = [
+    'quantity.set(5) stores the new value',
+    'Everything that depends on quantity is marked as stale',
+    'Angular runs change detection for the affected template',
+    'The template reads total(), so the computed recalculates once with the new value',
+  ];
+
   // signal() creates reactive state.
   readonly productName = signal('Protein');
   readonly price = signal(50);

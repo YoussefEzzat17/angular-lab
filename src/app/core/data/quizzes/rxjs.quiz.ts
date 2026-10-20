@@ -2,7 +2,7 @@ import type { QuizBank } from '../../../core/models/learning.models';
 
 export const RXJS_QUIZ: QuizBank = {
   topicId: 'rxjs',
-  version: 3,
+  version: 4,
   questions: [
     {
       id: 'rxjs-01',
@@ -151,6 +151,34 @@ export const RXJS_QUIZ: QuizBank = {
       correct: ['a'],
       explanation: 'concatMap queues the inner requests and runs them one after another. switchMap would cancel earlier saves, and mergeMap would run them all at once with no guaranteed order.',
       sectionId: 'operators',
+    },
+    {
+      id: 'rxjs-14',
+      type: 'single',
+      prompt: 'On a marble diagram, source is a-b-c----d-e and the pipe is debounceTime(3). Which values come out?',
+      choices: [
+        { id: 'a', text: 'a, b, c, d, e' },
+        { id: 'b', text: 'c and e, the last value before each pause' },
+        { id: 'c', text: 'a and d, the first value of each burst' },
+        { id: 'd', text: 'Nothing, debounceTime only delays' },
+      ],
+      correct: ['b'],
+      explanation: 'debounceTime waits until the stream is quiet for the given time and then emits only the latest value. The burst a, b, c ends with c, and the burst d, e ends with e.',
+      sectionId: 'operators',
+    },
+    {
+      id: 'rxjs-15',
+      type: 'single',
+      prompt: 'Which line stops an interval subscription when the component is destroyed?',
+      choices: [
+        { id: 'a', text: 'interval(1000).pipe(takeUntilDestroyed()).subscribe(...)' },
+        { id: 'b', text: 'interval(1000).subscribe(...) and nothing else, Angular cleans it up' },
+        { id: 'c', text: 'interval(1000).pipe(take(0)).subscribe(...)' },
+        { id: 'd', text: 'interval(1000).pipe(delay(0)).subscribe(...)' },
+      ],
+      correct: ['a'],
+      explanation: 'A live source like interval keeps running unless something ends it. takeUntilDestroyed completes the stream when the owning component is destroyed.',
+      sectionId: 'memory-leaks',
     },
   ],
 };

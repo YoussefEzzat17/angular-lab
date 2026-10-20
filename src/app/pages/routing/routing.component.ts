@@ -6,6 +6,7 @@ import { LessonCardComponent } from '../../shared/lesson-card.component';
 import type { PredictChallenge } from '../../shared/predict-output.component';
 import { PredictOutputComponent } from '../../shared/predict-output.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
+import { RouteMatcherDemoComponent } from './route-matcher-demo.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
 import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
@@ -19,7 +20,7 @@ interface MockRoute {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [PredictOutputComponent, FormsModule, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [RouteMatcherDemoComponent, PredictOutputComponent, FormsModule, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'routing'" [section]="section()">
       <ng-template appLessonSection="basics">
@@ -28,6 +29,26 @@ interface MockRoute {
         A Single Page Application never actually reloads the browser — Angular's <strong class="text-gold-300">Router</strong> lets one page
         swap components based on the URL, giving you real navigation, bookmarkable links, and a back button that works.
       </app-page-header>
+
+      <app-lesson-card class="mt-10" label="THE PROBLEM" heading="One page, many screens">
+        <p class="mt-2 text-sm text-stone-400">
+          An Angular app is one HTML page. Without a router, every "screen" would have to live on that one page and you could not link to it, bookmark it or use the back button. The router ties
+          each <strong class="text-stone-200">URL</strong> to a <strong class="text-stone-200">component</strong>, so the address bar always says where you are.
+        </p>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" label="THE MENTAL MODEL" heading="A receptionist with a directory" tone="amber">
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+          <li><strong class="text-stone-100">The URL</strong> is the name of the room you ask for.</li>
+          <li><strong class="text-stone-100">The routes</strong> are the receptionist's directory: "products/:id is room 4".</li>
+          <li><strong class="text-stone-100">The router</strong> reads the directory top to bottom and sends you to the first room that fits.</li>
+          <li><strong class="text-stone-100">&lt;router-outlet&gt;</strong> is the room itself: the one spot on the page where the component appears. The rest of the building (the nav bar) stays put.</li>
+        </ul>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" label="SET IT UP" heading="Give the app its routes and an outlet">
+        <pre class="mt-3 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ setupCode }}</pre>
+      </app-lesson-card>
 
       <!-- 1 · ROUTES -->
       <app-lesson-card
@@ -84,6 +105,29 @@ interface MockRoute {
       </section>
       </ng-template>
 
+      <ng-template appLessonSection="matching">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <app-lesson-card class="mt-10" label="HOW A URL IS MATCHED" heading="Top to bottom, first match wins">
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+          <li>The router walks the list from the first route down and <strong class="text-stone-100">stops at the first one that fits</strong>.</li>
+          <li><code class="text-gold-300">products/:id</code> fits <code class="text-gold-300">products/42</code> and captures <code class="text-gold-300">id = '42'</code>. The colon marks a dynamic part.</li>
+          <li>A route like <code class="text-gold-300">products</code> must use up the whole URL, so it does not catch <code class="text-gold-300">products/42</code>.</li>
+          <li><code class="text-gold-300">**</code> fits anything. It belongs <strong class="text-stone-100">last</strong>, as the "page not found" catch-all.</li>
+          <li>Query parameters (<code class="text-gold-300">?tab=reviews</code>) are not part of the match. They ride along beside it.</li>
+        </ul>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="TRY IT" heading="Type a URL and watch the router search">
+        <ol class="mt-2 list-decimal space-y-1 pl-5 text-sm text-stone-400">
+          <li>Try <strong class="text-stone-200">/products/42</strong>. Which route wins, and what does it capture?</li>
+          <li>Try <strong class="text-stone-200">/settings</strong>. Every route says "no match" until the wildcard.</li>
+          <li>Tick the checkbox to put <strong class="text-stone-200">**</strong> first, and try the same URLs again.</li>
+        </ol>
+        <app-route-matcher-demo />
+      </app-lesson-card>
+      </section>
+      </ng-template>
+
       <ng-template appLessonSection="navigation">
       <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <!-- 3 · TWO WAYS TO NAVIGATE -->
@@ -98,7 +142,7 @@ interface MockRoute {
           </div>
           <div class="min-w-0 rounded-xl bg-gold-950/30 p-4">
             <p class="text-xs font-bold text-emerald-300">Programmatic — Router service</p>
-            <pre class="mt-2 overflow-x-auto text-[11px] leading-relaxed text-gold-100">constructor(private router: Router) &#123;&#125;
+            <pre class="mt-2 overflow-x-auto text-[11px] leading-relaxed text-gold-100">private router = inject(Router);
 
 goToLogin() &#123;
   this.router.navigate(['/login']);
@@ -106,6 +150,14 @@ goToLogin() &#123;
             <p class="mt-2 text-xs text-stone-500">Best after logic runs first — e.g. redirect once a form submits.</p>
           </div>
         </div>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" label="LINKS WITH DATA" heading="Path pieces, query params and the active link">
+        <pre class="mt-3 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ linksCode }}</pre>
+        <p class="mt-3 text-sm text-stone-400">
+          Give <code class="text-gold-300">routerLink</code> an array instead of a string and Angular builds the URL for you, so an id with a slash in it cannot break the path.
+          <code class="text-gold-300">routerLinkActive</code> adds a class to the link of the page you are on, which is how nav bars highlight the current page.
+        </p>
       </app-lesson-card>
 
       <app-lesson-card class="mt-5" variant="highlight" label="PREDICT THE OUTPUT" heading="Which URL does this go to?">
@@ -144,11 +196,19 @@ goToLogin() &#123;
         @if (visitedProductId() !== null) {
           <div class="mt-4 rounded-xl bg-stone-900 p-4">
             <p class="text-xs text-stone-400">Inside ProductDetailComponent:</p>
-            <pre class="mt-2 text-xs text-gold-200">const id = this.route.snapshot.paramMap.get('id');
-// id === '{{ visitedProductId() }}'</pre>
+            <pre class="mt-2 text-xs text-gold-200">id = input.required&lt;string&gt;();
+// id() === '{{ visitedProductId() }}'</pre>
             <p class="mt-2 text-sm text-stone-300">→ Loaded details for product <strong class="text-gold-300">#{{ visitedProductId() }}</strong>.</p>
           </div>
         }
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" label="READING THE PARAMETER" heading="Three ways, and the one to prefer">
+        <pre class="mt-3 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ paramsCode }}</pre>
+        <p class="mt-3 text-sm text-stone-400">
+          With <code class="text-gold-300">withComponentInputBinding()</code> turned on in <code class="text-gold-300">provideRouter</code>, route params and query params arrive as plain
+          <code class="text-gold-300">input()</code>s. That is the shortest way, it is a signal, and it updates when the id changes.
+        </p>
       </app-lesson-card>
 
       <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Routing mistakes to avoid">
@@ -179,6 +239,35 @@ goToLogin() &#123;
 })
 export class RoutingComponent {
   readonly section = input<string>();
+
+  protected readonly setupCode = `// app.routes.ts
+export const routes: Routes = [
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: 'dashboard', component: DashboardComponent },
+  { path: '**', component: NotFoundComponent },
+];
+
+// app.config.ts
+providers: [provideRouter(routes, withComponentInputBinding())]
+
+// app.component.html: the one place the pages appear
+<nav>…links…</nav>
+<router-outlet />`;
+
+  protected readonly linksCode = `<a [routerLink]="['/products', product.id]">Details</a>          <!-- /products/42 -->
+<a routerLink="/products" [queryParams]="{ page: 2 }">Next</a>      <!-- /products?page=2 -->
+<a routerLink="/products" routerLinkActive="text-gold-300">Products</a>
+
+this.router.navigate(['/products', 42], { queryParams: { tab: 'reviews' } });`;
+
+  protected readonly paramsCode = `// 1. an input (preferred): needs withComponentInputBinding()
+id = input.required<string>();
+
+// 2. an Observable: updates when the id changes
+id = toSignal(inject(ActivatedRoute).paramMap.pipe(map((p) => p.get('id'))));
+
+// 3. a snapshot: read once, goes stale if /product/1 becomes /product/2
+const id = inject(ActivatedRoute).snapshot.paramMap.get('id');`;
 
   readonly navigateChallenge: PredictChallenge = {
     question: 'Which URL does this navigate to?',

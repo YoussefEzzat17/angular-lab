@@ -3,7 +3,11 @@ import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Valid
 
 import { NumbersOnlyDirective } from '../../directives/number-only.directive';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
+import { OrderStepsComponent } from '../../shared/order-steps.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
+import { PredictOutputComponent } from '../../shared/predict-output.component';
+import type { PredictChallenge } from '../../shared/predict-output.component';
+import { ControlStateDemoComponent } from './control-state-demo.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
@@ -12,7 +16,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, NumbersOnlyDirective, FlowDiagramComponent, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [ControlStateDemoComponent, OrderStepsComponent, PredictOutputComponent, ReactiveFormsModule, FormsModule, NumbersOnlyDirective, FlowDiagramComponent, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   styles: `
     .field {
       width: 100%;
@@ -47,7 +51,23 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
         everything, and Angular builds the model for you behind the scenes — best for a short, simple form like a contact box.
       </app-page-header>
 
-      <div class="mt-10 flex flex-col gap-8 lg:flex-row">
+      <app-lesson-card class="mt-8" variant="danger" label="THE PROBLEM" heading="A form is more than inputs">
+        <p class="mt-2 text-sm text-stone-400">
+          Behind every form there is state to keep track of: what was typed, which fields are valid, which ones the user already visited, and whether
+          the whole thing can be submitted. Doing that by hand with a dozen <code class="text-gold-300">(input)</code> handlers gets messy fast.
+          Angular's forms give every field a control object that tracks all of it for you.
+        </p>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" tone="amber" label="MENTAL MODEL" heading="A paper form and a clerk">
+        <p class="mt-2 text-sm text-stone-400">
+          Think of a paper form handled by a clerk. In a <strong class="text-stone-200">template-driven</strong> form the sheet itself carries the rules
+          ("required", "email") and the clerk builds a record from it. In a <strong class="text-stone-200">reactive</strong> form the clerk already
+          holds the full record and the rules in a binder (your TypeScript), and the sheet is just a view of it.
+        </p>
+      </app-lesson-card>
+
+      <div class="mt-8 flex flex-col gap-8 lg:flex-row">
         <!-- Template-driven form -->
         <div class="min-w-0 flex-1">
           <form
@@ -384,6 +404,26 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
 &#125;</pre>
       </app-lesson-card>
 
+      <app-lesson-card class="mt-5" variant="highlight" label="TRY IT" heading="Watch the control state change" headingSize="lg">
+        <p class="mt-2 text-sm text-stone-400">
+          This is one real <code class="text-gold-300">FormControl</code>. Click in and out of the field without typing, then type a wrong email,
+          then a good one. Notice that the message waits until the field is touched or dirty.
+        </p>
+        <app-control-state-demo />
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" label="CUSTOM VALIDATOR" heading="A validator is just a function">
+        <p class="mt-2 text-sm text-stone-400">
+          When the built-in rules are not enough, write a function that takes the control and returns <code class="text-gold-300">null</code> if it is fine,
+          or an object whose key names the problem. The demo above uses exactly this for "no spaces".
+        </p>
+        <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ validatorCode }}</pre>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="PREDICT" heading="Touched or dirty?">
+        <app-predict-output [challenge]="touchedChallenge" />
+      </app-lesson-card>
+
       <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Validation mistakes to avoid">
         <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
           <li><strong class="text-stone-100">Showing errors before the user has typed anything.</strong> Check <code class="text-gold-300">control.touched || control.dirty</code> before you show a message.</li>
@@ -428,6 +468,14 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
         </p>
       </app-lesson-card>
 
+      <app-lesson-card class="mt-5" variant="highlight" label="PUT IT IN ORDER" heading="What happens when the user submits">
+        <p class="mt-2 text-sm text-stone-400">Put the steps of a safe submit in order.</p>
+        <app-order-steps
+          [steps]="submitSteps"
+          explanation="Marking everything touched first makes every hidden error appear, so the user sees what is wrong. Only a valid form is sent, and the server validates once more because the browser cannot be trusted."
+        />
+      </app-lesson-card>
+
       <app-knowledge-check [items]="checkItems" />
       </section>
       </ng-template>
@@ -450,6 +498,30 @@ export class FormsComponent {
       question: "What's the main reason to choose Reactive forms over Template-Driven for a complex form?",
       answer: 'The whole form is a plain object in the TypeScript class, which makes it much easier to unit test and to change validation rules dynamically.',
     },
+  ];
+
+  readonly validatorCode = `export const noSpaces: ValidatorFn = (control) =>
+  /\\s/.test(control.value ?? '') ? { noSpaces: true } : null;
+
+email = new FormControl('', [Validators.required, Validators.email, noSpaces]);`;
+
+  readonly touchedChallenge: PredictChallenge = {
+    question: 'A user clicks into an empty required field and then clicks away without typing anything. Which flags are true now?',
+    options: [
+      { id: 'touched', text: 'touched is true, dirty is false' },
+      { id: 'dirty', text: 'dirty is true, touched is false' },
+      { id: 'both', text: 'both are true' },
+      { id: 'none', text: 'both are false' },
+    ],
+    correct: 'touched',
+    explanation: 'touched means the user visited the field (it lost focus). dirty means the value was changed by the user. Leaving without typing changes nothing, so only touched is true. That is why error messages usually check touched or dirty.',
+  };
+
+  readonly submitSteps = [
+    'The user presses Submit',
+    'markAllAsTouched() makes every hidden error visible',
+    'The code checks form.valid',
+    'If valid, the value is sent to the server, which validates again',
   ];
 
   success = false;

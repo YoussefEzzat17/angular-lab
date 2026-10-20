@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 
+import { TOPICS } from '../../core/data/topics';
 import { BookmarkService } from '../../core/services/bookmark.service';
 import { ProgressService } from '../../core/services/progress.service';
 import { ToastService } from '../../core/services/toast.service';
@@ -13,6 +14,7 @@ import { LessonSectionDirective } from './lesson-section.directive';
   imports: [LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'binding'" [section]="section()">
+      <ng-template appLessonSection="overview"><p data-testid="body-overview">Overview body</p></ng-template>
       <ng-template appLessonSection="interpolation"><p data-testid="body-interpolation">Interpolation body</p></ng-template>
       <ng-template appLessonSection="property-binding"><p data-testid="body-property">Property body</p></ng-template>
       <ng-template appLessonSection="event-binding"><p data-testid="body-event">Event body</p></ng-template>
@@ -24,15 +26,22 @@ class HostComponent {
   readonly section = signal<string | undefined>('interpolation');
 }
 
+/** The sections of the topic the host uses, read from the data so these tests survive lessons growing. */
+const SECTIONS = TOPICS.find((t) => t.id === 'binding')!.sections;
+const position = (id: string) => SECTIONS.findIndex((s) => s.id === id) + 1;
+const titleOf = (id: string) => SECTIONS.find((s) => s.id === id)!.title;
+
 describe('LessonPlayerComponent', () => {
-  function setup(section: string | undefined = 'interpolation') {
+  /** `null` means no section in the URL (a default parameter would turn `undefined` into 'interpolation'). */
+  function setup(section: string | null = 'interpolation', seed?: () => void) {
     localStorage.clear();
+    seed?.();
     TestBed.configureTestingModule({ providers: [provideRouter([])] });
     const router = TestBed.inject(Router);
     const navigate = spyOn(router, 'navigate').and.resolveTo(true);
     spyOn(window, 'scrollTo');
     const fixture = TestBed.createComponent(HostComponent);
-    fixture.componentInstance.section.set(section);
+    fixture.componentInstance.section.set(section ?? undefined);
     fixture.detectChanges();
     const root: HTMLElement = fixture.nativeElement;
     const has = (testId: string) => root.querySelector(`[data-testid="${testId}"]`) !== null;
@@ -64,8 +73,8 @@ describe('LessonPlayerComponent', () => {
   it('says which section of how many the learner is on', () => {
     const { headerText } = setup('event-binding');
 
-    expect(headerText()).toContain('Section 3 of 4');
-    expect(headerText()).toContain('Event Binding');
+    expect(headerText()).toContain(`Section ${position('event-binding')} of ${SECTIONS.length}`);
+    expect(headerText()).toContain(titleOf('event-binding'));
   });
 
   it('records the visit so Continue can bring the learner back', () => {
@@ -78,22 +87,27 @@ describe('LessonPlayerComponent', () => {
   });
 
   it('opens the last visited section when the URL has none', () => {
-    localStorage.setItem(
-      'angular-lab:progress',
-      JSON.stringify({ version: 2, topics: { binding: { sectionsDone: [], attempts: [], lastSectionId: 'event-binding' } }, activity: [] }),
+    const { has } = setup(null, () =>
+      localStorage.setItem(
+        'angular-lab:progress',
+        JSON.stringify({ version: 2, topics: { binding: { sectionsDone: [], attempts: [], lastSectionId: 'event-binding' } }, activity: [] }),
+      ),
     );
-    TestBed.resetTestingModule();
 
-    const { has } = setup(undefined);
+    expect(has('body-event')).toBeTrue();
+    expect(has('body-overview')).toBeFalse();
+  });
 
-    expect(has('body-event')).toBeFalse();
-    expect(has('body-interpolation')).toBeTrue();
+  it('opens the first section when the URL has none and nothing was visited', () => {
+    const { has } = setup(null);
+
+    expect(has('body-overview')).toBeTrue();
   });
 
   it('falls back to the first section for an id that does not exist', () => {
     const { has } = setup('no-such-section');
 
-    expect(has('body-interpolation')).toBeTrue();
+    expect(has('body-overview')).toBeTrue();
   });
 
   it('saves the section for later and tells the learner', () => {
@@ -131,18 +145,19 @@ describe('LessonPlayerComponent', () => {
   });
 
   it('goes to the quiz from the last section, and finishes that section first', () => {
-    const { navButtons, navigate } = setup('two-way');
+    const lastId = SECTIONS.at(-1)!.id;
+    const { navButtons, navigate } = setup(lastId);
 
     navButtons().at(-1)!.click();
 
-    expect(TestBed.inject(ProgressService).isSectionDone('binding', 'two-way')).toBeTrue();
+    expect(TestBed.inject(ProgressService).isSectionDone('binding', lastId)).toBeTrue();
     expect(navigate).toHaveBeenCalledWith(['/learn', 'binding', 'quiz']);
   });
 
   it('jumps to a section from its dot without marking the current one done', () => {
     const { root, navigate } = setup('interpolation');
 
-    root.querySelector<HTMLButtonElement>('[aria-label="Section 3: Event Binding"]')!.click();
+    root.querySelector<HTMLButtonElement>(`[aria-label="Section ${position('event-binding')}: ${titleOf('event-binding')}"]`)!.click();
 
     expect(navigate).toHaveBeenCalledWith(['/learn', 'binding', 'event-binding']);
     expect(TestBed.inject(ProgressService).isSectionDone('binding', 'interpolation')).toBeFalse();
@@ -153,6 +168,6 @@ describe('LessonPlayerComponent', () => {
 
     const current = root.querySelector('[aria-current="step"]');
 
-    expect(current?.getAttribute('aria-label')).toBe('Section 2: Property Binding');
+    expect(current?.getAttribute('aria-label')).toBe(`Section ${position('property-binding')}: ${titleOf('property-binding')}`);
   });
 });

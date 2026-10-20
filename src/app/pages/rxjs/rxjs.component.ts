@@ -8,6 +8,8 @@ import type { PredictChallenge } from '../../shared/predict-output.component';
 import { PredictOutputComponent } from '../../shared/predict-output.component';
 import { TermComponent } from '../../shared/term.component';
 import { FlattenDemoComponent } from './flatten-demo.component';
+import { MarbleDemoComponent } from './marble-demo.component';
+import { OrderStepsComponent } from '../../shared/order-steps.component';
 import { SubjectRadioDemoComponent } from './subject-radio-demo.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
@@ -32,7 +34,7 @@ import {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [PredictOutputComponent, TermComponent, FormsModule, AsyncPipe, FlattenDemoComponent, SubjectRadioDemoComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [MarbleDemoComponent, OrderStepsComponent, PredictOutputComponent, TermComponent, FormsModule, AsyncPipe, FlattenDemoComponent, SubjectRadioDemoComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'rxjs'" [section]="section()">
       <ng-template appLessonSection="observables">
@@ -44,7 +46,15 @@ import {
       </app-page-header>
 
       <!-- 1 · WHY RXJS -->
-      <app-lesson-card class="mt-10" label="1 · Why does RxJS exist?" heading="The problem before RxJS">
+      <app-lesson-card class="mt-8" tone="amber" label="MENTAL MODEL" heading="A newsletter you subscribe to">
+        <p class="mt-2 text-sm text-stone-400">
+          An Observable is a newsletter. Writing it does nothing until someone subscribes. After that, issues arrive over time (values), it can
+          end (complete) or have a problem (error), and each reader can unsubscribe whenever they like. Operators are the editor who rewrites,
+          filters or delays each issue before it reaches your inbox.
+        </p>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" label="1 · Why does RxJS exist?" heading="The problem before RxJS">
         <p class="mt-2 text-sm text-stone-400">
           When you have lots of events happening over time (typing, clicks, API replies), handling them with plain callbacks leads to a problem called
           <span class="text-gold-300">Callback Hell</span>: every event needs its own condition, you have to cancel the old one manually, and there's no unified way to combine, filter, or delay these events.
@@ -147,6 +157,14 @@ take(3):         20───40───60|  (completes after 3 values)</pre>
         <div class="mt-4 rounded-xl bg-stone-800 p-4 text-sm text-stone-300">
           Result: <span class="text-gold-300">{{ operatorsResult().join(', ') || '—' }}</span>
         </div>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="MARBLE DIAGRAMS" heading="Draw the stream on a timeline" headingSize="lg">
+        <p class="mt-2 text-sm text-stone-400">
+          RxJS people read streams as <strong class="text-stone-200">marble diagrams</strong>: time runs left to right and each marble is a value.
+          Choose an operator and an input stream below. The bottom line is produced by the real operator, running on a virtual clock.
+        </p>
+        <app-marble-demo />
       </app-lesson-card>
 
       <!-- 4 · FLATTENING OPERATORS -->
@@ -403,6 +421,26 @@ ngOnDestroy() &#123;
   this.sub.unsubscribe(); // closes every subscription that was added
 &#125;</pre>
       </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="success" label="THE MODERN FIX" heading="takeUntilDestroyed() closes it for you">
+        <p class="mt-2 text-sm text-stone-400">
+          Instead of storing subscriptions, add one operator at the end of the pipe. It completes the stream when the component or service is destroyed.
+          Inside a constructor or field initializer, call it with no arguments.
+        </p>
+        <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ takeUntilCode }}</pre>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="PREDICT" heading="Does the interval stop?">
+        <app-predict-output [challenge]="leakChallenge" />
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="PUT IT IN ORDER" heading="Life of a leaked subscription">
+        <p class="mt-2 text-sm text-stone-400">Put the steps in the order they happen when a component subscribes to interval(1000) and never cleans up.</p>
+        <app-order-steps
+          [steps]="leakSteps"
+          explanation="The subscription is held by the interval timer, not by your component, so destroying the component does not stop it. It keeps running and keeps the component in memory until someone unsubscribes."
+        />
+      </app-lesson-card>
       </section>
       </ng-template>
 
@@ -448,6 +486,35 @@ ngOnDestroy() &#123;
 })
 export class RxjsComponent implements OnDestroy {
   readonly section = input<string>();
+
+  readonly takeUntilCode = `private readonly destroyRef = inject(DestroyRef);
+
+constructor() {
+  interval(1000)
+    .pipe(takeUntilDestroyed())          // in a constructor, no argument needed
+    .subscribe((n) => this.tick.set(n));
+}
+
+// later, outside the constructor, pass the reference
+someStream$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(...);`;
+
+  readonly leakChallenge: PredictChallenge = {
+    question: 'A component runs interval(1000).subscribe(() => console.log("tick")) and is destroyed after 3 seconds. What happens next?',
+    options: [
+      { id: 'stops', text: 'The ticks stop, because the component is gone' },
+      { id: 'goes', text: 'It keeps logging every second forever' },
+      { id: 'error', text: 'Angular throws an error when it fires' },
+    ],
+    correct: 'goes',
+    explanation: 'The timer lives on its own. Destroying the component does not unsubscribe, so the callback keeps firing and keeps the component alive in memory. A takeUntilDestroyed() at the end of the pipe would stop it.',
+  };
+
+  readonly leakSteps = [
+    'The component is created and calls subscribe() on interval(1000)',
+    'The interval starts ticking and calling the callback',
+    'The user navigates away and the component is destroyed',
+    'The interval keeps ticking, holding the component in memory',
+  ];
 
   readonly behaviorChallenge: PredictChallenge = {
     question: 'What does this log?',
