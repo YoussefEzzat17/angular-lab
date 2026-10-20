@@ -1,23 +1,28 @@
-import { Component, HostListener, OnDestroy, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, HostListener, inject, OnDestroy } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import { A11yModule } from '@angular/cdk/a11y';
 import { SidebarStateService } from '../../core/services/sidebar-state.service';
 import { ProfileService } from '../../core/services/profile.service';
 import { OnboardingDialogComponent } from '../../core/onboarding/onboarding-dialog.component';
+import { TourComponent } from '../../core/onboarding/tour.component';
+import { MobileNavComponent } from '../../shared/mobile-nav.component';
 import { CourseSidebarComponent } from '../sidebar/course-sidebar.component';
 import { TOPICS } from '../../core/data/topics';
 import { TopNavbarComponent } from './top-navbar.component';
 import { LearnFooterComponent } from './learn-footer.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-learn-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, CourseSidebarComponent, A11yModule, OnboardingDialogComponent, TopNavbarComponent, LearnFooterComponent],
+  imports: [RouterOutlet, RouterLink, CourseSidebarComponent, A11yModule, OnboardingDialogComponent, TourComponent, MobileNavComponent, TopNavbarComponent, LearnFooterComponent],
   template: `
     @if (showOnboarding()) {
       <app-onboarding-dialog (closed)="onOnboardingClosed()" />
     }
+
+    <app-tour />
 
     <div class="flex h-screen flex-col overflow-hidden">
 
@@ -103,45 +108,7 @@ import { LearnFooterComponent } from './learn-footer.component';
 
         <app-learn-footer />
 
-        <!-- Mobile bottom nav -->
-        <nav class="lg:hidden fixed bottom-0 inset-x-0 z-30 border-t border-stone-800 bg-stone-950/95 backdrop-blur"
-             style="padding-bottom: env(safe-area-inset-bottom)"
-             aria-label="Main navigation">
-          <div class="flex items-center justify-around px-2 py-2">
-
-            <a routerLink="/"
-               [class]="isMobileActive('/') ? 'flex flex-col items-center gap-0.5 px-3 py-1 text-gold-400' : 'flex flex-col items-center gap-0.5 px-3 py-1 text-stone-500'"
-               aria-label="Home">
-              <span class="text-xl">🏠</span>
-              <span class="text-[10px] font-semibold">Home</span>
-            </a>
-
-            <button
-              type="button"
-              (click)="sidebarState.openDrawer()"
-              [class]="sidebarState.drawerOpen() ? 'flex flex-col items-center gap-0.5 px-3 py-1 text-gold-400' : 'flex flex-col items-center gap-0.5 px-3 py-1 text-stone-500'"
-              aria-label="Topics"
-            >
-              <span class="text-xl">📚</span>
-              <span class="text-[10px] font-semibold">Topics</span>
-            </button>
-
-            <a routerLink="/products"
-               [class]="isDemoMobileActive() ? 'flex flex-col items-center gap-0.5 px-3 py-1 text-gold-400' : 'flex flex-col items-center gap-0.5 px-3 py-1 text-stone-500'"
-               aria-label="Demo App">
-              <span class="text-xl">🎬</span>
-              <span class="text-[10px] font-semibold">Demo</span>
-            </a>
-
-            <a routerLink="/bookmarks"
-               [class]="isMobileActive('/bookmarks') ? 'flex flex-col items-center gap-0.5 px-3 py-1 text-gold-400' : 'flex flex-col items-center gap-0.5 px-3 py-1 text-stone-500'"
-               aria-label="Bookmarks">
-              <span class="text-xl">🔖</span>
-              <span class="text-[10px] font-semibold">Saved</span>
-            </a>
-
-          </div>
-        </nav>
+        <app-mobile-nav />
       </div>
 
       </div>
@@ -172,8 +139,8 @@ import { LearnFooterComponent } from './learn-footer.component';
               aria-label="Close"
             >✕</button>
           </div>
-          <div class="flex-1 overflow-y-auto">
-            <app-course-sidebar class="flex h-full w-full flex-col" />
+          <div class="flex min-h-0 flex-1 flex-col">
+            <app-course-sidebar class="flex min-h-0 w-full flex-1 flex-col" />
           </div>
         </div>
       }
@@ -202,15 +169,6 @@ export class LearnLayoutComponent implements OnDestroy {
 
   isActive(path: string): boolean {
     return this.router.url === path || this.router.url.startsWith(path + '/');
-  }
-
-  isMobileActive(path: string): boolean {
-    return this.router.url === path || this.router.url.startsWith(path + '/');
-  }
-
-  isDemoMobileActive(): boolean {
-    const url = this.router.url;
-    return url.startsWith('/products') || url.startsWith('/favorites') || url.startsWith('/movies') || url.startsWith('/watchlist');
   }
 
   @HostListener('document:keydown.escape')

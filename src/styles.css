@@ -11,7 +11,7 @@
   --stone-200: 231 229 228;
   --stone-300: 214 211 209;
   --stone-400: 168 162 158;
-  --stone-500: 140 125 110;
+  --stone-500: 154 139 124;
   --stone-600: 168 153 138;
   --stone-700: 68 64 60;
   --stone-750: 55 51 48;
@@ -32,6 +32,8 @@
   --gold-800: 92 69 38;
   --gold-900: 58 42 28;
   --gold-950: 36 26 18;
+  --gold-solid: 150 108 44;
+  --gold-solid-hover: 128 91 36;
 
   /* Legacy one-off overrides kept for the two demo cards (Favorites, Product Details) that were
      originally authored as light cards on a light page, before the rest of the app went dark. */
@@ -68,7 +70,7 @@
   --stone-300: 74 62 52;
   --stone-400: 107 93 79;
   --stone-500: 123 107 90;
-  --stone-600: 168 153 138;
+  --stone-600: 140 124 108;
   --stone-700: 214 204 190;
   --stone-750: 225 216 202;
   --stone-800: 235 227 213;
@@ -87,6 +89,8 @@
   --gold-800: 232 211 166;
   --gold-900: 243 233 208;
   --gold-950: 250 246 236;
+  --gold-solid: 146 104 42;
+  --gold-solid-hover: 120 84 34;
 
   --card-surface: 255 255 255;
   --card-ring-soft: 231 229 228;
@@ -120,7 +124,7 @@
   --stone-200: 231 229 228;
   --stone-300: 214 211 209;
   --stone-400: 168 162 158;
-  --stone-500: 140 125 110;
+  --stone-500: 154 139 124;
   --stone-600: 168 153 138;
   --stone-700: 68 64 60;
   --stone-750: 55 51 48;
@@ -139,6 +143,8 @@
   --gold-800: 92 69 38;
   --gold-900: 58 42 28;
   --gold-950: 36 26 18;
+  --gold-solid: 150 108 44;
+  --gold-solid-hover: 128 91 36;
   --card-surface: 42 31 22;
   --card-ring-soft: 58 45 34;
   --card-ring-strong: 74 58 44;
@@ -165,9 +171,21 @@
 /* Status accents: bright pastels read fine on a dark card, but need to darken for contrast on a light one. */
 .text-rose-300, .text-rose-400 { color: rgb(var(--status-rose)) !important; }
 .text-emerald-300, .text-emerald-400 { color: rgb(var(--status-emerald)) !important; }
-.text-amber-200 { color: rgb(var(--status-amber)) !important; }
+.text-amber-200, .text-amber-300 { color: rgb(var(--status-amber)) !important; }
+/* Rating stars are text too: yellow on cream is unreadable, so the light theme uses the darker amber. */
+:root[data-theme='light'] .text-amber-400 { color: rgb(var(--status-amber)) !important; }
 
 /* Logo bracket draw animation */
 @keyframes draw-bracket {
   to { stroke-dashoffset: 0; }
+}
+
+/* Respect "reduce motion" everywhere, including animations that components do not guard themselves. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -18,6 +18,9 @@ export const QUIZ_BANK_LOADERS: Record<TopicId, () => Promise<QuizBank>> = {
   'facade':           () => import('../data/quizzes/facade.quiz').then((m) => m.FACADE_QUIZ),
   'change-detection': () => import('../data/quizzes/change-detection.quiz').then((m) => m.CHANGE_DETECTION_QUIZ),
   'lazy-loading':     () => import('../data/quizzes/lazy-loading.quiz').then((m) => m.LAZY_LOADING_QUIZ),
+  'content-projection': () => import('../data/quizzes/content-projection.quiz').then((m) => m.CONTENT_PROJECTION_QUIZ),
+  'resource':         () => import('../data/quizzes/resource.quiz').then((m) => m.RESOURCE_QUIZ),
+  'defer':            () => import('../data/quizzes/defer.quiz').then((m) => m.DEFER_QUIZ),
 };
 
 @Injectable({ providedIn: 'root' })

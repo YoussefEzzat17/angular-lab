@@ -1,4 +1,4 @@
-import { Component, OnDestroy, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { TOPICS } from '../../core/data/topics';
@@ -10,6 +10,7 @@ import { PageHeaderComponent } from '../../shared/page-header.component';
 const COOLDOWN_SECONDS = 10;
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [IconComponent, PageHeaderComponent, ReactiveFormsModule],
   styles: `
@@ -123,7 +124,7 @@ const COOLDOWN_SECONDS = 10;
         <button
           type="submit"
           [disabled]="isSubmitting() || feedbackForm.invalid || isCooldown()"
-          class="mt-8 w-full rounded-xl bg-gold-500 px-4 py-3.5 font-semibold text-white transition hover:bg-gold-400 disabled:cursor-not-allowed disabled:opacity-50"
+          class="mt-8 w-full rounded-xl bg-gold-solid px-4 py-3.5 font-semibold text-white transition hover:bg-gold-solid-hover disabled:cursor-not-allowed disabled:opacity-50"
         >
           @if (isSubmitting()) {
             Sending...

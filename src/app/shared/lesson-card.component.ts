@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 export type LessonCardVariant = 'default' | 'highlight' | 'danger' | 'success';
 export type LessonCardTone = 'gold' | 'amber' | 'emerald' | 'rose';
@@ -27,6 +27,7 @@ const TONES: Record<LessonCardTone, string> = {
  *  - `danger` / `success` burgundy and green callouts
  */
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-lesson-card',
   standalone: true,
   host: { class: 'block min-w-0' },

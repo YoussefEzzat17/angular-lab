@@ -24,6 +24,7 @@ export class ProfileService {
     return n.split(/\s+/).map((w) => w[0].toUpperCase()).slice(0, 2).join('');
   });
   readonly onboardingDone = computed(() => this.profile().onboardingDone);
+  readonly tourDone = computed(() => this.profile().tourDone);
   readonly streak = computed(() => computeStreak(this.profile().activeDays, dayKey(this.clock.now())));
 
   setName(name: string): void { this.update((p) => ({ ...p, name: name.trim() })); }

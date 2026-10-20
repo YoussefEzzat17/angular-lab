@@ -2,7 +2,7 @@ import type { QuizBank } from '../../../core/models/learning.models';
 
 export const DI_QUIZ: QuizBank = {
   topicId: 'di',
-  version: 1,
+  version: 2,
   questions: [
     {
       id: 'di-01',
@@ -128,6 +128,48 @@ export const DI_QUIZ: QuizBank = {
       correct: ['a'],
       explanation: 'TestBed providers override the real implementation for the test module. Creating the service with new skips the injector that the component relies on.',
       sectionId: 'providers',
+    },
+    {
+      id: 'di-11',
+      type: 'single',
+      prompt: 'When do you need an InjectionToken instead of a class as the token?',
+      choices: [
+        { id: 'a', text: 'When the thing you want to inject is not a class, such as a URL string or a config object' },
+        { id: 'b', text: 'Every time you use providedIn: root' },
+        { id: 'c', text: 'Only inside tests' },
+        { id: 'd', text: 'When the service has no methods' },
+      ],
+      correct: ['a'],
+      explanation: 'Plain strings and objects have no class to use as a lookup key, so an InjectionToken gives you a unique name to provide and inject them by.',
+      sectionId: 'providers',
+    },
+    {
+      id: 'di-12',
+      type: 'single',
+      prompt: 'Which provider recipe lets you compute the value with a function that can call inject() for other tokens?',
+      choices: [
+        { id: 'a', text: 'useValue' },
+        { id: 'b', text: 'useFactory' },
+        { id: 'c', text: 'useExisting' },
+        { id: 'd', text: 'providedIn' },
+      ],
+      correct: ['b'],
+      explanation: 'useFactory runs a function in an injection context, so it can read other tokens to decide what to build. useValue is a fixed object that is never computed.',
+      sectionId: 'providers',
+    },
+    {
+      id: 'di-13',
+      type: 'single',
+      prompt: 'Two components each inject a service that has providedIn: root. One adds an item to it. What does the other see?',
+      choices: [
+        { id: 'a', text: 'The item, because both received the same instance' },
+        { id: 'b', text: 'Nothing, each component gets a copy' },
+        { id: 'c', text: 'An error because root services cannot be shared' },
+        { id: 'd', text: 'The item only after a page reload' },
+      ],
+      correct: ['a'],
+      explanation: 'providedIn root creates one instance for the whole app, so both components hold the same object and see each other changes.',
+      sectionId: 'scope',
     },
   ],
 };

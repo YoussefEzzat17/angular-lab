@@ -1,10 +1,14 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { GROUPED_TOPICS } from '../../core/data/topics';
+import { activityIcon, activityLabel, dayLabel, topicTitleOf } from '../../core/services/activity-history';
+import { CLOCK } from '../../core/services/clock';
+import { GamificationService } from '../../core/services/gamification.service';
 import { LearningFacade } from '../../core/services/learning.facade';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [RouterLink],
   template: `
@@ -45,7 +49,7 @@ import { LearningFacade } from '../../core/services/learning.facade';
             <!-- CTA -->
             <div class="mt-7 flex flex-wrap gap-3">
               <a [routerLink]="facade.continueTarget()"
-                 class="rounded-xl bg-gold-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-gold-400">
+                 class="rounded-xl bg-gold-solid px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-gold-solid-hover">
                 {{ facade.completedCount() === 0 ? 'Start Learning →' : 'Continue →' }}
               </a>
               <a routerLink="/products"
@@ -161,18 +165,39 @@ import { LearningFacade } from '../../core/services/learning.facade';
       </div>
 
       <!-- ── Recent activity ───────────────────────────────────────────── -->
+      <!-- ── Level and badges ──────────────────────────────────────────── -->
+      <a
+        routerLink="/journey"
+        data-testid="open-journey"
+        class="mt-10 block rounded-2xl border border-gold-500/30 bg-gold-950/20 p-5 transition hover:bg-gold-950/30"
+      >
+        <div class="flex flex-wrap items-baseline justify-between gap-2">
+          <p class="text-lg font-bold text-stone-100">
+            Level {{ game.level().level.number }} · <span class="text-gold-300">{{ game.level().level.title }}</span>
+          </p>
+          <p class="text-sm text-stone-400">{{ game.xp() }} XP · 🏅 {{ game.earnedCount() }}/{{ game.badges().length }} badges</p>
+        </div>
+        <div class="mt-3 h-2.5 overflow-hidden rounded-full bg-stone-800" aria-hidden="true">
+          <div class="h-full rounded-full bg-gold-400" [style.width.%]="game.level().percent"></div>
+        </div>
+        <p class="mt-3 text-sm font-semibold text-gold-400">Open your journey →</p>
+      </a>
+
       @if (facade.recentActivity().length) {
         <div class="mt-10">
-          <h2 class="text-lg font-bold text-stone-100">Recent Activity</h2>
+          <div class="flex items-center justify-between gap-3">
+            <h2 class="text-lg font-bold text-stone-100">Recent Activity</h2>
+            <a routerLink="/history" data-testid="view-history" class="text-sm font-semibold text-gold-400 hover:text-gold-300">View full history →</a>
+          </div>
           <div class="mt-4 space-y-2">
-            @for (entry of facade.recentActivity(); track entry.at) {
+            @for (entry of facade.recentActivity(); track entry.at + entry.kind + entry.topicId + (entry.sectionId ?? '')) {
               <div class="flex items-center gap-3 rounded-xl border border-stone-800 bg-stone-900 px-4 py-3 text-sm">
-                <span class="text-lg">{{ entry.kind === 'quiz-passed' ? '🎉' : entry.kind === 'quiz-failed' ? '📝' : '✓' }}</span>
+                <span class="text-lg" aria-hidden="true">{{ activityIcon(entry.kind) }}</span>
                 <span class="flex-1 text-stone-300">
                   {{ activityLabel(entry.kind) }}
-                  <span class="font-semibold text-stone-100">{{ topicTitle(entry.topicId) }}</span>
+                  <span class="font-semibold text-stone-100">{{ topicTitleOf(entry.topicId) }}</span>
                 </span>
-                <span class="shrink-0 text-stone-500">{{ formatDate(entry.at) }}</span>
+                <span class="shrink-0 text-stone-500">{{ dayOf(entry.at) }}</span>
               </div>
             }
           </div>
@@ -184,6 +209,8 @@ import { LearningFacade } from '../../core/services/learning.facade';
 })
 export class DashboardComponent {
   readonly facade = inject(LearningFacade);
+  readonly game = inject(GamificationService);
+  private readonly clock = inject(CLOCK);
   readonly groups = GROUPED_TOPICS;
 
   // SVG ring: radius 68, circumference = 2π × 68 ≈ 427.3
@@ -193,18 +220,12 @@ export class DashboardComponent {
     return this.circumference * (1 - this.facade.percent() / 100);
   }
 
-  activityLabel(kind: string): string {
-    if (kind === 'quiz-passed') return 'Passed quiz — ';
-    if (kind === 'quiz-failed') return 'Attempted quiz — ';
-    return 'Completed section in ';
-  }
+  readonly activityLabel = activityLabel;
+  readonly activityIcon = activityIcon;
+  readonly topicTitleOf = topicTitleOf;
 
-  topicTitle(topicId: string): string {
-    return this.facade.groups().flatMap(g => g.topics).find(t => t.id === topicId)?.title ?? topicId;
-  }
-
-  formatDate(iso: string): string {
-    try { return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); }
-    catch { return ''; }
+  dayOf(iso: string): string {
+    const date = new Date(iso);
+    return Number.isNaN(date.getTime()) ? '' : dayLabel(date, this.clock.now());
   }
 }

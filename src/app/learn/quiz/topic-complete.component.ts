@@ -1,10 +1,11 @@
-import { Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TOPICS } from '../../core/data/topics';
 import { ProgressService } from '../../core/services/progress.service';
 import { QUIZ_RULES, type TopicId } from '../../core/models/learning.models';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [RouterLink],
   template: `
@@ -30,14 +31,14 @@ import { QUIZ_RULES, type TopicId } from '../../core/models/learning.models';
             <p class="mt-2 text-xl font-bold">{{ next.icon }} {{ next.title }}</p>
             <p class="mt-1 text-sm text-stone-400">{{ next.description }}</p>
             <a [routerLink]="['/learn', next.id]"
-               class="mt-5 inline-block rounded-xl bg-gold-500 px-6 py-3 font-semibold text-white transition hover:bg-gold-400">
+               class="mt-5 inline-block rounded-xl bg-gold-solid px-6 py-3 font-semibold text-white transition hover:bg-gold-solid-hover">
               Start {{ next.title }} →
             </a>
           </div>
         } @else {
           <div class="mt-10 rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-6">
             <p class="text-2xl font-bold text-emerald-400">🏆 You've completed all topics!</p>
-            <a routerLink="/" class="mt-5 inline-block rounded-xl bg-gold-500 px-6 py-3 font-semibold text-white transition hover:bg-gold-400">
+            <a routerLink="/" class="mt-5 inline-block rounded-xl bg-gold-solid px-6 py-3 font-semibold text-white transition hover:bg-gold-solid-hover">
               Back to Home
             </a>
           </div>

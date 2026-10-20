@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 export type IllustrationName =
   | 'directives'
@@ -22,6 +22,7 @@ export type IllustrationName =
  * light/dark mode, and decorative only (the page text already explains the idea).
  */
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-topic-illustration',
   standalone: true,
   host: { 'aria-hidden': 'true', class: 'block' },

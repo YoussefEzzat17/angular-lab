@@ -1,8 +1,9 @@
-import { Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import type { QuizQuestion } from '../../core/models/learning.models';
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-quiz-question',
   standalone: true,
   imports: [CodeBlockDirective],

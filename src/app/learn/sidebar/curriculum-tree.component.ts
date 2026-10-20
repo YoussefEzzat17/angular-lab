@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { LearningFacade } from '../../core/services/learning.facade';
 import { ProgressService } from '../../core/services/progress.service';
@@ -6,6 +6,7 @@ import { TopicStatusIconComponent } from './topic-status-icon.component';
 import type { TopicId } from '../../core/models/learning.models';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-curriculum-tree',
   standalone: true,
   imports: [RouterLink, RouterLinkActive, TopicStatusIconComponent],
@@ -50,7 +51,10 @@ import type { TopicId } from '../../core/models/learning.models';
                           [class.text-gold-300]="isCurrentSection(topic.id, sec.id)"
                           [class.text-stone-400]="!isCurrentSection(topic.id, sec.id)"
                         >
-                          <span class="text-[10px]">{{ progress.isSectionDone(topic.id, sec.id) ? '✓' : '·' }}</span>
+                          <span class="text-[10px]" aria-hidden="true">{{ progress.isSectionDone(topic.id, sec.id) ? '✓' : '·' }}</span>
+                          @if (progress.isSectionDone(topic.id, sec.id)) {
+                            <span class="sr-only">Done:</span>
+                          }
                           {{ sec.title }}
                         </a>
                       }

@@ -2,7 +2,7 @@ import type { QuizBank } from '../../../core/models/learning.models';
 
 export const SIGNALS_QUIZ: QuizBank = {
   topicId: 'signals',
-  version: 1,
+  version: 2,
   questions: [
     {
       id: 'signals-01',
@@ -113,6 +113,48 @@ export const SIGNALS_QUIZ: QuizBank = {
       correct: ['a'],
       explanation: 'computed() tracks price and qty and recalculates when either changes. A snapshot like signal(price * qty) never updates.',
       sectionId: 'try-it',
+    },
+    {
+      id: 'signals-11',
+      type: 'single',
+      prompt: 'A computed() reads price and quantity, but nothing reads the computed anymore. Price then changes three times. How much work does the computed do for those changes?',
+      choices: [
+        { id: 'a', text: 'It recalculates three times' },
+        { id: 'b', text: 'None, it is lazy and only runs when it is read' },
+        { id: 'c', text: 'It recalculates once per second' },
+        { id: 'd', text: 'It throws an error' },
+      ],
+      correct: ['b'],
+      explanation: 'A computed does no work until someone reads it. Changes only mark it stale, and the next read recalculates once with the latest values.',
+      sectionId: 'computed',
+    },
+    {
+      id: 'signals-12',
+      type: 'single',
+      prompt: 'You set a signal three times in a row in one click handler. How many values does toObservable(signal) emit?',
+      choices: [
+        { id: 'a', text: 'Three, one for every set' },
+        { id: 'b', text: 'One, the final value after things settle' },
+        { id: 'c', text: 'None until the component is destroyed' },
+        { id: 'd', text: 'Two, the first and the last' },
+      ],
+      correct: ['b'],
+      explanation: 'toObservable runs through an effect, which waits until the changes settle. A burst of sets is announced once with the last value.',
+      sectionId: 'interop',
+    },
+    {
+      id: 'signals-13',
+      type: 'single',
+      prompt: 'What does toSignal(this.stream, { initialValue: 0 }) give you before the stream emits?',
+      choices: [
+        { id: 'a', text: 'undefined' },
+        { id: 'b', text: 'An error' },
+        { id: 'c', text: '0' },
+        { id: 'd', text: 'The last value of another stream' },
+      ],
+      correct: ['c'],
+      explanation: 'A signal always has a value. initialValue provides it until the Observable emits, and without it the type would include undefined.',
+      sectionId: 'interop',
     },
   ],
 };

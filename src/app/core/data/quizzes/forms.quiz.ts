@@ -2,7 +2,7 @@ import type { QuizBank } from '../../../core/models/learning.models';
 
 export const FORMS_QUIZ: QuizBank = {
   topicId: 'forms',
-  version: 1,
+  version: 2,
   questions: [
     {
       id: 'forms-01',
@@ -113,6 +113,48 @@ export const FORMS_QUIZ: QuizBank = {
       correct: ['b'],
       explanation: 'Reactive forms keep the model in code, which scales better and tests well. Template-driven forms are simpler for small forms. Both support validation and can coexist.',
       sectionId: 'comparison',
+    },
+    {
+      id: 'forms-11',
+      type: 'single',
+      prompt: 'A user clicks into a field and leaves without typing. Which control flags are true?',
+      choices: [
+        { id: 'a', text: 'touched only' },
+        { id: 'b', text: 'dirty only' },
+        { id: 'c', text: 'touched and dirty' },
+        { id: 'd', text: 'neither' },
+      ],
+      correct: ['a'],
+      explanation: 'touched records that the field lost focus. dirty records that the user changed the value, which did not happen here.',
+      sectionId: 'validation',
+    },
+    {
+      id: 'forms-12',
+      type: 'single',
+      prompt: 'What must a custom validator function return when the value is valid?',
+      choices: [
+        { id: 'a', text: 'true' },
+        { id: 'b', text: 'An empty object' },
+        { id: 'c', text: 'null' },
+        { id: 'd', text: 'undefined' },
+      ],
+      correct: ['c'],
+      explanation: 'Validators return null for no error, or an object whose key names the problem, such as { noSpaces: true }. That key is what the template reads with hasError.',
+      sectionId: 'validation',
+    },
+    {
+      id: 'forms-13',
+      type: 'single',
+      prompt: 'Why call markAllAsTouched() before checking form.valid on submit?',
+      choices: [
+        { id: 'a', text: 'So every hidden error message becomes visible to the user' },
+        { id: 'b', text: 'It makes the form valid' },
+        { id: 'c', text: 'It sends the data to the server' },
+        { id: 'd', text: 'It resets all fields' },
+      ],
+      correct: ['a'],
+      explanation: 'Error messages usually wait for touched or dirty. Marking everything touched shows the user which fields still need attention instead of leaving them silently blocked.',
+      sectionId: 'validation',
     },
   ],
 };

@@ -6,7 +6,7 @@ import { quizUnlockedGuard } from './learn.guards';
 // Map of topicId → lazy component loader.
 // Pilot topics (binding, guards) are multi-section LessonPlayers. The other topics render their existing page
 // under /learn/:topic/:section until Phase 3 splits them into sections.
-const TOPIC_LOADERS: Record<TopicId, () => Promise<unknown>> = {
+export const TOPIC_LOADERS: Record<TopicId, () => Promise<unknown>> = {
   'binding':          () => import('../pages/binding/binding.component').then((m) => m.BindingComponent),
   'pipes':            () => import('../pages/pipes/pipes.component').then((m) => m.PipesComponent),
   'directives':       () => import('../pages/directives/directives.component').then((m) => m.DirectivesComponent),
@@ -22,6 +22,9 @@ const TOPIC_LOADERS: Record<TopicId, () => Promise<unknown>> = {
   'facade':           () => import('../pages/facade/facade.component').then((m) => m.FacadeComponent),
   'change-detection': () => import('../pages/change-detection/change-detection.component').then((m) => m.ChangeDetectionComponent),
   'lazy-loading':     () => import('../pages/lazy-loading/lazy-loading.component').then((m) => m.LazyLoadingComponent),
+  'content-projection': () => import('../pages/content-projection/content-projection.component').then((m) => m.ContentProjectionComponent),
+  'resource':         () => import('../pages/resource/resource.component').then((m) => m.ResourceComponent),
+  'defer':            () => import('../pages/defer/defer.component').then((m) => m.DeferComponent),
 };
 
 export const LEARN_ROUTES: Routes = [

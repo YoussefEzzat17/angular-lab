@@ -1,17 +1,24 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, computed, effect, signal, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, input, signal, untracked } from '@angular/core';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
+import type { PredictChallenge } from '../../shared/predict-output.component';
+import { PredictOutputComponent } from '../../shared/predict-output.component';
+import { OrderStepsComponent } from '../../shared/order-steps.component';
+import { ComputedCacheDemoComponent } from './computed-cache-demo.component';
+import { InteropDemoComponent } from './interop-demo.component';
+import { TermComponent } from '../../shared/term.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
 import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CurrencyPipe, FlowDiagramComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [ComputedCacheDemoComponent, InteropDemoComponent, OrderStepsComponent, PredictOutputComponent, TermComponent, CurrencyPipe, FlowDiagramComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'signals'" [section]="section()">
       <ng-template appLessonSection="basics">
@@ -22,7 +29,16 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
         actually depends on it. Change the product and quantity below and watch every dependent value update automatically.
       </app-page-header>
 
-      <div class="mt-10 grid gap-5 md:grid-cols-2">
+      <app-lesson-card class="mt-10" label="THE MENTAL MODEL" heading="Signals work like spreadsheet cells" tone="amber">
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+          <li><strong class="text-stone-100">signal()</strong> is a cell that holds a value, like <code class="text-gold-300">A1 = 50</code>.</li>
+          <li><strong class="text-stone-100">computed()</strong> is a formula cell, like <code class="text-gold-300">C1 = A1 * B1</code>. Change A1 and C1 fixes itself — you never update it by hand.</li>
+          <li><strong class="text-stone-100">effect()</strong> is an alert that fires whenever a cell it watches changes. It is how you run a <app-term term="side-effect">side effect</app-term>: save a file, send a log, ping a server.</li>
+          <li><strong class="text-stone-100">Calling <code class="text-gold-300">price()</code></strong> is like pointing at a cell inside a formula. That is how Angular learns who depends on what.</li>
+        </ul>
+      </app-lesson-card>
+
+      <div class="mt-5 grid gap-5 md:grid-cols-2">
         <app-lesson-card label="1 · SIGNAL()" heading="Reactive state">
           <p class="mt-2 text-sm text-stone-400">
             <code class="text-gold-300">signal()</code> creates reactive state. Read a signal by calling it with <code class="text-gold-300">()</code>.
@@ -46,7 +62,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
             <code class="text-gold-300">set()</code> replaces the current value with a new value.
           </p>
           <app-flow-diagram class="mt-4 block" from="(click)" to="productName.set()" direction="right" />
-          <button (click)="changeProduct()" class="mt-5 rounded-xl bg-gold-500 px-4 py-2.5 font-semibold text-white hover:bg-gold-400">
+          <button (click)="changeProduct()" class="mt-5 rounded-xl bg-gold-solid px-4 py-2.5 font-semibold text-white hover:bg-gold-solid-hover">
             Change Protein to Creatine
           </button>
           <p class="mt-4 rounded-xl bg-stone-800 p-4 text-stone-300">Current product: <strong class="text-stone-100">{{ productName() }}</strong></p>
@@ -57,7 +73,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
             <code class="text-gold-300">update()</code> calculates a new value from the current value. The quantity never goes below 1.
           </p>
           <app-flow-diagram class="mt-4 block" from="(click)" to="quantity.update()" direction="right" />
-          <div class="mt-5 flex items-center gap-4"><button (click)="decreaseQuantity()" class="grid h-10 w-10 place-items-center rounded-xl border border-stone-600 text-xl hover:bg-stone-800">−</button><strong class="text-2xl">{{ quantity() }}</strong><button (click)="increaseQuantity()" class="grid h-10 w-10 place-items-center rounded-xl bg-gold-500 text-xl hover:bg-gold-400">+</button></div>
+          <div class="mt-5 flex items-center gap-4"><button (click)="decreaseQuantity()" class="grid h-10 w-10 place-items-center rounded-xl border border-stone-600 text-xl hover:bg-stone-800">−</button><strong class="text-2xl">{{ quantity() }}</strong><button (click)="increaseQuantity()" class="grid h-10 w-10 place-items-center rounded-xl bg-gold-solid text-xl text-white hover:bg-gold-solid-hover">+</button></div>
           <p class="mt-4 text-xs text-stone-500"><code class="text-gold-300">set(5)</code> chooses a value. <code class="text-gold-300">update(value =&gt; value + 1)</code> uses the old value.</p>
         </app-lesson-card>
       </div>
@@ -84,22 +100,86 @@ quantity ────┘</pre>
        ↓
 subtotal changes → discount changes → finalPrice changes</pre>
       </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="PREDICT THE OUTPUT" heading="What does computed() give back?">
+        <app-predict-output [challenge]="computedChallenge" />
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="TRY IT" heading="When does a computed really run?" headingSize="lg">
+        <p class="mt-2 text-sm text-stone-400">
+          Change <strong class="text-stone-200">price</strong> and <strong class="text-stone-200">quantity</strong> and watch the run counter. Then change the note, and finally
+          untick "Show total" and change the price a few times.
+        </p>
+        <app-computed-cache-demo />
+        <p class="mt-3 text-xs text-stone-500">Rules to remember: it is lazy (no read, no work), cached (same answer without work) and only reruns when a signal it read changes.</p>
+      </app-lesson-card>
       </section>
       </ng-template>
 
       <ng-template appLessonSection="effects">
       <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <app-lesson-card class="mt-5" label="6 · EFFECT()" heading="Run a side effect">
-        <p class="mt-2 text-sm text-stone-400"><code class="text-gold-300">effect()</code> runs side effects when the Signals it reads change. Open the browser console and change quantity to see <code class="text-gold-300">Cart changed:</code>.</p>
+      <app-lesson-card class="mt-5" label="6 · EFFECT()" heading="Run code whenever a signal changes">
+        <p class="mt-2 text-sm text-stone-400">
+          <code class="text-gold-300">effect()</code> says: "whenever any signal I read changes, run this code again." It runs <strong class="text-stone-200">once straight away</strong>,
+          then after every change. Use it for things that happen <em>outside</em> the template: logging, saving to <code class="text-gold-300">localStorage</code>, analytics, or talking to a
+          non-Angular library.
+        </p>
         <app-flow-diagram class="mt-4 block" from="finalPrice() changes" to="effect() re-runs" direction="right" />
-        <p class="mt-4 text-sm text-stone-300"><strong>Remember:</strong> <code class="text-gold-300">computed()</code> derives data for the UI; <code class="text-gold-300">effect()</code> performs a side effect such as logging.</p>
+        <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">constructor() &#123;
+  effect(() =&gt; &#123;
+    // reading finalPrice() tells Angular: "re-run me when this changes"
+    console.log('Cart changed:', this.finalPrice());
+  &#125;);
+&#125;</pre>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="TRY IT · WATCH THE EFFECT RUN" heading="Change the quantity and read the log">
+        <p class="mt-2 text-sm text-stone-400">The first line appeared when the page loaded. Then every change adds a new line. Below quantity 5 there is no discount; at 5 or more there is a $10 one.</p>
+        <div class="mt-4 flex flex-wrap items-center gap-3">
+          <button type="button" data-testid="effect-qty-down" (click)="decreaseQuantity()" class="grid h-10 w-10 place-items-center rounded-xl border border-stone-600 text-xl hover:bg-stone-800" aria-label="Decrease quantity">−</button>
+          <span class="min-w-24 text-center">Quantity: <strong data-testid="effect-qty">{{ quantity() }}</strong></span>
+          <button type="button" data-testid="effect-qty-up" (click)="increaseQuantity()" class="grid h-10 w-10 place-items-center rounded-xl border border-stone-600 text-xl hover:bg-stone-800" aria-label="Increase quantity">+</button>
+          <span class="text-sm text-stone-400">Final price: <strong class="text-gold-200">{{ finalPrice() | currency }}</strong></span>
+        </div>
+        <div class="mt-4 rounded-xl bg-stone-950 p-4">
+          <div class="flex items-center justify-between">
+            <p class="text-xs font-bold tracking-wider text-stone-500">EFFECT LOG</p>
+            <button type="button" data-testid="effect-clear" (click)="clearEffectLog()" class="text-xs font-semibold text-stone-400 hover:text-stone-200">Clear</button>
+          </div>
+          <ul class="mt-2 space-y-1 text-sm text-emerald-300" data-testid="effect-log" aria-live="polite">
+            @for (line of effectLog(); track $index) {
+              <li>{{ line }}</li>
+            } @empty {
+              <li class="text-stone-600">Log cleared — change the quantity to see the effect run again.</li>
+            }
+          </ul>
+        </div>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="danger" label="THE #1 MISTAKE" heading="Do not use effect() to calculate a value">
+        <p class="mt-2 text-sm text-stone-300">Copying one signal into another inside an effect works at first, but it is slower, easy to get stuck in loops, and a formula is clearer.</p>
+        <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-rose-300">// ❌ an effect used to derive a value
+effect(() =&gt; this.finalPrice.set(this.price() * this.quantity()));</pre>
+        <pre class="mt-3 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-emerald-300">// ✅ a formula cell: always correct, nothing to forget
+readonly finalPrice = computed(() =&gt; this.price() * this.quantity());</pre>
+        <p class="mt-4 text-sm text-stone-300">
+          <strong class="text-stone-100">Rule of thumb:</strong> need a value to show in the template? Use <code class="text-gold-300">computed()</code>.
+          Need to <em>do</em> something — save, log, call an API? Use <code class="text-gold-300">effect()</code>.
+        </p>
       </app-lesson-card>
       </section>
       </ng-template>
 
       <ng-template appLessonSection="component-signals">
       <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-        <app-lesson-card class="mt-10" label="COMPONENT SIGNALS" heading="input() and output() as signals">
+        <app-lesson-card class="mt-8" variant="danger" label="THE PROBLEM" heading="Decorators hide the reactive part">
+          <p class="mt-2 text-sm text-stone-400">
+            With <code class="text-gold-300">&#64;Input()</code> a parent value is a plain property, so a component cannot react to it without <code class="text-gold-300">ngOnChanges</code>.
+            With <code class="text-gold-300">input()</code> the value is a signal, so a <code class="text-gold-300">computed()</code> or an <code class="text-gold-300">effect()</code> can depend on it directly.
+          </p>
+        </app-lesson-card>
+
+        <app-lesson-card class="mt-5" label="COMPONENT SIGNALS" heading="input() and output() as signals">
           <p class="mt-2 text-sm text-stone-400">
             Components can use signals for their API too. <code class="text-gold-300">input()</code> reads a value from the parent and
             returns a signal you read with <code class="text-gold-300">()</code>. <code class="text-gold-300">output()</code> replaces
@@ -124,6 +204,18 @@ this.added.emit(this.price() * 2);</pre>
           <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">readonly products = toSignal(this.http.get&lt;Product[]&gt;('/api/products'), &#123; initialValue: [] &#125;);</pre>
           <p class="mt-3 text-sm text-stone-400">In the other direction, <code class="text-gold-300">toObservable()</code> turns a signal into an Observable.</p>
         </app-lesson-card>
+
+        <app-lesson-card class="mt-5" tone="amber" label="MENTAL MODEL" heading="A whiteboard and a news ticker">
+          <p class="mt-2 text-sm text-stone-400">
+            A signal is a whiteboard: it always shows the current value and has no history. An Observable is a news ticker: it announces each event as it happens.
+            <code class="text-gold-300">toSignal()</code> copies the latest headline onto a whiteboard. <code class="text-gold-300">toObservable()</code> reads the whiteboard
+            and announces it once things settle, so changes made in a burst are announced together as the final value.
+          </p>
+        </app-lesson-card>
+
+        <app-lesson-card class="mt-5" variant="highlight" label="TRY IT" heading="Cross the bridge both ways" headingSize="lg">
+          <app-interop-demo />
+        </app-lesson-card>
       </section>
       </ng-template>
 
@@ -137,6 +229,14 @@ this.added.emit(this.price() * 2);</pre>
           </p>
         </app-lesson-card>
 
+      <app-lesson-card class="mt-5" variant="highlight" label="PUT IT IN ORDER" heading="What happens when a signal changes">
+        <p class="mt-2 text-sm text-stone-400">Put the steps in the order Angular performs them after <code class="text-gold-300">quantity.set(5)</code>.</p>
+        <app-order-steps
+          [steps]="updateSteps"
+          explanation="A set() only marks things stale. A computed does its work later, when something reads it, and the template (or an effect) is what reads it, so the screen always gets the fresh derived value."
+        />
+      </app-lesson-card>
+
       <app-knowledge-check [items]="checkItems" />
       </section>
       </ng-template>
@@ -145,6 +245,26 @@ this.added.emit(this.price() * 2);</pre>
 })
 export class SignalsPlaygroundComponent {
   readonly section = input<string>();
+
+  readonly computedChallenge: PredictChallenge = {
+    question: 'What does this log?',
+    code: 'const price = signal(10);\nconst double = computed(() => price() * 2);\nprice.set(25);\nconsole.log(double());',
+    options: [
+      { id: 'a', text: '20' },
+      { id: 'b', text: '50' },
+      { id: 'c', text: '10' },
+      { id: 'd', text: 'undefined' },
+    ],
+    correct: 'b',
+    explanation: 'A computed signal is always worked out from the current value of the signals it reads. price is 25 by the time double() is read, so the answer is 50.',
+  };
+  readonly updateSteps = [
+    'quantity.set(5) stores the new value',
+    'Everything that depends on quantity is marked as stale',
+    'Angular runs change detection for the affected template',
+    'The template reads total(), so the computed recalculates once with the new value',
+  ];
+
   // signal() creates reactive state.
   readonly productName = signal('Protein');
   readonly price = signal(50);
@@ -156,10 +276,19 @@ export class SignalsPlaygroundComponent {
   readonly discount = computed(() => (this.quantity() >= 5 ? 10 : 0));
   readonly finalPrice = computed(() => this.subtotal() - this.discount());
 
+  // Visible log of every effect run, so the lesson does not depend on the browser console.
+  readonly effectLog = signal<string[]>([]);
+
   constructor() {
     effect(() => {
+      const message = `Effect ran → final price is $${this.finalPrice()}`;
       console.log('Cart changed:', this.finalPrice());
+      untracked(() => this.effectLog.update((log) => [...log, message].slice(-6)));
     });
+  }
+
+  clearEffectLog(): void {
+    this.effectLog.set([]);
   }
 
   changeProduct(): void {

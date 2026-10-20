@@ -26,6 +26,7 @@ export class LearningFacade {
   readonly percent = this.progress.percent;
   readonly totalCount = this.progress.totalCount;
   readonly recentActivity = this.progress.recentActivity;
+  readonly allActivity = this.progress.allActivity;
 
   // ── Bookmark passthrough ─────────────────────────────────────────────────
   readonly bookmarkCount = this.bookmarks.count;

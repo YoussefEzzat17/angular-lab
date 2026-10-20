@@ -2,7 +2,7 @@ import type { QuizBank } from '../../../core/models/learning.models';
 
 export const INTERCEPTOR_QUIZ: QuizBank = {
   topicId: 'interceptor',
-  version: 1,
+  version: 2,
   questions: [
     {
       id: 'interceptor-01',
@@ -123,6 +123,48 @@ export const INTERCEPTOR_QUIZ: QuizBank = {
       correct: ['a'],
       explanation: 'A functional interceptor runs in an injection context, so inject() works inside it. A plain function has no constructor.',
       sectionId: 'try-it',
+    },
+    {
+      id: 'interceptor-11',
+      type: 'single',
+      prompt: 'An interceptor ends with return next(req) after building a cloned request with a token. What does the server receive?',
+      choices: [
+        { id: 'a', text: 'The request with the token, because clone edits req' },
+        { id: 'b', text: 'The original request without the token' },
+        { id: 'c', text: 'Nothing, the request is cancelled' },
+        { id: 'd', text: 'An error from Angular' },
+      ],
+      correct: ['b'],
+      explanation: 'clone() creates a new object. Only what you pass to next() continues down the chain, so the clone must be passed, not req.',
+      sectionId: 'auth-header',
+    },
+    {
+      id: 'interceptor-12',
+      type: 'single',
+      prompt: 'Two interceptors are registered as [auth, logging]. In what order do they see the response?',
+      choices: [
+        { id: 'a', text: 'auth first, then logging' },
+        { id: 'b', text: 'logging first, then auth' },
+        { id: 'c', text: 'At the same time' },
+        { id: 'd', text: 'Only the first one sees it' },
+      ],
+      correct: ['b'],
+      explanation: 'The request goes down the chain in registration order, and the response comes back up in reverse order. The one closest to the server sees the response first.',
+      sectionId: 'chaining',
+    },
+    {
+      id: 'interceptor-13',
+      type: 'single',
+      prompt: 'The logging interceptor is registered before the auth interceptor. What will the logger see about the Authorization header?',
+      choices: [
+        { id: 'a', text: 'It is already there' },
+        { id: 'b', text: 'It is not there yet, because auth has not run' },
+        { id: 'c', text: 'It is there only for POST requests' },
+        { id: 'd', text: 'Angular reorders them automatically' },
+      ],
+      correct: ['b'],
+      explanation: 'Each interceptor receives the request as the previous one left it. Registered first means it sees the request before auth adds the header.',
+      sectionId: 'chaining',
     },
   ],
 };

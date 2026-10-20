@@ -2,7 +2,7 @@ import type { QuizBank } from '../../../core/models/learning.models';
 
 export const MOVIES_QUIZ: QuizBank = {
   topicId: 'movies',
-  version: 1,
+  version: 2,
   questions: [
     {
       id: 'movies-01',
@@ -123,6 +123,48 @@ export const MOVIES_QUIZ: QuizBank = {
       correct: ['a'],
       explanation: 'Non-2xx responses are errors in HttpClient. You have to handle them with catchError or the subscriber error callback.',
       sectionId: 'states',
+    },
+    {
+      id: 'movies-11',
+      type: 'single',
+      prompt: 'The server answers 404 Not Found. What does your code get from HttpClient?',
+      choices: [
+        { id: 'a', text: 'next() with the error text as the body' },
+        { id: 'b', text: 'error() with an HttpErrorResponse' },
+        { id: 'c', text: 'Nothing: the Observable just never emits' },
+        { id: 'd', text: 'next() with an empty body' },
+      ],
+      correct: ['b'],
+      explanation: 'HttpClient treats any status outside 2xx as an error. Your error callback receives an HttpErrorResponse that carries the status and the message.',
+      sectionId: 'request-anatomy',
+    },
+    {
+      id: 'movies-12',
+      type: 'single',
+      prompt: 'Two components subscribe to the same http.get() Observable, with no sharing. How many requests go out?',
+      choices: [
+        { id: 'a', text: 'One, because the URL is the same' },
+        { id: 'b', text: 'Two, because each subscription starts its own request' },
+        { id: 'c', text: 'None until a third component subscribes' },
+        { id: 'd', text: 'One, and the second component gets the cached result' },
+      ],
+      correct: ['b'],
+      explanation: 'An HttpClient Observable is cold: the request is a recipe that runs once per subscriber. shareReplay(1), or keeping the result in a signal, makes them share one request.',
+      sectionId: 'cold',
+    },
+    {
+      id: 'movies-13',
+      type: 'single',
+      prompt: 'What does provideHttpClient() do, and where does it go?',
+      choices: [
+        { id: 'a', text: 'It makes HttpClient available to inject; it goes once in the app config' },
+        { id: 'b', text: 'It sends a test request when the app starts; it goes in main.ts' },
+        { id: 'c', text: 'It caches every response; it goes in each service' },
+        { id: 'd', text: 'It replaces the need for services; it goes in each component' },
+      ],
+      correct: ['a'],
+      explanation: 'provideHttpClient() registers HttpClient (and is where interceptors are configured) for the whole app. After that any service can inject it.',
+      sectionId: 'httpclient',
     },
   ],
 };

@@ -1,7 +1,8 @@
-import { Component, computed, inject, signal, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
+import { TermComponent } from '../../shared/term.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
@@ -43,14 +44,15 @@ placeOrder() {
 // the template just reads checkout.status(), checkout.log(), checkout.message()`;
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [TermComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'facade'" [section]="section()">
       <ng-template appLessonSection="problem">
       <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <app-page-header title="Facade Pattern" illustration="facade">
-        A <strong class="text-stone-200">facade</strong> is one simple front door in front of a messy set of services. Instead of
+        A <strong class="text-stone-200">facade</strong> is one simple front door in front of a messy set of <app-term term="service">services</app-term>. Instead of
         every component learning how the cart, the stock, the payment and the email services fit together, they ask a single
         class — <code class="text-gold-300">CheckoutFacade</code> — to "place the order". The facade knows the steps, the order,
         and what to undo when something fails. Try both versions below and compare what the component has to know.
@@ -127,7 +129,7 @@ placeOrder() {
       <ng-template appLessonSection="building">
       <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <div class="mt-10 grid gap-5 md:grid-cols-2">
-        <app-lesson-card class="md:col-span-2" label="5 · BUILD ONE" heading="Five steps to your own facade">
+        <app-lesson-card class="md:col-span-2" label="4 · BUILD ONE" heading="Five steps to your own facade">
           <ol class="mt-4 grid gap-3 md:grid-cols-5">
             @for (step of buildSteps; track step.title; let i = $index) {
               <li class="rounded-xl bg-stone-800 p-4">
@@ -146,7 +148,7 @@ placeOrder() {
       <ng-template appLessonSection="wiring">
       <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <div class="mt-10 grid gap-5 md:grid-cols-2">
-        <app-lesson-card label="6 · USING IT" heading="The component gets tiny">
+        <app-lesson-card label="5 · USING IT" heading="The component gets tiny">
           <p class="mt-2 text-sm text-stone-400">
             Components inject only the facade and read its signals. They never import the subsystem services, so those can change
             freely behind the facade.
@@ -154,7 +156,7 @@ placeOrder() {
           <pre class="mt-3 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ usageCode }}</pre>
         </app-lesson-card>
 
-        <app-lesson-card label="7 · WHERE IT LIVES" heading="Folder and naming">
+        <app-lesson-card label="6 · WHERE IT LIVES" heading="Folder and naming">
           <pre class="mt-3 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ folderCode }}</pre>
           <ul class="mt-3 space-y-1.5 text-sm text-stone-400">
             <li>• One facade per <b class="text-stone-200">feature</b> (checkout, products, auth) — not one for the whole app.</li>
@@ -169,7 +171,7 @@ placeOrder() {
       <ng-template appLessonSection="try-it">
       <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <div class="mt-10 grid gap-5 md:grid-cols-2">
-        <app-lesson-card variant="highlight" class="md:col-span-2" label="4 · TRY IT" heading="Place the same order both ways">
+        <app-lesson-card variant="highlight" class="md:col-span-2" label="7 · TRY IT" heading="Place the same order both ways">
           <p class="mt-2 text-sm text-stone-400">
             Both versions do <b class="text-stone-200">exactly the same work</b> and produce the same log. The difference is where the
             knowledge lives. Turn on "decline the card" to watch the rollback.
@@ -177,8 +179,8 @@ placeOrder() {
 
           <div class="mt-4 flex flex-wrap items-center gap-3">
             <div class="inline-flex rounded-xl border border-stone-700 p-1" role="radiogroup" aria-label="Which version to run">
-              <button type="button" role="radio" [attr.aria-checked]="mode() === 'without'" (click)="setMode('without')" class="min-h-11 rounded-lg px-4 text-sm font-semibold transition" [class]="mode() === 'without' ? 'bg-gold-500 text-white' : 'text-stone-300 hover:bg-stone-800'">Without a facade</button>
-              <button type="button" role="radio" [attr.aria-checked]="mode() === 'with'" (click)="setMode('with')" class="min-h-11 rounded-lg px-4 text-sm font-semibold transition" [class]="mode() === 'with' ? 'bg-gold-500 text-white' : 'text-stone-300 hover:bg-stone-800'">With a facade</button>
+              <button type="button" role="radio" [attr.aria-checked]="mode() === 'without'" (click)="setMode('without')" class="min-h-11 rounded-lg px-4 text-sm font-semibold transition" [class]="mode() === 'without' ? 'bg-gold-solid text-white' : 'text-stone-300 hover:bg-stone-800'">Without a facade</button>
+              <button type="button" role="radio" [attr.aria-checked]="mode() === 'with'" (click)="setMode('with')" class="min-h-11 rounded-lg px-4 text-sm font-semibold transition" [class]="mode() === 'with' ? 'bg-gold-solid text-white' : 'text-stone-300 hover:bg-stone-800'">With a facade</button>
             </div>
             <label class="flex min-h-11 cursor-pointer items-center gap-2 text-sm text-stone-300">
               <input type="checkbox" class="h-4 w-4 accent-[rgb(var(--gold-500))]" [checked]="settings.declineCard()" (change)="settings.declineCard.set(!settings.declineCard())" />
@@ -222,7 +224,7 @@ placeOrder() {
                 <p role="status" class="mt-3 rounded-xl p-3 text-sm font-semibold" [class]="status() === 'success' ? 'bg-[rgb(var(--panel-success-bg))] text-[rgb(var(--panel-success-heading))]' : 'bg-[rgb(var(--panel-danger-bg))] text-[rgb(var(--panel-danger-heading))]'">{{ message() }}</p>
               }
               <div class="mt-3 flex gap-3">
-                <button type="button" (click)="place()" [disabled]="status() === 'working'" class="min-h-11 rounded-xl bg-gold-500 px-5 text-sm font-semibold text-white hover:bg-gold-400 disabled:cursor-not-allowed disabled:opacity-60">{{ status() === 'working' ? 'Working…' : 'Place order' }}</button>
+                <button type="button" (click)="place()" [disabled]="status() === 'working'" class="min-h-11 rounded-xl bg-gold-solid px-5 text-sm font-semibold text-white hover:bg-gold-solid-hover disabled:cursor-not-allowed disabled:opacity-60">{{ status() === 'working' ? 'Working…' : 'Place order' }}</button>
                 <button type="button" (click)="reset()" [disabled]="status() === 'working'" class="min-h-11 rounded-xl border border-stone-700 px-4 text-sm font-semibold hover:bg-stone-800 disabled:opacity-60">Reset</button>
               </div>
             </div>

@@ -1,4 +1,4 @@
-import { Component, Input, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { CurrencyPipe, DatePipe, LowerCasePipe, UpperCasePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { Product } from '../../core/models/product.model';
@@ -8,6 +8,7 @@ import { ToastService } from '../../core/services/toast.service';
 import { StockStatusPipe } from '../../pipes/stock-status.pipe';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-product-card',
   standalone: true,
   imports: [CurrencyPipe, DatePipe, LowerCasePipe, UpperCasePipe, StockStatusPipe],
@@ -25,7 +26,7 @@ import { StockStatusPipe } from '../../pipes/stock-status.pipe';
         <div class="mt-4 flex items-center justify-between"><strong class="text-xl">{{ product.price | currency }}</strong><span class="text-sm text-amber-400">★ {{ product.rating }}</span></div>
         <p class="mt-2 text-xs text-stone-500">Added on {{ product.addedOn | date:'mediumDate' }}</p>
         <div class="mt-4 flex items-center justify-between"><span [class.text-rose-400]="product.stock === 0" [class.text-amber-400]="product.stock > 0 && product.stock < 5" class="text-sm font-semibold text-emerald-400">{{ product.stock | stockStatus }}</span><span class="text-xs text-stone-500">{{ product.stock }} passes left</span></div>
-        <div class="mt-5 flex gap-2"><button (click)="addToCart(product)" [disabled]="product.stock === 0" class="min-h-11 flex-1 rounded-xl bg-gold-500 px-3 py-2.5 text-sm font-semibold text-white transition hover:bg-gold-400 disabled:cursor-not-allowed disabled:bg-stone-700">{{ cart.has(product.id) ? 'In watchlist ✓ · Remove' : 'Add to watchlist' }}</button><button (click)="viewDetails()" class="min-h-11 rounded-xl border border-stone-700 px-3 py-2.5 text-sm font-semibold hover:bg-stone-800">Details</button></div>
+        <div class="mt-5 flex gap-2"><button (click)="addToCart(product)" [disabled]="product.stock === 0" class="min-h-11 flex-1 rounded-xl bg-gold-solid px-3 py-2.5 text-sm font-semibold text-white transition hover:bg-gold-solid-hover disabled:cursor-not-allowed disabled:bg-stone-700">{{ cart.has(product.id) ? 'In watchlist ✓ · Remove' : 'Add to watchlist' }}</button><button (click)="viewDetails()" class="min-h-11 rounded-xl border border-stone-700 px-3 py-2.5 text-sm font-semibold hover:bg-stone-800">Details</button></div>
       </div>
     </article>
   `,

@@ -1,4 +1,4 @@
-import { Component, effect, HostListener, inject, OnDestroy, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, HostListener, inject, OnDestroy, signal } from '@angular/core';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 
@@ -11,6 +11,7 @@ import { IconComponent } from '../../shared/icon.component';
 import { ThemeService } from '../services/theme.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-navbar',
   // The host must not be a box of its own: a sticky header can only stick inside its parent, and the host is exactly as tall as the header.
   host: { class: 'contents' },

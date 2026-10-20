@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-learn-footer',
   standalone: true,
   imports: [RouterLink],
@@ -14,7 +15,7 @@ import { RouterLink } from '@angular/router';
           <span class="font-semibold text-gold-400">
             &lt;Angular <span class="text-stone-100">Lab</span>&gt;
           </span>
-          <span class="hidden text-stone-700 lg:inline">—</span>
+          <span class="hidden text-stone-700 lg:inline" aria-hidden="true">—</span>
           <span class="hidden text-stone-500 lg:inline">A hands-on playground for learning Angular.</span>
         </div>
 

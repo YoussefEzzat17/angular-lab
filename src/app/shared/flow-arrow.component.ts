@@ -1,4 +1,4 @@
-import { booleanAttribute, Component, input } from '@angular/core';
+import { booleanAttribute, ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 /**
  * A labelled arrow showing data moving between two things on the page (parent → child, child → parent).
@@ -9,6 +9,7 @@ import { booleanAttribute, Component, input } from '@angular/core';
  *  - `turn`               vertical on small screens, horizontal from `md` up (for cards that stack on mobile)
  */
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-flow-arrow',
   standalone: true,
   host: { 'aria-hidden': 'true' },

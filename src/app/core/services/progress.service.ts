@@ -1,6 +1,7 @@
 import { Injectable, computed, signal } from '@angular/core';
 import { TOPICS } from '../data/topics';
 import type { TopicId, TopicProgress, ProgressStateV2, QuizAttempt, ActivityEntry, TopicStatus } from '../models/learning.models';
+import { ACTIVITY_LIMIT, PREVIEW_SIZE } from './activity-history';
 import { readStored, writeStored } from './safe-storage';
 import { migrateProgress } from './progress-migration';
 
@@ -10,6 +11,8 @@ const PROGRESS_KEY = 'angular-lab:progress';
 export class ProgressService {
   private readonly state = signal<ProgressStateV2>(this.load());
 
+  /** Read-only view of every topic's saved progress (used to work out XP and badges). */
+  readonly topics = computed(() => this.state().topics);
   readonly totalCount = TOPICS.length;
   readonly completedCount = computed(() =>
     Object.values(this.state().topics).filter((t) => t?.completedAt).length
@@ -17,7 +20,10 @@ export class ProgressService {
   readonly percent = computed(() =>
     Math.round((this.completedCount() / this.totalCount) * 100)
   );
-  readonly recentActivity = computed(() => this.state().activity.slice(-10).reverse());
+  /** The newest few entries, newest first — for the dashboard preview. */
+  readonly recentActivity = computed(() => this.state().activity.slice(-PREVIEW_SIZE).reverse());
+  /** Every stored entry (up to ACTIVITY_LIMIT), newest first — for the history page. */
+  readonly allActivity = computed(() => [...this.state().activity].reverse());
 
   status(id: TopicId): TopicStatus {
     const t = this.state().topics[id];
@@ -134,7 +140,7 @@ export class ProgressService {
 
   private addActivity(entry: Omit<ActivityEntry, 'at'> & { at: string }): void {
     this.state.update((s) => {
-      const activity = [...s.activity, entry as ActivityEntry].slice(-30);
+      const activity = [...s.activity, entry as ActivityEntry].slice(-ACTIVITY_LIMIT);
       const next = { ...s, activity };
       writeStored(PROGRESS_KEY, next);
       return next;

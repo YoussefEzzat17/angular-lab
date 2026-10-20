@@ -1,23 +1,14 @@
-import { Component, HostListener, computed, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, computed, HostListener, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { DEMO_LINKS, TOPICS } from '../data/topics';
 import { ProgressService } from '../services/progress.service';
 import { SearchPaletteService } from '../services/search-palette.service';
-
-interface ResultItem {
-  path: string;
-  icon: string;
-  title: string;
-  description: string;
-  isTopic: boolean;
-}
+import { buildSearchIndex, searchIndex } from '../services/search-index';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-search-palette',
   standalone: true,
-  imports: [FormsModule],
   template: `
     @if (palette.open()) {
       <div class="fixed inset-0 z-50 flex items-start justify-center bg-stone-950/80 px-4 pt-[12vh] backdrop-blur-sm" (click)="close()">
@@ -30,8 +21,8 @@ interface ResultItem {
             <input
               type="text"
               autofocus
-              [ngModel]="query()"
-              (ngModelChange)="onQueryChange($event)"
+              [value]="query()"
+              (input)="onQueryInput($event)"
               placeholder="Search topics… (e.g. signals, forms, interceptor)"
               class="flex-1 bg-transparent text-sm text-stone-100 placeholder:text-stone-500 focus:outline-none"
               autocomplete="off"
@@ -41,7 +32,7 @@ interface ResultItem {
 
           <div class="max-h-[50vh] overflow-y-auto p-2">
             @if (results().length === 0) {
-              <p class="px-3 py-6 text-center text-sm text-stone-500">No topics match "{{ query() }}"</p>
+              <p class="px-3 py-6 text-center text-sm text-stone-500">Nothing matches "{{ query() }}". Try a topic or a word from a lesson, like signals or routing.</p>
             }
             @for (item of results(); track item.path; let i = $index) {
               <button
@@ -57,7 +48,7 @@ interface ResultItem {
                 <span class="min-w-0 flex-1">
                   <span class="flex items-center gap-2">
                     <span class="block truncate font-semibold text-stone-100">{{ item.title }}</span>
-                    @if (item.isTopic && progress.isCompleted(item.path)) {
+                    @if (item.kind === 'topic' && progress.isCompleted(item.path)) {
                       <span class="shrink-0 text-xs text-emerald-400">✓</span>
                     }
                   </span>
@@ -79,18 +70,9 @@ export class SearchPaletteComponent {
   readonly query = signal('');
   readonly activeIndex = signal(0);
 
-  private readonly allItems: ResultItem[] = [
-    ...TOPICS.map((t) => ({ path: t.path, icon: t.icon, title: t.title, description: t.description, isTopic: true })),
-    ...DEMO_LINKS.map((d) => ({ path: d.path, icon: '🎬', title: d.label, description: 'Demo app', isTopic: false })),
-  ];
+  private readonly index = buildSearchIndex();
 
-  readonly results = computed(() => {
-    const q = this.query().trim().toLowerCase();
-    if (!q) {
-      return this.allItems;
-    }
-    return this.allItems.filter((item) => item.title.toLowerCase().includes(q) || item.description.toLowerCase().includes(q));
-  });
+  readonly results = computed(() => searchIndex(this.index, this.query()));
 
   @HostListener('window:keydown', ['$event'])
   onWindowKeydown(event: KeyboardEvent): void {
@@ -119,6 +101,10 @@ export class SearchPaletteComponent {
         this.go(item.path);
       }
     }
+  }
+
+  onQueryInput(event: Event): void {
+    this.onQueryChange((event.target as HTMLInputElement).value);
   }
 
   onQueryChange(value: string): void {

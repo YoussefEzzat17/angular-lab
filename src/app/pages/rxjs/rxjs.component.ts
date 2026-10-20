@@ -1,9 +1,16 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, OnDestroy, signal, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, OnDestroy, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
+import type { PredictChallenge } from '../../shared/predict-output.component';
+import { PredictOutputComponent } from '../../shared/predict-output.component';
+import { TermComponent } from '../../shared/term.component';
+import { FlattenDemoComponent } from './flatten-demo.component';
+import { MarbleDemoComponent } from './marble-demo.component';
+import { OrderStepsComponent } from '../../shared/order-steps.component';
+import { SubjectRadioDemoComponent } from './subject-radio-demo.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
@@ -25,20 +32,29 @@ import {
 } from 'rxjs';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [FormsModule, AsyncPipe, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [MarbleDemoComponent, OrderStepsComponent, PredictOutputComponent, TermComponent, FormsModule, AsyncPipe, FlattenDemoComponent, SubjectRadioDemoComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'rxjs'" [section]="section()">
       <ng-template appLessonSection="observables">
       <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <app-page-header title="RxJS from Scratch" illustration="rxjs">
         RxJS is a library that helps you deal with anything that happens "over time" — a click, typing in an input, an API response — as one
-        <strong class="text-gold-300">data stream</strong> you can filter, transform and control, instead of handling each as a separate event.
+        <strong class="text-gold-300"><app-term term="stream">data stream</app-term></strong> you can filter, transform and control, instead of handling each as a separate event.
         Try the examples below, and open the console to see what's happening under the hood.
       </app-page-header>
 
       <!-- 1 · WHY RXJS -->
-      <app-lesson-card class="mt-10" label="1 · Why does RxJS exist?" heading="The problem before RxJS">
+      <app-lesson-card class="mt-8" tone="amber" label="MENTAL MODEL" heading="A newsletter you subscribe to">
+        <p class="mt-2 text-sm text-stone-400">
+          An Observable is a newsletter. Writing it does nothing until someone subscribes. After that, issues arrive over time (values), it can
+          end (complete) or have a problem (error), and each reader can unsubscribe whenever they like. Operators are the editor who rewrites,
+          filters or delays each issue before it reaches your inbox.
+        </p>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" label="1 · Why does RxJS exist?" heading="The problem before RxJS">
         <p class="mt-2 text-sm text-stone-400">
           When you have lots of events happening over time (typing, clicks, API replies), handling them with plain callbacks leads to a problem called
           <span class="text-gold-300">Callback Hell</span>: every event needs its own condition, you have to cancel the old one manually, and there's no unified way to combine, filter, or delay these events.
@@ -88,7 +104,7 @@ import {
               type="button"
               (click)="startTicker()"
               [disabled]="tickerRunning()"
-              class="rounded-lg bg-gold-500 px-4 py-2 font-semibold text-white hover:bg-gold-400 disabled:cursor-not-allowed disabled:opacity-40"
+              class="rounded-lg bg-gold-solid px-4 py-2 font-semibold text-white hover:bg-gold-solid-hover disabled:cursor-not-allowed disabled:opacity-40"
             >
               ▶ subscribe()
             </button>
@@ -108,6 +124,14 @@ import {
           <p class="mt-2 text-xs text-stone-500">Click subscribe, let a few numbers come in, then click unsubscribe — notice it stops instantly, just like pausing the show.</p>
         </div>
       </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Observable mistakes to avoid">
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+          <li><strong class="text-stone-100">Expecting something to happen without subscribe().</strong> A cold Observable does nothing until someone subscribes.</li>
+          <li><strong class="text-stone-100">Subscribing inside a subscribe.</strong> Nested subscriptions are hard to cancel and easy to leak. Combine them with <code class="text-gold-300">switchMap</code> instead.</li>
+          <li><strong class="text-stone-100">Using an Observable for simple local state.</strong> A <code class="text-gold-300">signal()</code> is less code for a counter or a toggle. Save Observables for streams of events over time.</li>
+        </ul>
+      </app-lesson-card>
       </section>
       </ng-template>
 
@@ -126,13 +150,35 @@ take(3):         20───40───60|  (completes after 3 values)</pre>
           type="button"
           (click)="runOperatorsDemo()"
           [disabled]="operatorsRunning()"
-          class="mt-4 rounded-lg bg-gold-500 px-4 py-2 font-semibold text-white hover:bg-gold-400 disabled:cursor-not-allowed disabled:opacity-40"
+          class="mt-4 rounded-lg bg-gold-solid px-4 py-2 font-semibold text-white hover:bg-gold-solid-hover disabled:cursor-not-allowed disabled:opacity-40"
         >
           Run: source → filter(even) → map(×10) → take(3)
         </button>
         <div class="mt-4 rounded-xl bg-stone-800 p-4 text-sm text-stone-300">
           Result: <span class="text-gold-300">{{ operatorsResult().join(', ') || '—' }}</span>
         </div>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="MARBLE DIAGRAMS" heading="Draw the stream on a timeline" headingSize="lg">
+        <p class="mt-2 text-sm text-stone-400">
+          RxJS people read streams as <strong class="text-stone-200">marble diagrams</strong>: time runs left to right and each marble is a value.
+          Choose an operator and an input stream below. The bottom line is produced by the real operator, running on a virtual clock.
+        </p>
+        <app-marble-demo />
+      </app-lesson-card>
+
+      <!-- 4 · FLATTENING OPERATORS -->
+      <app-lesson-card class="mt-5" label="4 · FLATTENING OPERATORS" heading="switchMap, mergeMap, concatMap — what happens when a new request arrives?">
+        <p class="mt-2 text-sm text-stone-400">
+          Some operators start a <strong class="text-stone-200">new async job for every value</strong> — for example, one HTTP call per keystroke. The question is what to do when a new
+          job starts while the previous one is still running. The three operators answer it differently:
+        </p>
+        <ul class="mt-3 list-disc space-y-1 pl-5 text-sm text-stone-300">
+          <li><code class="text-gold-300">switchMap</code> — <strong class="text-stone-100">cancel the old one</strong>. Use it for search boxes and "load the selected item".</li>
+          <li><code class="text-gold-300">mergeMap</code> — <strong class="text-stone-100">run them all in parallel</strong>. Use it when the jobs are independent.</li>
+          <li><code class="text-gold-300">concatMap</code> — <strong class="text-stone-100">queue them</strong>. Use it when order matters, like saving edits one by one.</li>
+        </ul>
+        <app-flatten-demo />
       </app-lesson-card>
 
       <!-- 7 · CHEAT SHEET -->
@@ -217,14 +263,106 @@ ngOnDestroy() &#123;
 
       <ng-template appLessonSection="subjects">
       <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-      <app-lesson-card class="mt-10" label="SUBJECTS" heading="An Observable you can push into">
+      <app-lesson-card class="mt-10" label="SUBJECTS · WHY THEY EXIST" heading="Sometimes you are the one who has to push the values">
         <p class="mt-2 text-sm text-stone-400">
-          A <code class="text-gold-300">Subject</code> lets you call <code class="text-gold-300">next(value)</code> yourself and sends that value to every
-          current subscriber. A <code class="text-gold-300">BehaviorSubject</code> also remembers its latest value and gives it to new subscribers at once.
+          A normal Observable <em>produces</em> its own values — a timer ticks, an HTTP call answers. But some values come from <strong class="text-stone-200">your own code</strong>:
+          a button in one component that another, unrelated component must react to. There is nothing for an Observable to "wrap" there.
         </p>
-        <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">private readonly count$ = new BehaviorSubject(0);
+        <p class="mt-3 text-sm text-stone-400">
+          A <code class="text-gold-300">Subject</code> solves it. It is an Observable <strong class="text-stone-200">plus</strong> a
+          <code class="text-gold-300">next(value)</code> method: anyone can <code class="text-gold-300">subscribe()</code> to listen, and you call
+          <code class="text-gold-300">next()</code> to broadcast.
+        </p>
+      </app-lesson-card>
 
-increment() &#123; this.count$.next(this.count$.value + 1); &#125;</pre>
+      <app-lesson-card class="mt-5" label="THE MENTAL MODEL" heading="A live radio station" tone="amber">
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+          <li><strong class="text-stone-100">The station</strong> is the Subject. <code class="text-gold-300">next(song)</code> plays a song on air.</li>
+          <li><strong class="text-stone-100">Listeners</strong> are subscribers. <code class="text-gold-300">subscribe()</code> tunes in, <code class="text-gold-300">unsubscribe()</code> switches off.</li>
+          <li><strong class="text-stone-100">Everyone tuned in hears the same song at the same moment.</strong> That is called <app-term term="multicasting">multicasting</app-term>.</li>
+          <li><strong class="text-stone-100">Live means live:</strong> if you tune in late, the songs that already played are gone — unless the station keeps a memory.</li>
+        </ul>
+        <p class="mt-3 text-sm text-stone-400">
+          A plain Observable is the opposite: a recorded show where every listener gets their own copy, starting from the beginning.
+        </p>
+      </app-lesson-card>
+
+      <app-lesson-card
+        class="mt-5"
+        variant="highlight"
+        label="TRY IT · THE RADIO STATION"
+        heading="Broadcast, tune in late, and see what each Subject remembers"
+      >
+        <ol class="mt-2 list-decimal space-y-1 pl-5 text-sm text-stone-400">
+          <li>Press <strong class="text-stone-200">subscribe()</strong> on Ali, then broadcast two songs. Ali hears both.</li>
+          <li>Now subscribe Sara. She joined late — what does she hear?</li>
+          <li>Switch to <strong class="text-stone-200">BehaviorSubject</strong>, then <strong class="text-stone-200">ReplaySubject</strong>, and repeat steps 1–2.</li>
+        </ol>
+        <app-subject-radio-demo />
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" label="THE FAMILY" heading="Which one should I pick?">
+        <div class="mt-3 grid gap-3 sm:grid-cols-2">
+          <div class="rounded-xl bg-stone-950 p-4">
+            <p class="font-bold text-stone-100">Subject</p>
+            <p class="mt-1 text-xs text-stone-400">New subscriber gets: <strong class="text-stone-200">nothing from the past</strong></p>
+            <p class="mt-2 text-sm text-stone-300">Events: a click, a "saved!" notification, a message that only matters right now.</p>
+          </div>
+          <div class="rounded-xl bg-stone-950 p-4">
+            <p class="font-bold text-stone-100">BehaviorSubject</p>
+            <p class="mt-1 text-xs text-stone-400">New subscriber gets: <strong class="text-stone-200">the current value, instantly</strong></p>
+            <p class="mt-2 text-sm text-stone-300">State: the logged-in user, the cart count, the selected theme. Needs a starting value.</p>
+          </div>
+          <div class="rounded-xl bg-stone-950 p-4">
+            <p class="font-bold text-stone-100">ReplaySubject(n)</p>
+            <p class="mt-1 text-xs text-stone-400">New subscriber gets: <strong class="text-stone-200">the last n values</strong></p>
+            <p class="mt-2 text-sm text-stone-300">History: the last 3 notifications, a chat catch-up, a recent-searches list.</p>
+          </div>
+          <div class="rounded-xl bg-stone-950 p-4">
+            <p class="font-bold text-stone-100">Observable</p>
+            <p class="mt-1 text-xs text-stone-400">New subscriber gets: <strong class="text-stone-200">its own fresh run</strong></p>
+            <p class="mt-2 text-sm text-stone-300">Producers: HTTP calls, timers, Router events. You cannot call next() on it.</p>
+          </div>
+        </div>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" label="THE REAL-WORLD PATTERN" heading="A BehaviorSubject inside a service">
+        <p class="mt-2 text-sm text-stone-400">
+          Keep the Subject <strong class="text-stone-200">private</strong> and give everyone else a read-only view with
+          <code class="text-gold-300">asObservable()</code>. Only the service can change the value.
+        </p>
+        <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">&#64;Injectable(&#123; providedIn: 'root' &#125;)
+export class CartCountService &#123;
+  private readonly count = new BehaviorSubject&lt;number&gt;(0);
+  readonly count$ = this.count.asObservable();   // read-only for everyone else
+
+  add(): void &#123; this.count.next(this.count.value + 1); &#125;
+&#125;</pre>
+        <pre ngNonBindable class="mt-3 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">&lt;!-- any component, anywhere in the app --&gt;
+&lt;span&gt;Cart: {{ cart.count$ | async }}&lt;/span&gt;</pre>
+        <p class="mt-3 text-sm text-stone-400">
+          The navbar badge and the product page never talk to each other, yet they always show the same number — because both listen to one station.
+        </p>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Where Subjects bite beginners">
+        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+          <li><strong class="text-stone-100">Exposing the Subject itself.</strong> If a component can call <code class="text-gold-300">next()</code> on your service's Subject, anyone can change shared state. Expose <code class="text-gold-300">asObservable()</code>.</li>
+          <li><strong class="text-stone-100">Using a plain Subject for state.</strong> A component that loads later sees nothing and looks empty. State needs a BehaviorSubject.</li>
+          <li><strong class="text-stone-100">Forgetting to unsubscribe.</strong> A Subject lives as long as the service, so a manual <code class="text-gold-300">subscribe()</code> in a component leaks. Prefer the <code class="text-gold-300">async</code> pipe.</li>
+        </ul>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="success" label="MODERN ANGULAR NOTE" heading="Subjects or signals?">
+        <p class="mt-2 text-sm text-stone-300">
+          For simple state that lives in one place, a <code class="text-gold-300">signal()</code> is usually less code than a BehaviorSubject. Reach for a Subject when the
+          value is an <strong class="text-stone-100">event stream</strong> that you want to shape with operators like <code class="text-gold-300">debounceTime</code> or
+          <code class="text-gold-300">switchMap</code> — like the search box in the next section. You can always bridge the two with <code class="text-gold-300">toSignal()</code>.
+        </p>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="PREDICT THE OUTPUT" heading="What does a late subscriber receive?">
+        <app-predict-output [challenge]="behaviorChallenge" />
       </app-lesson-card>
       </section>
       </ng-template>
@@ -283,6 +421,26 @@ ngOnDestroy() &#123;
   this.sub.unsubscribe(); // closes every subscription that was added
 &#125;</pre>
       </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="success" label="THE MODERN FIX" heading="takeUntilDestroyed() closes it for you">
+        <p class="mt-2 text-sm text-stone-400">
+          Instead of storing subscriptions, add one operator at the end of the pipe. It completes the stream when the component or service is destroyed.
+          Inside a constructor or field initializer, call it with no arguments.
+        </p>
+        <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ takeUntilCode }}</pre>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="PREDICT" heading="Does the interval stop?">
+        <app-predict-output [challenge]="leakChallenge" />
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="PUT IT IN ORDER" heading="Life of a leaked subscription">
+        <p class="mt-2 text-sm text-stone-400">Put the steps in the order they happen when a component subscribes to interval(1000) and never cleans up.</p>
+        <app-order-steps
+          [steps]="leakSteps"
+          explanation="The subscription is held by the interval timer, not by your component, so destroying the component does not stop it. It keeps running and keeps the component in memory until someone unsubscribes."
+        />
+      </app-lesson-card>
       </section>
       </ng-template>
 
@@ -300,6 +458,7 @@ ngOnDestroy() &#123;
           skips the search if the value hasn't changed. <code class="text-gold-300">switchMap</code> cancels the previous request the instant a new one comes in (critical so the order never gets mixed up).
         </p>
         <input
+          aria-label="Search for a movie"
           type="text"
           [ngModel]="searchInputValue()"
           (ngModelChange)="onSearchInput($event)"
@@ -327,6 +486,48 @@ ngOnDestroy() &#123;
 })
 export class RxjsComponent implements OnDestroy {
   readonly section = input<string>();
+
+  readonly takeUntilCode = `private readonly destroyRef = inject(DestroyRef);
+
+constructor() {
+  interval(1000)
+    .pipe(takeUntilDestroyed())          // in a constructor, no argument needed
+    .subscribe((n) => this.tick.set(n));
+}
+
+// later, outside the constructor, pass the reference
+someStream$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(...);`;
+
+  readonly leakChallenge: PredictChallenge = {
+    question: 'A component runs interval(1000).subscribe(() => console.log("tick")) and is destroyed after 3 seconds. What happens next?',
+    options: [
+      { id: 'stops', text: 'The ticks stop, because the component is gone' },
+      { id: 'goes', text: 'It keeps logging every second forever' },
+      { id: 'error', text: 'Angular throws an error when it fires' },
+    ],
+    correct: 'goes',
+    explanation: 'The timer lives on its own. Destroying the component does not unsubscribe, so the callback keeps firing and keeps the component alive in memory. A takeUntilDestroyed() at the end of the pipe would stop it.',
+  };
+
+  readonly leakSteps = [
+    'The component is created and calls subscribe() on interval(1000)',
+    'The interval starts ticking and calling the callback',
+    'The user navigates away and the component is destroyed',
+    'The interval keeps ticking, holding the component in memory',
+  ];
+
+  readonly behaviorChallenge: PredictChallenge = {
+    question: 'What does this log?',
+    code: 'const s = new BehaviorSubject(0);\ns.next(1);\ns.subscribe(v => console.log(v));\ns.next(2);',
+    options: [
+      { id: 'b', text: '0, 1, 2' },
+      { id: 'c', text: '2' },
+      { id: 'a', text: '1, 2' },
+      { id: 'd', text: '0, 2' },
+    ],
+    correct: 'a',
+    explanation: 'A BehaviorSubject keeps only its latest value. next(1) replaced the 0 before anyone subscribed, so the subscriber gets 1 straight away and then 2.',
+  };
 
   // ── 2 · Observable ticker demo ──────────────────────────────
   readonly tickerRunning = signal(false);

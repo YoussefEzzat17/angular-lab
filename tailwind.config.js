@@ -19,7 +19,8 @@ module.exports = {
         // no component needs a dark:/light: variant.
         stone: themeVarScale('stone'),
         // Runaq-inspired warm gold accent, replacing the old violet brand color.
-        gold: themeVarScale('gold'),
+        // gold-solid is for buttons with white text: dark enough for 4.5:1, and the hover goes darker, not lighter.
+        gold: { ...themeVarScale('gold'), solid: themeVar('--gold-solid'), 'solid-hover': themeVar('--gold-solid-hover') },
       },
     },
   },

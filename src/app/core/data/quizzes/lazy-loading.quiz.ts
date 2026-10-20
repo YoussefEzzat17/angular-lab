@@ -2,7 +2,7 @@ import type { QuizBank } from '../../../core/models/learning.models';
 
 export const LAZY_LOADING_QUIZ: QuizBank = {
   topicId: 'lazy-loading',
-  version: 1,
+  version: 2,
   questions: [
     {
       id: 'lazy-loading-01',
@@ -108,6 +108,48 @@ export const LAZY_LOADING_QUIZ: QuizBank = {
       correct: ['a', 'b', 'd'],
       explanation: 'Network timing, the build output and the initial transfer size all show lazy chunks. index.html only loads the entry script, so it does not contain route code.',
       sectionId: 'devtools',
+    },
+    {
+      id: 'lazy-loading-11',
+      type: 'single',
+      prompt: 'What is the main cost of PreloadAllModules?',
+      choices: [
+        { id: 'a', text: 'Pages open more slowly' },
+        { id: 'b', text: 'It downloads chunks in the background that the user may never visit' },
+        { id: 'c', text: 'It turns lazy routes back into eager ones' },
+        { id: 'd', text: 'It breaks route guards' },
+      ],
+      correct: ['b'],
+      explanation: 'Preloading trades bandwidth for speed. Every lazy chunk is fetched in the background, which helps clicks feel instant but spends data on pages that may never be opened.',
+      sectionId: 'preloading',
+    },
+    {
+      id: 'lazy-loading-12',
+      type: 'single',
+      prompt: 'You want only the pages most users open next to be preloaded. What do you use?',
+      choices: [
+        { id: 'a', text: 'A custom PreloadingStrategy that reads a flag on the route data' },
+        { id: 'b', text: 'Make those routes eager' },
+        { id: 'c', text: 'Remove loadComponent from them' },
+        { id: 'd', text: 'Nothing, Angular decides by itself' },
+      ],
+      correct: ['a'],
+      explanation: 'withPreloading accepts your own strategy. It can look at route.data and preload only the routes marked for it, keeping the rest purely on demand.',
+      sectionId: 'preloading',
+    },
+    {
+      id: 'lazy-loading-13',
+      type: 'single',
+      prompt: 'With no preloading, a visitor opens a lazy route for the second time in the same session. What happens?',
+      choices: [
+        { id: 'a', text: 'The chunk downloads again every time' },
+        { id: 'b', text: 'The chunk is already loaded, so the route opens without another download' },
+        { id: 'c', text: 'The route becomes eager for everyone' },
+        { id: 'd', text: 'Angular throws an error' },
+      ],
+      correct: ['b'],
+      explanation: 'A lazy chunk is fetched once and kept by the browser module cache, so only the first visit pays the download.',
+      sectionId: 'basics',
     },
   ],
 };

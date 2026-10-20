@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 export type IconName = 'download' | 'search' | 'sun' | 'moon' | 'chevron-down' | 'menu' | 'close' | 'check' | 'alert' | 'info';
 
@@ -7,6 +7,7 @@ export type IconName = 'download' | 'search' | 'sun' | 'moon' | 'chevron-down' |
  * text color class — the svg fills the host and paints with `currentColor`.
  */
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-icon',
   standalone: true,
   host: { class: 'block', 'aria-hidden': 'true' },

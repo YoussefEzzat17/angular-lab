@@ -2,7 +2,7 @@ import type { QuizBank } from '../../../core/models/learning.models';
 
 export const RXJS_QUIZ: QuizBank = {
   topicId: 'rxjs',
-  version: 1,
+  version: 4,
   questions: [
     {
       id: 'rxjs-01',
@@ -108,6 +108,77 @@ export const RXJS_QUIZ: QuizBank = {
       correct: ['a'],
       explanation: 'Debouncing limits the number of requests, distinctUntilChanged skips repeats, and switchMap cancels outdated requests. The other pipelines miss at least one of these.',
       sectionId: 'try-it',
+    },
+    {
+      id: 'rxjs-11',
+      type: 'single',
+      prompt: 'A service keeps its state in a BehaviorSubject. How should it share that state with components?',
+      choices: [
+        { id: 'a', text: 'Expose count$ = this.count.asObservable() and keep the Subject private' },
+        { id: 'b', text: 'Make the BehaviorSubject public so components can call next() themselves' },
+        { id: 'c', text: 'Create a new BehaviorSubject inside every component' },
+        { id: 'd', text: 'Return a plain Subject so late components start empty' },
+      ],
+      correct: ['a'],
+      explanation: 'asObservable() gives components a read-only view, so only the service can change the shared value. A public Subject lets any component overwrite it.',
+      sectionId: 'subjects',
+    },
+    {
+      id: 'rxjs-12',
+      type: 'single',
+      code: "const s = new Subject<number>();\ns.next(1);\ns.next(2);\ns.subscribe(v => console.log(v));\ns.next(3);",
+      prompt: 'What does this code log?',
+      choices: [
+        { id: 'a', text: '3' },
+        { id: 'b', text: '1, 2, 3' },
+        { id: 'c', text: '2, 3' },
+        { id: 'd', text: 'Nothing — a Subject never emits' },
+      ],
+      correct: ['a'],
+      explanation: 'A plain Subject does not remember anything. The subscriber joined after next(1) and next(2) had already happened, so it only receives 3.',
+      sectionId: 'subjects',
+    },
+    {
+      id: 'rxjs-13',
+      type: 'single',
+      prompt: 'Which operator should you use so that saved edits are sent to the server one at a time, in the order the user made them?',
+      choices: [
+        { id: 'a', text: 'concatMap' },
+        { id: 'b', text: 'switchMap' },
+        { id: 'c', text: 'mergeMap' },
+        { id: 'd', text: 'filter' },
+      ],
+      correct: ['a'],
+      explanation: 'concatMap queues the inner requests and runs them one after another. switchMap would cancel earlier saves, and mergeMap would run them all at once with no guaranteed order.',
+      sectionId: 'operators',
+    },
+    {
+      id: 'rxjs-14',
+      type: 'single',
+      prompt: 'On a marble diagram, source is a-b-c----d-e and the pipe is debounceTime(3). Which values come out?',
+      choices: [
+        { id: 'a', text: 'a, b, c, d, e' },
+        { id: 'b', text: 'c and e, the last value before each pause' },
+        { id: 'c', text: 'a and d, the first value of each burst' },
+        { id: 'd', text: 'Nothing, debounceTime only delays' },
+      ],
+      correct: ['b'],
+      explanation: 'debounceTime waits until the stream is quiet for the given time and then emits only the latest value. The burst a, b, c ends with c, and the burst d, e ends with e.',
+      sectionId: 'operators',
+    },
+    {
+      id: 'rxjs-15',
+      type: 'single',
+      prompt: 'Which line stops an interval subscription when the component is destroyed?',
+      choices: [
+        { id: 'a', text: 'interval(1000).pipe(takeUntilDestroyed()).subscribe(...)' },
+        { id: 'b', text: 'interval(1000).subscribe(...) and nothing else, Angular cleans it up' },
+        { id: 'c', text: 'interval(1000).pipe(take(0)).subscribe(...)' },
+        { id: 'd', text: 'interval(1000).pipe(delay(0)).subscribe(...)' },
+      ],
+      correct: ['a'],
+      explanation: 'A live source like interval keeps running unless something ends it. takeUntilDestroyed completes the stream when the owning component is destroyed.',
+      sectionId: 'memory-leaks',
     },
   ],
 };

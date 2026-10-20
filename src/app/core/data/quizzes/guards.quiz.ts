@@ -2,7 +2,7 @@ import type { QuizBank } from '../../../core/models/learning.models';
 
 export const GUARDS_QUIZ: QuizBank = {
   topicId: 'guards',
-  version: 1,
+  version: 2,
   questions: [
     {
       id: 'guards-01',
@@ -113,6 +113,43 @@ export const GUARDS_QUIZ: QuizBank = {
       correct: ['a'],
       explanation: 'Guards are declared in the route config. Hiding a link alone does not stop a visitor from typing the URL.',
       sectionId: 'try-it',
+    },
+    {
+      id: 'guards-11',
+      type: 'single',
+      prompt: 'A functional guard needs the router and the auth service. How does it get them?',
+      choices: [
+        { id: 'a', text: 'It calls inject() inside the guard function' },
+        { id: 'b', text: 'Through constructor parameters, like a class' },
+        { id: 'c', text: 'Through an @Input on the route' },
+        { id: 'd', text: 'From a global variable' },
+      ],
+      correct: ['a'],
+      explanation: 'A guard function runs in an injection context, so inject() works inside it. That is why guards no longer need to be classes.',
+      sectionId: 'can-activate',
+    },
+    {
+      id: 'guards-12',
+      type: 'single',
+      prompt: 'A logged-in member opens a page whose guard returns false for everyone who is not an admin. What happens?',
+      choices: [
+        { id: 'a', text: 'They are sent to the login page' },
+        { id: 'b', text: 'The navigation is cancelled and they stay where they were' },
+        { id: 'c', text: 'The page opens, but without its data' },
+        { id: 'd', text: 'Angular throws an error' },
+      ],
+      correct: ['b'],
+      explanation: 'false only cancels the navigation. To send the member somewhere useful, the guard has to return a UrlTree instead.',
+      sectionId: 'simulator',
+    },
+    {
+      id: 'guards-13',
+      type: 'true-false',
+      prompt: 'Because a guard runs in the browser, it is enough on its own to protect private data.',
+      choices: [{ id: 'true', text: 'True' }, { id: 'false', text: 'False' }],
+      correct: ['false'],
+      explanation: 'Anyone can change the code that runs in their own browser or call your API directly. A guard improves the experience; the server must still check permissions.',
+      sectionId: 'why',
     },
   ],
 };

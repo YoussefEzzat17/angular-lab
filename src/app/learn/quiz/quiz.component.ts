@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TOPICS } from '../../core/data/topics';
 import { QuizService } from '../../core/services/quiz.service';
@@ -10,6 +10,7 @@ import type { TopicId, QuizQuestion, QuizAttempt } from '../../core/models/learn
 type QuizPhase = 'loading' | 'answering' | 'result';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [QuizQuestionComponent, QuizResultComponent, RouterLink],
   template: `
@@ -52,14 +53,14 @@ type QuizPhase = 'loading' | 'answering' | 'result';
                 <button
                   type="button"
                   (click)="next()"
-                  class="rounded-xl bg-gold-500 px-5 py-2 text-sm font-semibold text-white transition hover:bg-gold-400"
+                  class="rounded-xl bg-gold-solid px-5 py-2 text-sm font-semibold text-white transition hover:bg-gold-solid-hover"
                 >Next →</button>
               } @else {
                 <button
                   type="button"
                   [disabled]="!canSubmit()"
                   (click)="submit()"
-                  class="rounded-xl bg-gold-500 px-5 py-2 text-sm font-semibold text-white transition hover:bg-gold-400 disabled:opacity-50"
+                  class="rounded-xl bg-gold-solid px-5 py-2 text-sm font-semibold text-white transition hover:bg-gold-solid-hover disabled:opacity-50"
                 >Submit Quiz</button>
               }
             </div>

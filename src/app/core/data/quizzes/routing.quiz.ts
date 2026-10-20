@@ -2,7 +2,7 @@ import type { QuizBank } from '../../../core/models/learning.models';
 
 export const ROUTING_QUIZ: QuizBank = {
   topicId: 'routing',
-  version: 1,
+  version: 2,
   questions: [
     {
       id: 'routing-01',
@@ -113,6 +113,48 @@ export const ROUTING_QUIZ: QuizBank = {
       correct: ['a'],
       explanation: 'A guard can return true, false, or a UrlTree. Returning a UrlTree tells the router where to navigate instead.',
       sectionId: 'guards-preview',
+    },
+    {
+      id: 'routing-11',
+      type: 'single',
+      prompt: "The routes are [{ path: 'products' }, { path: 'products/:id' }]. Which one matches /products/42?",
+      choices: [
+        { id: 'a', text: "'products', because it comes first" },
+        { id: 'b', text: "'products/:id'" },
+        { id: 'c', text: 'Both, and the router shows two pages' },
+        { id: 'd', text: 'Neither: a number cannot be a path segment' },
+      ],
+      correct: ['b'],
+      explanation: "A route without children must use up the whole URL. 'products' leaves '42' over, so the router moves on to 'products/:id', which captures id = '42'.",
+      sectionId: 'matching',
+    },
+    {
+      id: 'routing-12',
+      type: 'single',
+      prompt: 'Where should the ** wildcard route go in the list?',
+      choices: [
+        { id: 'a', text: 'First, so it always runs' },
+        { id: 'b', text: 'Last, as the catch-all' },
+        { id: 'c', text: 'It does not matter' },
+        { id: 'd', text: 'Right after the home route' },
+      ],
+      correct: ['b'],
+      explanation: 'The router stops at the first match and ** matches everything. Put it first and no other route is ever reached; put it last and it only catches what nothing else did.',
+      sectionId: 'matching',
+    },
+    {
+      id: 'routing-13',
+      type: 'single',
+      prompt: 'With withComponentInputBinding() enabled, how does a component read the :id route parameter most simply?',
+      choices: [
+        { id: 'a', text: 'id = input.required<string>()' },
+        { id: 'b', text: 'window.location.pathname.split("/")[2]' },
+        { id: 'c', text: 'new ActivatedRoute().id' },
+        { id: 'd', text: 'It cannot: parameters only exist in the snapshot' },
+      ],
+      correct: ['a'],
+      explanation: 'Router inputs bind route and query params to input() properties by name, and they update when the parameter changes. A snapshot, by contrast, is read once.',
+      sectionId: 'params',
     },
   ],
 };

@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 import { IllustrationName, TopicIllustrationComponent } from './topic-illustration.component';
 
@@ -7,6 +7,7 @@ import { IllustrationName, TopicIllustrationComponent } from './topic-illustrati
  * paragraph (projected, so it can contain <strong>/<code> markup).
  */
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-page-header',
   standalone: true,
   imports: [TopicIllustrationComponent],

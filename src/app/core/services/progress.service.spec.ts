@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { TOPICS } from '../data/topics';
 import type { QuizAttempt, TopicId } from '../models/learning.models';
+import { ACTIVITY_LIMIT, PREVIEW_SIZE } from './activity-history';
 import { ProgressService } from './progress.service';
 
 function attempt(topicId: TopicId, passed: boolean, score = passed ? 5 : 4): QuizAttempt {
@@ -115,5 +116,28 @@ describe('ProgressService (v2)', () => {
     expect(service.status('binding')).toBe('not-started');
     expect(service.isVisited('/binding')).toBeFalse();
     expect(service.recentActivity().length).toBe(0);
+  });
+
+  it('keeps up to ACTIVITY_LIMIT entries and drops the oldest beyond that', () => {
+    for (let i = 0; i < ACTIVITY_LIMIT + 5; i++) {
+      service.completeSection('binding', `section-${i}`);
+    }
+
+    const all = service.allActivity();
+
+    expect(all.length).toBe(ACTIVITY_LIMIT);
+    expect(all[0].sectionId).toBe(`section-${ACTIVITY_LIMIT + 4}`);
+    expect(all.at(-1)?.sectionId).toBe('section-5');
+  });
+
+  it('shows only the newest few entries, newest first, in recentActivity()', () => {
+    for (let i = 0; i < PREVIEW_SIZE + 3; i++) {
+      service.completeSection('binding', `section-${i}`);
+    }
+
+    const recent = service.recentActivity();
+
+    expect(recent.length).toBe(PREVIEW_SIZE);
+    expect(recent[0].sectionId).toBe(`section-${PREVIEW_SIZE + 2}`);
   });
 });
