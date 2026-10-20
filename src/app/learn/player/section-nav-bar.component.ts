@@ -28,12 +28,11 @@ export interface SectionNavItem {
         }
 
         <!-- Dots -->
-        <div class="flex items-center gap-2" role="list"
+        <div class="flex items-center gap-2" role="group"
              [attr.aria-label]="'Section ' + (currentIndex() + 1) + ' of ' + sections().length">
           @for (s of sections(); track s.id; let i = $index) {
             <button
               type="button"
-              role="listitem"
               (click)="go.emit(s.id)"
               [attr.aria-label]="'Section ' + (i + 1) + ': ' + s.title"
               [attr.aria-current]="s.id === currentSectionId() ? 'step' : null"

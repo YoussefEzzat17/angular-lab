@@ -82,7 +82,7 @@ onAdd() &#123; this.addToWatchlist.emit(this.title); &#125;</pre>
       <div class="mt-6 grid gap-3 md:grid-cols-[1fr_auto_1fr] md:gap-x-5">
         <app-lesson-card label="PARENT COMPONENT" tone="emerald">
           <label class="mt-4 block text-sm font-medium">Movie or series title</label>
-          <input [(value)]="selectedTitle" (input)="onTitleInput($any($event.target).value)" class="mt-2 w-full rounded-xl border border-stone-600 bg-stone-800 px-3 py-2.5 focus:border-gold-400 focus:outline-none" />
+          <input aria-label="Movie or series title" [(value)]="selectedTitle" (input)="onTitleInput($any($event.target).value)" class="mt-2 w-full rounded-xl border border-stone-600 bg-stone-800 px-3 py-2.5 focus:border-gold-400 focus:outline-none" />
           <p class="mt-5 text-sm text-stone-400">The parent sends this value with:</p>
           <code class="mt-2 block rounded-lg bg-stone-950 p-3 text-sm text-gold-300">[title]="selectedTitle"</code>
         </app-lesson-card>

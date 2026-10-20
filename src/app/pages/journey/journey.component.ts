@@ -69,7 +69,7 @@ import type { TopicStatus } from '../../core/models/learning.models';
                     <span class="block truncate text-xs text-stone-500">{{ levelLabel[topic.level] }} · {{ statusText(topic.status) }}</span>
                   </span>
                   @if (topic.id === nextTopicId()) {
-                    <span class="shrink-0 rounded-full bg-gold-500/20 px-2.5 py-1 text-xs font-bold text-gold-300">You are here</span>
+                    <span class="shrink-0 rounded-full bg-gold-500/15 px-2.5 py-1 text-xs font-bold text-gold-300">You are here</span>
                   } @else if (game.xpForTopic(topic.id) > 0) {
                     <span class="shrink-0 text-xs font-bold text-emerald-300">+{{ game.xpForTopic(topic.id) }} XP</span>
                   }
@@ -92,13 +92,13 @@ import type { TopicStatus } from '../../core/models/learning.models';
               class="flex items-center gap-3 rounded-2xl border p-4"
               [attr.data-testid]="'badge-' + badge.id"
               [attr.data-earned]="badge.isEarned"
-              [class]="badge.isEarned ? 'border-gold-500/40 bg-gold-950/20' : 'border-stone-800 bg-stone-900 opacity-60'"
+              [class]="badge.isEarned ? 'border-gold-500/40 bg-gold-950/20' : 'border-stone-800 bg-stone-900'"
             >
-              <span class="text-3xl" [class.grayscale]="!badge.isEarned" aria-hidden="true">{{ badge.icon }}</span>
+              <span class="text-3xl" [class]="badge.isEarned ? '' : 'opacity-50 grayscale'" aria-hidden="true">{{ badge.icon }}</span>
               <span class="min-w-0">
                 <span class="block font-semibold text-stone-100">{{ badge.title }}</span>
                 <span class="block text-xs text-stone-400">{{ badge.description }}</span>
-                <span class="mt-1 block text-xs font-bold" [class]="badge.isEarned ? 'text-emerald-300' : 'text-stone-500'">
+                <span class="mt-1 block text-xs font-bold" [class]="badge.isEarned ? 'text-emerald-300' : 'text-stone-400'">
                   {{ badge.isEarned ? '✓ Earned' : '🔒 Locked' }}
                 </span>
               </span>

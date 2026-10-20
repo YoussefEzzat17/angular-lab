@@ -7,7 +7,6 @@ import { LessonCardComponent } from '../../shared/lesson-card.component';
 import type { PredictChallenge } from '../../shared/predict-output.component';
 import { PredictOutputComponent } from '../../shared/predict-output.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
-import { TopicNavComponent } from '../../shared/topic-nav.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
 import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
 
@@ -17,7 +16,6 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
   imports: [PredictOutputComponent, 
     FormsModule,
     FlowDiagramComponent,
-    TopicNavComponent,
     PageHeaderComponent,
     LessonCardComponent,
     LessonPlayerComponent,
@@ -138,6 +136,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
               <app-flow-diagram class="mt-4 block" from="[(ngModel)]" to="review" direction="both" />
               <p class="mt-2 text-xs text-stone-400">Type a review and see it update without pressing a button.</p>
               <input
+                aria-label="Your review"
                 [(ngModel)]="review"
                 class="mt-5 w-full rounded-xl border border-stone-600 bg-stone-800 px-3 py-2.5 text-stone-100 focus:border-gold-400 focus:outline-none"
                 placeholder="This title is..."
@@ -159,8 +158,6 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
             </p>
           </div>
 
-          <app-knowledge-check [items]="recapItems" />
-          <app-topic-nav />
 
       <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Four things that trip up every beginner">
         <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
@@ -170,7 +167,9 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
           <li><strong class="text-stone-100">Calling a heavy method inside interpolation.</strong> It runs on every change-detection pass. Compute it once with <code class="text-gold-300">computed()</code> or a pipe.</li>
         </ul>
       </app-lesson-card>
-        </section>
+
+          <app-knowledge-check [items]="recapItems" />
+</section>
       </ng-template>
 
     </app-lesson-player>

@@ -156,6 +156,7 @@ export class TruncatePipe implements PipeTransform &#123;
 
             @if (mode() === 'currency' || mode() === 'percent') {
               <input
+                aria-label="Raw number"
                 type="number"
                 step="0.01"
                 [ngModel]="numberValue()"
@@ -164,6 +165,7 @@ export class TruncatePipe implements PipeTransform &#123;
               />
             } @else if (mode() === 'date') {
               <input
+                aria-label="Raw date"
                 type="date"
                 [ngModel]="dateInputValue()"
                 (ngModelChange)="onDateChange($event)"
@@ -171,6 +173,7 @@ export class TruncatePipe implements PipeTransform &#123;
               />
             } @else {
               <input
+                aria-label="Raw text"
                 type="text"
                 [ngModel]="textValue()"
                 (ngModelChange)="textValue.set($event)"

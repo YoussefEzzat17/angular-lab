@@ -192,7 +192,6 @@ provideRouter(routes, withPreloading(PreloadAllModules));</pre>
           </ul>
         </app-lesson-card>
 
-      <app-knowledge-check [items]="checkItems" />
 
       <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Lazy loading mistakes to avoid">
         <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
@@ -201,7 +200,9 @@ provideRouter(routes, withPreloading(PreloadAllModules));</pre>
           <li><strong class="text-stone-100">Not checking the build output.</strong> Run <code class="text-gold-300">ng build</code> and read the chunk sizes — that is the only way to know it worked.</li>
         </ul>
       </app-lesson-card>
-      </section>
+
+      <app-knowledge-check [items]="checkItems" />
+</section>
       </ng-template>
     </app-lesson-player>
   `,

@@ -136,6 +136,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
             <div>
               <label class="text-xs text-stone-400">Try typing letters or symbols, or paste "abc123" — only digits get through</label>
               <input
+                aria-label="Phone number"
                 type="text"
                 inputmode="numeric"
                 appNumbersOnly

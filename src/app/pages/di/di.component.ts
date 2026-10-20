@@ -150,7 +150,6 @@ export class DiPrivateCounterComponent {
         </app-lesson-card>
       </div>
 
-      <app-knowledge-check [items]="checkItems" />
 
       <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Dependency injection mistakes to avoid">
         <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
@@ -159,7 +158,9 @@ export class DiPrivateCounterComponent {
           <li><strong class="text-stone-100">Two services that need each other.</strong> A circular dependency is a design smell. Move the shared part into a third service.</li>
         </ul>
       </app-lesson-card>
-      </section>
+
+      <app-knowledge-check [items]="checkItems" />
+</section>
       </ng-template>
     </app-lesson-player>
   `,

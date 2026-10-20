@@ -50,24 +50,26 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
       />
 
       <!-- traveling data values -->
-      <circle r="5" fill="#e8d3a6">
-        <animateMotion dur="4s" repeatCount="indefinite" rotate="auto">
-          <mpath href="#stream-path" />
-        </animateMotion>
-        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.9;1" dur="4s" repeatCount="indefinite" />
-      </circle>
-      <circle r="4" fill="#c9a263">
-        <animateMotion dur="4s" begin="1.3s" repeatCount="indefinite" rotate="auto">
-          <mpath href="#stream-path" />
-        </animateMotion>
-        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.9;1" dur="4s" begin="1.3s" repeatCount="indefinite" />
-      </circle>
-      <circle r="4" fill="#dbb877">
-        <animateMotion dur="4s" begin="2.6s" repeatCount="indefinite" rotate="auto">
-          <mpath href="#stream-path" />
-        </animateMotion>
-        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.9;1" dur="4s" begin="2.6s" repeatCount="indefinite" />
-      </circle>
+      @if (animate) {
+        <circle r="5" fill="#e8d3a6">
+          <animateMotion dur="4s" repeatCount="indefinite" rotate="auto">
+            <mpath href="#stream-path" />
+          </animateMotion>
+          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.9;1" dur="4s" repeatCount="indefinite" />
+        </circle>
+        <circle r="4" fill="#c9a263">
+          <animateMotion dur="4s" begin="1.3s" repeatCount="indefinite" rotate="auto">
+            <mpath href="#stream-path" />
+          </animateMotion>
+          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.9;1" dur="4s" begin="1.3s" repeatCount="indefinite" />
+        </circle>
+        <circle r="4" fill="#dbb877">
+          <animateMotion dur="4s" begin="2.6s" repeatCount="indefinite" rotate="auto">
+            <mpath href="#stream-path" />
+          </animateMotion>
+          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.9;1" dur="4s" begin="2.6s" repeatCount="indefinite" />
+        </circle>
+      }
 
       <!-- pipeline nodes -->
       @for (node of nodes; track node.label) {
@@ -90,6 +92,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   `,
 })
 export class SignalNetworkComponent {
+  /** SVG animations ignore the CSS media query, so the moving dots are left out for people who asked for less motion. */
+  protected readonly animate = !(typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches);
+
   readonly nodes = [
     { x: 40, y: 210, r: 12, label: 'source$' },
     { x: 170, y: 150, r: 10, label: 'map()' },

@@ -6,7 +6,7 @@ import { quizUnlockedGuard } from './learn.guards';
 // Map of topicId → lazy component loader.
 // Pilot topics (binding, guards) are multi-section LessonPlayers. The other topics render their existing page
 // under /learn/:topic/:section until Phase 3 splits them into sections.
-const TOPIC_LOADERS: Record<TopicId, () => Promise<unknown>> = {
+export const TOPIC_LOADERS: Record<TopicId, () => Promise<unknown>> = {
   'binding':          () => import('../pages/binding/binding.component').then((m) => m.BindingComponent),
   'pipes':            () => import('../pages/pipes/pipes.component').then((m) => m.PipesComponent),
   'directives':       () => import('../pages/directives/directives.component').then((m) => m.DirectivesComponent),

@@ -35,7 +35,7 @@ It is built with modern Angular only: standalone components, signals, the `@if` 
     </td>
     <td width="33%" valign="top">
       <b>✅ Final quiz per topic</b><br>
-      6 random questions, shuffled choices, 75% to pass, best score kept. Unlocks when every section is done.
+      6 random questions drawn from a bank of 10–15, shuffled choices, 75% to pass, best score kept. Unlocks when every section is done.
     </td>
     <td width="33%" valign="top">
       <b>📈 Progress tracking</b><br>
@@ -45,7 +45,7 @@ It is built with modern Angular only: standalone components, signals, the `@if` 
   <tr>
     <td width="33%" valign="top">
       <b>🔥 Dashboard</b><br>
-      Welcome by name, day streak, overall progress ring and a per-topic progress map.
+      Welcome by name, day streak, level and XP, overall progress ring, a per-topic progress map and your latest activity.
     </td>
     <td width="33%" valign="top">
       <b>🔖 Save for later</b><br>
@@ -53,13 +53,13 @@ It is built with modern Angular only: standalone components, signals, the `@if` 
     </td>
     <td width="33%" valign="top">
       <b>👋 Onboarding</b><br>
-      A first-visit dialog asks for an optional name, shown as initials in the navbar avatar.
+      A first-visit dialog asks for an optional name, then a short skippable 5-step tour shows how the app works.
     </td>
   </tr>
   <tr>
     <td width="33%" valign="top">
       <b>🧭 Sidebar &amp; mobile nav</b><br>
-      Curriculum in five groups, in a collapsible sidebar (icon rail when collapsed). On phones, a bottom bar with Topics as a bottom sheet.
+      Curriculum in five groups, in a collapsible sidebar (icon rail when collapsed). On phones, a bottom bar: Home, Topics (a bottom sheet), Journey, Dashboard and Saved.
     </td>
     <td width="33%" valign="top">
       <b>🌗 Light &amp; dark themes</b><br>
@@ -67,7 +67,7 @@ It is built with modern Angular only: standalone components, signals, the `@if` 
     </td>
     <td width="33%" valign="top">
       <b>⌘ Command palette</b><br>
-      <kbd>⌘</kbd>/<kbd>Ctrl</kbd> + <kbd>K</kbd> jumps to any topic or demo page.
+      <kbd>⌘</kbd>/<kbd>Ctrl</kbd> + <kbd>K</kbd> finds any topic, any section of a lesson, or a demo page, best match first.
     </td>
   </tr>
   <tr>
@@ -81,7 +81,35 @@ It is built with modern Angular only: standalone components, signals, the `@if` 
     </td>
     <td width="33%" valign="top">
       <b>♿ Accessible &amp; responsive</b><br>
-      Keyboard navigable, respects <code>prefers-reduced-motion</code>, works down to phone width.
+      Keyboard navigable, every control has an accessible name (checked by tests on every page), respects <code>prefers-reduced-motion</code>, works down to phone width.
+    </td>
+  </tr>
+  <tr>
+    <td width="33%" valign="top">
+      <b>🏆 XP, levels &amp; badges</b><br>
+      10 XP per section, 50 for passing a quiz, 25 more for full marks. 7 levels and 8 badges, celebrated with a toast and a little confetti (loaded only when needed).
+    </td>
+    <td width="33%" valign="top">
+      <b>🗺️ Journey map</b><br>
+      Every topic as a stop on a path through five worlds, with "You are here", the XP earned in each topic and the badge wall.
+    </td>
+    <td width="33%" valign="top">
+      <b>🕑 History</b><br>
+      The last 200 things you did, grouped by day (Today, Yesterday, full dates), filtered by type or topic, shown 20 at a time.
+    </td>
+  </tr>
+  <tr>
+    <td width="33%" valign="top">
+      <b>🧪 Practice widgets</b><br>
+      Predict the output, put the steps in order, and live visualisers: change detection tree, DI tree, Subject radio station, switchMap vs. mergeMap vs. concatMap lanes, a real <code>resource()</code>.
+    </td>
+    <td width="33%" valign="top">
+      <b>📖 Glossary</b><br>
+      Tap or hover a hard word (injector, stream, OnPush…) for a plain-language explanation.
+    </td>
+    <td width="33%" valign="top">
+      <b>🎚️ Levels &amp; prerequisites</b><br>
+      Every topic shows Beginner / Intermediate / Advanced, its time, and which topics it builds on.
     </td>
   </tr>
 </table>
@@ -145,6 +173,7 @@ Each lesson has its own overview at `/learn/<id>`, and its sections at `/learn/<
 | Styling | Tailwind CSS 3 with CSS-variable design tokens (light / dark) |
 | Reactive | RxJS 7.8 and Angular Signals |
 | Email | `@emailjs/browser` |
+| Celebrations | `canvas-confetti`, loaded on demand |
 | Testing | Jasmine + Karma |
 | Hosting | GitHub Pages, deployed by GitHub Actions |
 
@@ -165,7 +194,7 @@ The app reloads on every save — change a component and watch the concept it te
 | --- | --- |
 | `npm start` | Dev server on `http://localhost:4200` |
 | `npm run build` | Production build into `dist/angular-lab/` |
-| `npm test` | Unit tests (Karma + Jasmine) |
+| `npm test` | Unit tests (Karma + Jasmine). Besides unit tests it renders every lesson section and every page and audits them for accessibility |
 | `npm run build:gh-pages` | Production build plus the `404.html` / `.nojekyll` files GitHub Pages needs |
 
 ### Feedback form (optional)
@@ -177,15 +206,17 @@ The feedback page sends mail through EmailJS. Its service ID, template ID and **
 ```text
 src/app/
 ├── core/
-│   ├── data/          topics.ts — single source of truth for every lesson (sections, objectives, group)
-│   │   └── quizzes/   one question bank per lesson
+│   ├── data/          topics.ts — single source of truth for every lesson (sections, objectives, level,
+│   │   │              prerequisites, group) and glossary.ts — plain-language word meanings
+│   │   └── quizzes/   one question bank per lesson (checked by quiz-banks.spec.ts)
 │   ├── guards/        members.guard.ts — the guard used by the Route Guards lesson
 │   ├── layout/        site layout for the home and 404 pages (navbar, footer), toast, command palette
 │   ├── models/        learning.models.ts (topics, sections, quizzes, progress), Movie, Product, User
-│   ├── onboarding/    first-visit dialog that asks for an optional name
+│   ├── onboarding/    first-visit dialog that asks for an optional name, and the welcome tour
 │   └── services/      progress, quiz, learning.facade, profile, bookmark, sidebar-state,
 │                      progress-migration, theme, toast, watchlist (cart), favorites,
-│                      feedback, movie, product, search palette, safe-storage
+│                      feedback, movie, product, search palette, search-index, safe-storage,
+│                      gamification (+ gamification-rules: XP, levels, badges), activity-history
 ├── learn/             the lesson system
 │   ├── layout/        learn layout with the top navbar and footer
 │   ├── sidebar/       curriculum tree and sidebar parts
@@ -193,12 +224,13 @@ src/app/
 │   ├── quiz/          final quiz, quiz result and topic-complete pages
 │   ├── learn.routes.ts   /learn/:topic routes and the lesson page loaders
 │   └── learn.guards.ts   quizUnlockedGuard, which locks the quiz until all sections are done
-├── pages/             one folder per lesson, plus the home, dashboard, bookmarks,
+├── pages/             one folder per lesson, plus the home, dashboard, journey, history, bookmarks,
 │                      demo (products, product-details, watchlist, favorites, movies, feedback),
 │                      guards/members and not-found pages
-├── shared/            reusable UI: page-header, lesson-card, empty-state, knowledge-check, topic-nav,
-│                      topic-illustration, progress-ring, flow-arrow, flow-diagram, icon,
-│                      code-block directive
+├── shared/            reusable UI: page-header, lesson-card, empty-state, knowledge-check, mobile-nav,
+│                      predict-output, order-steps, term (glossary), topic-illustration, progress-ring,
+│                      flow-arrow, flow-diagram, icon, code-block directive
+├── testing/           a11y-audit.ts — the accessibility checks used by the page specs
 ├── directives/        custom attribute directives used in the lessons
 └── pipes/             custom pipes used in the lessons
 docs/                  workshop blueprint and slide deck, README screenshots

@@ -420,6 +420,7 @@ ngOnDestroy() &#123;
           skips the search if the value hasn't changed. <code class="text-gold-300">switchMap</code> cancels the previous request the instant a new one comes in (critical so the order never gets mixed up).
         </p>
         <input
+          aria-label="Search for a movie"
           type="text"
           [ngModel]="searchInputValue()"
           (ngModelChange)="onSearchInput($event)"
