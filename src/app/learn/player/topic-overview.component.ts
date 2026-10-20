@@ -54,7 +54,7 @@ import type { TopicId } from '../../core/models/learning.models';
             <p class="mt-0.5 text-xs text-stone-500">~{{ totalMinutes() }} min · {{ t.sections.length }} sections</p>
           </div>
           <a [routerLink]="startPath()"
-             class="w-full rounded-xl bg-gold-500 px-5 py-2.5 text-center font-semibold text-white transition hover:bg-gold-400 sm:w-auto">
+             class="w-full rounded-xl bg-gold-solid px-5 py-2.5 text-center font-semibold text-white transition hover:bg-gold-solid-hover sm:w-auto">
             {{ doneSections() === 0 ? 'Start →' : 'Continue →' }}
           </a>
         </div>
@@ -109,7 +109,7 @@ import type { TopicId } from '../../core/models/learning.models';
             </div>
             @if (allSectionsDone()) {
               <a [routerLink]="['/learn', t.id, 'quiz']"
-                 class="rounded-xl bg-gold-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-gold-400">
+                 class="rounded-xl bg-gold-solid px-4 py-2 text-sm font-semibold text-white transition hover:bg-gold-solid-hover">
                 {{ isCompleted() ? 'Retake' : 'Take Quiz' }}
               </a>
             } @else {

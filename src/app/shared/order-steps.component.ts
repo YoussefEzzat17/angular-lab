@@ -54,7 +54,7 @@ export function startingOrder(count: number): number[] {
         type="button"
         data-testid="order-check"
         (click)="check()"
-        class="min-h-11 rounded-xl bg-gold-500 px-4 text-sm font-semibold text-white transition hover:bg-gold-400"
+        class="min-h-11 rounded-xl bg-gold-solid px-4 text-sm font-semibold text-white transition hover:bg-gold-solid-hover"
       >
         Check order
       </button>

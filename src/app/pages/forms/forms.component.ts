@@ -351,7 +351,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
             }
 
             <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-              <button type="submit" class="w-full rounded-xl bg-gold-500 px-4 py-3.5 font-semibold text-white hover:bg-gold-400 sm:flex-1">
+              <button type="submit" class="w-full rounded-xl bg-gold-solid px-4 py-3.5 font-semibold text-white hover:bg-gold-solid-hover sm:flex-1">
                 Create profile
               </button>
               <button type="button" (click)="reset()" class="w-full rounded-xl border border-stone-700 px-4 py-3.5 font-semibold text-stone-300 sm:w-auto">

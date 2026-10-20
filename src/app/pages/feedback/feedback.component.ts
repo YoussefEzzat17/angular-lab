@@ -124,7 +124,7 @@ const COOLDOWN_SECONDS = 10;
         <button
           type="submit"
           [disabled]="isSubmitting() || feedbackForm.invalid || isCooldown()"
-          class="mt-8 w-full rounded-xl bg-gold-500 px-4 py-3.5 font-semibold text-white transition hover:bg-gold-400 disabled:cursor-not-allowed disabled:opacity-50"
+          class="mt-8 w-full rounded-xl bg-gold-solid px-4 py-3.5 font-semibold text-white transition hover:bg-gold-solid-hover disabled:cursor-not-allowed disabled:opacity-50"
         >
           @if (isSubmitting()) {
             Sending...

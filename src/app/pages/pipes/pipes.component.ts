@@ -140,7 +140,7 @@ export class TruncatePipe implements PipeTransform &#123;
               type="button"
               (click)="mode.set(option.mode)"
               class="rounded-lg px-3 py-2 text-sm font-semibold transition"
-              [class.bg-gold-500]="mode() === option.mode"
+              [class.bg-gold-solid]="mode() === option.mode"
               [class.text-white]="mode() === option.mode"
               [class.bg-stone-800]="mode() !== option.mode"
               [class.text-stone-300]="mode() !== option.mode"

@@ -141,7 +141,7 @@ const NAMES = ['Ada', 'Grace', 'Linus', 'Margaret', 'Alan'];
           </div>
           <div class="mt-4 flex flex-wrap gap-3">
             <button type="button" (click)="mutate()" class="min-h-11 rounded-xl border border-stone-600 px-4 text-sm font-semibold hover:bg-stone-800">Mutate name</button>
-            <button type="button" (click)="replace()" class="min-h-11 rounded-xl bg-gold-500 px-4 text-sm font-semibold text-white hover:bg-gold-400">Replace user</button>
+            <button type="button" (click)="replace()" class="min-h-11 rounded-xl bg-gold-solid px-4 text-sm font-semibold text-white hover:bg-gold-solid-hover">Replace user</button>
           </div>
           <p class="mt-3 text-xs text-stone-500">
             The parent now holds <strong class="text-stone-300">{{ user.name }}</strong>. If the OnPush card still shows an older name, that is the point.
@@ -170,7 +170,7 @@ const NAMES = ['Ada', 'Grace', 'Linus', 'Margaret', 'Alan'];
           </p>
           <div class="mt-4 grid items-center gap-3 sm:grid-cols-[1fr_auto]">
             <app-cd-signal-reader />
-            <button type="button" (click)="ticks.increment()" class="min-h-11 rounded-xl bg-gold-500 px-4 text-sm font-semibold text-white hover:bg-gold-400">Increment the signal</button>
+            <button type="button" (click)="ticks.increment()" class="min-h-11 rounded-xl bg-gold-solid px-4 text-sm font-semibold text-white hover:bg-gold-solid-hover">Increment the signal</button>
           </div>
         </app-lesson-card>
       </div>

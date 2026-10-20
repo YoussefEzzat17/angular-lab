@@ -32,6 +32,8 @@
   --gold-800: 92 69 38;
   --gold-900: 58 42 28;
   --gold-950: 36 26 18;
+  --gold-solid: 150 108 44;
+  --gold-solid-hover: 128 91 36;
 
   /* Legacy one-off overrides kept for the two demo cards (Favorites, Product Details) that were
      originally authored as light cards on a light page, before the rest of the app went dark. */
@@ -87,6 +89,8 @@
   --gold-800: 232 211 166;
   --gold-900: 243 233 208;
   --gold-950: 250 246 236;
+  --gold-solid: 146 104 42;
+  --gold-solid-hover: 120 84 34;
 
   --card-surface: 255 255 255;
   --card-ring-soft: 231 229 228;
@@ -139,6 +143,8 @@
   --gold-800: 92 69 38;
   --gold-900: 58 42 28;
   --gold-950: 36 26 18;
+  --gold-solid: 150 108 44;
+  --gold-solid-hover: 128 91 36;
   --card-surface: 42 31 22;
   --card-ring-soft: 58 45 34;
   --card-ring-strong: 74 58 44;

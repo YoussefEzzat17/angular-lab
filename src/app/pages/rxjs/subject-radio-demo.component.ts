@@ -72,7 +72,7 @@ const STATIONS: StationOption[] = [
           type="button"
           data-testid="broadcast"
           (click)="broadcast()"
-          class="min-h-11 rounded-xl bg-gold-500 px-4 text-sm font-semibold text-white transition hover:bg-gold-400"
+          class="min-h-11 rounded-xl bg-gold-solid px-4 text-sm font-semibold text-white transition hover:bg-gold-solid-hover"
         >
           next(♪{{ songs() + 1 }}) — broadcast
         </button>

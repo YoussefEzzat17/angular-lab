@@ -74,7 +74,7 @@ import { CounterDemoComponent, FancyCardComponent, SlotCardComponent, TabPanelCo
                     </ul>
                   }
                   @default {
-                    <button type="button" class="min-h-11 rounded-xl bg-gold-500 px-4 text-sm font-semibold text-white">A real button</button>
+                    <button type="button" class="min-h-11 rounded-xl bg-gold-solid px-4 text-sm font-semibold text-white">A real button</button>
                   }
                 }
               </app-fancy-card>
@@ -147,7 +147,7 @@ import { CounterDemoComponent, FancyCardComponent, SlotCardComponent, TabPanelCo
           <app-lesson-card class="mt-5" variant="highlight" label="6 · viewChild" heading="Call a method on a child, and focus an element">
             <app-counter-demo class="mt-3 block" />
             <div class="mt-3 flex flex-wrap items-center gap-3">
-              <button type="button" data-testid="reset-child" (click)="resetCounter()" class="min-h-11 rounded-xl bg-gold-500 px-4 text-sm font-semibold text-white hover:bg-gold-400">Reset the child from the parent</button>
+              <button type="button" data-testid="reset-child" (click)="resetCounter()" class="min-h-11 rounded-xl bg-gold-solid px-4 text-sm font-semibold text-white hover:bg-gold-solid-hover">Reset the child from the parent</button>
             </div>
             <div class="mt-4 flex flex-wrap items-center gap-3">
               <input #nameInput type="text" placeholder="Type here" aria-label="Demo field" class="min-h-11 rounded-xl border border-stone-700 bg-stone-900 px-3 text-sm text-stone-100 focus:border-gold-400 focus:outline-none" />

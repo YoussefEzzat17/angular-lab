@@ -50,7 +50,7 @@ export const TOUR_STEPS: TourStep[] = [
             @if (index() > 0) {
               <button type="button" data-testid="tour-back" (click)="back()" class="min-h-11 rounded-xl border border-stone-700 px-4 text-sm font-semibold text-stone-300 hover:bg-stone-800">Back</button>
             }
-            <button type="button" data-testid="tour-next" (click)="next()" class="min-h-11 rounded-xl bg-gold-500 px-4 text-sm font-semibold text-white hover:bg-gold-400">
+            <button type="button" data-testid="tour-next" (click)="next()" class="min-h-11 rounded-xl bg-gold-solid px-4 text-sm font-semibold text-white hover:bg-gold-solid-hover">
               {{ isLast() ? 'Got it' : 'Next' }}
             </button>
           </div>

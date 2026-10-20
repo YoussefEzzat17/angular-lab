@@ -75,7 +75,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
               <div class="mt-5 flex items-center gap-3">
                 <button
                   [disabled]="isNotAvailable"
-                  class="rounded-xl bg-gold-500 px-4 py-2 font-semibold text-white disabled:cursor-not-allowed disabled:bg-stone-700"
+                  class="rounded-xl bg-gold-solid px-4 py-2 font-semibold text-white disabled:cursor-not-allowed disabled:bg-stone-700"
                 >
                   Play episode
                 </button>
@@ -110,7 +110,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
                 Click the button, then change the points added in <code class="text-gold-300">giveRating()</code>.
               </p>
               <div class="mt-5 flex items-center gap-4">
-                <button (click)="giveRating()" class="rounded-xl bg-gold-500 px-4 py-2 font-semibold text-white">
+                <button (click)="giveRating()" class="rounded-xl bg-gold-solid px-4 py-2 font-semibold text-white">
                   Give a star ★
                 </button>
                 <strong>{{ stars }} stars</strong>

@@ -28,7 +28,7 @@ import { SignalNetworkComponent } from './signal-network.component';
 
             <div class="mt-8 flex flex-wrap gap-3">
               <a [routerLink]="continuePath()"
-                 class="w-full rounded-xl bg-gold-500 px-6 py-3 text-center font-semibold text-white shadow-lg shadow-gold-500/20 transition hover:bg-gold-400 sm:w-auto">
+                 class="w-full rounded-xl bg-gold-solid px-6 py-3 text-center font-semibold text-white shadow-lg shadow-gold-500/20 transition hover:bg-gold-solid-hover sm:w-auto">
                 {{ progress.completedCount() === 0 ? 'Start Learning →' : 'Continue Learning →' }}
               </a>
               <a routerLink="/dashboard"
@@ -133,7 +133,7 @@ import { SignalNetworkComponent } from './signal-network.component';
             <p class="mt-1 text-sm text-stone-400">Browse a movie catalog, add to My List — all powered by the Angular patterns you learn here.</p>
           </div>
           <div class="flex shrink-0 flex-wrap gap-3">
-            <a routerLink="/products" class="rounded-xl bg-gold-500 px-5 py-2.5 font-semibold text-white transition hover:bg-gold-400">Browse titles →</a>
+            <a routerLink="/products" class="rounded-xl bg-gold-solid px-5 py-2.5 font-semibold text-white transition hover:bg-gold-solid-hover">Browse titles →</a>
             <a routerLink="/favorites" class="rounded-xl border border-stone-700 px-5 py-2.5 font-semibold text-stone-200 transition hover:bg-stone-800">My List</a>
           </div>
         </div>

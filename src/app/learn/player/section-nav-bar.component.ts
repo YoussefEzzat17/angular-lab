@@ -49,14 +49,14 @@ export interface SectionNavItem {
         <!-- Next / Quiz -->
         @if (isLastSection()) {
           <button type="button" (click)="goQuiz.emit()"
-            class="flex min-h-[44px] items-center gap-1.5 rounded-xl bg-gold-500 px-3 py-2 text-sm font-semibold text-white transition hover:bg-gold-400 sm:px-4">
+            class="flex min-h-[44px] items-center gap-1.5 rounded-xl bg-gold-solid px-3 py-2 text-sm font-semibold text-white transition hover:bg-gold-solid-hover sm:px-4">
             <span class="hidden sm:inline">Take the Quiz</span>
             <span class="sm:hidden">Quiz</span>
             <span>→</span>
           </button>
         } @else if (nextSection(); as next) {
           <button type="button" (click)="completeAndGo.emit(next.id)"
-            class="flex min-h-[44px] items-center gap-1.5 rounded-xl bg-gold-500 px-3 py-2 text-sm font-semibold text-white transition hover:bg-gold-400 sm:px-4">
+            class="flex min-h-[44px] items-center gap-1.5 rounded-xl bg-gold-solid px-3 py-2 text-sm font-semibold text-white transition hover:bg-gold-solid-hover sm:px-4">
             <span class="hidden sm:inline max-w-[100px] truncate">{{ next.title }}</span>
             <span>→</span>
           </button>

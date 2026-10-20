@@ -59,7 +59,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
             <code class="text-gold-300">set()</code> replaces the current value with a new value.
           </p>
           <app-flow-diagram class="mt-4 block" from="(click)" to="productName.set()" direction="right" />
-          <button (click)="changeProduct()" class="mt-5 rounded-xl bg-gold-500 px-4 py-2.5 font-semibold text-white hover:bg-gold-400">
+          <button (click)="changeProduct()" class="mt-5 rounded-xl bg-gold-solid px-4 py-2.5 font-semibold text-white hover:bg-gold-solid-hover">
             Change Protein to Creatine
           </button>
           <p class="mt-4 rounded-xl bg-stone-800 p-4 text-stone-300">Current product: <strong class="text-stone-100">{{ productName() }}</strong></p>
@@ -70,7 +70,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
             <code class="text-gold-300">update()</code> calculates a new value from the current value. The quantity never goes below 1.
           </p>
           <app-flow-diagram class="mt-4 block" from="(click)" to="quantity.update()" direction="right" />
-          <div class="mt-5 flex items-center gap-4"><button (click)="decreaseQuantity()" class="grid h-10 w-10 place-items-center rounded-xl border border-stone-600 text-xl hover:bg-stone-800">−</button><strong class="text-2xl">{{ quantity() }}</strong><button (click)="increaseQuantity()" class="grid h-10 w-10 place-items-center rounded-xl bg-gold-500 text-xl hover:bg-gold-400">+</button></div>
+          <div class="mt-5 flex items-center gap-4"><button (click)="decreaseQuantity()" class="grid h-10 w-10 place-items-center rounded-xl border border-stone-600 text-xl hover:bg-stone-800">−</button><strong class="text-2xl">{{ quantity() }}</strong><button (click)="increaseQuantity()" class="grid h-10 w-10 place-items-center rounded-xl bg-gold-solid text-xl text-white hover:bg-gold-solid-hover">+</button></div>
           <p class="mt-4 text-xs text-stone-500"><code class="text-gold-300">set(5)</code> chooses a value. <code class="text-gold-300">update(value =&gt; value + 1)</code> uses the old value.</p>
         </app-lesson-card>
       </div>

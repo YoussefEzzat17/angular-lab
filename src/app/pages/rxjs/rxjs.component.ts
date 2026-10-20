@@ -94,7 +94,7 @@ import {
               type="button"
               (click)="startTicker()"
               [disabled]="tickerRunning()"
-              class="rounded-lg bg-gold-500 px-4 py-2 font-semibold text-white hover:bg-gold-400 disabled:cursor-not-allowed disabled:opacity-40"
+              class="rounded-lg bg-gold-solid px-4 py-2 font-semibold text-white hover:bg-gold-solid-hover disabled:cursor-not-allowed disabled:opacity-40"
             >
               ▶ subscribe()
             </button>
@@ -140,7 +140,7 @@ take(3):         20───40───60|  (completes after 3 values)</pre>
           type="button"
           (click)="runOperatorsDemo()"
           [disabled]="operatorsRunning()"
-          class="mt-4 rounded-lg bg-gold-500 px-4 py-2 font-semibold text-white hover:bg-gold-400 disabled:cursor-not-allowed disabled:opacity-40"
+          class="mt-4 rounded-lg bg-gold-solid px-4 py-2 font-semibold text-white hover:bg-gold-solid-hover disabled:cursor-not-allowed disabled:opacity-40"
         >
           Run: source → filter(even) → map(×10) → take(3)
         </button>

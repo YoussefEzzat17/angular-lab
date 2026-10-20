@@ -213,7 +213,7 @@ type Stage = 'idle' | 'built' | 'cloned' | 'sent' | 'response' | 'handled';
             type="button"
             (click)="sendRequest()"
             [disabled]="stage() !== 'idle' && stage() !== 'handled'"
-            class="rounded-lg bg-gold-500 px-4 py-2 font-semibold text-white hover:bg-gold-400 disabled:cursor-not-allowed disabled:opacity-40"
+            class="rounded-lg bg-gold-solid px-4 py-2 font-semibold text-white hover:bg-gold-solid-hover disabled:cursor-not-allowed disabled:opacity-40"
           >
             ▶ Send GET /api/users
           </button>

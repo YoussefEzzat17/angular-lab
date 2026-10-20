@@ -62,7 +62,7 @@ interface MockRoute {
                 type="button"
                 (click)="navigateTo(route.path)"
                 class="rounded-lg px-3 py-2 text-sm font-medium transition"
-                [class.bg-gold-500]="currentPath() === route.path"
+                [class.bg-gold-solid]="currentPath() === route.path"
                 [class.text-white]="currentPath() === route.path"
                 [class.text-stone-300]="currentPath() !== route.path"
                 [class.hover:bg-stone-800]="currentPath() !== route.path"
@@ -136,7 +136,7 @@ goToLogin() &#123;
           <button
             type="button"
             (click)="visitProduct()"
-            class="rounded-lg bg-gold-500 px-4 py-2 text-sm font-semibold text-white hover:bg-gold-400"
+            class="rounded-lg bg-gold-solid px-4 py-2 text-sm font-semibold text-white hover:bg-gold-solid-hover"
           >
             Visit /products/{{ productId() }}
           </button>

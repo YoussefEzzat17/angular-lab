@@ -74,7 +74,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
         <div class="mt-8 rounded-2xl border border-[rgb(var(--panel-danger-heading))]/30 bg-[rgb(var(--panel-danger-bg))] p-6">
           <p class="font-bold text-[rgb(var(--panel-danger-heading))]">The movie request did not complete.</p>
           <p class="mt-1 text-sm text-stone-300">{{ error() }}</p>
-          <button (click)="loadMovies()" class="mt-4 rounded-xl bg-gold-500 px-4 py-2 font-semibold text-white hover:bg-gold-400">
+          <button (click)="loadMovies()" class="mt-4 rounded-xl bg-gold-solid px-4 py-2 font-semibold text-white hover:bg-gold-solid-hover">
             Try again
           </button>
         </div>

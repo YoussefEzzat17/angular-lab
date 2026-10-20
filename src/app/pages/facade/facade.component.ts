@@ -179,8 +179,8 @@ placeOrder() {
 
           <div class="mt-4 flex flex-wrap items-center gap-3">
             <div class="inline-flex rounded-xl border border-stone-700 p-1" role="radiogroup" aria-label="Which version to run">
-              <button type="button" role="radio" [attr.aria-checked]="mode() === 'without'" (click)="setMode('without')" class="min-h-11 rounded-lg px-4 text-sm font-semibold transition" [class]="mode() === 'without' ? 'bg-gold-500 text-white' : 'text-stone-300 hover:bg-stone-800'">Without a facade</button>
-              <button type="button" role="radio" [attr.aria-checked]="mode() === 'with'" (click)="setMode('with')" class="min-h-11 rounded-lg px-4 text-sm font-semibold transition" [class]="mode() === 'with' ? 'bg-gold-500 text-white' : 'text-stone-300 hover:bg-stone-800'">With a facade</button>
+              <button type="button" role="radio" [attr.aria-checked]="mode() === 'without'" (click)="setMode('without')" class="min-h-11 rounded-lg px-4 text-sm font-semibold transition" [class]="mode() === 'without' ? 'bg-gold-solid text-white' : 'text-stone-300 hover:bg-stone-800'">Without a facade</button>
+              <button type="button" role="radio" [attr.aria-checked]="mode() === 'with'" (click)="setMode('with')" class="min-h-11 rounded-lg px-4 text-sm font-semibold transition" [class]="mode() === 'with' ? 'bg-gold-solid text-white' : 'text-stone-300 hover:bg-stone-800'">With a facade</button>
             </div>
             <label class="flex min-h-11 cursor-pointer items-center gap-2 text-sm text-stone-300">
               <input type="checkbox" class="h-4 w-4 accent-[rgb(var(--gold-500))]" [checked]="settings.declineCard()" (change)="settings.declineCard.set(!settings.declineCard())" />
@@ -224,7 +224,7 @@ placeOrder() {
                 <p role="status" class="mt-3 rounded-xl p-3 text-sm font-semibold" [class]="status() === 'success' ? 'bg-[rgb(var(--panel-success-bg))] text-[rgb(var(--panel-success-heading))]' : 'bg-[rgb(var(--panel-danger-bg))] text-[rgb(var(--panel-danger-heading))]'">{{ message() }}</p>
               }
               <div class="mt-3 flex gap-3">
-                <button type="button" (click)="place()" [disabled]="status() === 'working'" class="min-h-11 rounded-xl bg-gold-500 px-5 text-sm font-semibold text-white hover:bg-gold-400 disabled:cursor-not-allowed disabled:opacity-60">{{ status() === 'working' ? 'Working…' : 'Place order' }}</button>
+                <button type="button" (click)="place()" [disabled]="status() === 'working'" class="min-h-11 rounded-xl bg-gold-solid px-5 text-sm font-semibold text-white hover:bg-gold-solid-hover disabled:cursor-not-allowed disabled:opacity-60">{{ status() === 'working' ? 'Working…' : 'Place order' }}</button>
                 <button type="button" (click)="reset()" [disabled]="status() === 'working'" class="min-h-11 rounded-xl border border-stone-700 px-4 text-sm font-semibold hover:bg-stone-800 disabled:opacity-60">Reset</button>
               </div>
             </div>

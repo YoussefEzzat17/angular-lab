@@ -49,7 +49,7 @@ import { LearningFacade } from '../../core/services/learning.facade';
             <!-- CTA -->
             <div class="mt-7 flex flex-wrap gap-3">
               <a [routerLink]="facade.continueTarget()"
-                 class="rounded-xl bg-gold-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-gold-400">
+                 class="rounded-xl bg-gold-solid px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-gold-solid-hover">
                 {{ facade.completedCount() === 0 ? 'Start Learning →' : 'Continue →' }}
               </a>
               <a routerLink="/products"

@@ -46,7 +46,7 @@ import { ProfileService } from '../services/profile.service';
           <button
             type="button"
             (click)="done()"
-            class="w-full rounded-xl bg-gold-500 py-3 font-semibold text-white transition hover:bg-gold-400"
+            class="w-full rounded-xl bg-gold-solid py-3 font-semibold text-white transition hover:bg-gold-solid-hover"
           >
             Start Learning →
           </button>

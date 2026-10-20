@@ -31,7 +31,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
       <div class="mt-8 grid gap-5 md:grid-cols-2">
         <app-lesson-card label="STRUCTURAL · *ngIf" heading="Adds or removes the element" headingSize="lg">
           <p class="mt-2 text-sm text-stone-400">Unlike <code class="text-gold-300">display:none</code>, a false *ngIf takes the element out of the DOM completely.</p>
-          <button (click)="showTips = !showTips" class="mt-4 rounded-xl bg-gold-500 px-4 py-2 font-semibold text-white">Toggle tips</button>
+          <button (click)="showTips = !showTips" class="mt-4 rounded-xl bg-gold-solid px-4 py-2 font-semibold text-white">Toggle tips</button>
 
           <div class="mt-4 flex items-center gap-3 rounded-xl bg-stone-950 p-3 text-xs font-mono">
             <span class="text-stone-500">DOM:</span>

@@ -38,7 +38,7 @@ import { TOPICS } from '../../core/data/topics';
       <div class="mt-6 flex flex-wrap gap-3 justify-center">
         @if (attempt().passed) {
           <button type="button" (click)="goComplete.emit()"
-            class="rounded-xl bg-gold-500 px-6 py-2.5 font-semibold text-white transition hover:bg-gold-400">
+            class="rounded-xl bg-gold-solid px-6 py-2.5 font-semibold text-white transition hover:bg-gold-solid-hover">
             Continue →
           </button>
         }

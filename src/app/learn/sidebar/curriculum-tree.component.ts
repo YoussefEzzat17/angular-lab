@@ -51,7 +51,10 @@ import type { TopicId } from '../../core/models/learning.models';
                           [class.text-gold-300]="isCurrentSection(topic.id, sec.id)"
                           [class.text-stone-400]="!isCurrentSection(topic.id, sec.id)"
                         >
-                          <span class="text-[10px]">{{ progress.isSectionDone(topic.id, sec.id) ? '✓' : '·' }}</span>
+                          <span class="text-[10px]" aria-hidden="true">{{ progress.isSectionDone(topic.id, sec.id) ? '✓' : '·' }}</span>
+                          @if (progress.isSectionDone(topic.id, sec.id)) {
+                            <span class="sr-only">Done:</span>
+                          }
                           {{ sec.title }}
                         </a>
                       }

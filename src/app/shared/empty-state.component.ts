@@ -22,7 +22,7 @@ import { RouterLink } from '@angular/router';
         <a
           [routerLink]="ctaLink()"
           data-testid="empty-state-cta"
-          class="mt-6 inline-block rounded-xl bg-gold-500 px-5 py-3 font-semibold text-white transition hover:bg-gold-400"
+          class="mt-6 inline-block rounded-xl bg-gold-solid px-5 py-3 font-semibold text-white transition hover:bg-gold-solid-hover"
         >
           {{ ctaLabel() }}
         </a>

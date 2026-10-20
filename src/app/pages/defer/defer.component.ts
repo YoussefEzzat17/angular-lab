@@ -76,7 +76,7 @@ import { DeferStatsService } from './defer-stats.service';
                 type="button"
                 data-testid="defer-load"
                 (click)="loadIt.set(true)"
-                class="min-h-11 rounded-xl bg-gold-500 px-4 text-sm font-semibold text-white transition hover:bg-gold-400"
+                class="min-h-11 rounded-xl bg-gold-solid px-4 text-sm font-semibold text-white transition hover:bg-gold-solid-hover"
               >
                 Load the widget
               </button>

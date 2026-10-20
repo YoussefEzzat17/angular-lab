@@ -78,7 +78,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
                 </button>
               </div>
 
-              <a routerLink="/guards/members" class="mt-4 inline-block rounded-xl bg-gold-500 px-4 py-2.5 font-semibold text-white hover:bg-gold-400">
+              <a routerLink="/guards/members" class="mt-4 inline-block rounded-xl bg-gold-solid px-4 py-2.5 font-semibold text-white hover:bg-gold-solid-hover">
                 Open the members page →
               </a>
 
