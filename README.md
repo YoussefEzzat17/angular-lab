@@ -21,7 +21,7 @@
 
 ## Overview
 
-Angular Lab teaches Angular through **15 lessons**. Each lesson is split into short sections and closed by a final quiz. Each one explains *why* a concept exists and what problem it solves, shows a small animated diagram of what is actually happening, and gives you a live example you can click, edit and watch update in the browser. A small movie-and-series **demo app** shows several of these concepts working together in one real feature.
+Angular Lab teaches Angular through **18 lessons**. Each lesson is split into short sections and closed by a final quiz. Each one explains *why* a concept exists and what problem it solves, shows a small animated diagram of what is actually happening, and gives you a live example you can click, edit and watch update in the browser. A small movie-and-series **demo app** shows several of these concepts working together in one real feature.
 
 It is built with modern Angular only: standalone components, signals, the `@if` / `@for` / `@switch` control flow and signal inputs — no NgModules. There is no backend; everything runs in the browser.
 
@@ -31,7 +31,7 @@ It is built with modern Angular only: standalone components, signals, the `@if` 
   <tr>
     <td width="33%" valign="top">
       <b>📚 Interactive lessons</b><br>
-      15 lessons in short sections (concept / try-it / reference), with an overview, objectives and animated diagrams.
+      18 lessons in short sections (concept / try-it / reference), with an overview, objectives and animated diagrams.
     </td>
     <td width="33%" valign="top">
       <b>✅ Final quiz per topic</b><br>
@@ -117,6 +117,7 @@ The lessons are grouped, and the order below is the recommended learning path (i
 | | Pipes | `/learn/pipes` | Formatting dates, prices and text in templates, plus a custom pipe |
 | | Directives | `/learn/directives` | `@if` / `@for` (and the older `*ngIf` / `*ngFor`), custom attribute directives |
 | | Component Communication | `/learn/communication` | `@Input()` / `@Output()`, parent ↔ child with animated data-flow arrows |
+| | Content Projection & Queries | `/learn/content-projection` | `ng-content` slots, `viewChild`, `contentChild` and a tabs component that builds itself |
 | **Forms & Navigation** | Angular Forms | `/learn/forms` | Template-driven vs. reactive forms, validation |
 | | Routing | `/learn/routing` | Routes, `router-outlet`, `routerLink`, route parameters |
 | | Route Guards | `/learn/guards` | `canActivate`, redirecting with a `UrlTree`, and the other guard kinds (live login demo) |
@@ -124,10 +125,12 @@ The lessons are grouped, and the order below is the recommended learning path (i
 | | RxJS | `/learn/rxjs` | Observables, operators (`map`, `filter`, `switchMap`, `debounceTime`), memory leaks, the `async` pipe |
 | **Services & Data** | Dependency Injection | `/learn/di` | `inject()`, `providedIn: 'root'` vs. component `providers` — one shared instance vs. one each |
 | | Fetch API & HTTP | `/learn/movies` | `HttpClient`, services, a real public API |
+| | Resource API | `/learn/resource` | `resource()`, `rxResource()` and `httpResource()`: loading, error and cancelled requests as signals (experimental in Angular 20) |
 | | HttpInterceptor | `/learn/interceptor` | One checkpoint for every request and response (e.g. attaching a token) |
 | | Facade Pattern | `/learn/facade` | One simple front door over several services: build one, use it, test it, and when *not* to (live checkout demo with rollback) |
 | **Performance** | Change Detection | `/learn/change-detection` | Default vs. `OnPush`, mutating vs. replacing, and why signals fit `OnPush` |
 | | Lazy Loading | `/learn/lazy-loading` | `loadComponent` and smaller initial bundles |
+| | `@defer` Blocks | `/learn/defer` | Placeholders, triggers (`viewport`, `interaction`, `timer`) and prefetching for parts of a page |
 
 Each lesson has its own overview at `/learn/<id>`, and its sections at `/learn/<id>/<section>`. The quiz is at `/learn/<id>/quiz` and opens only after all sections are done. `/learn` opens the first lesson, and the old paths (such as `/binding`) redirect to `/learn/<id>`.
 

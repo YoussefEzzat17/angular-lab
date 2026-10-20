@@ -112,6 +112,22 @@ export const TOPICS: Topic[] = [
     ],
   },
   {
+    id: 'content-projection', group: 'fundamentals', legacyPath: '/content-projection', path: '/learn/content-projection',
+    level: 'intermediate', prerequisites: ['communication'],
+    icon: '🧩', title: 'Content Projection & Queries', description: 'ng-content slots for reusable wrappers, and viewChild / contentChild to reach what is inside.',
+    objectives: [
+      { text: 'Build a wrapper component that shows whatever markup its parent puts inside it', sectionId: 'ng-content' },
+      { text: 'Use select to create named slots such as a title and a footer', sectionId: 'slots' },
+      { text: 'Read child components and elements with viewChild, contentChild and contentChildren', sectionId: 'queries' },
+    ],
+    sections: [
+      { id: 'ng-content', title: 'ng-content', kind: 'concept', minutes: 5 },
+      { id: 'slots', title: 'Multiple slots', kind: 'concept', minutes: 5 },
+      { id: 'queries', title: 'viewChild and contentChild', kind: 'concept', minutes: 7 },
+      { id: 'try-it', title: 'Try It', kind: 'try-it', minutes: 5 },
+    ],
+  },
+  {
     id: 'forms', group: 'forms-navigation', legacyPath: '/forms', path: '/learn/forms',
     level: 'intermediate', prerequisites: ['binding'],
     icon: '📝', title: 'Angular Forms', description: 'Template-driven and reactive forms, with validation, side by side.',
@@ -233,6 +249,22 @@ export const TOPICS: Topic[] = [
     ],
   },
   {
+    id: 'resource', group: 'services-data', legacyPath: '/resource', path: '/learn/resource',
+    level: 'advanced', prerequisites: ['signals', 'movies'],
+    icon: '📦', title: 'Resource API', description: 'resource(), rxResource() and httpResource(): async data with loading and error state built in.',
+    objectives: [
+      { text: 'Load async data with resource() and read its value, status and error as signals', sectionId: 'basics' },
+      { text: 'Tell the six resource statuses apart and know when each one happens', sectionId: 'states' },
+      { text: 'Choose between resource, rxResource and httpResource', sectionId: 'http-rx' },
+    ],
+    sections: [
+      { id: 'basics', title: 'resource() basics', kind: 'concept', minutes: 7 },
+      { id: 'states', title: 'Statuses', kind: 'concept', minutes: 5 },
+      { id: 'http-rx', title: 'httpResource and rxResource', kind: 'concept', minutes: 5 },
+      { id: 'try-it', title: 'Try It', kind: 'try-it', minutes: 5 },
+    ],
+  },
+  {
     id: 'interceptor', group: 'services-data', legacyPath: '/interceptor', path: '/learn/interceptor',
     level: 'advanced', prerequisites: ['movies'],
     icon: '🛡️', title: 'HttpInterceptor', description: 'One checkpoint that every outgoing request and incoming response passes through.',
@@ -299,6 +331,22 @@ export const TOPICS: Topic[] = [
       { id: 'bundles', title: 'Bundle Analysis', kind: 'concept', minutes: 4 },
       { id: 'preloading', title: 'Preloading Strategies', kind: 'concept', minutes: 4 },
       { id: 'devtools', title: 'Measuring with DevTools', kind: 'reference', minutes: 4 },
+    ],
+  },
+  {
+    id: 'defer', group: 'performance', legacyPath: '/defer', path: '/learn/defer',
+    level: 'intermediate', prerequisites: ['lazy-loading'],
+    icon: '⏳', title: '@defer Blocks', description: 'Load parts of a template later: placeholders, triggers and prefetching.',
+    objectives: [
+      { text: 'Wrap heavy content in @defer with @placeholder, @loading and @error', sectionId: 'basics' },
+      { text: 'Pick the right trigger: viewport, interaction, timer or a condition', sectionId: 'triggers' },
+      { text: 'Prefetch content early, and know when not to defer', sectionId: 'prefetch' },
+    ],
+    sections: [
+      { id: 'basics', title: '@defer basics', kind: 'concept', minutes: 5 },
+      { id: 'triggers', title: 'Triggers', kind: 'concept', minutes: 6 },
+      { id: 'prefetch', title: 'Prefetch and pitfalls', kind: 'concept', minutes: 5 },
+      { id: 'try-it', title: 'Try It', kind: 'try-it', minutes: 5 },
     ],
   },
 ];

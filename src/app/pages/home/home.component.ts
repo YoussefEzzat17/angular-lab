@@ -86,7 +86,7 @@ import { SignalNetworkComponent } from './signal-network.component';
       <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6">
         <div class="mb-10">
           <p class="text-xs font-bold uppercase tracking-widest text-gold-400">Curriculum</p>
-          <h2 class="mt-2 text-3xl font-bold text-stone-100">15 topics, one learning path</h2>
+          <h2 class="mt-2 text-3xl font-bold text-stone-100">{{ topics.length }} topics, one learning path</h2>
           <p class="mt-2 text-stone-400">From data binding to performance — each topic builds on the last.</p>
         </div>
 

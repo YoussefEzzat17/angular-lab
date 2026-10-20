@@ -2,7 +2,8 @@
 export type TopicId =
   | 'binding' | 'pipes' | 'directives' | 'communication' | 'forms'
   | 'routing' | 'guards' | 'signals' | 'rxjs' | 'di' | 'movies'
-  | 'interceptor' | 'facade' | 'change-detection' | 'lazy-loading';
+  | 'interceptor' | 'facade' | 'change-detection' | 'lazy-loading'
+  | 'content-projection' | 'resource' | 'defer';
 
 // ─── Lesson Sections ──────────────────────────────────────────────────────────
 export type SectionKind = 'concept' | 'try-it' | 'reference';
@@ -50,7 +51,7 @@ export interface QuizBank {
   topicId: TopicId;
   /** Increment when questions change — stored in attempts for audit. */
   version: number;
-  /** Should contain 10–12 questions. */
+  /** Should contain 10–15 questions: 6 are drawn at random, so more questions means more variety. */
   questions: QuizQuestion[];
 }
 

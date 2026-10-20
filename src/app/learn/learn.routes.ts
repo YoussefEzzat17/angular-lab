@@ -22,6 +22,9 @@ const TOPIC_LOADERS: Record<TopicId, () => Promise<unknown>> = {
   'facade':           () => import('../pages/facade/facade.component').then((m) => m.FacadeComponent),
   'change-detection': () => import('../pages/change-detection/change-detection.component').then((m) => m.ChangeDetectionComponent),
   'lazy-loading':     () => import('../pages/lazy-loading/lazy-loading.component').then((m) => m.LazyLoadingComponent),
+  'content-projection': () => import('../pages/content-projection/content-projection.component').then((m) => m.ContentProjectionComponent),
+  'resource':         () => import('../pages/resource/resource.component').then((m) => m.ResourceComponent),
+  'defer':            () => import('../pages/defer/defer.component').then((m) => m.DeferComponent),
 };
 
 export const LEARN_ROUTES: Routes = [
