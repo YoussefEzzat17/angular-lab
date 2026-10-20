@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
+import type { PredictChallenge } from '../../shared/predict-output.component';
+import { PredictOutputComponent } from '../../shared/predict-output.component';
 import { TermComponent } from '../../shared/term.component';
 import { FlattenDemoComponent } from './flatten-demo.component';
 import { SubjectRadioDemoComponent } from './subject-radio-demo.component';
@@ -30,7 +32,7 @@ import {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [TermComponent, FormsModule, AsyncPipe, FlattenDemoComponent, SubjectRadioDemoComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [PredictOutputComponent, TermComponent, FormsModule, AsyncPipe, FlattenDemoComponent, SubjectRadioDemoComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'rxjs'" [section]="section()">
       <ng-template appLessonSection="observables">
@@ -340,6 +342,10 @@ export class CartCountService &#123;
           <code class="text-gold-300">switchMap</code> — like the search box in the next section. You can always bridge the two with <code class="text-gold-300">toSignal()</code>.
         </p>
       </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="PREDICT THE OUTPUT" heading="What does a late subscriber receive?">
+        <app-predict-output [challenge]="behaviorChallenge" />
+      </app-lesson-card>
       </section>
       </ng-template>
 
@@ -441,6 +447,19 @@ ngOnDestroy() &#123;
 })
 export class RxjsComponent implements OnDestroy {
   readonly section = input<string>();
+
+  readonly behaviorChallenge: PredictChallenge = {
+    question: 'What does this log?',
+    code: 'const s = new BehaviorSubject(0);\ns.next(1);\ns.subscribe(v => console.log(v));\ns.next(2);',
+    options: [
+      { id: 'b', text: '0, 1, 2' },
+      { id: 'c', text: '2' },
+      { id: 'a', text: '1, 2' },
+      { id: 'd', text: '0, 2' },
+    ],
+    correct: 'a',
+    explanation: 'A BehaviorSubject keeps only its latest value. next(1) replaced the 0 before anyone subscribed, so the subscriber gets 1 straight away and then 2.',
+  };
 
   // ── 2 · Observable ticker demo ──────────────────────────────
   readonly tickerRunning = signal(false);

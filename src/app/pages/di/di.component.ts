@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, inject, Injectable, input, signal }
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
+import { DiTreeDemoComponent } from './di-tree-demo.component';
 import { TermComponent } from '../../shared/term.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
@@ -71,7 +72,7 @@ export class DiPrivateCounterComponent {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [TermComponent, DiSharedCounterComponent, DiPrivateCounterComponent, FlowDiagramComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [DiTreeDemoComponent, TermComponent, DiSharedCounterComponent, DiPrivateCounterComponent, FlowDiagramComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'di'" [section]="section()">
       <ng-template appLessonSection="basics">
@@ -121,6 +122,15 @@ export class DiPrivateCounterComponent {
           <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ providersCode }}</pre>
         </app-lesson-card>
       </div>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="SEE IT · WHO GETS WHICH INSTANCE?" heading="Provide a service at different levels of the tree">
+        <ol class="mt-2 list-decimal space-y-1 pl-5 text-sm text-stone-400">
+          <li>Press <strong class="text-stone-200">+1 item</strong> on Card #1. Every component shows 1, because they all share the root instance.</li>
+          <li>Switch on <strong class="text-stone-200">Provide here</strong> for ProductListComponent. The list and its two cards now share a new cart. The header and the app still use the root one.</li>
+          <li>Also switch it on for Card #2. It leaves the list's cart and gets a cart of its own.</li>
+        </ol>
+        <app-di-tree-demo />
+      </app-lesson-card>
       </section>
       </ng-template>
 

@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
+import { OrderStepsComponent } from '../../shared/order-steps.component';
 import { TermComponent } from '../../shared/term.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
@@ -17,7 +18,7 @@ interface RouteChunk {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [TermComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [OrderStepsComponent, TermComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'lazy-loading'" [section]="section()">
       <ng-template appLessonSection="basics">
@@ -60,6 +61,11 @@ export const routes: Routes = [
 ];</pre>
           </div>
         </div>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="PUT IT IN ORDER" heading="What happens when someone opens a lazy route?">
+        <p class="mt-2 text-sm text-stone-400">Put these four steps in the order they happen the first time a visitor goes to /admin.</p>
+        <app-order-steps [steps]="lazySteps" explanation="Nothing for /admin is downloaded until the visitor asks for it. The router finds the lazy route, the browser fetches that one chunk, and only then is the component created." />
       </app-lesson-card>
       </section>
       </ng-template>
@@ -202,6 +208,13 @@ provideRouter(routes, withPreloading(PreloadAllModules));</pre>
 })
 export class LazyLoadingComponent {
   readonly section = input<string>();
+
+  readonly lazySteps = [
+    'The visitor clicks a link to /admin',
+    'The router matches the lazy route',
+    'The browser downloads the admin chunk',
+    'Angular creates the admin component and shows it',
+  ];
   readonly routeChunks: RouteChunk[] = [
     { path: '/products', label: 'Products', kb: 38 },
     { path: '/checkout', label: 'Checkout', kb: 22 },

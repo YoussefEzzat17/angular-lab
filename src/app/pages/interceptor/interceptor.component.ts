@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, input, OnDestroy, signal } from '@a
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
+import { OrderStepsComponent } from '../../shared/order-steps.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
@@ -12,7 +13,7 @@ type Stage = 'idle' | 'built' | 'cloned' | 'sent' | 'response' | 'handled';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [OrderStepsComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'interceptor'" [section]="section()">
       <ng-template appLessonSection="basics">
@@ -189,6 +190,11 @@ type Stage = 'idle' | 'built' | 'cloned' | 'sent' | 'response' | 'handled';
           <li><strong class="text-stone-100">Ignoring the order.</strong> Interceptors run in the order they are registered for the request, and in reverse for the response.</li>
         </ul>
       </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="PUT IT IN ORDER" heading="Follow one request through two interceptors">
+        <p class="mt-2 text-sm text-stone-400">The app registers the auth interceptor first and the logging interceptor second. Put these seven things in the order they happen.</p>
+        <app-order-steps [steps]="chainSteps" explanation="Interceptors form a chain. A request passes through them in the order they are registered, and the response comes back through them in reverse order." />
+      </app-lesson-card>
       </section>
       </ng-template>
 
@@ -278,6 +284,16 @@ Authorization: Bearer {{ tokenPreview() }}</pre>
 })
 export class InterceptorComponent implements OnDestroy {
   readonly section = input<string>();
+
+  readonly chainSteps = [
+    "The component calls http.get('/api/users')",
+    'The auth interceptor adds the token to the request',
+    'The logging interceptor writes the request to the console',
+    'The request reaches the server',
+    'The logging interceptor sees the response first',
+    'The auth interceptor sees the response last',
+    'The component receives the data',
+  ];
 
   readonly stage = signal<Stage>('idle');
   readonly simulateExpired = signal(false);

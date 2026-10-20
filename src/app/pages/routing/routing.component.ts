@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
+import type { PredictChallenge } from '../../shared/predict-output.component';
+import { PredictOutputComponent } from '../../shared/predict-output.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
@@ -17,7 +19,7 @@ interface MockRoute {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [FormsModule, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [PredictOutputComponent, FormsModule, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'routing'" [section]="section()">
       <ng-template appLessonSection="basics">
@@ -105,6 +107,10 @@ goToLogin() &#123;
           </div>
         </div>
       </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="PREDICT THE OUTPUT" heading="Which URL does this go to?">
+        <app-predict-output [challenge]="navigateChallenge" />
+      </app-lesson-card>
       </section>
       </ng-template>
 
@@ -173,6 +179,19 @@ goToLogin() &#123;
 })
 export class RoutingComponent {
   readonly section = input<string>();
+
+  readonly navigateChallenge: PredictChallenge = {
+    question: 'Which URL does this navigate to?',
+    code: "this.router.navigate(['/users', 5, 'edit']);",
+    options: [
+      { id: 'b', text: '/users,5,edit' },
+      { id: 'c', text: '/users/5' },
+      { id: 'd', text: '/users5edit' },
+      { id: 'a', text: '/users/5/edit' },
+    ],
+    correct: 'a',
+    explanation: 'Each item in the array becomes one segment of the path, and Angular joins the segments with slashes.',
+  };
   readonly mockRoutes: MockRoute[] = [
     { path: 'dashboard', label: 'Dashboard', icon: '📊' },
     { path: 'products', label: 'Products', icon: '🛒' },

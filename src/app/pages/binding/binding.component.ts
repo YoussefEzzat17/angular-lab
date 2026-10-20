@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
+import type { PredictChallenge } from '../../shared/predict-output.component';
+import { PredictOutputComponent } from '../../shared/predict-output.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
 import { TopicNavComponent } from '../../shared/topic-nav.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
@@ -12,7 +14,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [
+  imports: [PredictOutputComponent, 
     FormsModule,
     FlowDiagramComponent,
     TopicNavComponent,
@@ -53,6 +55,10 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
               <p class="mt-4 text-xs text-stone-500">Hint: {{ '{{ practiceTitle }}' }}</p>
             </app-lesson-card>
           </div>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="PREDICT THE OUTPUT" heading="Read the template, then guess what it shows">
+        <app-predict-output [challenge]="interpolationChallenge" />
+      </app-lesson-card>
         </section>
       </ng-template>
 
@@ -173,6 +179,19 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
 export class BindingComponent {
   /** Set by the router from the :section URL param (withComponentInputBinding). */
   readonly section = input<string>();
+
+  readonly interpolationChallenge: PredictChallenge = {
+    question: 'What does this template show on the page?',
+    code: "<p>{{ '2' + 3 }}</p>\n<p>{{ 2 + 3 }}</p>",
+    options: [
+      { id: 'b', text: '5 and 5' },
+      { id: 'd', text: 'An error, because you cannot mix text and numbers' },
+      { id: 'a', text: '23 and 5' },
+      { id: 'c', text: '23 and 23' },
+    ],
+    correct: 'a',
+    explanation: "Template expressions follow JavaScript rules. '2' + 3 joins text, so it shows 23. 2 + 3 adds numbers, so it shows 5.",
+  };
 
   // Student task: replace this starter value with a title you enjoy.
   practiceTitle = 'The Last Horizon';

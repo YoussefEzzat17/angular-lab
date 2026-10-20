@@ -4,6 +4,8 @@ import { ChangeDetectionStrategy, Component, computed, effect, input, signal, un
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
+import type { PredictChallenge } from '../../shared/predict-output.component';
+import { PredictOutputComponent } from '../../shared/predict-output.component';
 import { TermComponent } from '../../shared/term.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
@@ -13,7 +15,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [TermComponent, CurrencyPipe, FlowDiagramComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [PredictOutputComponent, TermComponent, CurrencyPipe, FlowDiagramComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'signals'" [section]="section()">
       <ng-template appLessonSection="basics">
@@ -94,6 +96,10 @@ quantity ────┘</pre>
         <pre class="mt-4 overflow-x-auto text-xs text-gold-200">quantity changes
        ↓
 subtotal changes → discount changes → finalPrice changes</pre>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="PREDICT THE OUTPUT" heading="What does computed() give back?">
+        <app-predict-output [challenge]="computedChallenge" />
       </app-lesson-card>
       </section>
       </ng-template>
@@ -200,6 +206,19 @@ this.added.emit(this.price() * 2);</pre>
 })
 export class SignalsPlaygroundComponent {
   readonly section = input<string>();
+
+  readonly computedChallenge: PredictChallenge = {
+    question: 'What does this log?',
+    code: 'const price = signal(10);\nconst double = computed(() => price() * 2);\nprice.set(25);\nconsole.log(double());',
+    options: [
+      { id: 'a', text: '20' },
+      { id: 'b', text: '50' },
+      { id: 'c', text: '10' },
+      { id: 'd', text: 'undefined' },
+    ],
+    correct: 'b',
+    explanation: 'A computed signal is always worked out from the current value of the signals it reads. price is 25 by the time double() is read, so the answer is 50.',
+  };
   // signal() creates reactive state.
   readonly productName = signal('Protein');
   readonly price = signal(50);
