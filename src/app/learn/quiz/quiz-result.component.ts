@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { IconComponent } from '../../shared/icon.component';
 import { ProgressRingComponent } from '../../shared/progress-ring.component';
 import type { QuizAttempt, QuizQuestion, TopicId } from '../../core/models/learning.models';
 import { TOPICS } from '../../core/data/topics';
@@ -8,11 +9,11 @@ import { TOPICS } from '../../core/data/topics';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-quiz-result',
   standalone: true,
-  imports: [RouterLink, ProgressRingComponent],
+  imports: [RouterLink, ProgressRingComponent, IconComponent],
   template: `
     <div>
       <!-- Score card -->
-      <div class="rounded-2xl border p-6 text-center"
+      <div class="rounded-2xl border p-6 text-center shadow-card"
            [class.border-emerald-500]="attempt().passed"
            [class.bg-emerald-500/5]="attempt().passed"
            [class.border-stone-700]="!attempt().passed"
@@ -27,7 +28,7 @@ import { TOPICS } from '../../core/data/topics';
         </div>
         <p class="mt-4 text-3xl font-bold">{{ attempt().score }}/{{ attempt().total }}</p>
         <p class="mt-1 text-lg font-semibold" [class.text-emerald-400]="attempt().passed" [class.text-stone-300]="!attempt().passed">
-          {{ attempt().passed ? '🎉 Passed!' : 'Keep going — you can do it!' }}
+          {{ attempt().passed ? 'Passed!' : 'Keep going — you can do it!' }}
         </p>
         <p class="mt-2 text-sm text-stone-400">
           {{ attempt().passed ? 'You scored ' + scorePercent() + '% — great work!' : 'You need 75% to pass. Review the sections below and try again.' }}
@@ -37,19 +38,12 @@ import { TOPICS } from '../../core/data/topics';
       <!-- Actions -->
       <div class="mt-6 flex flex-wrap gap-3 justify-center">
         @if (attempt().passed) {
-          <button type="button" (click)="goComplete.emit()"
-            class="rounded-xl bg-gold-solid px-6 py-2.5 font-semibold text-white transition hover:bg-gold-solid-hover">
-            Continue →
+          <button type="button" (click)="goComplete.emit()" class="btn-primary">
+            Continue <app-icon name="chevron-right" class="h-4 w-4" />
           </button>
         }
-        <button type="button" (click)="retry.emit()"
-          class="rounded-xl border border-stone-700 px-5 py-2.5 font-semibold text-stone-300 transition hover:bg-stone-800">
-          Retry Quiz
-        </button>
-        <a [routerLink]="['/learn', topicId()]"
-          class="rounded-xl border border-stone-700 px-5 py-2.5 font-semibold text-stone-300 transition hover:bg-stone-800">
-          Back to Overview
-        </a>
+        <button type="button" (click)="retry.emit()" class="btn-secondary">Retry quiz</button>
+        <a [routerLink]="['/learn', topicId()]" class="btn-secondary">Back to overview</a>
       </div>
 
       <!-- Sections to review (on failure) -->
@@ -59,8 +53,8 @@ import { TOPICS } from '../../core/data/topics';
           <div class="mt-3 space-y-2">
             @for (sec of reviewSections(); track sec.id) {
               <a [routerLink]="['/learn', topicId(), sec.id]"
-                 class="flex items-center gap-3 rounded-xl border border-stone-800 bg-stone-900 px-4 py-3 text-sm transition hover:border-gold-400/50 hover:bg-stone-800">
-                <span class="text-gold-400">→</span>
+                 class="card interactive-card flex min-h-12 items-center gap-3 px-4 py-3 text-sm">
+                <app-icon name="chevron-right" class="h-4 w-4 shrink-0 text-gold-400" />
                 <span class="font-semibold text-stone-200">{{ sec.title }}</span>
               </a>
             }
@@ -78,7 +72,12 @@ import { TOPICS } from '../../core/data/topics';
                [class.border-stone-700]="!isCorrect(q.id)"
                [class.bg-stone-900]="!isCorrect(q.id)">
             <div class="flex items-start gap-3">
-              <span class="mt-0.5 text-lg">{{ isCorrect(q.id) ? '✓' : '✗' }}</span>
+              @if (isCorrect(q.id)) {
+                <app-icon name="check" class="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
+              } @else {
+                <app-icon name="close" class="mt-0.5 h-5 w-5 shrink-0 text-rose-400" />
+              }
+              <span class="sr-only">{{ isCorrect(q.id) ? 'Correct:' : 'Incorrect:' }}</span>
               <div class="flex-1 min-w-0">
                 <p class="font-semibold text-stone-100 text-sm">{{ q.prompt }}</p>
                 <p class="mt-2 text-xs text-stone-400">{{ q.explanation }}</p>

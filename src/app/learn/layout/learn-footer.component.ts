@@ -7,7 +7,7 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [RouterLink],
   template: `
-    <footer class="border-t border-stone-800 bg-stone-950 pb-24 text-sm text-stone-500 lg:pb-6">
+    <footer class="border-t border-stone-800 bg-stone-950 lg:pb-2 text-sm text-stone-500">
       <div class="mx-auto flex max-w-5xl flex-col items-center gap-3 px-6 py-5 lg:flex-row lg:justify-between">
 
         <!-- Left: logo always visible + description text on desktop only -->

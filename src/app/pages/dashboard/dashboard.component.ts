@@ -1,16 +1,27 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { GROUPED_TOPICS } from '../../core/data/topics';
-import { activityIcon, activityLabel, dayLabel, topicTitleOf } from '../../core/services/activity-history';
+import { TOPICS } from '../../core/data/topics';
+import { activityLabel, dayLabel, topicTitleOf } from '../../core/services/activity-history';
 import { CLOCK } from '../../core/services/clock';
 import { GamificationService } from '../../core/services/gamification.service';
 import { LearningFacade } from '../../core/services/learning.facade';
+import { ProgressService } from '../../core/services/progress.service';
+import { TOPIC_STATUS_LABELS, TopicStatusIconComponent } from '../../learn/sidebar/topic-status-icon.component';
+import { IconComponent, IconName } from '../../shared/icon.component';
+import { GROUP_ICONS } from '../../shared/learning-icons';
+import type { ActivityKind, TopicId } from '../../core/models/learning.models';
+
+const ACTIVITY_ICONS: Record<ActivityKind, { icon: IconName; tone: string }> = {
+  'section-done': { icon: 'check', tone: 'text-emerald-400' },
+  'quiz-passed': { icon: 'help', tone: 'text-gold-300' },
+  'quiz-failed': { icon: 'alert', tone: 'text-stone-400' },
+};
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, IconComponent, TopicStatusIconComponent],
   template: `
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
 
@@ -114,93 +125,75 @@ import { LearningFacade } from '../../core/services/learning.facade';
         </div>
       </div>
 
-      <!-- ── Quick stats ─────────────────────────────────────────────────── -->
-      <div class="mt-6 grid grid-cols-3 gap-3 sm:gap-4">
-        <div class="rounded-2xl border border-stone-800 bg-stone-900 p-4 text-center">
-          <p class="text-2xl font-bold text-emerald-400">{{ facade.completedCount() }}</p>
-          <p class="mt-1 text-xs text-stone-400">Completed</p>
-        </div>
-        <div class="rounded-2xl border border-stone-800 bg-stone-900 p-4 text-center">
-          <p class="text-2xl font-bold text-gold-400">{{ facade.totalCount - facade.completedCount() }}</p>
-          <p class="mt-1 text-xs text-stone-400">Remaining</p>
-        </div>
-        <div class="rounded-2xl border border-stone-800 bg-stone-900 p-4 text-center">
-          <p class="text-2xl font-bold text-gold-400">{{ facade.streak() > 0 ? facade.streak() : '—' }}</p>
-          <p class="mt-1 text-xs text-stone-400">Day streak 🔥</p>
-        </div>
-      </div>
-
-      <!-- ── Progress by group ─────────────────────────────────────────── -->
-      <div class="mt-10">
-        <h2 class="text-lg font-bold text-stone-100">Progress by Group</h2>
-        <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          @for (group of facade.groups(); track group.id) {
-            <div class="rounded-2xl border border-stone-800 bg-stone-900 p-5">
-              <div class="flex items-center justify-between gap-2">
-                <p class="font-semibold text-stone-100">{{ group.title }}</p>
-                <span class="text-sm font-semibold text-gold-300">{{ group.completedCount }}/{{ group.topics.length }}</span>
-              </div>
-              <div class="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-stone-800">
-                <div class="h-full rounded-full bg-gold-500 transition-all duration-500"
-                     [style.width.%]="group.topics.length ? (group.completedCount / group.topics.length) * 100 : 0"></div>
-              </div>
-              <div class="mt-4 space-y-1.5">
-                @for (topic of group.topics; track topic.id) {
-                  <a [routerLink]="['/learn', topic.id]"
-                     class="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm transition hover:bg-stone-800">
-                    <span class="text-base">{{ topic.icon }}</span>
-                    <span class="flex-1 truncate text-stone-300">{{ topic.title }}</span>
-                    <span class="text-xs"
-                          [class.text-emerald-400]="topic.status === 'completed'"
-                          [class.text-gold-400]="topic.status === 'in-progress'"
-                          [class.text-stone-600]="topic.status === 'not-started'">
-                      {{ topic.status === 'completed' ? '✓' : topic.status === 'in-progress' ? '◐' : '○' }}
-                    </span>
-                  </a>
-                }
-              </div>
-            </div>
-          }
-        </div>
-      </div>
-
-      <!-- ── Recent activity ───────────────────────────────────────────── -->
-      <!-- ── Level and badges ──────────────────────────────────────────── -->
-      <a
-        routerLink="/journey"
-        data-testid="open-journey"
-        class="mt-10 block rounded-2xl border border-gold-500/30 bg-gold-950/20 p-5 transition hover:bg-gold-950/30"
-      >
-        <div class="flex flex-wrap items-baseline justify-between gap-2">
+      <!-- Level and badges: the whole card opens the journey -->
+      <a routerLink="/journey" data-testid="open-journey" class="card interactive-card mt-4 block p-5">
+        <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
           <p class="text-lg font-bold text-stone-100">
             Level {{ game.level().level.number }} · <span class="text-gold-300">{{ game.level().level.title }}</span>
           </p>
-          <p class="text-sm text-stone-400">{{ game.xp() }} XP · 🏅 {{ game.earnedCount() }}/{{ game.badges().length }} badges</p>
+          <p class="text-sm text-stone-400">{{ game.xp() }} XP · {{ game.earnedCount() }} of {{ game.badges().length }} badges</p>
         </div>
-        <div class="mt-3 h-2.5 overflow-hidden rounded-full bg-stone-800" aria-hidden="true">
+        <div class="mt-3 h-2 overflow-hidden rounded-full bg-stone-800" aria-hidden="true">
           <div class="h-full rounded-full bg-gold-400" [style.width.%]="game.level().percent"></div>
         </div>
-        <p class="mt-3 text-sm font-semibold text-gold-400">Open your journey →</p>
+        <p class="mt-3 flex items-center gap-1 text-sm font-semibold text-gold-300">
+          Open your journey <app-icon name="chevron-right" class="h-4 w-4" />
+        </p>
       </a>
 
-      @if (facade.recentActivity().length) {
-        <div class="mt-10">
-          <div class="flex items-center justify-between gap-3">
-            <h2 class="text-lg font-bold text-stone-100">Recent Activity</h2>
-            <a routerLink="/history" data-testid="view-history" class="text-sm font-semibold text-gold-400 hover:text-gold-300">View full history →</a>
+      <!-- Topics, by group -->
+      <h2 class="mt-12 text-lg font-bold text-stone-100">Topics by group</h2>
+      <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        @for (group of facade.groups(); track group.id) {
+          <div class="card flex flex-col p-5">
+            <div class="flex items-center gap-2.5">
+              <app-icon [name]="groupIcons[group.id]" class="h-5 w-5 shrink-0 text-gold-400" />
+              <h3 class="flex-1 font-semibold text-stone-100">{{ group.title }}</h3>
+              <span class="text-sm font-semibold tabular-nums text-gold-300">
+                {{ group.completedCount }}/{{ group.topics.length }}<span class="sr-only"> topics completed</span>
+              </span>
+            </div>
+            <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-stone-800" aria-hidden="true">
+              <div class="h-full rounded-full bg-gold-500" [style.width.%]="groupSectionPercent(group.id)"></div>
+            </div>
+            <ul class="-mx-2 mt-3 space-y-0.5">
+              @for (topic of group.topics; track topic.id) {
+                <li>
+                  <a [routerLink]="['/learn', topic.id]" [attr.title]="topic.title"
+                     class="flex min-h-11 items-center gap-2.5 rounded-xl px-2 text-sm text-stone-300 transition hover:bg-stone-800 hover:text-stone-100">
+                    <app-topic-status-icon [status]="topic.status" [fraction]="topicFraction(topic.id)" />
+                    <span class="min-w-0 flex-1 truncate">{{ topic.title }}</span>
+                    <span class="sr-only">, {{ statusLabels[topic.status] }}</span>
+                    <span class="shrink-0 text-xs tabular-nums text-stone-500" aria-hidden="true">{{ topicDone(topic.id) }}/{{ topic.sections.length }}</span>
+                  </a>
+                </li>
+              }
+            </ul>
           </div>
-          <div class="mt-4 space-y-2">
+        }
+      </div>
+
+      @if (facade.recentActivity().length) {
+        <div class="mt-12">
+          <div class="flex items-center justify-between gap-3">
+            <h2 class="text-lg font-bold text-stone-100">Recent activity</h2>
+            <a routerLink="/history" data-testid="view-history"
+               class="flex min-h-11 items-center gap-1 rounded-lg px-2 text-sm font-semibold text-gold-300 hover:text-gold-200">
+              View full history <app-icon name="chevron-right" class="h-4 w-4" />
+            </a>
+          </div>
+          <ul class="card mt-3 divide-y divide-stone-800 p-0">
             @for (entry of facade.recentActivity(); track entry.at + entry.kind + entry.topicId + (entry.sectionId ?? '')) {
-              <div class="flex items-center gap-3 rounded-xl border border-stone-800 bg-stone-900 px-4 py-3 text-sm">
-                <span class="text-lg" aria-hidden="true">{{ activityIcon(entry.kind) }}</span>
-                <span class="flex-1 text-stone-300">
+              <li class="flex items-center gap-3 px-5 py-3 text-sm">
+                <app-icon [name]="activityIcons[entry.kind].icon" class="h-4 w-4 shrink-0" [class]="activityIcons[entry.kind].tone" />
+                <span class="min-w-0 flex-1 text-stone-300">
                   {{ activityLabel(entry.kind) }}
                   <span class="font-semibold text-stone-100">{{ topicTitleOf(entry.topicId) }}</span>
                 </span>
                 <span class="shrink-0 text-stone-500">{{ dayOf(entry.at) }}</span>
-              </div>
+              </li>
             }
-          </div>
+          </ul>
         </div>
       }
 
@@ -210,8 +203,12 @@ import { LearningFacade } from '../../core/services/learning.facade';
 export class DashboardComponent {
   readonly facade = inject(LearningFacade);
   readonly game = inject(GamificationService);
+  private readonly progress = inject(ProgressService);
   private readonly clock = inject(CLOCK);
-  readonly groups = GROUPED_TOPICS;
+
+  protected readonly groupIcons = GROUP_ICONS;
+  protected readonly statusLabels = TOPIC_STATUS_LABELS;
+  protected readonly activityIcons = ACTIVITY_ICONS;
 
   // SVG ring: radius 68, circumference = 2π × 68 ≈ 427.3
   readonly circumference = 2 * Math.PI * 68;
@@ -220,8 +217,24 @@ export class DashboardComponent {
     return this.circumference * (1 - this.facade.percent() / 100);
   }
 
+  topicDone(topicId: TopicId | string): number {
+    const topic = TOPICS.find((t) => t.id === topicId);
+    return topic ? topic.sections.filter((s) => this.progress.isSectionDone(topic.id, s.id)).length : 0;
+  }
+
+  topicFraction(topicId: TopicId | string): number {
+    const topic = TOPICS.find((t) => t.id === topicId);
+    return topic?.sections.length ? this.topicDone(topicId) / topic.sections.length : 0;
+  }
+
+  groupSectionPercent(groupId: string): number {
+    const topics = TOPICS.filter((t) => t.group === groupId);
+    const total = topics.reduce((sum, t) => sum + t.sections.length, 0);
+    const done = topics.reduce((sum, t) => sum + this.topicDone(t.id), 0);
+    return total ? (done / total) * 100 : 0;
+  }
+
   readonly activityLabel = activityLabel;
-  readonly activityIcon = activityIcon;
   readonly topicTitleOf = topicTitleOf;
 
   dayOf(iso: string): string {

@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "src/app/pages/products/product-card.component.ts"
+        ],
+        "createdAt": "2026-10-24T17:12:47.498Z",
+        "reason": "model triage: <img> uses an Angular [src] binding to product.imageUrl, which the static scan reads as missing src"
+      }
+    ]
+  }
+}

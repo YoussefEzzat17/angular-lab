@@ -1,33 +1,37 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { LEVEL_LABEL, TOPICS } from '../../core/data/topics';
+import { LEVEL_LABEL, TOPICS, TOPIC_GROUPS } from '../../core/data/topics';
 import { ProgressService } from '../../core/services/progress.service';
 import { ProgressRingComponent } from '../../shared/progress-ring.component';
+import { IconComponent } from '../../shared/icon.component';
+import { GROUP_ICONS, SECTION_KIND_ICONS, SECTION_KIND_LABELS } from '../../shared/learning-icons';
+import { TopicStatusIconComponent } from '../sidebar/topic-status-icon.component';
 import type { TopicId } from '../../core/models/learning.models';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [RouterLink, ProgressRingComponent],
+  imports: [RouterLink, ProgressRingComponent, IconComponent, TopicStatusIconComponent],
   template: `
     @if (topic(); as t) {
       <section class="mx-auto max-w-3xl px-4 py-12 sm:px-6">
         <!-- Header -->
-        <div class="flex items-start gap-4">
-          <span class="text-5xl">{{ t.icon }}</span>
-          <div>
-            <p class="text-sm font-semibold text-gold-400">{{ groupTitle() }}</p>
-            <h1 class="mt-1 text-3xl font-bold sm:text-4xl">{{ t.title }}</h1>
-            <p class="mt-2 text-stone-400">{{ t.description }}</p>
-            <p class="mt-3">
-              <span class="rounded-full border border-stone-700 px-3 py-1 text-xs font-semibold text-stone-300" data-testid="topic-level">{{ levelLabel[t.level] }}</span>
-            </p>
-          </div>
-        </div>
-
+        <nav aria-label="Breadcrumb">
+          <ol class="flex flex-wrap items-center gap-x-1.5 text-sm text-stone-400">
+            <li class="flex items-center gap-1.5"><app-icon [name]="groupIcon()" class="h-4 w-4 text-gold-400" />{{ groupTitle() }}</li>
+            <li aria-hidden="true"><app-icon name="chevron-right" class="h-3.5 w-3.5 text-stone-600" /></li>
+            <li aria-current="page" class="text-stone-200">{{ t.title }}</li>
+          </ol>
+        </nav>
+        <h1 class="mt-3 text-3xl font-bold text-stone-100 [text-wrap:balance] sm:text-4xl">{{ t.title }}</h1>
+        <p class="mt-2 max-w-[60ch] text-stone-400">{{ t.description }}</p>
+        <p class="mt-3 flex flex-wrap items-center gap-2 text-sm text-stone-400">
+          <span class="rounded-full border border-stone-700 px-3 py-1 text-xs font-semibold text-stone-300" data-testid="topic-level">{{ levelLabel[t.level] }}</span>
+          <span>~{{ totalMinutes() }} min · {{ t.sections.length }} sections</span>
+        </p>
         <!-- Before you start -->
         @if (prerequisites().length) {
-          <div class="mt-6 rounded-2xl border border-stone-800 bg-stone-900 p-5" data-testid="prerequisites">
+          <div class="card mt-6 p-5" data-testid="prerequisites">
             <p class="font-semibold text-stone-100">Before you start</p>
             <p class="mt-0.5 text-sm text-stone-400">
               {{ allPrerequisitesDone() ? 'You have finished the topics this one builds on.' : 'This topic builds on these. Finishing them first makes it easier (you can still start now).' }}
@@ -36,9 +40,10 @@ import type { TopicId } from '../../core/models/learning.models';
               @for (pre of prerequisites(); track pre.topic.id) {
                 <li>
                   <a [routerLink]="pre.topic.path" [attr.data-testid]="'prereq-' + pre.topic.id"
-                     class="inline-flex min-h-9 items-center gap-1.5 rounded-full border px-3 text-sm transition hover:bg-stone-800"
+                     class="inline-flex min-h-11 items-center gap-2 rounded-full border px-3.5 text-sm transition hover:bg-stone-800"
                      [class]="pre.done ? 'border-emerald-500/40 text-emerald-300' : 'border-stone-700 text-stone-300'">
-                    <span aria-hidden="true">{{ pre.done ? '✓' : pre.topic.icon }}</span> {{ pre.topic.title }}
+                    <app-topic-status-icon [status]="pre.status" [fraction]="pre.fraction" />
+                    {{ pre.topic.title }}<span class="sr-only">{{ pre.done ? ' (finished)' : ' (not finished yet)' }}</span>
                   </a>
                 </li>
               }
@@ -46,27 +51,26 @@ import type { TopicId } from '../../core/models/learning.models';
           </div>
         }
 
-        <!-- Progress ring + stats -->
-        <div class="mt-8 flex flex-wrap items-center gap-4 rounded-2xl border border-stone-800 bg-stone-900 p-5">
-          <app-progress-ring [percent]="sectionPercent()" [ariaText]="sectionPercent() + '% complete'" [size]="56" [strokeWidth]="5" />
-          <div class="flex-1 min-w-0">
-            <p class="text-sm text-stone-400">{{ doneSections() }} of {{ t.sections.length }} sections done</p>
-            <p class="mt-0.5 text-xs text-stone-500">~{{ totalMinutes() }} min · {{ t.sections.length }} sections</p>
+        <!-- Progress + start -->
+        <div class="card mt-8 flex flex-wrap items-center gap-4 p-5">
+          <app-progress-ring [percent]="sectionPercent()" [ariaText]="doneSections() + ' of ' + t.sections.length + ' sections done'" [size]="56" [strokeWidth]="5" />
+          <div class="min-w-0 flex-1">
+            <p class="font-semibold text-stone-100">{{ doneSections() }} of {{ t.sections.length }} sections done</p>
+            <p class="mt-0.5 text-sm text-stone-400">{{ doneSections() === 0 ? 'Each section takes a few minutes.' : 'Pick up at the next section.' }}</p>
           </div>
-          <a [routerLink]="startPath()"
-             class="w-full rounded-xl bg-gold-solid px-5 py-2.5 text-center font-semibold text-white transition hover:bg-gold-solid-hover sm:w-auto">
-            {{ doneSections() === 0 ? 'Start →' : 'Continue →' }}
+          <a [routerLink]="startPath()" class="btn-primary w-full sm:w-auto">
+            {{ doneSections() === 0 ? 'Start' : 'Continue' }}
+            <app-icon name="chevron-right" class="h-4 w-4" />
           </a>
         </div>
-
         <!-- Objectives -->
         @if (t.objectives.length) {
           <div class="mt-8">
             <h2 class="text-lg font-bold">What you'll learn</h2>
             <ul class="mt-3 space-y-2">
               @for (obj of t.objectives; track obj.text) {
-                <li class="flex items-start gap-2 text-sm text-stone-300">
-                  <span class="mt-0.5 text-gold-400">✓</span>
+                <li class="flex items-start gap-2.5 text-sm text-stone-300">
+                  <app-icon name="check" class="mt-0.5 h-4 w-4 shrink-0 text-gold-400" />
                   {{ obj.text }}
                 </li>
               }
@@ -80,40 +84,53 @@ import type { TopicId } from '../../core/models/learning.models';
           <div class="mt-3 space-y-2">
             @for (sec of t.sections; track sec.id; let i = $index) {
               <a [routerLink]="['/learn', t.id, sec.id]"
-                 class="flex items-center gap-3 rounded-xl border border-stone-800 bg-stone-900 px-4 py-3 transition hover:border-gold-400/50 hover:bg-stone-800">
-                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold"
-                      [class]="isSectionDone(sec.id) ? 'bg-emerald-500/20 text-emerald-400' : 'bg-stone-800 text-stone-400'">
-                  {{ isSectionDone(sec.id) ? '✓' : (i + 1) }}
+                 class="card interactive-card flex min-h-14 items-center gap-3 px-4 py-3">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold tabular-nums"
+                      [class]="isSectionDone(sec.id) ? 'bg-emerald-500/20 text-emerald-400' : 'bg-stone-800 text-stone-400'" aria-hidden="true">
+                  @if (isSectionDone(sec.id)) {
+                    <app-icon name="check" class="h-4 w-4" />
+                  } @else {
+                    {{ i + 1 }}
+                  }
                 </span>
-                <span class="flex-1 font-semibold text-stone-100">{{ sec.title }}</span>
-                <span class="text-xs text-stone-500">{{ sec.minutes }} min</span>
+                <span class="min-w-0 flex-1">
+                  <span class="block font-semibold text-stone-100">{{ sec.title }}</span>
+                  <span class="mt-0.5 flex items-center gap-1.5 text-xs text-stone-500">
+                    <app-icon [name]="kindIcons[sec.kind]" class="h-3.5 w-3.5" />{{ kindLabels[sec.kind] }} · {{ sec.minutes }} min
+                  </span>
+                </span>
+                @if (isSectionDone(sec.id)) {
+                  <span class="sr-only">, done</span>
+                }
               </a>
             }
           </div>
         </div>
 
         <!-- Quiz status -->
-        <div class="mt-6 rounded-2xl border border-stone-800 bg-stone-900 p-5">
-          <div class="flex items-center justify-between gap-4">
+        <div class="card mt-6 p-5">
+          <div class="flex flex-wrap items-center justify-between gap-4">
             <div>
               <p class="font-semibold">Final Quiz</p>
               <p class="mt-0.5 text-sm text-stone-400">
                 @if (isCompleted()) {
                   Passed · Best score {{ bestScore() }}/6
                 } @else if (allSectionsDone()) {
-                  Ready to take — complete all sections first ✓
+                  Every section is done: you're ready
                 } @else {
                   Complete all sections to unlock
                 }
               </p>
             </div>
             @if (allSectionsDone()) {
-              <a [routerLink]="['/learn', t.id, 'quiz']"
-                 class="rounded-xl bg-gold-solid px-4 py-2 text-sm font-semibold text-white transition hover:bg-gold-solid-hover">
-                {{ isCompleted() ? 'Retake' : 'Take Quiz' }}
+              <a [routerLink]="['/learn', t.id, 'quiz']" class="btn-secondary">
+                <app-icon name="help" class="h-4 w-4" />
+                {{ isCompleted() ? 'Retake quiz' : 'Take the quiz' }}
               </a>
             } @else {
-              <span class="rounded-xl border border-stone-700 px-4 py-2 text-sm text-stone-500">🔒 Locked</span>
+              <span class="inline-flex min-h-11 items-center gap-2 rounded-xl border border-stone-800 px-4 text-sm text-stone-500">
+                <app-icon name="lock" class="h-4 w-4" /> Locked
+              </span>
             }
           </div>
         </div>
@@ -133,14 +150,17 @@ export class TopicOverviewComponent {
 
   protected readonly topic = computed(() => TOPICS.find((t) => t.id === this.topicId) ?? null);
 
-  protected readonly groupTitle = computed(() => {
-    const group = this.topic()?.group ?? '';
-    return group.replace(/-/g, ' ').toUpperCase();
-  });
+  protected readonly kindIcons = SECTION_KIND_ICONS;
+  protected readonly kindLabels = SECTION_KIND_LABELS;
+  protected readonly groupTitle = computed(() => TOPIC_GROUPS.find((g) => g.id === this.topic()?.group)?.title ?? '');
+  protected readonly groupIcon = computed(() => GROUP_ICONS[this.topic()?.group ?? 'fundamentals']);
   protected readonly prerequisites = computed(() =>
     (this.topic()?.prerequisites ?? []).flatMap((id) => {
       const topic = TOPICS.find((t) => t.id === id);
-      return topic ? [{ topic, done: this.progress.status(id) === 'completed' }] : [];
+      if (!topic) return [];
+      const doneCount = topic.sections.filter((s) => this.progress.isSectionDone(topic.id, s.id)).length;
+      const status = this.progress.status(id);
+      return [{ topic, status, done: status === 'completed', fraction: topic.sections.length ? doneCount / topic.sections.length : 0 }];
     }),
   );
   protected readonly allPrerequisitesDone = computed(() => this.prerequisites().every((p) => p.done));

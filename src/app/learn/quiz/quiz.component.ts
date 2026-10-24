@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TOPICS } from '../../core/data/topics';
+import { IconComponent } from '../../shared/icon.component';
 import { QuizService } from '../../core/services/quiz.service';
 import { ProgressService } from '../../core/services/progress.service';
 import { QuizQuestionComponent } from './quiz-question.component';
@@ -12,7 +13,7 @@ type QuizPhase = 'loading' | 'answering' | 'result';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [QuizQuestionComponent, QuizResultComponent, RouterLink],
+  imports: [QuizQuestionComponent, QuizResultComponent, RouterLink, IconComponent],
   template: `
     <div class="mx-auto max-w-3xl px-4 py-10 sm:px-6">
       @switch (phase()) {
@@ -23,7 +24,9 @@ type QuizPhase = 'loading' | 'answering' | 'result';
           <div>
             <!-- Header -->
             <div class="mb-6 flex items-center justify-between">
-              <a [routerLink]="['/learn', topicId]" class="text-sm text-stone-400 hover:text-gold-300">← Back to overview</a>
+              <a [routerLink]="['/learn', topicId]" class="-ml-2 flex min-h-11 items-center gap-1 rounded-lg px-2 text-sm text-stone-400 hover:text-gold-300">
+                <app-icon name="chevron-left" class="h-4 w-4" /> Back to overview
+              </a>
               <p class="text-sm font-semibold text-stone-400">
                 Question {{ currentQuestionIndex() + 1 }} of {{ drawnQuestions().length }}
               </p>
@@ -47,21 +50,21 @@ type QuizPhase = 'loading' | 'answering' | 'result';
                 type="button"
                 [disabled]="currentQuestionIndex() === 0"
                 (click)="prev()"
-                class="rounded-xl border border-stone-700 px-4 py-2 text-sm font-semibold text-stone-300 transition hover:bg-stone-800 disabled:opacity-40"
-              >← Previous</button>
+                class="btn-secondary"
+              ><app-icon name="chevron-left" class="h-4 w-4" /> Previous</button>
               @if (currentQuestionIndex() < drawnQuestions().length - 1) {
                 <button
                   type="button"
                   (click)="next()"
-                  class="rounded-xl bg-gold-solid px-5 py-2 text-sm font-semibold text-white transition hover:bg-gold-solid-hover"
-                >Next →</button>
+                  class="btn-primary"
+                >Next <app-icon name="chevron-right" class="h-4 w-4" /></button>
               } @else {
                 <button
                   type="button"
                   [disabled]="!canSubmit()"
                   (click)="submit()"
-                  class="rounded-xl bg-gold-solid px-5 py-2 text-sm font-semibold text-white transition hover:bg-gold-solid-hover disabled:opacity-50"
-                >Submit Quiz</button>
+                  class="btn-primary"
+                >Submit quiz</button>
               }
             </div>
           </div>

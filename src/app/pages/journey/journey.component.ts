@@ -4,16 +4,16 @@ import { RouterLink } from '@angular/router';
 import { LEVEL_LABEL } from '../../core/data/topics';
 import { GamificationService } from '../../core/services/gamification.service';
 import { LearningFacade } from '../../core/services/learning.facade';
+import { IconComponent } from '../../shared/icon.component';
 import type { TopicStatus } from '../../core/models/learning.models';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, IconComponent],
   template: `
     <section class="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
-      <p class="text-xs font-bold uppercase tracking-widest text-gold-400">Your journey</p>
-      <h1 class="mt-2 text-3xl font-bold text-stone-100">From Newcomer to Angular Wizard</h1>
+      <h1 class="text-3xl font-bold text-stone-100 [text-wrap:balance]">From Newcomer to Angular Wizard</h1>
       <p class="mt-2 text-sm text-stone-400">
         Finish sections to earn 10 XP each, pass a topic quiz for 50 XP, and score 100% for a 25 XP bonus. Follow the path from the top.
       </p>
@@ -55,7 +55,11 @@ import type { TopicStatus } from '../../core/models/learning.models';
                   [class]="nodeClass(topic.status, topic.id === nextTopicId())"
                   aria-hidden="true"
                 >
-                  {{ statusMark(topic.status) }}
+                  @if (topic.status === 'completed') {
+                    <app-icon name="check" class="h-3.5 w-3.5" />
+                  } @else if (topic.status === 'in-progress') {
+                    <span class="h-2 w-2 rounded-full bg-current"></span>
+                  }
                 </span>
                 <a
                   [routerLink]="topic.path"
@@ -99,7 +103,9 @@ import type { TopicStatus } from '../../core/models/learning.models';
                 <span class="block font-semibold text-stone-100">{{ badge.title }}</span>
                 <span class="block text-xs text-stone-400">{{ badge.description }}</span>
                 <span class="mt-1 block text-xs font-bold" [class]="badge.isEarned ? 'text-emerald-300' : 'text-stone-400'">
-                  {{ badge.isEarned ? '✓ Earned' : '🔒 Locked' }}
+                  <span class="inline-flex items-center gap-1">
+                    <app-icon [name]="badge.isEarned ? 'check' : 'lock'" class="h-3.5 w-3.5" />{{ badge.isEarned ? 'Earned' : 'Locked' }}
+                  </span>
                 </span>
               </span>
             </li>
@@ -123,10 +129,6 @@ export class JourneyComponent {
     const { next, xp, xpIntoLevel, xpForLevel } = this.game.level();
     return next ? `${xp} XP · ${xpIntoLevel}/${xpForLevel} to level ${next.number}` : `${xp} XP · top level reached`;
   });
-
-  statusMark(status: TopicStatus): string {
-    return status === 'completed' ? '✓' : status === 'in-progress' ? '◐' : '';
-  }
 
   statusText(status: TopicStatus): string {
     return status === 'completed' ? 'Completed' : status === 'in-progress' ? 'In progress' : 'Not started';

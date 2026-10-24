@@ -29,7 +29,7 @@ describe('MobileNavComponent', () => {
 
     const labels = Array.from(root.querySelectorAll('a, button')).map((el) => el.getAttribute('aria-label'));
 
-    expect(labels).toEqual(['Home', 'Topics', 'Journey', 'Dashboard', 'Bookmarks']);
+    expect(labels).toEqual(['Home', 'Topics', 'Journey', 'Dashboard', 'Saved']);
   });
 
   it('highlights only Home on the home page', async () => {

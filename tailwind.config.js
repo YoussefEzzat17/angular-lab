@@ -22,6 +22,13 @@ module.exports = {
         // gold-solid is for buttons with white text: dark enough for 4.5:1, and the hover goes darker, not lighter.
         gold: { ...themeVarScale('gold'), solid: themeVar('--gold-solid'), 'solid-hover': themeVar('--gold-solid-hover') },
       },
+      // Elevation tokens ("Lifted cards" in DESIGN.md). Strength and color come from --shadow-* in src/styles.css,
+      // so each theme tunes its own shadows.
+      boxShadow: {
+        card: 'inset 0 1px 0 0 var(--shadow-highlight), 0 1px 2px rgb(var(--shadow-color) / var(--shadow-near)), 0 8px 24px -10px rgb(var(--shadow-color) / var(--shadow-far))',
+        'card-lift': 'inset 0 1px 0 0 var(--shadow-highlight), 0 2px 4px rgb(var(--shadow-color) / var(--shadow-near)), 0 18px 36px -12px rgb(var(--shadow-color) / calc(var(--shadow-far) * 1.4))',
+        float: 'inset 0 1px 0 0 var(--shadow-highlight), 0 4px 8px rgb(var(--shadow-color) / var(--shadow-near)), 0 28px 56px -16px rgb(var(--shadow-color) / calc(var(--shadow-far) * 1.6))',
+      },
     },
   },
   plugins: [],

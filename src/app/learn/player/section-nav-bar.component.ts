@@ -10,10 +10,15 @@ export interface SectionNavItem {
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-section-nav-bar',
   standalone: true,
+  // Sticky lives on the host: a sticky element can only move inside its parent, and this host is the
+  // flex item in the lesson column, so a sticky <nav> inside it (exactly as tall as itself) never moved.
+  // bottom-0 is measured inside the scrolling column's padding, and below lg that padding already clears the
+  // fixed mobile nav (4.375rem plus the safe area, see learn-layout), so the bar rests right on top of it.
+  // From lg there is no padding and the bar sits on the viewport edge, so only then does it pad for the safe area.
+  host: { class: 'sticky bottom-0 z-20 block' },
   template: `
-    <nav class="sticky bottom-16 lg:bottom-0 z-20 border-t border-stone-800 bg-stone-950/95 backdrop-blur"
-         aria-label="Section navigation"
-         style="padding-bottom: max(0.5rem, env(safe-area-inset-bottom))">
+    <nav class="border-t border-stone-800 bg-stone-950/95 pb-2 backdrop-blur lg:pb-[max(0.5rem,env(safe-area-inset-bottom))]"
+         aria-label="Section navigation">
       <div class="mx-auto flex max-w-5xl items-center justify-between gap-2 px-3 py-2 sm:gap-4 sm:px-6 sm:py-3">
 
         <!-- Previous -->

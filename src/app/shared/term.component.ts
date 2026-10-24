@@ -36,7 +36,7 @@ let nextId = 1;
         role="tooltip"
         data-testid="term-tooltip"
         [id]="tooltipId"
-        class="absolute left-0 top-full z-30 mt-1 w-64 max-w-[80vw] rounded-xl border border-stone-700 bg-stone-950 p-3 text-left text-xs font-normal leading-relaxed text-stone-200 shadow-xl"
+        class="absolute left-0 top-full z-30 mt-1 w-64 max-w-[80vw] rounded-xl border border-stone-700 bg-stone-950 p-3 text-left text-xs font-normal leading-relaxed text-stone-200 shadow-float-xl"
       >
         <strong class="block text-gold-300">{{ e.title }}</strong>
         {{ e.text }}

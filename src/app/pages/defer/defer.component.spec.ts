@@ -1,4 +1,5 @@
 import { DeferBlockBehavior, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { DeferStatsService } from './defer-stats.service';
 import { DeferComponent } from './defer.component';
@@ -16,7 +17,7 @@ describe('DeferComponent', () => {
 
   beforeEach(() => {
     // Let @defer blocks really load when their trigger fires, the way they do in the browser.
-    TestBed.configureTestingModule({ deferBlockBehavior: DeferBlockBehavior.Playthrough });
+    TestBed.configureTestingModule({ deferBlockBehavior: DeferBlockBehavior.Playthrough, providers: [provideRouter([])] });
     TestBed.inject(DeferStatsService).created.set(0);
   });
 

@@ -29,7 +29,7 @@ export const TOUR_STEPS: TourStep[] = [
         aria-modal="false"
         aria-labelledby="tour-title"
         data-testid="tour"
-        class="fixed inset-x-4 bottom-24 z-40 rounded-2xl border border-gold-500/40 bg-stone-900 p-5 shadow-2xl sm:left-auto sm:right-6 sm:w-96 lg:bottom-6"
+        class="fixed inset-x-4 bottom-24 z-40 rounded-2xl border border-gold-500/40 bg-stone-900 p-5 shadow-float sm:left-auto sm:right-6 sm:w-96 lg:bottom-6"
       >
         <div class="flex items-center justify-between gap-3">
           <p class="text-xs font-bold uppercase tracking-widest text-gold-400" data-testid="tour-progress">Quick tour · {{ index() + 1 }} of {{ total }}</p>

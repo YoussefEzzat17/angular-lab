@@ -37,7 +37,7 @@ import { EmptyStateComponent } from '../../shared/empty-state.component';
       @if (total() === 0) {
         <app-empty-state
           class="mt-8"
-          icon="🕑"
+          icon="clock"
           heading="No history yet"
           message="Finish a section or take a quiz and it will show up here."
           ctaLabel="Start learning →"
@@ -108,7 +108,7 @@ import { EmptyStateComponent } from '../../shared/empty-state.component';
         } @empty {
           <app-empty-state
             class="mt-8"
-            icon="🔎"
+            icon="search"
             heading="Nothing matches these filters"
             message="Try a different activity type or topic."
           />

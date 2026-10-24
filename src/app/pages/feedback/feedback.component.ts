@@ -50,7 +50,7 @@ const COOLDOWN_SECONDS = 10;
       <form
         [formGroup]="feedbackForm"
         (ngSubmit)="submit()"
-        class="mt-8 rounded-3xl border border-stone-800 bg-stone-900 p-6 shadow-2xl shadow-black/20 sm:p-8"
+        class="mt-8 rounded-3xl border border-stone-800 bg-stone-900 p-6 shadow-card sm:p-8"
       >
         <div class="grid gap-6 sm:grid-cols-2">
           <div>

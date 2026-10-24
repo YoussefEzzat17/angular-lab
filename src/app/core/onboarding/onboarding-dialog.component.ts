@@ -16,7 +16,7 @@ import { ProfileService } from '../services/profile.service';
         aria-labelledby="onboarding-title"
         cdkTrapFocus
         [cdkTrapFocusAutoCapture]="true"
-        class="w-full max-w-md rounded-3xl border border-stone-800 bg-stone-900 p-8 shadow-2xl shadow-black/60"
+        class="w-full max-w-md rounded-3xl border border-stone-800 bg-stone-900 p-8 shadow-float"
       >
         <p class="text-4xl text-center">👋</p>
         <h2 id="onboarding-title" class="mt-4 text-2xl font-bold text-center text-stone-100">

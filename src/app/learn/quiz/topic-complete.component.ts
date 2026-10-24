@@ -2,43 +2,46 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TOPICS } from '../../core/data/topics';
 import { ProgressService } from '../../core/services/progress.service';
+import { IconComponent } from '../../shared/icon.component';
 import { QUIZ_RULES, type TopicId } from '../../core/models/learning.models';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, IconComponent],
   template: `
     @if (topic(); as t) {
       <section class="mx-auto max-w-2xl px-4 py-16 sm:px-6 text-center">
-        <!-- Celebration emoji (CSS animated, respects prefers-reduced-motion) -->
-        <p class="text-6xl" aria-hidden="true" style="animation: pop 0.4s ease-out">🎉</p>
+        <!-- Completion badge (pops in; still under reduced motion) -->
+        <span class="mx-auto grid h-20 w-20 place-items-center rounded-full bg-emerald-500/15 text-emerald-400 shadow-card" aria-hidden="true" style="animation: pop 0.4s ease-out">
+          <app-icon name="check" class="h-10 w-10" />
+        </span>
         <h1 class="mt-6 text-3xl font-bold sm:text-4xl">Topic Complete!</h1>
-        <p class="mt-3 text-xl font-semibold text-gold-400">{{ t.icon }} {{ t.title }}</p>
+        <p class="mt-3 text-xl font-semibold text-gold-400">{{ t.title }}</p>
         <p class="mt-4 text-stone-400">You've completed all sections and passed the quiz. Excellent work!</p>
 
         @if (bestScore() !== undefined) {
           <div class="mt-6 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-5 py-2 text-emerald-400">
-            <span class="text-lg">✓</span>
+            <app-icon name="check" class="h-4 w-4" />
             <span class="font-semibold">Best score: {{ bestScore() }}/{{ quizSize }}</span>
           </div>
         }
 
         <!-- Next topic -->
         @if (nextTopic(); as next) {
-          <div class="mt-10 rounded-2xl border border-stone-800 bg-stone-900 p-6">
+          <div class="card mt-10">
             <p class="text-sm font-semibold text-gold-400">UP NEXT</p>
-            <p class="mt-2 text-xl font-bold">{{ next.icon }} {{ next.title }}</p>
+            <p class="mt-2 text-xl font-bold">{{ next.title }}</p>
             <p class="mt-1 text-sm text-stone-400">{{ next.description }}</p>
             <a [routerLink]="['/learn', next.id]"
-               class="mt-5 inline-block rounded-xl bg-gold-solid px-6 py-3 font-semibold text-white transition hover:bg-gold-solid-hover">
-              Start {{ next.title }} →
+               class="btn-primary mt-5">
+              Start {{ next.title }} <app-icon name="chevron-right" class="h-4 w-4" />
             </a>
           </div>
         } @else {
           <div class="mt-10 rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-6">
-            <p class="text-2xl font-bold text-emerald-400">🏆 You've completed all topics!</p>
-            <a routerLink="/" class="mt-5 inline-block rounded-xl bg-gold-solid px-6 py-3 font-semibold text-white transition hover:bg-gold-solid-hover">
+            <p class="text-2xl font-bold text-emerald-400">You've completed all topics!</p>
+            <a routerLink="/" class="btn-primary mt-5">
               Back to Home
             </a>
           </div>
@@ -46,7 +49,7 @@ import { QUIZ_RULES, type TopicId } from '../../core/models/learning.models';
 
         <div class="mt-8 flex justify-center gap-4">
           <a [routerLink]="['/learn', t.id]"
-             class="rounded-xl border border-stone-700 px-4 py-2 text-sm text-stone-400 transition hover:bg-stone-800">
+             class="btn-secondary">
             Review topic
           </a>
         </div>

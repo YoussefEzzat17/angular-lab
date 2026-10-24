@@ -2,13 +2,15 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { RouterLink } from '@angular/router';
 import { BookmarkService } from '../../core/services/bookmark.service';
 import { EmptyStateComponent } from '../../shared/empty-state.component';
+import { IconComponent } from '../../shared/icon.component';
+import { GROUP_ICONS } from '../../shared/learning-icons';
 import { TOPICS } from '../../core/data/topics';
 import type { TopicId } from '../../core/models/learning.models';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [RouterLink, EmptyStateComponent],
+  imports: [RouterLink, EmptyStateComponent, IconComponent],
   template: `
     <section class="mx-auto max-w-3xl px-4 py-10 sm:px-6">
       <p class="text-sm font-semibold text-gold-400">MY BOOKMARKS</p>
@@ -20,22 +22,23 @@ import type { TopicId } from '../../core/models/learning.models';
           @for (group of groupedBookmarks(); track group.topicId) {
             <div>
               <div class="flex items-center gap-2">
-                <span class="text-xl">{{ group.topicIcon }}</span>
+                <app-icon [name]="group.groupIcon" class="h-5 w-5 text-gold-400" />
                 <h2 class="font-bold text-stone-100">{{ group.topicTitle }}</h2>
               </div>
               <div class="mt-3 space-y-2">
                 @for (item of group.sections; track item.sectionId) {
-                  <div class="flex items-center gap-3 rounded-xl border border-stone-800 bg-stone-900 px-4 py-3">
+                  <div class="card flex items-center gap-2 py-1 pl-4 pr-1">
                     <a [routerLink]="['/learn', group.topicId, item.sectionId]"
-                       class="flex-1 text-sm font-semibold text-stone-200 transition hover:text-gold-300">
-                      🔖 {{ item.sectionTitle }}
+                       class="flex min-h-11 flex-1 items-center gap-2.5 text-sm font-semibold text-stone-200 transition hover:text-gold-300">
+                      <app-icon name="bookmark" class="h-4 w-4 shrink-0 text-gold-400" />
+                      {{ item.sectionTitle }}
                     </a>
                     <button
                       type="button"
                       (click)="remove(group.topicId, item.sectionId)"
-                      aria-label="Remove bookmark"
-                      class="text-xs text-stone-500 transition hover:text-rose-400"
-                    >✕</button>
+                      [attr.aria-label]="'Remove ' + item.sectionTitle + ' from saved'"
+                      class="btn-icon text-stone-500 hover:text-rose-400"
+                    ><app-icon name="close" class="h-4 w-4" /></button>
                   </div>
                 }
               </div>
@@ -45,7 +48,7 @@ import type { TopicId } from '../../core/models/learning.models';
       } @else {
         <app-empty-state
           class="mt-10"
-          icon="🔖"
+          icon="bookmark"
           heading="No bookmarks yet"
           message="Tap the bookmark icon on any section to save it here."
           ctaLabel="Start learning →"
@@ -71,7 +74,7 @@ export class BookmarksComponent {
       return {
         topicId,
         topicTitle: topic?.title ?? topicId,
-        topicIcon: topic?.icon ?? '📌',
+        groupIcon: GROUP_ICONS[topic?.group ?? 'fundamentals'],
         sections: bms.map((b) => ({
           sectionId: b.sectionId,
           sectionTitle: topic?.sections.find((s) => s.id === b.sectionId)?.title ?? b.sectionId,

@@ -6,15 +6,16 @@ import { TOPICS } from '../../core/data/topics';
 import { BookmarkService } from '../../core/services/bookmark.service';
 import { ProgressService } from '../../core/services/progress.service';
 import { ToastService } from '../../core/services/toast.service';
+import { PageHeaderComponent } from '../../shared/page-header.component';
 import { LessonPlayerComponent } from './lesson-player.component';
 import { LessonSectionDirective } from './lesson-section.directive';
 
 @Component({
   standalone: true,
-  imports: [LessonPlayerComponent, LessonSectionDirective],
+  imports: [LessonPlayerComponent, LessonSectionDirective, PageHeaderComponent],
   template: `
     <app-lesson-player [topicId]="'binding'" [section]="section()">
-      <ng-template appLessonSection="overview"><p data-testid="body-overview">Overview body</p></ng-template>
+      <ng-template appLessonSection="overview"><app-page-header title="Data Binding">Intro</app-page-header><p data-testid="body-overview">Overview body</p></ng-template>
       <ng-template appLessonSection="interpolation"><p data-testid="body-interpolation">Interpolation body</p></ng-template>
       <ng-template appLessonSection="property-binding"><p data-testid="body-property">Property body</p></ng-template>
       <ng-template appLessonSection="event-binding"><p data-testid="body-event">Event body</p></ng-template>
@@ -39,15 +40,23 @@ describe('LessonPlayerComponent', () => {
     TestBed.configureTestingModule({ providers: [provideRouter([])] });
     const router = TestBed.inject(Router);
     const navigate = spyOn(router, 'navigate').and.resolveTo(true);
-    spyOn(window, 'scrollTo');
+    const scrollIntoView = spyOn(HTMLElement.prototype, 'scrollIntoView');
     const fixture = TestBed.createComponent(HostComponent);
     fixture.componentInstance.section.set(section ?? undefined);
     fixture.detectChanges();
     const root: HTMLElement = fixture.nativeElement;
     const has = (testId: string) => root.querySelector(`[data-testid="${testId}"]`) !== null;
-    const headerText = () => root.querySelector('.border-b')?.textContent?.replace(/\s+/g, ' ').trim();
+    const headerText = () => root.querySelector('header')?.textContent?.replace(/\s+/g, ' ').trim();
     const navButtons = () => Array.from(root.querySelectorAll<HTMLButtonElement>('nav[aria-label="Section navigation"] button'));
-    return { fixture, root, has, headerText, navButtons, navigate };
+    /** What the router does after a navigation: hand the player the new :section, then let it render. */
+    const arrive = async (id: string) => {
+      fixture.componentInstance.section.set(id);
+      fixture.detectChanges();
+      await fixture.whenStable();
+      fixture.detectChanges();
+    };
+    const sectionTabs = () => Array.from(root.querySelectorAll<HTMLAnchorElement>('nav[aria-label="Lesson sections"] a[data-section-tab]'));
+    return { fixture, root, has, headerText, navButtons, navigate, scrollIntoView, arrive, sectionTabs };
   }
 
   afterEach(() => localStorage.clear());
@@ -163,10 +172,113 @@ describe('LessonPlayerComponent', () => {
     expect(TestBed.inject(ProgressService).isSectionDone('binding', 'interpolation')).toBeFalse();
   });
 
+  it('keeps the section bar sticky on its host, where it has room to move', () => {
+    const { root } = setup('interpolation');
+
+    const host = root.querySelector('app-section-nav-bar')!;
+
+    expect(host.classList).toContain('sticky');
+    expect(host.classList).toContain('bottom-0');
+  });
+
+  it('opens the next section at its top, even when Next is pressed far down the page', async () => {
+    const { root, navButtons, scrollIntoView, arrive } = setup('interpolation');
+
+    navButtons().at(-1)!.click();
+    await arrive('property-binding');
+
+    expect(scrollIntoView).toHaveBeenCalledOnceWith({ block: 'start', behavior: 'smooth' });
+    const scrolled: unknown = scrollIntoView.calls.mostRecent().object;
+    expect(scrolled).toBe(root.querySelector('header'));
+  });
+
+  it('does not scroll or move focus when the lesson first opens', async () => {
+    const { fixture, scrollIntoView } = setup('interpolation');
+    await fixture.whenStable();
+
+    expect(scrollIntoView).not.toHaveBeenCalled();
+    expect(document.activeElement?.tagName).not.toBe('H1');
+  });
+
+  it('jumps instead of gliding when the learner prefers reduced motion', async () => {
+    spyOn(window, 'matchMedia').and.returnValue({ matches: true } as MediaQueryList);
+    const { navButtons, scrollIntoView, arrive } = setup('interpolation');
+
+    navButtons().at(-1)!.click();
+    await arrive('property-binding');
+
+    expect(window.matchMedia).toHaveBeenCalledWith('(prefers-reduced-motion: reduce)');
+    expect(scrollIntoView).toHaveBeenCalledOnceWith({ block: 'start', behavior: 'auto' });
+  });
+
+  it('keeps focus on the bottom bar and announces the new section when Next is pressed there', async () => {
+    const { root, navButtons, arrive } = setup('interpolation');
+    const next = navButtons().at(-1)!;
+
+    next.focus();
+    next.click();
+    await arrive('property-binding');
+
+    expect(document.activeElement).toBe(next);
+    expect(root.querySelector('[aria-live="polite"]')?.textContent).toContain(
+      `Section ${position('property-binding')} of ${SECTIONS.length}: ${titleOf('property-binding')}`,
+    );
+  });
+
+  it('moves focus to the new section title when the learner arrives another way (tab, sidebar, link)', async () => {
+    const { root, arrive } = setup('interpolation');
+
+    await arrive('event-binding');
+
+    expect(document.activeElement).toBe(root.querySelector('h1'));
+    expect(root.querySelector('h1')?.textContent?.trim()).toBe(titleOf('event-binding'));
+  });
+
+  it('heads the page with breadcrumbs and one h1, the section title', () => {
+    const { root } = setup('overview');
+
+    const crumbs = root.querySelector('nav[aria-label="Breadcrumb"]')?.textContent?.replace(/\s+/g, ' ').trim();
+    expect(crumbs).toContain('Fundamentals');
+    expect(crumbs).toContain('Data Binding');
+    expect(root.querySelectorAll('h1').length).toBe(1);
+    expect(root.querySelector('h1')?.textContent?.trim()).toBe(titleOf('overview'));
+    // The topic intro inside the section steps down to h2.
+    expect(root.querySelector('app-page-header h2')?.textContent?.trim()).toBe('Data Binding');
+  });
+
+  it('lists every section as a tab, marks the current and done ones, and links each to its URL', () => {
+    const { root, sectionTabs } = setup('property-binding', () =>
+      localStorage.setItem(
+        'angular-lab:progress',
+        JSON.stringify({ version: 2, topics: { binding: { sectionsDone: ['overview'], attempts: [] } }, activity: [] }),
+      ),
+    );
+
+    const tabs = sectionTabs();
+    expect(tabs.map((t) => t.dataset['sectionTab'])).toEqual(SECTIONS.map((s) => s.id));
+    expect(tabs.find((t) => t.getAttribute('aria-current') === 'step')?.dataset['sectionTab']).toBe('property-binding');
+    expect(tabs[0].textContent).toContain('done');
+    expect(tabs[0].getAttribute('href')).toBe('/learn/binding/overview');
+    expect(root.querySelector('[data-testid="quiz-tab-locked"]')).not.toBeNull();
+  });
+
+  it('unlocks the quiz tab once every section is done', () => {
+    const { root } = setup('overview', () =>
+      localStorage.setItem(
+        'angular-lab:progress',
+        JSON.stringify({ version: 2, topics: { binding: { sectionsDone: SECTIONS.map((s) => s.id), attempts: [] } }, activity: [] }),
+      ),
+    );
+
+    expect(root.querySelector('[data-testid="quiz-tab-locked"]')).toBeNull();
+    const quiz = Array.from(root.querySelectorAll('nav[aria-label="Lesson sections"] a')).find((a) => a.textContent?.includes('Quiz'));
+    expect(quiz?.getAttribute('href')).toBe('/learn/binding/quiz');
+  });
+
   it('marks the current dot as the current step', () => {
     const { root } = setup('property-binding');
 
-    const current = root.querySelector('[aria-current="step"]');
+    const current = root.querySelector('nav[aria-label="Section navigation"] [aria-current="step"]');
 
     expect(current?.getAttribute('aria-label')).toBe(`Section ${position('property-binding')}: ${titleOf('property-binding')}`);
   });

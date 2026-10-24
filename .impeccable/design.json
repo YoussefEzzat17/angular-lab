@@ -1,0 +1,489 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-24T18:37:05.655649+00:00",
+  "title": "Design System: Angular Lab",
+  "extensions": {
+    "colorMeta": {
+      "workshop-night": {
+        "role": "neutral",
+        "displayName": "Workshop Night",
+        "canonical": "rgb(var(--stone-950))",
+        "tonalRamp": [
+          "#0c0a09",
+          "#1c1917",
+          "#292524",
+          "#44403c",
+          "#9a8b7c",
+          "#a8a29e",
+          "#d6d3d1",
+          "#f5f5f4"
+        ]
+      },
+      "oiled-walnut": {
+        "role": "neutral",
+        "displayName": "Oiled Walnut",
+        "canonical": "rgb(var(--stone-900))",
+        "tonalRamp": [
+          "#0c0a09",
+          "#1c1917",
+          "#292524",
+          "#44403c",
+          "#9a8b7c",
+          "#a8a29e",
+          "#d6d3d1",
+          "#f5f5f4"
+        ]
+      },
+      "bench-top": {
+        "role": "neutral",
+        "displayName": "Bench Top",
+        "canonical": "rgb(var(--stone-800))",
+        "tonalRamp": [
+          "#0c0a09",
+          "#1c1917",
+          "#292524",
+          "#44403c",
+          "#9a8b7c",
+          "#a8a29e",
+          "#d6d3d1",
+          "#f5f5f4"
+        ]
+      },
+      "iron-rule": {
+        "role": "neutral",
+        "displayName": "Iron Rule",
+        "canonical": "rgb(var(--stone-700))",
+        "tonalRamp": [
+          "#0c0a09",
+          "#1c1917",
+          "#292524",
+          "#44403c",
+          "#9a8b7c",
+          "#a8a29e",
+          "#d6d3d1",
+          "#f5f5f4"
+        ]
+      },
+      "pencil-grey": {
+        "role": "neutral",
+        "displayName": "Pencil Grey",
+        "canonical": "rgb(var(--stone-400))",
+        "tonalRamp": [
+          "#0c0a09",
+          "#1c1917",
+          "#292524",
+          "#44403c",
+          "#9a8b7c",
+          "#a8a29e",
+          "#d6d3d1",
+          "#f5f5f4"
+        ]
+      },
+      "chalk": {
+        "role": "neutral",
+        "displayName": "Chalk",
+        "canonical": "rgb(var(--stone-100))",
+        "tonalRamp": [
+          "#0c0a09",
+          "#1c1917",
+          "#292524",
+          "#44403c",
+          "#9a8b7c",
+          "#a8a29e",
+          "#d6d3d1",
+          "#f5f5f4"
+        ]
+      },
+      "lamp-brass": {
+        "role": "primary",
+        "displayName": "Lamp Brass",
+        "canonical": "rgb(var(--gold-400))",
+        "tonalRamp": [
+          "#241a12",
+          "#5c4526",
+          "#96703a",
+          "#b58a4a",
+          "#c9a263",
+          "#dbb877",
+          "#e8d3a6",
+          "#faf6ec"
+        ]
+      },
+      "lamplight": {
+        "role": "primary",
+        "displayName": "Lamplight",
+        "canonical": "rgb(var(--gold-300))",
+        "tonalRamp": [
+          "#241a12",
+          "#5c4526",
+          "#96703a",
+          "#b58a4a",
+          "#c9a263",
+          "#dbb877",
+          "#e8d3a6",
+          "#faf6ec"
+        ]
+      },
+      "candle-wax": {
+        "role": "primary",
+        "displayName": "Candle Wax",
+        "canonical": "rgb(var(--gold-200))",
+        "tonalRamp": [
+          "#241a12",
+          "#5c4526",
+          "#96703a",
+          "#b58a4a",
+          "#c9a263",
+          "#dbb877",
+          "#e8d3a6",
+          "#faf6ec"
+        ]
+      },
+      "burnished-brass": {
+        "role": "primary",
+        "displayName": "Burnished Brass",
+        "canonical": "rgb(var(--gold-solid))",
+        "tonalRamp": [
+          "#241a12",
+          "#5c4526",
+          "#96703a",
+          "#b58a4a",
+          "#c9a263",
+          "#dbb877",
+          "#e8d3a6",
+          "#faf6ec"
+        ]
+      },
+      "burnished-brass-deep": {
+        "role": "primary",
+        "displayName": "Burnished Brass Deep",
+        "canonical": "rgb(var(--gold-solid-hover))",
+        "tonalRamp": [
+          "#241a12",
+          "#5c4526",
+          "#96703a",
+          "#b58a4a",
+          "#c9a263",
+          "#dbb877",
+          "#e8d3a6",
+          "#faf6ec"
+        ]
+      },
+      "claret": {
+        "role": "tertiary",
+        "displayName": "Claret",
+        "canonical": "rgb(var(--status-rose))",
+        "tonalRamp": [
+          "#2a0d12",
+          "#3b141b",
+          "#5a121c",
+          "#7a1a26",
+          "#c76b7a",
+          "#e0949e",
+          "#efc3c9",
+          "#faedee"
+        ]
+      },
+      "claret-panel": {
+        "role": "tertiary",
+        "displayName": "Claret Panel",
+        "canonical": "rgb(var(--panel-danger-bg))",
+        "tonalRamp": [
+          "#2a0d12",
+          "#3b141b",
+          "#5a121c",
+          "#7a1a26",
+          "#c76b7a",
+          "#e0949e",
+          "#efc3c9",
+          "#faedee"
+        ]
+      },
+      "patina": {
+        "role": "tertiary",
+        "displayName": "Patina",
+        "canonical": "rgb(var(--status-emerald))",
+        "tonalRamp": [
+          "#022c22",
+          "#064e3b",
+          "#065f46",
+          "#047857",
+          "#34d399",
+          "#6ee7b7",
+          "#a7f3d0",
+          "#ecfdf5"
+        ]
+      },
+      "patina-panel": {
+        "role": "tertiary",
+        "displayName": "Patina Panel",
+        "canonical": "rgb(var(--panel-success-bg))",
+        "tonalRamp": [
+          "#022c22",
+          "#064e3b",
+          "#065f46",
+          "#047857",
+          "#34d399",
+          "#6ee7b7",
+          "#a7f3d0",
+          "#ecfdf5"
+        ]
+      },
+      "ember": {
+        "role": "tertiary",
+        "displayName": "Ember",
+        "canonical": "rgb(var(--status-amber))",
+        "tonalRamp": [
+          "#451a03",
+          "#78350f",
+          "#92400e",
+          "#b45309",
+          "#f59e0b",
+          "#fcd34d",
+          "#fde68a",
+          "#fffbeb"
+        ]
+      }
+    },
+    "themes": {
+      "light": {
+        "selector": ":root[data-theme='light']",
+        "note": "Same variables repainted to warm parchment; e.g. stone-950 #fdfaf4, stone-900 #faf6ef, stone-800 #ebe3d5, stone-100 #241d18, gold-400 #825c28, gold-solid #92682a."
+      },
+      "forcedDark": {
+        "selector": ".theme-dark-scope",
+        "note": "Pins a subtree (e.g. home hero) to the dark values."
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Home hero only."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Page and lesson titles (text-3xl, sm:text-4xl)."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Section, card and dialog titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Default 14px copy for lessons and UI; intros at 16px, max-w-3xl."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "11px bold uppercase Lamp Brass eyebrows and group headings."
+      },
+      "code": {
+        "displayName": "Code",
+        "purpose": "Code blocks and inline values."
+      }
+    },
+    "shadows": [
+      {
+        "name": "shadow-card",
+        "value": "inset 0 1px 0 0 var(--shadow-highlight), 0 1px 2px rgb(var(--shadow-color) / var(--shadow-near)), 0 8px 24px -10px rgb(var(--shadow-color) / var(--shadow-far))",
+        "purpose": "Every card and panel at rest."
+      },
+      {
+        "name": "shadow-card-lift",
+        "value": "inset 0 1px 0 0 var(--shadow-highlight), 0 2px 4px rgb(var(--shadow-color) / var(--shadow-near)), 0 18px 36px -12px rgb(var(--shadow-color) / calc(var(--shadow-far) * 1.4))",
+        "purpose": "Interactive card on hover or keyboard focus (.interactive-card), with a brass edge."
+      },
+      {
+        "name": "shadow-float",
+        "value": "inset 0 1px 0 0 var(--shadow-highlight), 0 4px 8px rgb(var(--shadow-color) / var(--shadow-near)), 0 28px 56px -16px rgb(var(--shadow-color) / calc(var(--shadow-far) * 1.6))",
+        "purpose": "Dropdowns, palette, dialogs, tour, toasts."
+      },
+      {
+        "name": "lamp-glow",
+        "value": "0 10px 15px -3px rgb(var(--gold-500) / 0.2)",
+        "purpose": "Home hero primary CTA only."
+      },
+      {
+        "name": "signal-glow",
+        "value": "0 0 6px 2px rgb(201 162 99 / 0.7)",
+        "purpose": "Moving dot in flow diagrams."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-standard",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1) 150ms",
+        "purpose": "Default `transition` for hovers and state changes."
+      },
+      {
+        "name": "theme-swap",
+        "value": "200ms colors",
+        "purpose": "Body background/text when toggling theme."
+      },
+      {
+        "name": "draw-bracket",
+        "value": "stroke-dashoffset keyframes",
+        "purpose": "Logo bracket draw-in."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "global 0.01ms override",
+        "purpose": "All animation and transitions collapse under prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
+    ],
+    "focus": {
+      "value": "outline: 2px solid rgb(var(--gold-400)); outline-offset: 2px",
+      "purpose": "Global :focus-visible ring; inputs use a Lamp Brass border instead."
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single solid brass action per view.",
+      "html": "<button class=\"ds-btn-primary\">Start lesson</button>",
+      "css": ".ds-btn-primary{min-height:44px;padding:0 16px;border:0;border-radius:12px;background:rgb(var(--gold-solid));color:#fff;font-size:14px;font-weight:600;cursor:pointer;transition:background-color 150ms cubic-bezier(0.4,0,0.2,1)}.ds-btn-primary:hover{background:rgb(var(--gold-solid-hover))}.ds-btn-primary:focus-visible{outline:2px solid rgb(var(--gold-400));outline-offset:2px}.ds-btn-primary:disabled{opacity:.4;cursor:not-allowed}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Quiet outlined action.",
+      "html": "<button class=\"ds-btn-secondary\">Skip tour</button>",
+      "css": ".ds-btn-secondary{min-height:44px;padding:0 16px;border:1px solid rgb(var(--stone-700));border-radius:12px;background:transparent;color:rgb(var(--stone-300));font-size:14px;font-weight:600;cursor:pointer;transition:background-color 150ms cubic-bezier(0.4,0,0.2,1)}.ds-btn-secondary:hover{background:rgb(var(--stone-800))}.ds-btn-secondary:focus-visible{outline:2px solid rgb(var(--gold-400));outline-offset:2px}"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Walnut field with brass focus border.",
+      "html": "<input class=\"ds-input\" placeholder=\"Your name (optional)\" aria-label=\"Your name\" />",
+      "css": ".ds-input{min-height:44px;padding:0 12px;border:1px solid rgb(var(--stone-700));border-radius:12px;background:rgb(var(--stone-900));color:rgb(var(--stone-100));font-size:14px;outline:none;transition:border-color 150ms}.ds-input::placeholder{color:rgb(var(--stone-500))}.ds-input:focus{border-color:rgb(var(--gold-400))}"
+    },
+    {
+      "name": "Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Brass-tint pill for levels, counts and status.",
+      "html": "<span class=\"ds-chip\">Beginner</span>",
+      "css": ".ds-chip{display:inline-block;padding:4px 10px;border-radius:9999px;background:rgb(var(--gold-500)/.15);color:rgb(var(--gold-300));font-size:12px;font-weight:700}"
+    },
+    {
+      "name": "Lifted Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Walnut card on the bench, lifts on hover.",
+      "html": "<a href=\"#\" class=\"ds-card\"><span class=\"ds-card-kicker\">TRY IT</span><strong class=\"ds-card-title\">Data Binding</strong><span class=\"ds-card-body\">Interpolation, property, event and two-way binding.</span></a>",
+      "css": ".ds-card{display:flex;flex-direction:column;gap:6px;max-width:280px;padding:16px;border:1px solid rgb(var(--stone-800));border-radius:16px;background:rgb(var(--stone-900));color:rgb(var(--stone-100));text-decoration:none;box-shadow:inset 0 1px 0 0 var(--shadow-highlight),0 1px 2px rgb(var(--shadow-color)/var(--shadow-near)),0 8px 24px -10px rgb(var(--shadow-color)/var(--shadow-far));transition:transform 150ms cubic-bezier(0.4,0,0.2,1),box-shadow 150ms,border-color 150ms}.ds-card:hover,.ds-card:focus-visible{border-color:rgb(var(--gold-500)/.6);box-shadow:inset 0 1px 0 0 var(--shadow-highlight),0 2px 4px rgb(var(--shadow-color)/var(--shadow-near)),0 18px 36px -12px rgb(var(--shadow-color)/calc(var(--shadow-far)*1.4));outline:none}@media (prefers-reduced-motion:no-preference){.ds-card:hover,.ds-card:focus-visible{transform:translateY(-2px)}}.ds-card-kicker{font-size:11px;font-weight:700;letter-spacing:.05em;color:rgb(var(--gold-400))}.ds-card-title{font-size:20px;font-weight:700}.ds-card-body{font-size:14px;color:rgb(var(--stone-400))}"
+    },
+    {
+      "name": "Sidebar Nav",
+      "kind": "nav",
+      "refersTo": "nav-item-active",
+      "description": "Curriculum group (icon, title, progress, chevron) with topic rows led by status rings; current topic in brass tint.",
+      "html": "<nav class=\"ds-nav\"><button class=\"ds-nav-group\" aria-expanded=\"true\"><svg aria-hidden=\"true\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M13 3 5 13.5h6L10 21l8-10.5h-6z\"/></svg><span>Reactivity</span><span class=\"ds-nav-count\">0/2</span></button><a href=\"#\" class=\"ds-nav-item ds-active\"><svg aria-hidden=\"true\" width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" style=\"transform:rotate(-90deg)\"><circle cx=\"10\" cy=\"10\" r=\"7\" fill=\"none\" stroke=\"rgb(var(--stone-700))\" stroke-width=\"2\"/><circle cx=\"10\" cy=\"10\" r=\"7\" fill=\"none\" stroke=\"rgb(var(--gold-400))\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-dasharray=\"44\" stroke-dashoffset=\"29\"/></svg>Signals</a><a href=\"#\" class=\"ds-nav-item\"><svg aria-hidden=\"true\" width=\"20\" height=\"20\" viewBox=\"0 0 20 20\"><circle cx=\"10\" cy=\"10\" r=\"7\" fill=\"none\" stroke=\"rgb(var(--stone-600))\" stroke-width=\"2\"/></svg>RxJS</a></nav>",
+      "css": ".ds-nav{display:flex;flex-direction:column;gap:2px;width:264px;padding:12px 8px;background:rgb(var(--stone-950))}.ds-nav-group{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 10px;border:0;border-radius:12px;background:transparent;color:rgb(var(--gold-400));font:600 13px system-ui,sans-serif;text-align:left;cursor:pointer;transition:background-color 150ms}.ds-nav-group span:first-of-type{flex:1;color:rgb(var(--stone-200))}.ds-nav-count{font-size:12px;font-weight:400;color:rgb(var(--stone-500));font-variant-numeric:tabular-nums}.ds-nav-group:hover{background:rgb(var(--stone-800))}.ds-nav-item{display:flex;align-items:center;gap:10px;min-height:44px;padding:0 10px 0 12px;border-radius:12px;font-size:14px;font-weight:500;color:rgb(var(--stone-300));text-decoration:none;transition:background-color 150ms}.ds-nav-item:hover{background:rgb(var(--stone-800));color:rgb(var(--stone-100))}.ds-nav-item:focus-visible,.ds-nav-group:focus-visible{outline:2px solid rgb(var(--gold-400));outline-offset:2px}.ds-active{background:rgb(var(--gold-500)/.1);color:rgb(var(--gold-300))}"
+    },
+    {
+      "name": "Code Block",
+      "kind": "custom",
+      "refersTo": "code-block",
+      "description": "Code example: header with language or file name, visible Copy, line-number gutter, palette syntax colors.",
+      "html": "<figure class=\"ds-code\"><figcaption class=\"ds-code-head\"><span class=\"ds-code-label\">TypeScript</span><button type=\"button\" class=\"ds-code-copy\" aria-label=\"Copy TypeScript code\"><svg aria-hidden=\"true\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"9\" y=\"9\" width=\"12\" height=\"12\" rx=\"2\"/><path d=\"M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1\"/></svg>Copy</button></figcaption><div class=\"ds-code-body\"><div class=\"ds-code-gutter\" aria-hidden=\"true\">1\n2\n3</div><pre class=\"ds-code-pre\"><span class=\"ds-kw\">const</span> count = signal(<span class=\"ds-num\">0</span>);\n<span class=\"ds-com\">// derived, lazy and cached</span>\n<span class=\"ds-kw\">const</span> label = computed(() =&gt; <span class=\"ds-str\">`Clicked ${count()}`</span>);</pre></div></figure>",
+      "css": ".ds-code{margin:0;max-width:520px;overflow:hidden;border:1px solid rgb(var(--code-border));border-radius:12px;background:rgb(var(--code-bg))}.ds-code-head{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;padding:4px 6px 4px 16px;border-bottom:1px solid rgb(var(--code-border));background:rgb(var(--code-head))}.ds-code-label{font:600 12px ui-monospace,SFMono-Regular,Menlo,monospace;color:rgb(var(--stone-300))}.ds-code-copy{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:0;border-radius:8px;background:transparent;color:rgb(var(--stone-300));font-size:12px;font-weight:600;cursor:pointer;transition:background-color 150ms,color 150ms}.ds-code-copy:hover{background:rgb(var(--stone-800));color:rgb(var(--gold-300))}.ds-code-copy:focus-visible{outline:2px solid rgb(var(--gold-400));outline-offset:2px}.ds-code-body{display:flex}.ds-code-gutter{padding:16px 12px 16px 16px;border-right:1px solid rgb(var(--code-border));color:rgb(var(--stone-500));text-align:right;white-space:pre;user-select:none;font:13px/24px ui-monospace,SFMono-Regular,Menlo,monospace}.ds-code-pre{flex:1;min-width:0;margin:0;padding:16px;overflow-x:auto;color:rgb(var(--gold-200));font:13px/24px ui-monospace,SFMono-Regular,Menlo,monospace}.ds-kw{color:rgb(var(--gold-300));font-weight:600}.ds-str{color:rgb(var(--status-emerald))}.ds-num{color:rgb(var(--status-amber))}.ds-com{color:rgb(var(--stone-400));font-style:italic}"
+    },
+    {
+      "name": "Danger Callout",
+      "kind": "custom",
+      "refersTo": "panel",
+      "description": "Burgundy watch-out panel with brass heading.",
+      "html": "<aside class=\"ds-callout\"><span class=\"ds-callout-kicker\">WATCH OUT</span><strong class=\"ds-callout-title\">Unsubscribe or leak</strong><p class=\"ds-callout-body\">A subscription that outlives its component keeps running.</p></aside>",
+      "css": ".ds-callout{max-width:420px;padding:24px;border:1px solid rgb(var(--panel-danger-heading)/.3);border-radius:16px;background:rgb(var(--panel-danger-bg))}.ds-callout-kicker{display:block;font-size:12px;font-weight:700;letter-spacing:.05em;color:rgb(var(--panel-danger-heading))}.ds-callout-title{display:block;margin-top:8px;font-size:20px;font-weight:700;color:rgb(var(--stone-100))}.ds-callout-body{margin:8px 0 0;font-size:14px;color:rgb(var(--stone-400))}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Lamplit Workbench",
+    "overview": "Angular Lab is a warm, dark workshop late in the evening. Brass lamps light the bench, the tools are laid out within reach, and gold marks the one thing that matters right now. The surfaces are walnut and iron rather than glass and chrome. Everything is warm-tinted: the neutrals lean brown, never blue-grey, and even the error tone is wine instead of alarm red. The workbench is where things get built. The live examples, visualisers and diagrams are the work on the bench, and the interface around them is the bench itself: sturdy, familiar and out of the way.\n\nThe feel is friendly and tactile. Controls are generously rounded, large enough for a thumb (44px), and respond when touched. Cards sit up off the bench on soft shadows and lift a little more under the hand. Progress is rewarded with brass: badges, rings, XP and the occasional burst of confetti. Density is moderate. Most copy is set small (14px), so lessons hold a lot of information without feeling crowded, and large type is kept for page titles and the home hero.\n\nThe workshop also has a daylight mode. The same tokens repaint to warm parchment with darker brass, and every component works in both without special-casing. Some decorative panels, such as the home hero, stay lamplit whatever the theme.",
+    "keyCharacteristics": [
+      "Warm brown-black neutrals (stone) and a single brass/gold accent; no cool greys, no second brand hue.",
+      "One solid brass button per view. Gold elsewhere is text, tint or outline.",
+      "Rounded, thumb-sized controls (12px corners, 44px minimum height).",
+      "Cards lifted on soft shadows; floating layers (dialogs, palette, toasts) lifted further.",
+      "Light and dark share the same classes; tokens describe a role, not a fixed color.",
+      "All motion honours `prefers-reduced-motion`."
+    ],
+    "rules": [
+      {
+        "name": "The Role-Not-Value Rule",
+        "body": "A stone or gold step names a role, not a fixed color: stone-950 is always the page and stone-100 is always the main text, in either theme. Never write `dark:` or `light:` variants. If something looks wrong in one theme, fix the token, not the component.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Lamp Rule",
+        "body": "Burnished Brass appears on at most one button per view, the primary action. Everything else that needs gold uses brass text, a tint or an outline. The lamp is bright because there is only one.",
+        "section": "colors"
+      },
+      {
+        "name": "The Label-Names-The-Kind Rule",
+        "body": "A card label names what kind of card it is (\"TRY IT\", \"THE #1 MISTAKE\", \"SIGNAL()\"). It never carries a sequence number; the player already says which section this is. `app-lesson-card` strips a leading \"N · \" from older labels.",
+        "section": "colors"
+      },
+      {
+        "name": "The No-Legacy-Classes Rule",
+        "body": "`src/styles.css` globally overrides `.bg-white`, `.bg-stone-50`, `.text-stone-800`, `.text-gold-600/700`, `.border-stone-200/300` and the rose/emerald/amber text classes, to keep old demo cards on-theme. New code never uses those classes for their literal meaning. Use the role tokens instead.",
+        "section": "colors"
+      },
+      {
+        "name": "The Semibold Spine Rule",
+        "body": "Hierarchy comes from weight (600 for controls and emphasis, 700 for headings) before size. Don't push body copy above 16px to create emphasis.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-Inside Rule",
+        "body": "Only the outer card is lifted. Anything set inside a card (a demo value, a nested group, a code panel, a log) is flat: `.tile` (Bench Top) or `.well` (Workshop Night), never a second shadow.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Tone-Then-Shadow Rule",
+        "body": "Every lifted surface first sits one stone step above what is beneath it, then gets its shadow. A shadow on the same tone as its background is mud.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do use the stone/gold role tokens for every color, so both themes work from one class list.",
+      "Do keep every tappable control at least 44px tall (`min-h-11`).",
+      "Do use Burnished Brass with white text for the single primary action per view, and darken it on hover.",
+      "Do use 12px corners as the default, rounding up for bigger containers (16px panels, 24px dialogs).",
+      "Do give cards one tonal step plus `shadow-card`, and lift interactive cards with `.interactive-card` (hover and keyboard focus).",
+      "Do keep everything inside a card flat (`.tile`, `.well`).",
+      "Do mark eyebrows and group headings with 11px bold uppercase Lamp Brass.",
+      "Do set real code and values in monospace with the palette's syntax colors.",
+      "Do keep text contrast at WCAG AA in both themes, and let the global reduced-motion rule apply to every animation."
+    ],
+    "donts": [
+      "Don't write `dark:` / `light:` variants or hard-code hex colors in components.",
+      "Don't use gold-400/500 as a button fill under white text. It fails contrast, which is why gold-solid exists.",
+      "Don't put more than one solid brass button in a view.",
+      "Don't introduce cool greys, blues or a second brand hue. Status colors stay muted (wine, patina, ember).",
+      "Don't use `.bg-white`, `.text-stone-800`, `.border-stone-200` and the other globally-overridden legacy classes in new code.",
+      "Don't set a shadow on a surface with the same tone as its background.",
+      "Don't write one-off shadow utilities (`shadow-xl shadow-black/20`); use the elevation tokens.",
+      "Don't use emoji as icons in navigation or controls.",
+      "Don't use sharp corners (under 8px) on interactive elements."
+    ]
+  }
+}

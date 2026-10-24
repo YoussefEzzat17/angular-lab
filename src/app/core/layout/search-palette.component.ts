@@ -13,7 +13,7 @@ import { buildSearchIndex, searchIndex } from '../services/search-index';
     @if (palette.open()) {
       <div class="fixed inset-0 z-50 flex items-start justify-center bg-stone-950/80 px-4 pt-[12vh] backdrop-blur-sm" (click)="close()">
         <div
-          class="w-full max-w-lg overflow-hidden rounded-2xl border border-stone-800 bg-stone-900 shadow-2xl shadow-black/60"
+          class="w-full max-w-lg overflow-hidden rounded-2xl border border-stone-800 bg-stone-900 shadow-float"
           (click)="$event.stopPropagation()"
         >
           <div class="flex items-center gap-3 border-b border-stone-800 px-4 py-3">

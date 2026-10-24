@@ -19,8 +19,17 @@ const TONES: Record<LessonCardTone, string> = {
 };
 
 /**
+ * Labels were written when every lesson was one long page ("6 · EFFECT()"). Sections split those pages up,
+ * so the numbers no longer match the "Section 3 of 6" the player shows. The label keeps naming the card's
+ * kind; the leading number is dropped.
+ */
+const LEADING_NUMBER = /^\s*\d+\s*·\s*/;
+
+/**
  * One lesson section: small tracked label, optional heading, then whatever you project.
  * Spacing between cards is the parent's job — put `class="mt-5"` (or a grid span) on the host.
+ * Cards rest on `shadow-card`; set `interactive` when the whole card responds to the pointer
+ * (a picker, a clickable demo) so it lifts on hover and keyboard focus.
  *
  *  - `default`   plain card
  *  - `highlight` gold-tinted card for the "Try it" interactive sections
@@ -32,8 +41,12 @@ const TONES: Record<LessonCardTone, string> = {
   standalone: true,
   host: { class: 'block min-w-0' },
   template: `
-    <article class="h-full rounded-2xl border p-6" [class]="surface().card">
-      <p class="text-xs font-bold tracking-wider" [class]="labelClass()">{{ label() }}</p>
+    <article
+      class="h-full rounded-2xl border p-6 shadow-card [&>ol]:max-w-[60ch] [&>p]:max-w-[60ch] [&>ul]:max-w-[60ch]"
+      [class]="surface().card"
+      [class.interactive-card]="interactive()"
+    >
+      <p class="text-xs font-bold tracking-wider" [class]="labelClass()">{{ displayLabel() }}</p>
       @if (heading()) {
         <h2 class="mt-2 font-bold" [class]="headingSize() === 'xl' ? 'text-xl' : 'text-lg'">{{ heading() }}</h2>
       }
@@ -48,7 +61,9 @@ export class LessonCardComponent {
   /** Override the label color when it should differ from the variant's default. */
   readonly tone = input<LessonCardTone>();
   readonly headingSize = input<'xl' | 'lg'>('xl');
+  readonly interactive = input(false);
 
+  protected readonly displayLabel = computed(() => this.label().replace(LEADING_NUMBER, ''));
   protected readonly surface = computed(() => SURFACES[this.variant()]);
   protected readonly labelClass = computed(() => TONES[this.tone() ?? this.surface().tone]);
 }

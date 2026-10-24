@@ -38,8 +38,8 @@ describe('TopicOverviewComponent', () => {
     const { root, text } = setup('movies', (progress) => progress.toggleManualComplete('di'));
 
     expect(root.querySelector('[data-testid="prereq-di"]')?.getAttribute('href')).toBe('/learn/di');
-    expect(text('prereq-di')).toContain('✓');
-    expect(text('prereq-rxjs')).not.toContain('✓');
+    expect(text('prereq-di')).toContain('(finished)');
+    expect(text('prereq-rxjs')).toContain('(not finished yet)');
     expect(text('prerequisites')).toContain('builds on these');
   });
 

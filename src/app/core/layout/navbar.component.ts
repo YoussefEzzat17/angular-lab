@@ -54,7 +54,7 @@ import { ThemeService } from '../services/theme.service';
 
             @if (topicsOpen()) {
               <div
-                class="absolute left-1/2 top-full mt-2 w-[900px] max-w-[calc(100vw-2rem)] -translate-x-1/2 rounded-2xl border border-stone-800 bg-stone-900 p-3 shadow-2xl shadow-black/50"
+                class="absolute left-1/2 top-full mt-2 w-[900px] max-w-[calc(100vw-2rem)] -translate-x-1/2 rounded-2xl border border-stone-800 bg-stone-900 p-3 shadow-float"
                 (click)="$event.stopPropagation()"
               >
                 <div class="grid grid-cols-3 gap-x-2 gap-y-3">
@@ -97,7 +97,7 @@ import { ThemeService } from '../services/theme.service';
 
             @if (demoOpen()) {
               <div
-                class="absolute left-1/2 top-full mt-2 w-64 -translate-x-1/2 rounded-2xl border border-stone-800 bg-stone-900 p-2 shadow-2xl shadow-black/50"
+                class="absolute left-1/2 top-full mt-2 w-64 -translate-x-1/2 rounded-2xl border border-stone-800 bg-stone-900 p-2 shadow-float"
                 (click)="$event.stopPropagation()"
               >
                 <a routerLink="/products" routerLinkActive="bg-gold-500/10 text-gold-300" class="flex items-center justify-between rounded-xl px-3 py-2.5 transition hover:bg-stone-800" (click)="closeAll()">
@@ -180,7 +180,7 @@ import { ThemeService } from '../services/theme.service';
         ></button>
         <div
           id="mobile-nav"
-          class="absolute inset-x-0 top-full z-40 max-h-[calc(100vh-4rem)] overflow-y-auto border-b border-stone-800 bg-stone-950 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2 shadow-xl shadow-black/40 lg:hidden"
+          class="absolute inset-x-0 top-full z-40 max-h-[calc(100vh-4rem)] overflow-y-auto border-b border-stone-800 bg-stone-950 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-2 shadow-float lg:hidden"
         >
           <div class="mx-auto flex max-w-6xl flex-col gap-1 pb-3 text-base font-medium text-stone-200">
             <a

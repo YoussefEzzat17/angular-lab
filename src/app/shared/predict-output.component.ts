@@ -29,7 +29,7 @@ export interface PredictChallenge {
   template: `
     <p class="mt-3 text-sm font-semibold text-stone-100" data-testid="predict-question">{{ challenge().question }}</p>
     @if (challenge().code) {
-      <pre class="mt-3 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ challenge().code }}</pre>
+      <pre class="mt-3" [appCode]="challenge().code"></pre>
     }
 
     <div class="mt-4 grid gap-2" role="radiogroup" [attr.aria-label]="challenge().question">

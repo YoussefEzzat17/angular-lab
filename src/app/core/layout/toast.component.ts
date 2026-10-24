@@ -96,7 +96,7 @@ const KINDS: Record<ToastKind, { card: string; badge: string; bar: string; icon:
     <div class="pointer-events-none fixed inset-x-4 bottom-[max(1.25rem,env(safe-area-inset-bottom))] z-50 flex flex-col gap-3 sm:inset-x-auto sm:bottom-auto sm:right-5 sm:top-24 sm:w-96">
       @for (t of toast.toasts(); track t.id) {
         <div
-          class="toast pointer-events-auto overflow-hidden rounded-2xl border shadow-xl shadow-black/20"
+          class="toast pointer-events-auto overflow-hidden rounded-2xl border shadow-float"
           [class]="kinds[t.kind].card"
           [class.toast-leave]="t.leaving"
           [attr.role]="kinds[t.kind].role"

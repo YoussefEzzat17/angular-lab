@@ -1,8 +1,12 @@
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { ResourceComponent } from './resource.component';
 
 describe('ResourceComponent', () => {
+  // The lesson player links its breadcrumbs and section tabs, so it needs a router.
+  beforeEach(() => TestBed.configureTestingModule({ providers: [provideRouter([])] }));
+
   function setup(section: string) {
     const fixture = TestBed.createComponent(ResourceComponent);
     fixture.componentRef.setInput('section', section);

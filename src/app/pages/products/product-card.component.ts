@@ -13,7 +13,7 @@ import { StockStatusPipe } from '../../pipes/stock-status.pipe';
   standalone: true,
   imports: [CurrencyPipe, DatePipe, LowerCasePipe, UpperCasePipe, StockStatusPipe],
   template: `
-    <article class="overflow-hidden rounded-2xl bg-stone-900 shadow-sm ring-1 ring-stone-800 transition hover:-transtone-y-1 hover:ring-gold-500/60">
+    <article class="overflow-hidden rounded-2xl bg-stone-900 shadow-card ring-1 ring-stone-800 transition hover:shadow-card-lift hover:ring-gold-500/60 motion-safe:hover:-translate-y-1">
       <img [src]="product.imageUrl" [alt]="product.name" class="h-52 w-full object-cover" />
       <div class="p-5">
         <div class="flex items-center justify-between gap-3">

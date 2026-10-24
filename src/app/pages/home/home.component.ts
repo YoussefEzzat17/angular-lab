@@ -4,11 +4,12 @@ import { RouterLink } from '@angular/router';
 import { GROUPED_TOPICS, LEVEL_LABEL, TOPIC_GROUPS, TOPICS, topicMinutes } from '../../core/data/topics';
 import { ProgressService } from '../../core/services/progress.service';
 import { SignalNetworkComponent } from './signal-network.component';
+import { IconComponent } from '../../shared/icon.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [RouterLink, SignalNetworkComponent],
+  imports: [RouterLink, SignalNetworkComponent, IconComponent],
   template: `
     <!-- ── Hero ───────────────────────────────────────────────────────── -->
     <section class="border-b border-stone-800 bg-stone-950">
@@ -62,19 +63,19 @@ import { SignalNetworkComponent } from './signal-network.component';
     <section class="border-b border-stone-800 bg-stone-950/50">
       <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6">
         <div class="grid gap-6 sm:grid-cols-3">
-          <div class="rounded-2xl border border-stone-800 bg-stone-900 p-6">
-            <div class="mb-3 text-2xl">🧪</div>
-            <h3 class="font-bold text-stone-100">Try it live</h3>
+          <div class="card">
+            <app-icon name="play" class="mb-3 h-6 w-6 text-gold-400" />
+            <h2 class="font-bold text-stone-100">Try it live</h2>
             <p class="mt-2 text-sm text-stone-400">Every topic has interactive demos you can modify and see update in real time.</p>
           </div>
-          <div class="rounded-2xl border border-stone-800 bg-stone-900 p-6">
-            <div class="mb-3 text-2xl">✅</div>
-            <h3 class="font-bold text-stone-100">Quiz to complete</h3>
+          <div class="card">
+            <app-icon name="help" class="mb-3 h-6 w-6 text-gold-400" />
+            <h2 class="font-bold text-stone-100">Quiz to complete</h2>
             <p class="mt-2 text-sm text-stone-400">Each topic ends with a quiz. Pass 75% to mark it complete and unlock the next.</p>
           </div>
-          <div class="rounded-2xl border border-stone-800 bg-stone-900 p-6">
-            <div class="mb-3 text-2xl">📈</div>
-            <h3 class="font-bold text-stone-100">Track progress</h3>
+          <div class="card">
+            <app-icon name="gauge" class="mb-3 h-6 w-6 text-gold-400" />
+            <h2 class="font-bold text-stone-100">Track progress</h2>
             <p class="mt-2 text-sm text-stone-400">Your progress is saved locally. Pick up exactly where you left off, any time.</p>
           </div>
         </div>
@@ -106,7 +107,8 @@ import { SignalNetworkComponent } from './signal-network.component';
                       <div class="flex items-center justify-between gap-2">
                         <p class="font-semibold text-stone-100">{{ topic.title }}</p>
                         @if (progress.isCompleted(topic.path)) {
-                          <span class="shrink-0 text-xs font-bold text-emerald-400">✓</span>
+                          <app-icon name="check" class="h-4 w-4 shrink-0 text-emerald-400" />
+                          <span class="sr-only">, completed</span>
                         } @else {
                           <span class="text-gold-400 opacity-0 transition group-hover:opacity-100">→</span>
                         }

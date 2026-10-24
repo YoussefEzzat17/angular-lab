@@ -2,7 +2,10 @@ import { TestBed } from '@angular/core/testing';
 
 import { IconComponent, IconName } from './icon.component';
 
-const ICONS: IconName[] = ['download', 'search', 'sun', 'moon', 'chevron-down', 'menu', 'close', 'check', 'alert', 'info'];
+const ICONS: IconName[] = [
+  'download', 'search', 'sun', 'moon', 'chevron-down', 'menu', 'close', 'check', 'alert', 'info',
+  'chevron-left', 'chevron-right', 'copy', 'bookmark', 'lock', 'book', 'play', 'list', 'help', 'layers', 'compass', 'zap', 'database', 'gauge', 'grid', 'map', 'clock', 'home', 'flame',
+];
 
 describe('IconComponent', () => {
   function render(name: IconName) {

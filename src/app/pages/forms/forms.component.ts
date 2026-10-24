@@ -12,11 +12,12 @@ import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowle
 import { LessonCardComponent } from '../../shared/lesson-card.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
 import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
+import { CodeBlockDirective } from '../../shared/code-block.directive';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [ControlStateDemoComponent, OrderStepsComponent, PredictOutputComponent, ReactiveFormsModule, FormsModule, NumbersOnlyDirective, FlowDiagramComponent, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [ControlStateDemoComponent, OrderStepsComponent, PredictOutputComponent, ReactiveFormsModule, FormsModule, NumbersOnlyDirective, FlowDiagramComponent, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective, CodeBlockDirective],
   styles: `
     .field {
       width: 100%;
@@ -73,7 +74,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
           <form
             #contactForm="ngForm"
             (ngSubmit)="submitContact(contactForm)"
-            class="rounded-3xl border border-stone-800 bg-stone-900 p-6 shadow-2xl shadow-black/20 sm:p-8"
+            class="rounded-3xl border border-stone-800 bg-stone-900 p-6 shadow-card sm:p-8"
           >
             <div class="flex items-center gap-2">
               <span class="rounded-full bg-emerald-400/10 px-3 py-1 text-xs font-bold tracking-wider text-emerald-300">TEMPLATE-DRIVEN FORM</span>
@@ -166,7 +167,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
           <form
             [formGroup]="signupForm"
             (ngSubmit)="submit()"
-            class="rounded-3xl border border-stone-800 bg-stone-900 p-6 shadow-2xl shadow-black/20 sm:p-8"
+            class="rounded-3xl border border-stone-800 bg-stone-900 p-6 shadow-card sm:p-8"
           >
             <div class="flex items-center gap-2">
               <span class="rounded-full bg-amber-400/10 px-3 py-1 text-xs font-bold tracking-wider text-amber-300">REACTIVE FORM</span>

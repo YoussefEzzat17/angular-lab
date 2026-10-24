@@ -12,11 +12,12 @@ import { AttributePropertyDemoComponent } from './attribute-property-demo.compon
 import { BindingDecoderDemoComponent } from './binding-decoder-demo.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
 import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
+import { CodeBlockDirective } from '../../shared/code-block.directive';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [AttributePropertyDemoComponent, BindingDecoderDemoComponent, OrderStepsComponent, PredictOutputComponent,
+  imports: [AttributePropertyDemoComponent, BindingDecoderDemoComponent, OrderStepsComponent, PredictOutputComponent, CodeBlockDirective,
     FormsModule,
     FlowDiagramComponent,
     PageHeaderComponent,

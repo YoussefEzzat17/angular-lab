@@ -7,7 +7,7 @@ import { LessonCardComponent, LessonCardTone, LessonCardVariant } from './lesson
   standalone: true,
   imports: [LessonCardComponent],
   template: `
-    <app-lesson-card [label]="label()" [heading]="heading()" [variant]="variant()" [tone]="tone()" [headingSize]="size()">
+    <app-lesson-card [label]="label()" [heading]="heading()" [variant]="variant()" [tone]="tone()" [headingSize]="size()" [interactive]="interactive()">
       <span class="body">projected body</span>
     </app-lesson-card>
   `,
@@ -18,6 +18,7 @@ class HostComponent {
   variant = signal<LessonCardVariant>('default');
   tone = signal<LessonCardTone | undefined>(undefined);
   size = signal<'xl' | 'lg'>('xl');
+  interactive = signal(false);
 }
 
 describe('LessonCardComponent', () => {
@@ -37,7 +38,7 @@ describe('LessonCardComponent', () => {
 
   it('renders the label, heading and projected body inside one article', () => {
     const { card, label, heading, root } = render();
-    expect(label().textContent).toBe('1 · The problem');
+    expect(label().textContent).toBe('The problem');
     expect(heading()?.textContent).toBe('Why it matters');
     expect(card().querySelector('.body')?.textContent).toBe('projected body');
     expect(root.querySelectorAll('article').length).toBe(1);
@@ -91,5 +92,28 @@ describe('LessonCardComponent', () => {
     fixture.detectChanges();
     expect(heading()?.className).toContain('text-lg');
     expect(heading()?.className).not.toContain('text-xl');
+  });
+
+  it('drops the leading number left over from one-page lessons, and keeps the rest of the label', () => {
+    const { fixture, host, label } = render();
+
+    host.label.set('12 · TRY IT · WATCH THE EFFECT RUN');
+    fixture.detectChanges();
+    expect(label().textContent).toBe('TRY IT · WATCH THE EFFECT RUN');
+
+    host.label.set('THE #1 MISTAKE');
+    fixture.detectChanges();
+    expect(label().textContent).toBe('THE #1 MISTAKE');
+  });
+
+  it('rests on the card shadow and lifts only when interactive', () => {
+    const { fixture, host, card } = render();
+    expect(card().className).toContain('shadow-card');
+    expect(card().classList).not.toContain('interactive-card');
+
+    host.interactive.set(true);
+    fixture.detectChanges();
+    expect(card().classList).toContain('interactive-card');
+    expect(card().className).toContain('bg-stone-900');
   });
 });

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, HostListener, inject, OnDestroy } from '@angular/core';
-import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { DOCUMENT } from '@angular/common';
 import { filter, Subscription } from 'rxjs';
 import { A11yModule } from '@angular/cdk/a11y';
 import { SidebarStateService } from '../../core/services/sidebar-state.service';
@@ -8,7 +9,12 @@ import { OnboardingDialogComponent } from '../../core/onboarding/onboarding-dial
 import { TourComponent } from '../../core/onboarding/tour.component';
 import { MobileNavComponent } from '../../shared/mobile-nav.component';
 import { CourseSidebarComponent } from '../sidebar/course-sidebar.component';
+import { LearningFacade } from '../../core/services/learning.facade';
+import { ProgressService } from '../../core/services/progress.service';
 import { TOPICS } from '../../core/data/topics';
+import type { TopicId } from '../../core/models/learning.models';
+import { IconComponent } from '../../shared/icon.component';
+import { GROUP_ICONS } from '../../shared/learning-icons';
 import { TopNavbarComponent } from './top-navbar.component';
 import { LearnFooterComponent } from './learn-footer.component';
 
@@ -16,7 +22,7 @@ import { LearnFooterComponent } from './learn-footer.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-learn-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, CourseSidebarComponent, A11yModule, OnboardingDialogComponent, TourComponent, MobileNavComponent, TopNavbarComponent, LearnFooterComponent],
+  imports: [RouterOutlet, CourseSidebarComponent, IconComponent, A11yModule, OnboardingDialogComponent, TourComponent, MobileNavComponent, TopNavbarComponent, LearnFooterComponent],
   template: `
     @if (showOnboarding()) {
       <app-onboarding-dialog (closed)="onOnboardingClosed()" />
@@ -25,6 +31,11 @@ import { LearnFooterComponent } from './learn-footer.component';
     <app-tour />
 
     <div class="flex h-screen flex-col overflow-hidden">
+      <!-- First Tab stop: jump past the header and sidebar. A plain #fragment would resolve against <base href>, so focus moves in code. -->
+      <a href="#learn-main" (click)="skipToContent($event)" data-testid="skip-link"
+         class="sr-only rounded-xl bg-gold-solid px-4 py-3 text-sm font-semibold text-white shadow-float focus:not-sr-only focus:fixed focus:left-4 focus:top-2 focus:z-[60]">
+        Skip to content
+      </a>
 
       <!-- Top navbar — full width, always visible -->
       <app-top-navbar />
@@ -41,68 +52,68 @@ import { LearnFooterComponent } from './learn-footer.component';
         @if (!sidebarState.collapsed()) {
           <app-course-sidebar class="flex h-full w-[280px] flex-col" />
         } @else {
-          <!-- Rail mode: topic icons + tooltips -->
-          <div class="flex h-full flex-col items-center gap-1 overflow-y-auto overflow-x-visible py-3">
-            <!-- Expand chevron button -->
+          <!-- Rail mode: one entry per curriculum group (icon in a ring that fills with the group's sections, topics done
+               beneath). Hover or focus names it; a click opens the sidebar on that group. -->
+          <nav aria-label="Collapsed sidebar" class="flex h-full flex-col items-center gap-2 py-3">
             <button
               type="button"
               (click)="sidebarState.toggleCollapsed()"
               aria-label="Expand sidebar"
-              class="mb-1 grid h-10 w-10 place-items-center rounded-xl text-stone-400 transition hover:bg-stone-800 hover:text-gold-300"
+              class="group relative grid h-11 w-11 shrink-0 place-items-center rounded-xl text-stone-400 transition hover:bg-stone-800 hover:text-gold-300"
             >
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                <path d="M5 2L10 7L5 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
+              <app-icon name="chevron-right" class="h-4 w-4" />
+              <span aria-hidden="true" class="pointer-events-none absolute left-full top-1/2 z-50 ml-3 hidden -translate-y-1/2 whitespace-nowrap rounded-lg bg-stone-800 px-3 py-2 text-xs font-semibold text-stone-100 shadow-float group-hover:block group-focus-visible:block">
+                Expand sidebar
+              </span>
             </button>
-            <!-- Dashboard icon -->
-            <a routerLink="/dashboard"
-               [class]="isActive('/dashboard') ? 'group relative grid h-10 w-10 place-items-center rounded-xl bg-gold-500/20 text-gold-400' : 'group relative grid h-10 w-10 place-items-center rounded-xl text-stone-400 transition hover:bg-stone-800 hover:text-gold-300'"
-               aria-label="Dashboard"
-               title="Dashboard">
-              <span class="text-base">📊</span>
-              <span class="pointer-events-none absolute left-full ml-2 z-50 hidden whitespace-nowrap rounded-lg bg-stone-800 px-2.5 py-1.5 text-xs font-semibold text-stone-100 shadow-lg group-hover:block">
-                Dashboard
-              </span>
-            </a>
 
-            <div class="my-1 h-px w-8 bg-stone-800"></div>
+            <div class="h-px w-10 shrink-0 bg-stone-800" aria-hidden="true"></div>
 
-            <!-- Topic icons -->
-            @for (topic of topics; track topic.id) {
-              <a
-                [routerLink]="['/learn', topic.id]"
-                [attr.aria-label]="topic.title"
-                [attr.title]="topic.title"
-                [class]="isActive('/learn/' + topic.id) ? 'group relative grid h-10 w-10 place-items-center rounded-xl bg-gold-500/20 text-gold-400' : 'group relative grid h-10 w-10 place-items-center rounded-xl text-stone-400 transition hover:bg-stone-800 hover:text-gold-300'"
-              >
-                <span class="text-base leading-none">{{ topic.icon }}</span>
-                <span class="pointer-events-none absolute left-full ml-2 z-50 hidden whitespace-nowrap rounded-lg bg-stone-800 px-2.5 py-1.5 text-xs font-semibold text-stone-100 shadow-lg group-hover:block">
-                  {{ topic.title }}
-                </span>
-              </a>
-            }
-
-            <div class="my-1 h-px w-8 bg-stone-800"></div>
-
-            <!-- Bookmarks icon -->
-            <a routerLink="/bookmarks"
-               aria-label="Bookmarks"
-               title="Saved Topics"
-               class="group relative grid h-10 w-10 place-items-center rounded-xl text-stone-400 transition hover:bg-stone-800 hover:text-gold-300">
-              <span class="text-base">🔖</span>
-              <span class="pointer-events-none absolute left-full ml-2 z-50 hidden whitespace-nowrap rounded-lg bg-stone-800 px-2.5 py-1.5 text-xs font-semibold text-stone-100 shadow-lg group-hover:block">
-                Bookmarks
-              </span>
-            </a>
-          </div>
+            <ul class="flex flex-col items-center gap-1.5">
+              @for (group of facade.groups(); track group.id) {
+                <li>
+                  <button
+                    type="button"
+                    (click)="openGroup(group.id)"
+                    [attr.aria-label]="group.title + ': ' + group.completedCount + ' of ' + group.topics.length + ' topics completed. Opens the sidebar.'"
+                    [attr.aria-current]="currentGroup() === group.id ? 'true' : null"
+                    class="group relative flex w-14 flex-col items-center gap-1 rounded-xl pb-1.5 pt-2 transition"
+                    [class]="currentGroup() === group.id ? 'bg-gold-500/15 text-gold-300' : 'text-stone-400 hover:bg-stone-800 hover:text-stone-100'"
+                  >
+                    <span class="relative grid h-10 w-10 place-items-center" aria-hidden="true">
+                      <svg class="absolute inset-0 h-10 w-10 -rotate-90" viewBox="0 0 40 40">
+                        <circle cx="20" cy="20" [attr.r]="ringRadius" fill="none" stroke="rgb(var(--stone-800))" stroke-width="2.5" />
+                        @if (groupSections(group.id).done > 0) {
+                          <circle cx="20" cy="20" [attr.r]="ringRadius" fill="none" stroke-width="2.5" stroke-linecap="round"
+                                  [attr.stroke]="group.completedCount === group.topics.length ? 'rgb(var(--status-emerald))' : 'rgb(var(--gold-400))'"
+                                  [attr.stroke-dasharray]="ringCircumference"
+                                  [attr.stroke-dashoffset]="ringCircumference * (1 - groupSections(group.id).done / groupSections(group.id).total)" />
+                        }
+                      </svg>
+                      <app-icon [name]="groupIcons[group.id]" class="h-[18px] w-[18px] text-gold-400" />
+                    </span>
+                    <span class="text-[11px] font-semibold tabular-nums" aria-hidden="true">{{ group.completedCount }}/{{ group.topics.length }}</span>
+                    <span aria-hidden="true" class="pointer-events-none absolute left-full top-1/2 z-50 ml-3 hidden -translate-y-1/2 whitespace-nowrap rounded-lg bg-stone-800 px-3 py-2 text-left shadow-float group-hover:block group-focus-visible:block">
+                      <span class="block text-xs font-semibold text-stone-100">{{ group.title }}</span>
+                      <span class="mt-0.5 block text-[11px] text-stone-400">
+                        {{ group.completedCount }} of {{ group.topics.length }} topics done · {{ groupSections(group.id).done }}/{{ groupSections(group.id).total }} sections
+                      </span>
+                    </span>
+                  </button>
+                </li>
+              }
+            </ul>
+          </nav>
         }
       </aside>
 
       <!-- Main content column -->
-      <div class="flex min-w-0 flex-1 flex-col overflow-y-auto">
+      <!-- Below lg this bottom padding clears the fixed phone nav: it ends the scroll after the footer, and the lesson's sticky
+           section bar (bottom-0, measured inside this padding) rests right on top of the nav. -->
+      <div class="flex min-w-0 flex-1 flex-col overflow-y-auto pb-[calc(4.375rem+env(safe-area-inset-bottom))] lg:pb-0">
 
         <!-- Router outlet -->
-        <main class="flex-1 pb-20 lg:pb-0" id="learn-main">
+        <main class="flex-1 focus:outline-none" id="learn-main" tabindex="-1">
           <router-outlet />
         </main>
 
@@ -135,12 +146,12 @@ import { LearnFooterComponent } from './learn-footer.component';
             <button
               type="button"
               (click)="sidebarState.closeDrawer()"
-              class="grid h-8 w-8 place-items-center rounded-lg text-stone-400 hover:bg-stone-800"
-              aria-label="Close"
-            >✕</button>
+              class="-mr-2 grid h-11 w-11 place-items-center rounded-xl text-stone-400 transition hover:bg-stone-800 hover:text-stone-100"
+              aria-label="Close topics"
+            ><app-icon name="close" class="h-5 w-5" /></button>
           </div>
           <div class="flex min-h-0 flex-1 flex-col">
-            <app-course-sidebar class="flex min-h-0 w-full flex-1 flex-col" />
+            <app-course-sidebar variant="drawer" class="flex min-h-0 w-full flex-1 flex-col" />
           </div>
         </div>
       }
@@ -152,7 +163,33 @@ export class LearnLayoutComponent implements OnDestroy {
   private readonly profile = inject(ProfileService);
   private readonly router = inject(Router);
   readonly showOnboarding = computed(() => !this.profile.onboardingDone());
-  readonly topics = TOPICS;
+  protected readonly facade = inject(LearningFacade);
+  protected readonly groupIcons = GROUP_ICONS;
+  private readonly progress = inject(ProgressService);
+  private readonly document = inject(DOCUMENT);
+
+  protected readonly ringRadius = 17;
+  protected readonly ringCircumference = 2 * Math.PI * 17;
+
+  /** The group of the topic on screen, highlighted in the rail. Reads the router's URL signal. */
+  protected readonly currentGroup = computed(() => {
+    const path = this.facade.currentUrl().split(/[?#]/)[0];
+    return TOPICS.find((t) => path === t.path || path.startsWith(`${t.path}/`))?.group ?? null;
+  });
+
+  protected groupSections(groupId: string): { done: number; total: number } {
+    const topics = TOPICS.filter((t) => t.group === groupId);
+    return {
+      done: topics.reduce((sum, t) => sum + t.sections.filter((s) => this.progress.isSectionDone(t.id as TopicId, s.id)).length, 0),
+      total: topics.reduce((sum, t) => sum + t.sections.length, 0),
+    };
+  }
+
+  /** Expands the sidebar with this group open, so the click lands on its topics. */
+  protected openGroup(groupId: string): void {
+    if (!this.sidebarState.expandedGroups().has(groupId)) this.sidebarState.toggleGroup(groupId);
+    this.sidebarState.toggleCollapsed();
+  }
 
   private readonly navSub: Subscription;
 
@@ -167,9 +204,11 @@ export class LearnLayoutComponent implements OnDestroy {
 
   onOnboardingClosed(): void {}
 
-  isActive(path: string): boolean {
-    return this.router.url === path || this.router.url.startsWith(path + '/');
+  skipToContent(event: Event): void {
+    event.preventDefault();
+    this.document.getElementById('learn-main')?.focus();
   }
+
 
   @HostListener('document:keydown.escape')
   onEscape(): void {
