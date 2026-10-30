@@ -27,7 +27,7 @@ import { IconComponent } from '../../shared/icon.component';
       </div>
     }
 
-    <app-curriculum-tree class="min-h-0 flex-1 overflow-y-auto" />
+    <app-curriculum-tree class="min-h-0 flex-1 overflow-y-auto overscroll-contain" />
 
     <!-- You: name, streak, level and XP -->
     <app-sidebar-user />

@@ -48,9 +48,25 @@ describe('TopicsSheetComponent', () => {
     expect(state.drawerOpen()).toBeFalse();
   });
 
+  it('locks the page scroll while open and releases it on close', async () => {
+    const { fixture, state } = await setup();
+    const locked = () => document.documentElement.classList.contains('max-lg:overflow-hidden') && document.body.classList.contains('max-lg:overflow-hidden');
+
+    state.openDrawer();
+    fixture.detectChanges();
+    TestBed.tick();
+    expect(locked()).toBeTrue();
+
+    state.closeDrawer();
+    fixture.detectChanges();
+    TestBed.tick();
+    expect(document.documentElement.classList.contains('max-lg:overflow-hidden')).toBeFalse();
+    expect(document.body.classList.contains('max-lg:overflow-hidden')).toBeFalse();
+  });
+
   describe('pulling the grip down', () => {
     function drag(root: HTMLElement, fromY: number, toY: number): void {
-      const zone = root.querySelector<HTMLElement>('.touch-none')!;
+      const zone = root.querySelector<HTMLElement>('.cursor-grab')!;
       spyOn(zone, 'setPointerCapture');
       const fire = (type: string, clientY: number) =>
         zone.dispatchEvent(new PointerEvent(type, { clientY, bubbles: true, pointerId: 1 }));
@@ -81,7 +97,7 @@ describe('TopicsSheetComponent', () => {
       const { fixture, state, root } = await setup();
       state.openDrawer();
       fixture.detectChanges();
-      const zone = root.querySelector<HTMLElement>('.touch-none')!;
+      const zone = root.querySelector<HTMLElement>('.cursor-grab')!;
       const capture = spyOn(zone, 'setPointerCapture');
       root.querySelector('[aria-label="Close topics"]')!.dispatchEvent(new PointerEvent('pointerdown', { clientY: 300, bubbles: true, pointerId: 1 }));
       expect(capture).not.toHaveBeenCalled();

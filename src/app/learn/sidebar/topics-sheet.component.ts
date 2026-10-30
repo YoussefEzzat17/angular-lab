@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, HostListener, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, HostListener, inject, signal } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import { A11yModule } from '@angular/cdk/a11y';
@@ -12,6 +13,9 @@ const DISMISS_DISTANCE = 100;
 const FLICK_DISTANCE = 40;
 const FLICK_SPEED = 0.5; // px per ms
 
+/** Applied to <html> and <body> while the sheet is open, below the lg breakpoint where the sheet exists. */
+const SCROLL_LOCK = 'max-lg:overflow-hidden';
+
 /**
  * The phone's "Course Topics" bottom sheet. One component, used by every layout, so the topics list looks and
  * behaves the same wherever it is opened from. It closes on Escape, on a tap outside, and on every navigation.
@@ -23,7 +27,7 @@ const FLICK_SPEED = 0.5; // px per ms
   imports: [A11yModule, CourseSidebarComponent, IconComponent],
   template: `
     @if (sidebarState.drawerOpen()) {
-      <div class="fixed inset-0 z-40 bg-black/65 lg:hidden" [style.opacity]="scrimOpacity()" (click)="sidebarState.closeDrawer()" aria-hidden="true"></div>
+      <div class="fixed inset-0 z-40 touch-none bg-black/65 lg:hidden" [style.opacity]="scrimOpacity()" (click)="sidebarState.closeDrawer()" aria-hidden="true"></div>
       <div
         role="dialog"
         aria-modal="true"
@@ -70,7 +74,18 @@ export class TopicsSheetComponent {
   private startY = 0;
   private startTime = 0;
 
+  private readonly document = inject(DOCUMENT);
+
   constructor() {
+    // The page behind must not scroll while the sheet is open, or a swipe in the list can scroll the site instead.
+    // html is the scroller here (styles.css sets overflow-x on it), so both it and body are locked.
+    effect((onCleanup) => {
+      if (!this.sidebarState.drawerOpen()) return;
+      const targets = [this.document.documentElement, this.document.body];
+      targets.forEach((el) => el.classList.add(SCROLL_LOCK));
+      onCleanup(() => targets.forEach((el) => el.classList.remove(SCROLL_LOCK)));
+    });
+
     inject(Router).events
       .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd), takeUntilDestroyed(inject(DestroyRef)))
       .subscribe(() => this.sidebarState.closeDrawer());

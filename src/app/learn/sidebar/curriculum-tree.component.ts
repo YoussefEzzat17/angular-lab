@@ -16,7 +16,7 @@ import type { TopicId } from '../../core/models/learning.models';
   imports: [RouterLink, IconComponent, TopicStatusIconComponent],
   template: `
     <!-- relative: keeps the absolutely positioned sr-only labels inside the scrolling list. -->
-    <nav aria-label="Course curriculum" class="relative flex-1 overflow-y-auto px-2 py-3">
+    <nav aria-label="Course curriculum" class="relative flex-1 overflow-y-auto overscroll-contain px-2 py-3">
       <ul class="space-y-1">
         @for (group of facade.groups(); track group.id) {
           <li>
