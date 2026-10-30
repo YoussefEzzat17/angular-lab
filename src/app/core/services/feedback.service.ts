@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import emailjs from '@emailjs/browser';
 
 const SERVICE_ID = 'service_i2i8bum';
 const TEMPLATE_ID = 'template_d3kytk7';
@@ -15,7 +14,8 @@ export interface FeedbackPayload {
 
 @Injectable({ providedIn: 'root' })
 export class FeedbackService {
-  sendFeedback(payload: FeedbackPayload): Promise<unknown> {
+  async sendFeedback(payload: FeedbackPayload): Promise<unknown> {
+    const { default: emailjs } = await import('@emailjs/browser');
     return emailjs.send(SERVICE_ID, TEMPLATE_ID, { ...payload }, { publicKey: PUBLIC_KEY });
   }
 }

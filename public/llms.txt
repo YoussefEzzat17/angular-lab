@@ -1,0 +1,27 @@
+# Angular Lab
+
+> Angular Lab is a hands-on playground for learning Angular by building. It has 15+ interactive lessons with animated diagrams and a demo app, built by Youssef Ezzat.
+
+## Lessons
+
+- [Binding](https://youssefezzat17.github.io/angular-lab/learn/binding): data binding basics
+- [Pipes](https://youssefezzat17.github.io/angular-lab/learn/pipes): built-in and custom pipes
+- [Directives](https://youssefezzat17.github.io/angular-lab/learn/directives): structural and attribute directives
+- [Component communication](https://youssefezzat17.github.io/angular-lab/learn/communication): inputs, outputs and services
+- [Forms](https://youssefezzat17.github.io/angular-lab/learn/forms): template-driven and reactive forms
+- [Routing](https://youssefezzat17.github.io/angular-lab/learn/routing): routes, params and navigation
+- [Guards](https://youssefezzat17.github.io/angular-lab/learn/guards): route guards
+- [Signals](https://youssefezzat17.github.io/angular-lab/learn/signals): signal-based reactivity
+- [RxJS](https://youssefezzat17.github.io/angular-lab/learn/rxjs): observables and operators
+- [Dependency injection](https://youssefezzat17.github.io/angular-lab/learn/di): providers and injectors
+- [Interceptors](https://youssefezzat17.github.io/angular-lab/learn/interceptor): HTTP interceptors
+- [Facade pattern](https://youssefezzat17.github.io/angular-lab/learn/facade): state facades
+- [Change detection](https://youssefezzat17.github.io/angular-lab/learn/change-detection): how Angular updates the view
+- [Lazy loading](https://youssefezzat17.github.io/angular-lab/learn/lazy-loading): lazy routes
+- [Content projection](https://youssefezzat17.github.io/angular-lab/learn/content-projection): ng-content
+- [Resource](https://youssefezzat17.github.io/angular-lab/learn/resource): the resource API
+- [Defer](https://youssefezzat17.github.io/angular-lab/learn/defer): @defer blocks
+
+## Optional
+
+- [Sitemap](https://youssefezzat17.github.io/angular-lab/sitemap.xml)

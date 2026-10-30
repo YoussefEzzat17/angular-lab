@@ -26,7 +26,7 @@ jobs:
       - run: npm ci
       - name: Unit tests
         run: npm test -- --watch=false --browsers=ChromeHeadlessNoSandbox
-      - run: npm run build -- --configuration production
+      - run: npm run build -- --configuration production --base-href /angular-lab/
       - name: Prepare GitHub Pages
         run: |
           cp dist/angular-lab/browser/index.html dist/angular-lab/browser/404.html

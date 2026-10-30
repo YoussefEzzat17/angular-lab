@@ -248,7 +248,7 @@ A few design decisions worth knowing:
 
 ## Deployment
 
-Every push to `main` runs `.github/workflows/deploy-github-pages.yml`: it installs dependencies, runs the unit tests, builds with the production configuration (base href `/angular-lab/`) and publishes to GitHub Pages. A copy of `index.html` is saved as `404.html` so deep links such as `/angular-lab/learn/signals` still resolve to the single-page app.
+Every push to `main` runs `.github/workflows/deploy-github-pages.yml`: it installs dependencies, runs the unit tests, builds with the production configuration (base href `/angular-lab/`, passed with `--base-href` because `angular.json` defaults to `/` for Vercel) and publishes to GitHub Pages. A copy of `index.html` is saved as `404.html` so deep links such as `/angular-lab/learn/signals` still resolve to the single-page app.
 
 ## Contributing
 
