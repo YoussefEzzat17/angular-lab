@@ -4,7 +4,7 @@
 
 **A hands-on playground for learning Angular — every core concept as a live, interactive page, not a slide.**
 
-[**Live demo →**](https://youssefezzat17.github.io/angular-lab/)
+[**Live demo →**](https://angular-lab-omega.vercel.app/)
 
 ![Angular](https://img.shields.io/badge/Angular-20-DD0031?logo=angular&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?logo=typescript&logoColor=white)

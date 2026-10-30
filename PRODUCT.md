@@ -44,7 +44,7 @@ Every concept is a live, poke-able example rather than a slide or a page of pros
 ## Evidence on Hand
 
 - README screenshots in `docs/screenshots/` (home light/dark, dashboard, quiz, save-for-later, lessons, mobile).
-- Live demo: https://youssefezzat17.github.io/angular-lab/
+- Live demo: https://angular-lab-omega.vercel.app/
 - App icons and OG image in `public/`.
 - `docs/angular-workshop-blueprint.md` and the `.pptx` deck are an archived earlier concept ("Nimbus Shop"), not current product truth.
 - No testimonials, user counts, learner outcomes or press exist. Do not fabricate them.
