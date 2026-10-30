@@ -10,7 +10,7 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?logo=typescript&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-06B6D4?logo=tailwindcss&logoColor=white)
 ![RxJS](https://img.shields.io/badge/RxJS-7.8-B7178C?logo=reactivex&logoColor=white)
-[![Deploy](https://github.com/YoussefEzzat17/angular-lab/actions/workflows/deploy-github-pages.yml/badge.svg)](https://github.com/YoussefEzzat17/angular-lab/actions/workflows/deploy-github-pages.yml)
+[![CI](https://github.com/YoussefEzzat17/angular-movie-app/actions/workflows/ci.yml/badge.svg)](https://github.com/YoussefEzzat17/angular-movie-app/actions/workflows/ci.yml)
 
 <img src="docs/screenshots/home-dark.png" alt="Angular Lab home page in dark mode" width="49%" />
 <img src="docs/screenshots/home-light.png" alt="Angular Lab home page in light mode" width="49%" />
@@ -175,7 +175,7 @@ Each lesson has its own overview at `/learn/<id>`, and its sections at `/learn/<
 | Email | `@emailjs/browser` |
 | Celebrations | `canvas-confetti`, loaded on demand |
 | Testing | Jasmine + Karma |
-| Hosting | GitHub Pages, deployed by GitHub Actions |
+| Hosting | Vercel (auto-deploys every push to `main`) |
 
 ## Getting started
 
@@ -195,7 +195,6 @@ The app reloads on every save — change a component and watch the concept it te
 | `npm start` | Dev server on `http://localhost:4200` |
 | `npm run build` | Production build into `dist/angular-lab/` |
 | `npm test` | Unit tests (Karma + Jasmine). Besides unit tests it renders every lesson section and every page and audits them for accessibility |
-| `npm run build:gh-pages` | Production build plus the `404.html` / `.nojekyll` files GitHub Pages needs |
 
 ### Feedback form (optional)
 
@@ -248,7 +247,7 @@ A few design decisions worth knowing:
 
 ## Deployment
 
-Every push to `main` runs `.github/workflows/deploy-github-pages.yml`: it installs dependencies, runs the unit tests, builds with the production configuration (base href `/angular-lab/`, passed with `--base-href` because `angular.json` defaults to `/` for Vercel) and publishes to GitHub Pages. A copy of `index.html` is saved as `404.html` so deep links such as `/angular-lab/learn/signals` still resolve to the single-page app.
+Every push to `main` is built and deployed by Vercel using `vercel.json` (SPA rewrites and immutable caching for hashed assets). GitHub Actions (`.github/workflows/ci.yml`) runs the unit tests and a production build on pull requests and on `main`.
 
 ## Contributing
 
