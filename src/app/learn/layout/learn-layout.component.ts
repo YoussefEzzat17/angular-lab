@@ -1,14 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, HostListener, inject, OnDestroy } from '@angular/core';
-import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
-import { filter, Subscription } from 'rxjs';
-import { A11yModule } from '@angular/cdk/a11y';
 import { SidebarStateService } from '../../core/services/sidebar-state.service';
 import { ProfileService } from '../../core/services/profile.service';
 import { OnboardingDialogComponent } from '../../core/onboarding/onboarding-dialog.component';
 import { TourComponent } from '../../core/onboarding/tour.component';
 import { MobileNavComponent } from '../../shared/mobile-nav.component';
 import { CourseSidebarComponent } from '../sidebar/course-sidebar.component';
+import { TopicsSheetComponent } from '../sidebar/topics-sheet.component';
 import { LearningFacade } from '../../core/services/learning.facade';
 import { ProgressService } from '../../core/services/progress.service';
 import { TOPICS } from '../../core/data/topics';
@@ -22,7 +21,7 @@ import { LearnFooterComponent } from './learn-footer.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-learn-layout',
   standalone: true,
-  imports: [RouterOutlet, CourseSidebarComponent, IconComponent, A11yModule, OnboardingDialogComponent, TourComponent, MobileNavComponent, TopNavbarComponent, LearnFooterComponent],
+  imports: [RouterOutlet, CourseSidebarComponent, TopicsSheetComponent, IconComponent, OnboardingDialogComponent, TourComponent, MobileNavComponent, TopNavbarComponent, LearnFooterComponent],
   template: `
     @if (showOnboarding()) {
       <app-onboarding-dialog (closed)="onOnboardingClosed()" />
@@ -124,44 +123,13 @@ import { LearnFooterComponent } from './learn-footer.component';
 
       </div>
 
-      <!-- Mobile bottom sheet (replaces left drawer) -->
-      @if (sidebarState.drawerOpen()) {
-        <div
-          class="fixed inset-0 z-40 bg-stone-950/70 lg:hidden"
-          (click)="sidebarState.closeDrawer()"
-          aria-hidden="true"
-        ></div>
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label="Course navigation"
-          cdkTrapFocus
-          [cdkTrapFocusAutoCapture]="true"
-          class="fixed inset-x-0 bottom-0 z-50 flex max-h-[80vh] flex-col rounded-t-2xl border-t border-stone-800 bg-stone-950 lg:hidden"
-          style="padding-bottom: env(safe-area-inset-bottom)"
-        >
-          <!-- Sheet handle -->
-          <div class="flex items-center justify-between border-b border-stone-800 px-4 py-3">
-            <p class="font-bold text-stone-100">Course Topics</p>
-            <button
-              type="button"
-              (click)="sidebarState.closeDrawer()"
-              class="-mr-2 grid h-11 w-11 place-items-center rounded-xl text-stone-400 transition hover:bg-stone-800 hover:text-stone-100"
-              aria-label="Close topics"
-            ><app-icon name="close" class="h-5 w-5" /></button>
-          </div>
-          <div class="flex min-h-0 flex-1 flex-col">
-            <app-course-sidebar variant="drawer" class="flex min-h-0 w-full flex-1 flex-col" />
-          </div>
-        </div>
-      }
+      <app-topics-sheet />
     </div>
   `,
 })
-export class LearnLayoutComponent implements OnDestroy {
+export class LearnLayoutComponent {
   readonly sidebarState = inject(SidebarStateService);
   private readonly profile = inject(ProfileService);
-  private readonly router = inject(Router);
   readonly showOnboarding = computed(() => !this.profile.onboardingDone());
   protected readonly facade = inject(LearningFacade);
   protected readonly groupIcons = GROUP_ICONS;
@@ -191,29 +159,10 @@ export class LearnLayoutComponent implements OnDestroy {
     this.sidebarState.toggleCollapsed();
   }
 
-  private readonly navSub: Subscription;
-
-  constructor() {
-    // Auto-close the mobile bottom sheet on every navigation
-    this.navSub = this.router.events
-      .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
-      .subscribe(() => this.sidebarState.closeDrawer());
-  }
-
-  ngOnDestroy(): void { this.navSub.unsubscribe(); }
-
   onOnboardingClosed(): void {}
 
   skipToContent(event: Event): void {
     event.preventDefault();
     this.document.getElementById('learn-main')?.focus();
-  }
-
-
-  @HostListener('document:keydown.escape')
-  onEscape(): void {
-    if (this.sidebarState.drawerOpen()) {
-      this.sidebarState.closeDrawer();
-    }
   }
 }
