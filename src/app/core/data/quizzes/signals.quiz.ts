@@ -156,5 +156,33 @@ export const SIGNALS_QUIZ: QuizBank = {
       explanation: 'A signal always has a value. initialValue provides it until the Observable emits, and without it the type would include undefined.',
       sectionId: 'interop',
     },
+    {
+      id: 'signals-14',
+      type: 'single',
+      prompt: 'What makes linkedSignal() different from computed()?',
+      choices: [
+        { id: 'a', text: 'It cannot be read' },
+        { id: 'b', text: 'You can also set it by hand' },
+        { id: 'c', text: 'It never changes' },
+        { id: 'd', text: 'It needs a server' },
+      ],
+      correct: ['b'],
+      explanation: 'A linkedSignal follows its source like a computed, but you can set() it, until the source changes again.',
+      sectionId: 'linked',
+    },
+    {
+      id: 'signals-15',
+      type: 'single',
+      prompt: 'You change a property inside an object held by a signal. What happens?',
+      choices: [
+        { id: 'a', text: 'Everything updates at once' },
+        { id: 'b', text: 'Nothing is told, because only replacing the value notifies readers' },
+        { id: 'c', text: 'An error is thrown' },
+        { id: 'd', text: 'The signal is deleted' },
+      ],
+      correct: ['b'],
+      explanation: 'A signal notices set() and update(). Replace the object with a copy so readers are told.',
+      sectionId: 'basics',
+    },
   ],
 };

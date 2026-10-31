@@ -1,7 +1,10 @@
 import { CurrencyPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, input, signal, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, input, linkedSignal, signal, untracked } from '@angular/core';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
+import { CodeOutputComponent } from '../../shared/code-output.component';
+import { CommonMistakeComponent } from '../../shared/common-mistake.component';
+import { RecapComponent } from '../../shared/recap.component';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
 import type { PredictChallenge } from '../../shared/predict-output.component';
@@ -18,7 +21,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [ComputedCacheDemoComponent, InteropDemoComponent, OrderStepsComponent, PredictOutputComponent, TermComponent, CurrencyPipe, FlowDiagramComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [CodeOutputComponent, CommonMistakeComponent, RecapComponent, ComputedCacheDemoComponent, InteropDemoComponent, OrderStepsComponent, PredictOutputComponent, TermComponent, CurrencyPipe, FlowDiagramComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'signals'" [section]="section()">
       <ng-template appLessonSection="basics">
@@ -77,6 +80,15 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
           <p class="mt-4 text-xs text-stone-500"><code class="text-gold-300">set(5)</code> chooses a value. <code class="text-gold-300">update(value =&gt; value + 1)</code> uses the old value.</p>
         </app-lesson-card>
       </div>
+      <app-common-mistake class="mt-5" title="Forgetting to call the signal" [wrong]="mistakeCallWrong" [right]="mistakeCallRight">
+        A signal is a function. Without the parentheses you hold the signal itself, not the value inside it, and the page prints something like <code class="text-gold-300">[Signal: 3]</code>.
+      </app-common-mistake>
+
+      <app-common-mistake class="mt-5" title="Changing an object inside a signal" [wrong]="mistakeMutateWrong" [right]="mistakeMutateRight">
+        A signal only notices when you <em>replace</em> its value. Editing a property of the object it holds changes the data, but no one is told. Replace the object with a copy.
+      </app-common-mistake>
+
+      <app-recap class="mt-5" [items]="recapBasics" />
       </section>
       </ng-template>
 
@@ -113,6 +125,7 @@ subtotal changes → discount changes → finalPrice changes</pre>
         <app-computed-cache-demo />
         <p class="mt-3 text-xs text-stone-500">Rules to remember: it is lazy (no read, no work), cached (same answer without work) and only reruns when a signal it read changes.</p>
       </app-lesson-card>
+      <app-recap class="mt-5" [items]="recapComputed" />
       </section>
       </ng-template>
 
@@ -167,6 +180,50 @@ readonly finalPrice = computed(() =&gt; this.price() * this.quantity());</pre>
           Need to <em>do</em> something — save, log, call an API? Use <code class="text-gold-300">effect()</code>.
         </p>
       </app-lesson-card>
+      <app-recap class="mt-5" [items]="recapEffects" />
+      </section>
+      </ng-template>
+
+      <ng-template appLessonSection="linked">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+        <app-lesson-card class="mt-10" label="THE PROBLEM" heading="A value that follows another, but can be changed by hand">
+          <p class="mt-2 text-sm text-stone-400">
+            Imagine a shop with a category menu and a "selected item" list. When the category changes, the selected item must reset to the first item of the new list.
+            But the user can also pick another item by hand. <code class="text-gold-300">computed()</code> is read-only, so it cannot be set by hand.
+            <code class="text-gold-300">linkedSignal()</code> is a signal that recomputes when its source changes, and can still be set.
+          </p>
+        </app-lesson-card>
+
+        <app-lesson-card class="mt-5" variant="highlight" label="SEE IT" heading="Change the category, then pick an item">
+          <div class="mt-3 flex flex-wrap gap-2" role="group" aria-label="Category">
+            @for (c of categories; track c) {
+              <button type="button" [attr.aria-pressed]="category() === c" (click)="category.set(c)"
+                      class="min-h-11 rounded-xl border px-4 text-sm font-semibold transition"
+                      [class]="category() === c ? 'border-gold-400 bg-gold-500/15 text-gold-200' : 'border-stone-700 text-stone-300 hover:bg-stone-800'">{{ c }}</button>
+            }
+          </div>
+          <div class="mt-3 flex flex-wrap gap-2" role="group" aria-label="Item">
+            @for (item of itemsOfCategory(); track item) {
+              <button type="button" [attr.aria-pressed]="selectedItem() === item" (click)="selectedItem.set(item)"
+                      class="min-h-11 rounded-xl border px-4 text-sm font-semibold transition"
+                      [class]="selectedItem() === item ? 'border-gold-400 bg-gold-500/15 text-gold-200' : 'border-stone-700 text-stone-300 hover:bg-stone-800'">{{ item }}</button>
+            }
+          </div>
+          <app-code-output class="mt-4 block" [code]="linkedCode" caption="Pick the last item, then change the category: the selection resets to the first item of the new list.">
+            <p class="text-sm text-stone-300">category = <strong class="text-gold-300">{{ category() }}</strong></p>
+            <p class="text-sm text-stone-300">selectedItem = <strong class="text-gold-300">{{ selectedItem() }}</strong></p>
+          </app-code-output>
+        </app-lesson-card>
+
+        <app-lesson-card class="mt-5" label="CHOOSING" heading="computed, linkedSignal or effect?">
+          <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+            <li><code class="text-gold-300">computed()</code>: the value is <em>always</em> worked out from others. Nobody sets it.</li>
+            <li><code class="text-gold-300">linkedSignal()</code>: worked out from others, <em>and</em> the user can override it until the source changes.</li>
+            <li><code class="text-gold-300">effect()</code>: do something outside the signals, such as log or save. Never a way to compute a value.</li>
+          </ul>
+        </app-lesson-card>
+
+        <app-recap class="mt-5" [items]="recapLinked" />
       </section>
       </ng-template>
 
@@ -191,6 +248,7 @@ readonly added = output&lt;number&gt;();
 // inside the component
 this.added.emit(this.price() * 2);</pre>
         </app-lesson-card>
+      <app-recap class="mt-5" [items]="recapComponent" />
       </section>
       </ng-template>
 
@@ -216,6 +274,7 @@ this.added.emit(this.price() * 2);</pre>
         <app-lesson-card class="mt-5" variant="highlight" label="TRY IT" heading="Cross the bridge both ways" headingSize="lg">
           <app-interop-demo />
         </app-lesson-card>
+      <app-recap class="mt-5" [items]="recapInterop" />
       </section>
       </ng-template>
 
@@ -236,6 +295,8 @@ this.added.emit(this.price() * 2);</pre>
           explanation="A set() only marks things stale. A computed does its work later, when something reads it, and the template (or an effect) is what reads it, so the screen always gets the fresh derived value."
         />
       </app-lesson-card>
+
+      <app-recap class="mt-5" [items]="recapTry" />
 
       <app-knowledge-check [items]="checkItems" />
       </section>
@@ -258,6 +319,65 @@ export class SignalsPlaygroundComponent {
     correct: 'b',
     explanation: 'A computed signal is always worked out from the current value of the signals it reads. price is 25 by the time double() is read, so the answer is 50.',
   };
+  protected readonly categories = ['Books', 'Games', 'Music'] as const;
+  protected readonly category = signal<'Books' | 'Games' | 'Music'>('Books');
+  private readonly catalog: Record<string, string[]> = {
+    Books: ['Dune', 'Emma', 'Ulysses'],
+    Games: ['Chess', 'Go', 'Tetris'],
+    Music: ['Jazz', 'Folk', 'Blues'],
+  };
+  protected readonly itemsOfCategory = computed(() => this.catalog[this.category()]);
+  protected readonly selectedItem = linkedSignal(() => this.itemsOfCategory()[0]);
+
+  protected readonly linkedCode = `category = signal('Books');
+items = computed(() => catalog[this.category()]);
+
+selectedItem = linkedSignal(() => this.items()[0]);   // follows items()
+
+selectedItem.set('Emma');   // allowed, until category changes`;
+
+  protected readonly mistakeCallWrong = '<p>{{ count }}</p>     <!-- prints the signal itself -->';
+  protected readonly mistakeCallRight = '<p>{{ count() }}</p>';
+  protected readonly mistakeMutateWrong = `user = signal({ name: 'Ada' });
+rename() { this.user().name = 'Grace'; }      // nobody is told`;
+  protected readonly mistakeMutateRight = `rename() { this.user.update(u => ({ ...u, name: 'Grace' })); }`;
+
+  protected readonly recapBasics = [
+    'A signal holds a value; read it by calling it, set() replaces it, update() changes it from the old value.',
+    'Signals work like spreadsheet cells: change one, and what depends on it updates.',
+    'Replace objects instead of editing them in place.',
+  ];
+  protected readonly recapComputed = [
+    'computed() is a formula cell: it is worked out from other signals.',
+    'It is lazy and cached: it runs only when read and only when a source changed.',
+    'You cannot set a computed value.',
+  ];
+  protected readonly recapEffects = [
+    'effect() runs code whenever the signals it reads change.',
+    'Use it for side effects such as logging or saving, never to calculate a value.',
+    'If you need a derived value, use computed().',
+  ];
+  protected readonly recapLinked = [
+    'linkedSignal() follows a source and resets when the source changes.',
+    'Unlike computed(), you can also set() it by hand.',
+    'Use it for a selection that depends on a list.',
+  ];
+  protected readonly recapComponent = [
+    'input() and output() are the signal versions of the old decorators.',
+    'Read an input by calling it: title().',
+    'input.required() makes the build fail if the parent forgets it.',
+  ];
+  protected readonly recapInterop = [
+    'toSignal() turns an Observable into a signal.',
+    'toObservable() turns a signal into an Observable.',
+    'Use the bridge when RxJS and signals meet.',
+  ];
+  protected readonly recapTry = [
+    'When a signal changes, anything that read it is marked stale and updates later.',
+    'Signals make the data flow visible and easy to trace.',
+    'Next stop: Signal Forms and RxJS.',
+  ];
+
   readonly updateSteps = [
     'quantity.set(5) stores the new value',
     'Everything that depends on quantity is marked as stale',

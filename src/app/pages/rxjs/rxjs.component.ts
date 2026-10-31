@@ -3,6 +3,9 @@ import { ChangeDetectionStrategy, Component, input, OnDestroy, signal } from '@a
 import { FormsModule } from '@angular/forms';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
+import { CodeOutputComponent } from '../../shared/code-output.component';
+import { CommonMistakeComponent } from '../../shared/common-mistake.component';
+import { RecapComponent } from '../../shared/recap.component';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
 import type { PredictChallenge } from '../../shared/predict-output.component';
 import { PredictOutputComponent } from '../../shared/predict-output.component';
@@ -34,7 +37,7 @@ import {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [MarbleDemoComponent, OrderStepsComponent, PredictOutputComponent, TermComponent, FormsModule, AsyncPipe, FlattenDemoComponent, SubjectRadioDemoComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [CodeOutputComponent, CommonMistakeComponent, RecapComponent, MarbleDemoComponent, OrderStepsComponent, PredictOutputComponent, TermComponent, FormsModule, AsyncPipe, FlattenDemoComponent, SubjectRadioDemoComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'rxjs'" [section]="section()">
       <ng-template appLessonSection="observables">
@@ -132,6 +135,7 @@ import {
           <li><strong class="text-stone-100">Using an Observable for simple local state.</strong> A <code class="text-gold-300">signal()</code> is less code for a counter or a toggle. Save Observables for streams of events over time.</li>
         </ul>
       </app-lesson-card>
+      <app-recap class="mt-5" [items]="recapObservables" />
       </section>
       </ng-template>
 
@@ -158,6 +162,25 @@ take(3):         20───40───60|  (completes after 3 values)</pre>
           Result: <span class="text-gold-300">{{ operatorsResult().join(', ') || '—' }}</span>
         </div>
       </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="SEE IT" heading="A pipeline, step by step">
+        <p class="mt-2 text-sm text-stone-400">
+          Five numbers go in. <code class="text-gold-300">filter</code> keeps the odd ones, <code class="text-gold-300">map</code> multiplies each by ten. Nothing runs until the
+          <code class="text-gold-300">subscribe</code> at the end.
+        </p>
+        <app-code-output class="mt-4 block" [code]="pipelineCode" caption="Each value passes through every operator in order, one at a time.">
+          <ol class="space-y-1 font-mono text-xs text-stone-300">
+            @for (step of pipelineSteps; track step) {
+              <li>{{ step }}</li>
+            }
+          </ol>
+          <p class="mt-3 text-sm text-stone-300">Result: <strong class="text-gold-300">{{ pipelineResult.join(', ') }}</strong></p>
+        </app-code-output>
+      </app-lesson-card>
+
+      <app-common-mistake class="mt-5" title="A subscribe inside a subscribe" [wrong]="mistakeNestedWrong" [right]="mistakeNestedRight">
+        Nested subscriptions are hard to cancel and easy to leak. A flattening operator such as <code class="text-gold-300">switchMap</code> does the same job, and cancels the old inner request when a new value arrives.
+      </app-common-mistake>
 
       <app-lesson-card class="mt-5" variant="highlight" label="MARBLE DIAGRAMS" heading="Draw the stream on a timeline" headingSize="lg">
         <p class="mt-2 text-sm text-stone-400">
@@ -204,6 +227,7 @@ take(3):         20───40───60|  (completes after 3 values)</pre>
           </table>
         </div>
       </app-lesson-card>
+      <app-recap class="mt-5" [items]="recapOperators" />
       </section>
       </ng-template>
 
@@ -258,6 +282,7 @@ ngOnDestroy() &#123;
           <p class="mt-2 text-xs text-stone-500">No subscribe or unsubscribe button here — the pipe handles it on its own for as long as the page is open.</p>
         </div>
       </app-lesson-card>
+      <app-recap class="mt-5" [items]="recapAsync" />
       </section>
       </ng-template>
 
@@ -364,6 +389,7 @@ export class CartCountService &#123;
       <app-lesson-card class="mt-5" variant="highlight" label="PREDICT THE OUTPUT" heading="What does a late subscriber receive?">
         <app-predict-output [challenge]="behaviorChallenge" />
       </app-lesson-card>
+      <app-recap class="mt-5" [items]="recapSubjects" />
       </section>
       </ng-template>
 
@@ -441,6 +467,7 @@ ngOnDestroy() &#123;
           explanation="The subscription is held by the interval timer, not by your component, so destroying the component does not stop it. It keeps running and keeps the component in memory until someone unsubscribes."
         />
       </app-lesson-card>
+      <app-recap class="mt-5" [items]="recapLeaks" />
       </section>
       </ng-template>
 
@@ -478,6 +505,7 @@ ngOnDestroy() &#123;
         </div>
       </app-lesson-card>
 
+      <app-recap class="mt-5" [items]="recapTry" />
       <app-knowledge-check [items]="checkItems" />
       </section>
       </ng-template>
@@ -508,6 +536,64 @@ someStream$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(...);`;
     correct: 'goes',
     explanation: 'The timer lives on its own. Destroying the component does not unsubscribe, so the callback keeps firing and keeps the component alive in memory. A takeUntilDestroyed() at the end of the pipe would stop it.',
   };
+
+  protected readonly pipelineCode = `of(1, 2, 3, 4, 5).pipe(
+  filter(n => n % 2 === 1),    // 1, 3, 5
+  map(n => n * 10),            // 10, 30, 50
+).subscribe(value => console.log(value));`;
+
+  protected readonly pipelineSteps: string[] = [];
+  protected readonly pipelineResult: number[] = [];
+
+  private readonly pipelineRun = of(1, 2, 3, 4, 5)
+    .pipe(
+      tap((n) => this.pipelineSteps.push(`in: ${n}`)),
+      filter((n) => n % 2 === 1),
+      tap((n) => this.pipelineSteps.push(`  filter keeps ${n}`)),
+      map((n) => n * 10),
+    )
+    .subscribe((n) => {
+      this.pipelineSteps.push(`  map gives ${n}`);
+      this.pipelineResult.push(n);
+    });
+
+  protected readonly mistakeNestedWrong = `search$.subscribe(term => {
+  this.http.get(url + term).subscribe(r => this.results = r);   // old requests keep running
+});`;
+  protected readonly mistakeNestedRight = `search$.pipe(
+  switchMap(term => this.http.get(url + term)),                  // cancels the old request
+).subscribe(r => this.results = r);`;
+
+  protected readonly recapObservables = [
+    'An Observable is a stream of values over time; nothing runs until you subscribe.',
+    'subscribe() starts it and returns a Subscription you can cancel.',
+    'RxJS is built for events and data that arrive more than once.',
+  ];
+  protected readonly recapOperators = [
+    'Operators such as map and filter reshape a stream inside pipe().',
+    'switchMap, mergeMap and concatMap differ in what they do when a new value arrives.',
+    'Never subscribe inside a subscribe; use a flattening operator.',
+  ];
+  protected readonly recapAsync = [
+    'The async pipe subscribes in the template and unsubscribes by itself.',
+    'It removes the need to store the result in a field.',
+    'In new code, toSignal() does a similar job.',
+  ];
+  protected readonly recapSubjects = [
+    'A Subject lets you push values into a stream yourself.',
+    'BehaviorSubject remembers the latest value for late subscribers.',
+    'In new code a signal often replaces a BehaviorSubject for state.',
+  ];
+  protected readonly recapLeaks = [
+    'A subscription that never ends keeps running after the component is gone.',
+    'takeUntilDestroyed() closes it automatically.',
+    'The async pipe and toSignal() clean up for you.',
+  ];
+  protected readonly recapTry = [
+    'debounceTime waits for the user to pause typing.',
+    'distinctUntilChanged ignores a repeated value.',
+    'switchMap cancels the old request when a new search starts.',
+  ];
 
   readonly leakSteps = [
     'The component is created and calls subscribe() on interval(1000)',

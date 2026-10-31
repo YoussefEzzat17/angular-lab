@@ -271,6 +271,7 @@ export const TOPICS: Topic[] = [
     level: 'intermediate', prerequisites: ['binding'],
     icon: '📡', title: 'Signals', description: "signal(), computed() and effect() — Angular's modern reactive state.",
     objectives: [
+      { text: 'Use linkedSignal() for a value that follows another signal but can also be set by hand', sectionId: 'linked' },
       { text: 'Create and update a signal with signal() and .set()/.update()', sectionId: 'basics' },
       { text: 'Derive values automatically with computed(), and explain why it is lazy and cached', sectionId: 'computed' },
       { text: 'Run side effects when signals change with effect()', sectionId: 'effects' },
@@ -281,6 +282,7 @@ export const TOPICS: Topic[] = [
       { id: 'basics', title: 'signal() Basics', kind: 'concept', minutes: 5 },
       { id: 'computed', title: 'computed()', kind: 'concept', minutes: 6 },
       { id: 'effects', title: 'effect()', kind: 'concept', minutes: 6 },
+      { id: 'linked', title: 'linkedSignal()', kind: 'try-it', minutes: 6 },
       { id: 'component-signals', title: 'input() and output()', kind: 'concept', minutes: 4 },
       { id: 'interop', title: 'toSignal() Interop', kind: 'concept', minutes: 6 },
       { id: 'try-it', title: 'Try It', kind: 'try-it', minutes: 6 },
