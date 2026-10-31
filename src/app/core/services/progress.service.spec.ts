@@ -32,7 +32,8 @@ describe('ProgressService (v2)', () => {
 
     expect(service.isSectionDone('binding', 'interpolation')).toBeTrue();
     expect(service.status('binding')).toBe('in-progress');
-    expect(service.recentActivity().filter((a) => a.kind === 'section-done').length).toBe(2);
+    // The repeated call is a no-op, so it must not log a second activity entry.
+    expect(service.recentActivity().filter((a) => a.kind === 'section-done').length).toBe(1);
   });
 
   it('allSectionsDone() is true only when every section is done', () => {
