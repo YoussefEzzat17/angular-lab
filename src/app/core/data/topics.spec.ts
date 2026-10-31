@@ -57,4 +57,16 @@ describe('topics data', () => {
       expect(topic.sections.some((s) => s.kind === 'try-it')).withContext(`${topic.id} has a try-it section`).toBeTrue();
     }
   });
+
+  it('has objectives for every lesson, and each points at a section of that lesson', async () => {
+    const { TOPIC_OBJECTIVES } = await import('./topic-objectives');
+    for (const topic of TOPICS) {
+      const objectives = TOPIC_OBJECTIVES[topic.id];
+      expect(objectives?.length).withContext(`${topic.id} objectives`).toBeGreaterThan(0);
+      const sectionIds = topic.sections.map((s) => s.id);
+      for (const objective of objectives) {
+        if (objective.sectionId) expect(sectionIds).withContext(`${topic.id}: ${objective.text}`).toContain(objective.sectionId);
+      }
+    }
+  });
 });

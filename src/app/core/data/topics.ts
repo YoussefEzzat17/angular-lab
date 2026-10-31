@@ -1,4 +1,4 @@
-import type { TopicId, LessonSection, TopicObjective } from '../models/learning.models';
+import type { TopicId, LessonSection } from '../models/learning.models';
 
 export type TopicGroup = 'fundamentals' | 'forms-navigation' | 'reactivity' | 'services-data' | 'performance' | 'quality' | 'advanced';
 
@@ -25,7 +25,6 @@ export interface Topic {
   /** Topics worth finishing first. Every entry comes earlier in the learning path. */
   prerequisites: TopicId[];
   sections: LessonSection[];
-  objectives: TopicObjective[];
 }
 
 export interface TopicGroupInfo {
@@ -51,12 +50,6 @@ export const TOPICS: Topic[] = [
     id: 'getting-started', group: 'fundamentals', legacyPath: '/getting-started', path: '/learn/getting-started',
     level: 'beginner', prerequisites: [],
     icon: '🚀', title: 'Getting Started', description: 'Install the CLI, create a project, run it, and read what Angular generates for you.',
-    objectives: [
-      { text: 'Say what Angular is and what it gives you', sectionId: 'what-is' },
-      { text: 'Create, run and build a project with the Angular CLI', sectionId: 'cli' },
-      { text: "Find your way around a new project's files", sectionId: 'project-tour' },
-      { text: 'Change the app and see it update in the browser', sectionId: 'first-change' },
-    ],
     sections: [
       { id: 'what-is', title: 'What is Angular?', kind: 'concept', minutes: 4 },
       { id: 'cli', title: 'The Angular CLI', kind: 'concept', minutes: 6 },
@@ -68,12 +61,6 @@ export const TOPICS: Topic[] = [
     id: 'components', group: 'fundamentals', legacyPath: '/components', path: '/learn/components',
     level: 'beginner', prerequisites: ['getting-started'],
     icon: '🧱', title: 'Component Essentials', description: 'The building block of every Angular app: a class, a template and styles, tied together by a selector.',
-    objectives: [
-      { text: 'Name the three parts of a component and what each does', sectionId: 'anatomy' },
-      { text: 'Choose a selector and use a component in another template', sectionId: 'selector' },
-      { text: 'Style a component without leaking into the rest of the page', sectionId: 'styling' },
-      { text: 'Build a small reusable component from scratch', sectionId: 'try-it' },
-    ],
     sections: [
       { id: 'anatomy', title: 'Anatomy of a component', kind: 'concept', minutes: 5 },
       { id: 'selector', title: 'Selectors', kind: 'concept', minutes: 4 },
@@ -85,14 +72,6 @@ export const TOPICS: Topic[] = [
     id: 'binding', group: 'fundamentals', legacyPath: '/binding', path: '/learn/binding',
     level: 'beginner', prerequisites: [],
     icon: '🔗', title: 'Data Binding', description: 'Interpolation, property binding, event binding and two-way binding, side by side.',
-    objectives: [
-      { text: 'Explain which way data flows for each of the four kinds of binding', sectionId: 'overview' },
-      { text: 'Use {{ }} to display component data in the template', sectionId: 'interpolation' },
-      { text: 'Bind element properties with [property]="value", and know why it is a property and not an attribute', sectionId: 'property-binding' },
-      { text: 'Listen to DOM events with (event)="handler($event)"', sectionId: 'event-binding' },
-      { text: 'Use [(ngModel)] for two-way binding on form inputs', sectionId: 'two-way' },
-      { text: 'Pick the right binding for a job', sectionId: 'practice' },
-    ],
     sections: [
       { id: 'overview', title: 'The big picture', kind: 'concept', minutes: 5 },
       { id: 'interpolation', title: 'Interpolation', kind: 'concept', minutes: 4 },
@@ -106,12 +85,6 @@ export const TOPICS: Topic[] = [
     id: 'pipes', group: 'fundamentals', legacyPath: '/pipes', path: '/learn/pipes',
     level: 'beginner', prerequisites: ['binding'],
     icon: '🧪', title: 'Pipes', description: 'Format dates, prices and text right in the template with | pipeName.',
-    objectives: [
-      { text: 'Format values in templates using built-in pipes and their arguments', sectionId: 'builtin' },
-      { text: 'Chain multiple pipes together, and predict how the order changes the result', sectionId: 'chain' },
-      { text: 'Create a custom pipe with @Pipe', sectionId: 'custom' },
-      { text: 'Explain why a pure pipe is cheaper than a method call, and when a pipe is impure', sectionId: 'pure-impure' },
-    ],
     sections: [
       { id: 'builtin', title: 'Built-in Pipes', kind: 'concept', minutes: 6 },
       { id: 'chain', title: 'Chaining Pipes', kind: 'try-it', minutes: 5 },
@@ -124,12 +97,6 @@ export const TOPICS: Topic[] = [
     id: 'directives', group: 'fundamentals', legacyPath: '/directives', path: '/learn/directives',
     level: 'beginner', prerequisites: ['binding'],
     icon: '⚙️', title: 'Directives', description: 'Give plain HTML extra behavior with structural and attribute directives.',
-    objectives: [
-      { text: 'Use @if, @else and @for in templates', sectionId: 'structural' },
-      { text: 'Choose a track expression that keeps rows tied to the right item', sectionId: 'track' },
-      { text: 'Build an attribute directive that changes host element behavior', sectionId: 'attribute' },
-      { text: 'Apply multiple directives to one element', sectionId: 'try-it' },
-    ],
     sections: [
       { id: 'structural', title: 'Structural Directives', kind: 'concept', minutes: 6 },
       { id: 'track', title: 'track — Keeping Rows Honest', kind: 'concept', minutes: 5 },
@@ -142,13 +109,6 @@ export const TOPICS: Topic[] = [
     id: 'template-tools', group: 'fundamentals', legacyPath: '/template-tools', path: '/learn/template-tools',
     level: 'intermediate', prerequisites: ['binding', 'directives'],
     icon: '🧰', title: 'Template Tools', description: 'ng-container, ng-template, @let and ngTemplateOutlet: the small tools for tidy, reusable templates.',
-    objectives: [
-      { text: 'Group elements without adding extra HTML using ng-container', sectionId: 'container' },
-      { text: 'Define a template fragment with ng-template and reuse it', sectionId: 'template' },
-      { text: 'Save a value in the template with @let', sectionId: 'let' },
-      { text: 'Render a template where you choose with ngTemplateOutlet', sectionId: 'outlet' },
-      { text: 'Combine them in a real list', sectionId: 'try-it' },
-    ],
     sections: [
       { id: 'container', title: 'ng-container', kind: 'concept', minutes: 4 },
       { id: 'template', title: 'ng-template', kind: 'concept', minutes: 5 },
@@ -161,12 +121,6 @@ export const TOPICS: Topic[] = [
     id: 'communication', group: 'fundamentals', legacyPath: '/communication', path: '/learn/communication',
     level: 'beginner', prerequisites: ['binding'],
     icon: '↔️', title: 'Component Communication', description: 'input(), output() and model() — how a parent and child component talk to each other.',
-    objectives: [
-      { text: 'Pass data from parent to child with input() and input.required()', sectionId: 'input' },
-      { text: 'Emit events from child to parent with output(), and name them well', sectionId: 'output' },
-      { text: 'Let a child edit a value the parent owns with model()', sectionId: 'model' },
-      { text: 'Choose between input, output, model, a service and ng-content', sectionId: 'when-service' },
-    ],
     sections: [
       { id: 'input', title: 'input() — Parent to Child', kind: 'concept', minutes: 6 },
       { id: 'output', title: 'output() — Child to Parent', kind: 'concept', minutes: 5 },
@@ -179,11 +133,6 @@ export const TOPICS: Topic[] = [
     id: 'content-projection', group: 'fundamentals', legacyPath: '/content-projection', path: '/learn/content-projection',
     level: 'intermediate', prerequisites: ['communication'],
     icon: '🧩', title: 'Content Projection & Queries', description: 'ng-content slots for reusable wrappers, and viewChild / contentChild to reach what is inside.',
-    objectives: [
-      { text: 'Build a wrapper component that shows whatever markup its parent puts inside it', sectionId: 'ng-content' },
-      { text: 'Use select to create named slots such as a title and a footer', sectionId: 'slots' },
-      { text: 'Read child components and elements with viewChild, contentChild and contentChildren', sectionId: 'queries' },
-    ],
     sections: [
       { id: 'ng-content', title: 'ng-content', kind: 'concept', minutes: 5 },
       { id: 'slots', title: 'Multiple slots', kind: 'concept', minutes: 5 },
@@ -195,13 +144,6 @@ export const TOPICS: Topic[] = [
     id: 'lifecycle', group: 'fundamentals', legacyPath: '/lifecycle', path: '/learn/lifecycle',
     level: 'intermediate', prerequisites: ['components', 'communication'],
     icon: '⏱️', title: 'Component Lifecycle', description: 'When a component is created, shown, updated and destroyed, and where to put code for each moment.',
-    objectives: [
-      { text: 'Put the lifecycle moments in order', sectionId: 'overview' },
-      { text: 'Start work in ngOnInit and clean up in ngOnDestroy or DestroyRef', sectionId: 'init-destroy' },
-      { text: 'Touch the DOM safely with afterNextRender', sectionId: 'render' },
-      { text: 'React to input changes with ngOnChanges, computed() or effect()', sectionId: 'changes' },
-      { text: 'Watch a real component being created and destroyed', sectionId: 'try-it' },
-    ],
     sections: [
       { id: 'overview', title: 'The life of a component', kind: 'concept', minutes: 5 },
       { id: 'init-destroy', title: 'Start and clean up', kind: 'concept', minutes: 6 },
@@ -214,13 +156,6 @@ export const TOPICS: Topic[] = [
     id: 'forms', group: 'forms-navigation', legacyPath: '/forms', path: '/learn/forms',
     level: 'intermediate', prerequisites: ['binding'],
     icon: '📝', title: 'Angular Forms', description: 'Template-driven and reactive forms, with validation, side by side.',
-    objectives: [
-      { text: 'Build a form with template-driven approach using ngModel', sectionId: 'template-driven' },
-      { text: 'Build a form with reactive approach using FormGroup', sectionId: 'reactive' },
-      { text: 'Add validation, write a custom validator and show error messages', sectionId: 'validation' },
-      { text: 'Read touched, dirty and errors from a control', sectionId: 'validation' },
-      { text: 'Choose between template-driven and reactive forms', sectionId: 'comparison' },
-    ],
     sections: [
       { id: 'template-driven', title: 'Template-Driven Forms', kind: 'concept', minutes: 7 },
       { id: 'reactive', title: 'Reactive Forms', kind: 'concept', minutes: 6 },
@@ -233,14 +168,6 @@ export const TOPICS: Topic[] = [
     id: 'routing', group: 'forms-navigation', legacyPath: '/routing', path: '/learn/routing',
     level: 'intermediate', prerequisites: ['binding'],
     icon: '🧭', title: 'Routing', description: 'Routes, router-outlet, routerLink and reading route parameters.',
-    objectives: [
-      { text: 'Nest routes inside a layout, and load data before a page opens with a resolver', sectionId: 'nested' },
-      { text: 'Define routes and render them with router-outlet', sectionId: 'basics' },
-      { text: 'Predict which route a URL matches, and why order and ** matter', sectionId: 'matching' },
-      { text: 'Navigate with routerLink and the Router service', sectionId: 'navigation' },
-      { text: 'Read route parameters and query params, preferably as inputs', sectionId: 'params' },
-      { text: 'Know what a guard does before the next topic', sectionId: 'guards-preview' },
-    ],
     sections: [
       { id: 'basics', title: 'Routes & Router Outlet', kind: 'concept', minutes: 7 },
       { id: 'matching', title: 'How a URL is matched', kind: 'try-it', minutes: 6 },
@@ -254,12 +181,6 @@ export const TOPICS: Topic[] = [
     id: 'guards', group: 'forms-navigation', legacyPath: '/guards', path: '/learn/guards',
     level: 'intermediate', prerequisites: ['routing'],
     icon: '🚧', title: 'Route Guards', description: 'canActivate — decide whether a user may open a page, and where to send them if not.',
-    objectives: [
-      { text: 'Explain why a router needs guards, and why a guard is not real security', sectionId: 'why' },
-      { text: 'Write a canActivate guard function with inject()', sectionId: 'can-activate' },
-      { text: 'Return true, false or a UrlTree, and know what each one does', sectionId: 'can-activate' },
-      { text: 'Know when to use each of the 5 guard types', sectionId: 'five-kinds' },
-    ],
     sections: [
       { id: 'why', title: 'Why guards', kind: 'concept', minutes: 4 },
       { id: 'can-activate', title: 'canActivate', kind: 'concept', minutes: 6 },
@@ -272,14 +193,6 @@ export const TOPICS: Topic[] = [
     id: 'signals', group: 'reactivity', legacyPath: '/signals', path: '/learn/signals',
     level: 'intermediate', prerequisites: ['binding'],
     icon: '📡', title: 'Signals', description: "signal(), computed() and effect() — Angular's modern reactive state.",
-    objectives: [
-      { text: 'Use linkedSignal() for a value that follows another signal but can also be set by hand', sectionId: 'linked' },
-      { text: 'Create and update a signal with signal() and .set()/.update()', sectionId: 'basics' },
-      { text: 'Derive values automatically with computed(), and explain why it is lazy and cached', sectionId: 'computed' },
-      { text: 'Run side effects when signals change with effect()', sectionId: 'effects' },
-      { text: 'Use input() and output() in components', sectionId: 'component-signals' },
-      { text: 'Convert between Observables and signals with toSignal() and toObservable()', sectionId: 'interop' },
-    ],
     sections: [
       { id: 'basics', title: 'signal() Basics', kind: 'concept', minutes: 5 },
       { id: 'computed', title: 'computed()', kind: 'concept', minutes: 6 },
@@ -294,13 +207,6 @@ export const TOPICS: Topic[] = [
     id: 'signal-forms', group: 'reactivity', legacyPath: '/signal-forms', path: '/learn/signal-forms',
     level: 'intermediate', prerequisites: ['forms', 'signals'],
     icon: '🧾', title: 'Signal Forms', description: 'Forms built on signals: one model, typed fields, rules in one place. Stable since Angular 22.',
-    objectives: [
-      { text: 'Explain how Signal Forms differ from reactive and template-driven forms', sectionId: 'why' },
-      { text: 'Create a form from a signal model and bind it with [formField]', sectionId: 'model' },
-      { text: 'Add rules such as required, email and minLength', sectionId: 'validation' },
-      { text: 'Show errors, and submit only when the form is valid', sectionId: 'submit' },
-      { text: 'Build a working sign-up form', sectionId: 'try-it' },
-    ],
     sections: [
       { id: 'why', title: 'Why Signal Forms?', kind: 'concept', minutes: 4 },
       { id: 'model', title: 'Model and fields', kind: 'concept', minutes: 6 },
@@ -313,14 +219,6 @@ export const TOPICS: Topic[] = [
     id: 'rxjs', group: 'reactivity', legacyPath: '/rxjs', path: '/learn/rxjs',
     level: 'advanced', prerequisites: ['signals'],
     icon: '🌊', title: 'RxJS', description: 'Observables, operators like switchMap and debounceTime, and the async pipe.',
-    objectives: [
-      { text: 'Understand what an Observable is and how to subscribe', sectionId: 'observables' },
-      { text: 'Read a marble diagram and use map, filter, debounceTime, take and scan', sectionId: 'operators' },
-      { text: 'Choose between switchMap, mergeMap and concatMap', sectionId: 'operators' },
-      { text: 'Use the async pipe to handle subscriptions in templates', sectionId: 'async-pipe' },
-      { text: 'Share values between components with Subject, BehaviorSubject and ReplaySubject', sectionId: 'subjects' },
-      { text: 'Avoid memory leaks with takeUntilDestroyed', sectionId: 'memory-leaks' },
-    ],
     sections: [
       { id: 'observables', title: 'Observables', kind: 'concept', minutes: 5 },
       { id: 'operators', title: 'Operators', kind: 'concept', minutes: 11 },
@@ -334,13 +232,6 @@ export const TOPICS: Topic[] = [
     id: 'di', group: 'services-data', legacyPath: '/di', path: '/learn/di',
     level: 'intermediate', prerequisites: ['communication'],
     icon: '💉', title: 'Dependency Injection', description: 'inject(), providers and scope — who creates a service, and who shares it.',
-    objectives: [
-      { text: 'Write a service with @Service(), and load a heavy one only when needed with injectAsync()', sectionId: 'service' },
-      { text: 'Inject a service into a component with inject()', sectionId: 'basics' },
-      { text: 'Understand root vs component scope', sectionId: 'scope' },
-      { text: 'Provide an alternative implementation for testing', sectionId: 'providers' },
-      { text: 'Create an InjectionToken and choose between useClass, useValue and useFactory', sectionId: 'providers' },
-    ],
     sections: [
       { id: 'basics', title: 'inject() Basics', kind: 'concept', minutes: 6 },
       { id: 'service', title: 'Writing a service', kind: 'concept', minutes: 5 },
@@ -353,13 +244,6 @@ export const TOPICS: Topic[] = [
     id: 'movies', group: 'services-data', legacyPath: '/movies', path: '/learn/movies',
     level: 'intermediate', prerequisites: ['di', 'rxjs'],
     icon: '🌐', title: 'Fetch API & HTTP', description: 'HttpClient and services, fetching real data from a public API.',
-    objectives: [
-      { text: 'Provide and inject HttpClient, and explain why the data arrives later', sectionId: 'httpclient' },
-      { text: 'Read a request and a status code, and know when your code gets next() or error()', sectionId: 'request-anatomy' },
-      { text: 'Wrap HTTP calls in a typed service', sectionId: 'service-pattern' },
-      { text: 'Explain why every subscriber starts its own request, and how to share one', sectionId: 'cold' },
-      { text: 'Handle loading, empty and error states', sectionId: 'states' },
-    ],
     sections: [
       { id: 'httpclient', title: 'HttpClient', kind: 'concept', minutes: 7 },
       { id: 'request-anatomy', title: 'Requests and status codes', kind: 'try-it', minutes: 6 },
@@ -373,11 +257,6 @@ export const TOPICS: Topic[] = [
     id: 'resource', group: 'services-data', legacyPath: '/resource', path: '/learn/resource',
     level: 'advanced', prerequisites: ['signals', 'movies'],
     icon: '📦', title: 'Resource API', description: 'resource(), rxResource() and httpResource(): async data with loading and error state built in.',
-    objectives: [
-      { text: 'Load async data with resource() and read its value, status and error as signals', sectionId: 'basics' },
-      { text: 'Tell the six resource statuses apart and know when each one happens', sectionId: 'states' },
-      { text: 'Choose between resource, rxResource and httpResource', sectionId: 'http-rx' },
-    ],
     sections: [
       { id: 'basics', title: 'resource() basics', kind: 'concept', minutes: 7 },
       { id: 'states', title: 'Statuses', kind: 'concept', minutes: 5 },
@@ -389,12 +268,6 @@ export const TOPICS: Topic[] = [
     id: 'interceptor', group: 'services-data', legacyPath: '/interceptor', path: '/learn/interceptor',
     level: 'advanced', prerequisites: ['movies'],
     icon: '🛡️', title: 'HttpInterceptor', description: 'One checkpoint that every outgoing request and incoming response passes through.',
-    objectives: [
-      { text: 'Write a functional interceptor', sectionId: 'basics' },
-      { text: 'Add auth headers to every request', sectionId: 'auth-header' },
-      { text: 'Handle errors globally in an interceptor', sectionId: 'error-handling' },
-      { text: 'Chain multiple interceptors and predict what each one sees', sectionId: 'chaining' },
-    ],
     sections: [
       { id: 'basics', title: 'What is an Interceptor?', kind: 'concept', minutes: 5 },
       { id: 'auth-header', title: 'Adding Auth Headers', kind: 'concept', minutes: 5 },
@@ -407,11 +280,6 @@ export const TOPICS: Topic[] = [
     id: 'facade', group: 'services-data', legacyPath: '/facade', path: '/learn/facade',
     level: 'advanced', prerequisites: ['di'],
     icon: '🏛️', title: 'Facade Pattern', description: 'One simple front door over several services — how to keep components small and logic in one place.',
-    objectives: [
-      { text: 'Explain the problem the Facade pattern solves', sectionId: 'problem' },
-      { text: 'Build a Facade service that wraps multiple services', sectionId: 'building' },
-      { text: 'Wire a component to use only the Facade', sectionId: 'wiring' },
-    ],
     sections: [
       { id: 'problem', title: 'The Problem', kind: 'concept', minutes: 4 },
       { id: 'services-overview', title: 'The Underlying Services', kind: 'concept', minutes: 5 },
@@ -426,12 +294,6 @@ export const TOPICS: Topic[] = [
     id: 'change-detection', group: 'performance', legacyPath: '/change-detection', path: '/learn/change-detection',
     level: 'advanced', prerequisites: ['signals', 'communication'],
     icon: '🔄', title: 'Change Detection', description: 'Eager vs OnPush — when Angular re-checks a component, and how to make it do less.',
-    objectives: [
-      { text: 'Explain how Angular decides which components to re-check', sectionId: 'default' },
-      { text: 'Switch a component to OnPush and know when it re-renders', sectionId: 'onpush' },
-      { text: 'Use Signals as an alternative to manual change detection', sectionId: 'signals-cd' },
-      { text: 'Name what schedules a check, with or without zone.js', sectionId: 'zoneless' },
-    ],
     sections: [
       { id: 'default', title: 'How Angular decides', kind: 'concept', minutes: 6 },
       { id: 'onpush', title: 'OnPush Strategy', kind: 'try-it', minutes: 9 },
@@ -443,12 +305,6 @@ export const TOPICS: Topic[] = [
     id: 'lazy-loading', group: 'performance', legacyPath: '/lazy-loading', path: '/learn/lazy-loading',
     level: 'intermediate', prerequisites: ['routing'],
     icon: '📦', title: 'Lazy Loading', description: 'loadComponent and smaller initial bundles for a faster first load.',
-    objectives: [
-      { text: 'Configure a route with loadComponent for lazy loading', sectionId: 'basics' },
-      { text: 'Understand how lazy loading affects bundle size', sectionId: 'bundles' },
-      { text: 'Compare preloading strategies by waiting time and background data', sectionId: 'preloading' },
-      { text: 'Measure the impact with DevTools', sectionId: 'devtools' },
-    ],
     sections: [
       { id: 'basics', title: 'loadComponent', kind: 'concept', minutes: 5 },
       { id: 'bundles', title: 'Bundle Analysis', kind: 'try-it', minutes: 4 },
@@ -460,11 +316,6 @@ export const TOPICS: Topic[] = [
     id: 'defer', group: 'performance', legacyPath: '/defer', path: '/learn/defer',
     level: 'intermediate', prerequisites: ['lazy-loading'],
     icon: '⏳', title: '@defer Blocks', description: 'Load parts of a template later: placeholders, triggers and prefetching.',
-    objectives: [
-      { text: 'Wrap heavy content in @defer with @placeholder, @loading and @error', sectionId: 'basics' },
-      { text: 'Pick the right trigger: viewport, interaction, timer or a condition', sectionId: 'triggers' },
-      { text: 'Prefetch content early, and know when not to defer', sectionId: 'prefetch' },
-    ],
     sections: [
       { id: 'basics', title: '@defer basics', kind: 'concept', minutes: 5 },
       { id: 'triggers', title: 'Triggers', kind: 'concept', minutes: 6 },
@@ -476,12 +327,6 @@ export const TOPICS: Topic[] = [
     id: 'images', group: 'performance', legacyPath: '/images', path: '/learn/images',
     level: 'beginner', prerequisites: ['binding'],
     icon: '🖼️', title: 'Optimized Images', description: 'NgOptimizedImage: sharper pages, faster loads and no layout jumps.',
-    objectives: [
-      { text: 'Explain why plain images hurt speed and layout', sectionId: 'why' },
-      { text: 'Use ngSrc with a width and a height', sectionId: 'ngsrc' },
-      { text: 'Mark the main image with priority, and use fill and sizes', sectionId: 'priority' },
-      { text: 'Read what Angular adds to an image tag', sectionId: 'try-it' },
-    ],
     sections: [
       { id: 'why', title: 'Why images are heavy', kind: 'concept', minutes: 4 },
       { id: 'ngsrc', title: 'ngSrc and size', kind: 'concept', minutes: 6 },
@@ -493,12 +338,6 @@ export const TOPICS: Topic[] = [
     id: 'testing', group: 'quality', legacyPath: '/testing', path: '/learn/testing',
     level: 'intermediate', prerequisites: ['components', 'di'],
     icon: '🧪', title: 'Testing', description: 'Write small tests that check a component or a service, and learn to read a failing test.',
-    objectives: [
-      { text: 'Say why tests save time, and name the three parts of a test', sectionId: 'why' },
-      { text: 'Read a test written as arrange, act, assert', sectionId: 'anatomy' },
-      { text: 'Test a component with TestBed and a fixture', sectionId: 'component' },
-      { text: 'Run tests, break the code on purpose, and read the failure', sectionId: 'runner' },
-    ],
     sections: [
       { id: 'why', title: 'Why test?', kind: 'concept', minutes: 4 },
       { id: 'anatomy', title: 'Anatomy of a test', kind: 'concept', minutes: 6 },
@@ -510,12 +349,6 @@ export const TOPICS: Topic[] = [
     id: 'accessibility', group: 'quality', legacyPath: '/accessibility', path: '/learn/accessibility',
     level: 'beginner', prerequisites: ['components'],
     icon: '♿', title: 'Accessibility', description: 'Build pages everyone can use: real elements, the keyboard, screen readers, and Angular Aria.',
-    objectives: [
-      { text: 'Explain who accessibility helps and why', sectionId: 'why' },
-      { text: 'Pick the right HTML element instead of a styled div', sectionId: 'semantic' },
-      { text: 'Make a page usable with the keyboard alone', sectionId: 'keyboard' },
-      { text: 'Announce changes and use an Angular Aria component', sectionId: 'aria' },
-    ],
     sections: [
       { id: 'why', title: 'Why accessibility?', kind: 'concept', minutes: 4 },
       { id: 'semantic', title: 'Use the right element', kind: 'concept', minutes: 6 },
@@ -527,12 +360,6 @@ export const TOPICS: Topic[] = [
     id: 'security', group: 'quality', legacyPath: '/security', path: '/learn/security',
     level: 'intermediate', prerequisites: ['binding'],
     icon: '🔐', title: 'Security Basics', description: 'How Angular keeps injected scripts out, what it cannot protect, and why bypassing it is risky.',
-    objectives: [
-      { text: 'Explain what cross-site scripting is', sectionId: 'why' },
-      { text: 'See how Angular escapes and cleans untrusted text', sectionId: 'escaping' },
-      { text: 'Know why bypassSecurityTrust is dangerous', sectionId: 'bypass' },
-      { text: 'List what Angular does not protect', sectionId: 'practices' },
-    ],
     sections: [
       { id: 'why', title: 'What are we defending?', kind: 'concept', minutes: 4 },
       { id: 'escaping', title: 'Angular escapes for you', kind: 'try-it', minutes: 6 },
@@ -544,12 +371,6 @@ export const TOPICS: Topic[] = [
     id: 'error-handling', group: 'quality', legacyPath: '/error-handling', path: '/learn/error-handling',
     level: 'intermediate', prerequisites: ['di', 'rxjs'],
     icon: '🚨', title: 'Error Handling', description: 'Catch errors where they happen, handle the rest in one place, and tell the user clearly.',
-    objectives: [
-      { text: 'Choose between try/catch and catchError', sectionId: 'local' },
-      { text: 'Describe what an ErrorHandler does', sectionId: 'global' },
-      { text: 'Show a clear error state with a way to retry', sectionId: 'ui' },
-      { text: 'Say why swallowing errors hides bugs', sectionId: 'why' },
-    ],
     sections: [
       { id: 'why', title: 'Errors will happen', kind: 'concept', minutes: 4 },
       { id: 'local', title: 'Catch it close by', kind: 'concept', minutes: 6 },
@@ -561,12 +382,6 @@ export const TOPICS: Topic[] = [
     id: 'animations', group: 'quality', legacyPath: '/animations', path: '/learn/animations',
     level: 'beginner', prerequisites: ['directives'],
     icon: '✨', title: 'Animations', description: 'animate.enter and animate.leave: smooth arrivals and exits with plain CSS, and respect for reduced motion.',
-    objectives: [
-      { text: 'Say when an animation helps and when it hurts', sectionId: 'why' },
-      { text: 'Animate an element in and out with animate.enter and animate.leave', sectionId: 'enter-leave' },
-      { text: 'Write the CSS for a transition and for keyframes', sectionId: 'css' },
-      { text: 'Turn motion off for people who ask for it', sectionId: 'motion' },
-    ],
     sections: [
       { id: 'why', title: 'Why animate?', kind: 'concept', minutes: 4 },
       { id: 'enter-leave', title: 'Enter and leave', kind: 'try-it', minutes: 6 },
@@ -578,12 +393,6 @@ export const TOPICS: Topic[] = [
     id: 'dynamic-components', group: 'advanced', legacyPath: '/dynamic-components', path: '/learn/dynamic-components',
     level: 'advanced', prerequisites: ['components', 'template-tools'],
     icon: '🧩', title: 'Dynamic Components', description: 'Choose which component to show at run time, with ngComponentOutlet or in code.',
-    objectives: [
-      { text: 'Explain when the component to show is not known in advance', sectionId: 'why' },
-      { text: 'Render a component chosen at run time with ngComponentOutlet', sectionId: 'outlet' },
-      { text: 'Create a component in code with ViewContainerRef', sectionId: 'create' },
-      { text: 'Choose between an outlet, a switch and a router', sectionId: 'when' },
-    ],
     sections: [
       { id: 'why', title: 'Why dynamic?', kind: 'concept', minutes: 4 },
       { id: 'outlet', title: 'ngComponentOutlet', kind: 'try-it', minutes: 6 },
@@ -595,12 +404,6 @@ export const TOPICS: Topic[] = [
     id: 'drag-drop', group: 'advanced', legacyPath: '/drag-drop', path: '/learn/drag-drop',
     level: 'intermediate', prerequisites: ['components', 'directives'],
     icon: '🧲', title: 'Drag and Drop', description: 'Reorder lists and move items between lists with the CDK, and keep it usable without a mouse.',
-    objectives: [
-      { text: 'Say what the CDK drag and drop gives you', sectionId: 'why' },
-      { text: 'Reorder a list with cdkDropList and moveItemInArray', sectionId: 'list' },
-      { text: 'Move items between lists with transferArrayItem', sectionId: 'lists' },
-      { text: 'Offer a keyboard alternative', sectionId: 'a11y' },
-    ],
     sections: [
       { id: 'why', title: 'Why the CDK?', kind: 'concept', minutes: 4 },
       { id: 'list', title: 'Reorder a list', kind: 'try-it', minutes: 6 },
@@ -612,13 +415,6 @@ export const TOPICS: Topic[] = [
     id: 'i18n', group: 'advanced', legacyPath: '/i18n', path: '/learn/i18n',
     level: 'intermediate', prerequisites: ['binding', 'pipes'],
     icon: '🌍', title: 'Internationalization', description: 'Show dates, numbers and text the way each reader expects, and support right-to-left languages.',
-    objectives: [
-      { text: 'Explain what a locale changes', sectionId: 'why' },
-      { text: 'Format dates, money and numbers for a locale with pipes', sectionId: 'formats' },
-      { text: 'Pick the right plural form with ngPlural', sectionId: 'plurals' },
-      { text: 'Describe how text is translated at build time', sectionId: 'translate' },
-      { text: 'Support right-to-left languages', sectionId: 'direction' },
-    ],
     sections: [
       { id: 'why', title: 'What is a locale?', kind: 'concept', minutes: 4 },
       { id: 'formats', title: 'Dates, money and numbers', kind: 'try-it', minutes: 6 },
@@ -631,12 +427,6 @@ export const TOPICS: Topic[] = [
     id: 'ssr', group: 'advanced', legacyPath: '/ssr', path: '/learn/ssr',
     level: 'advanced', prerequisites: ['components', 'lifecycle', 'lazy-loading'],
     icon: '🖥️', title: 'SSR and Hydration', description: 'Send ready-made HTML first, then make it interactive: server rendering, prerendering and hydration.',
-    objectives: [
-      { text: 'Compare client rendering, server rendering and prerendering', sectionId: 'why' },
-      { text: 'Explain what hydration does', sectionId: 'modes' },
-      { text: 'Write code that is safe on the server', sectionId: 'browser-only' },
-      { text: 'Choose a rendering mode for each route', sectionId: 'routes' },
-    ],
     sections: [
       { id: 'why', title: 'Why render on a server?', kind: 'concept', minutes: 5 },
       { id: 'modes', title: 'Three ways to render', kind: 'try-it', minutes: 6 },
@@ -648,12 +438,6 @@ export const TOPICS: Topic[] = [
     id: 'devtools', group: 'advanced', legacyPath: '/devtools', path: '/learn/devtools',
     level: 'intermediate', prerequisites: ['components', 'change-detection'],
     icon: '🛠️', title: 'DevTools and Style Guide', description: 'Inspect a running app, and write code the way the Angular style guide recommends.',
-    objectives: [
-      { text: 'Name what Angular DevTools shows you', sectionId: 'why' },
-      { text: 'Use DevTools to inspect components and find slow checks', sectionId: 'devtools' },
-      { text: 'Spot style guide problems in a component', sectionId: 'style' },
-      { text: 'Name files, classes and selectors the recommended way', sectionId: 'naming' },
-    ],
     sections: [
       { id: 'why', title: 'Tools of the trade', kind: 'concept', minutes: 4 },
       { id: 'devtools', title: 'Angular DevTools', kind: 'concept', minutes: 6 },

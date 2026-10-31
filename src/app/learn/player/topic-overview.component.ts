@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { LEVEL_LABEL, TOPICS, TOPIC_GROUPS } from '../../core/data/topics';
 import { ProgressService } from '../../core/services/progress.service';
@@ -7,7 +7,7 @@ import { IconComponent } from '../../shared/icon.component';
 import { GROUP_ICONS, SECTION_KIND_ICONS, SECTION_KIND_LABELS, TOPIC_ILLUSTRATIONS } from '../../shared/learning-icons';
 import { TopicIllustrationComponent } from '../../shared/topic-illustration.component';
 import { TopicStatusIconComponent } from '../sidebar/topic-status-icon.component';
-import type { TopicId } from '../../core/models/learning.models';
+import type { TopicId, TopicObjective } from '../../core/models/learning.models';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -68,11 +68,11 @@ import type { TopicId } from '../../core/models/learning.models';
           </a>
         </div>
         <!-- Objectives -->
-        @if (t.objectives.length) {
+        @if (objectives().length) {
           <div class="mt-8">
             <h2 class="text-lg font-bold">What you'll learn</h2>
             <ul class="mt-3 space-y-2">
-              @for (obj of t.objectives; track obj.text) {
+              @for (obj of objectives(); track obj.text) {
                 <li class="flex items-start gap-2.5 text-sm text-stone-300">
                   <app-icon name="check" class="mt-0.5 h-4 w-4 shrink-0 text-gold-400" />
                   {{ obj.text }}
@@ -152,6 +152,9 @@ export class TopicOverviewComponent {
 
   protected readonly levelLabel = LEVEL_LABEL;
 
+  /** Loaded with this page, so the objectives of all lessons stay out of the first download. */
+  protected readonly objectives = signal<TopicObjective[]>([]);
+
   protected readonly topic = computed(() => TOPICS.find((t) => t.id === this.topicId) ?? null);
 
   protected readonly kindIcons = SECTION_KIND_ICONS;
@@ -201,6 +204,7 @@ export class TopicOverviewComponent {
   });
 
   constructor() {
+    void import('../../core/data/topic-objectives').then((m) => this.objectives.set(m.TOPIC_OBJECTIVES[this.topicId] ?? []));
     const t = this.topic();
     if (!t) {
       this.router.navigate(['/learn']);
