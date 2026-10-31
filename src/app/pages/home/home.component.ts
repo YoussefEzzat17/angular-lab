@@ -5,11 +5,13 @@ import { GROUPED_TOPICS, LEVEL_LABEL, TOPIC_GROUPS, TOPICS, topicMinutes } from 
 import { ProgressService } from '../../core/services/progress.service';
 import { SignalNetworkComponent } from './signal-network.component';
 import { IconComponent } from '../../shared/icon.component';
+import { TOPIC_ILLUSTRATIONS } from '../../shared/learning-icons';
+import { TopicIllustrationComponent } from '../../shared/topic-illustration.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [RouterLink, SignalNetworkComponent, IconComponent],
+  imports: [RouterLink, SignalNetworkComponent, IconComponent, TopicIllustrationComponent],
   template: `
     <!-- ── Hero ───────────────────────────────────────────────────────── -->
     <section class="border-b border-stone-800 bg-stone-950">
@@ -101,7 +103,11 @@ import { IconComponent } from '../../shared/icon.component';
               <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 @for (topic of group.topics; track topic.id) {
                   <a [routerLink]="topic.path"
-                     class="group flex items-start gap-4 rounded-xl border border-stone-800 bg-stone-900 p-4 shadow-card transition hover:border-gold-400/40 hover:bg-stone-800 hover:shadow-card-lift motion-safe:hover:-translate-y-0.5">
+                     class="group flex flex-col gap-3 rounded-xl border border-stone-800 bg-stone-900 p-4 shadow-card transition hover:border-gold-400/40 hover:bg-stone-800 hover:shadow-card-lift motion-safe:hover:-translate-y-0.5">
+                    <div class="theme-dark-scope grid h-[10.5rem] place-items-center overflow-hidden rounded-lg border border-stone-800 bg-gradient-to-br from-gold-950 via-stone-900 to-stone-950" aria-hidden="true">
+                      <app-topic-illustration [name]="illustrations[topic.id]" class="block w-full max-w-[13rem] py-1" />
+                    </div>
+                    <div class="flex items-start gap-3">
                     <span class="text-2xl">{{ topic.icon }}</span>
                     <div class="min-w-0 flex-1">
                       <div class="flex items-center justify-between gap-2">
@@ -115,6 +121,7 @@ import { IconComponent } from '../../shared/icon.component';
                       </div>
                       <p class="mt-0.5 text-xs text-stone-500 line-clamp-3">{{ topic.description }}</p>
                       <p class="mt-1 text-[11px] font-semibold text-stone-500">{{ levelLabel[topic.level] }} · {{ minutes(topic) }} min</p>
+                    </div>
                     </div>
                   </a>
                 }
@@ -148,6 +155,7 @@ export class HomeComponent {
   readonly topics = TOPICS;
   readonly groups = GROUPED_TOPICS;
   readonly levelLabel = LEVEL_LABEL;
+  readonly illustrations = TOPIC_ILLUSTRATIONS;
   readonly minutes = topicMinutes;
 
   continuePath(): string {

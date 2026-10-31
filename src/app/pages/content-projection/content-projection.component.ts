@@ -31,7 +31,7 @@ import { CounterDemoComponent, FancyCardComponent, SlotCardComponent, TabPanelCo
     <app-lesson-player [topicId]="'content-projection'" [section]="section()">
       <ng-template appLessonSection="ng-content">
         <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-          <app-page-header title="Content Projection & Queries">
+          <app-page-header title="Content Projection & Queries" illustration="projection">
             An <code class="text-gold-300">input()</code> can pass a string or an object into a component, but not a piece of HTML. When you want a reusable wrapper, such as a card,
             a dialog or a panel, that shows <em>whatever the parent writes inside it</em>, you use <strong class="text-stone-200">content projection</strong>.
           </app-page-header>

@@ -4,14 +4,15 @@ import { LEVEL_LABEL, TOPICS, TOPIC_GROUPS } from '../../core/data/topics';
 import { ProgressService } from '../../core/services/progress.service';
 import { ProgressRingComponent } from '../../shared/progress-ring.component';
 import { IconComponent } from '../../shared/icon.component';
-import { GROUP_ICONS, SECTION_KIND_ICONS, SECTION_KIND_LABELS } from '../../shared/learning-icons';
+import { GROUP_ICONS, SECTION_KIND_ICONS, SECTION_KIND_LABELS, TOPIC_ILLUSTRATIONS } from '../../shared/learning-icons';
+import { TopicIllustrationComponent } from '../../shared/topic-illustration.component';
 import { TopicStatusIconComponent } from '../sidebar/topic-status-icon.component';
 import type { TopicId } from '../../core/models/learning.models';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [RouterLink, ProgressRingComponent, IconComponent, TopicStatusIconComponent],
+  imports: [RouterLink, ProgressRingComponent, IconComponent, TopicStatusIconComponent, TopicIllustrationComponent],
   template: `
     @if (topic(); as t) {
       <section class="mx-auto max-w-3xl px-4 py-12 sm:px-6">
@@ -23,7 +24,10 @@ import type { TopicId } from '../../core/models/learning.models';
             <li aria-current="page" class="text-stone-200">{{ t.title }}</li>
           </ol>
         </nav>
-        <h1 class="mt-3 text-3xl font-bold text-stone-100 [text-wrap:balance] sm:text-4xl">{{ t.title }}</h1>
+        <div class="theme-dark-scope mt-4 grid h-44 place-items-center overflow-hidden rounded-2xl border border-gold-400/30 bg-gradient-to-br from-gold-950 via-stone-900 to-stone-950 shadow-featured sm:h-48" aria-hidden="true">
+          <app-topic-illustration [name]="illustration()" class="block w-full max-w-[15rem] py-2" />
+        </div>
+        <h1 class="mt-5 text-3xl font-bold text-stone-100 [text-wrap:balance] sm:text-4xl">{{ t.title }}</h1>
         <p class="mt-2 max-w-[60ch] text-stone-400">{{ t.description }}</p>
         <p class="mt-3 flex flex-wrap items-center gap-2 text-sm text-stone-400">
           <span class="rounded-full border border-stone-700 px-3 py-1 text-xs font-semibold text-stone-300" data-testid="topic-level">{{ levelLabel[t.level] }}</span>
@@ -154,6 +158,7 @@ export class TopicOverviewComponent {
   protected readonly kindLabels = SECTION_KIND_LABELS;
   protected readonly groupTitle = computed(() => TOPIC_GROUPS.find((g) => g.id === this.topic()?.group)?.title ?? '');
   protected readonly groupIcon = computed(() => GROUP_ICONS[this.topic()?.group ?? 'fundamentals']);
+  protected readonly illustration = computed(() => TOPIC_ILLUSTRATIONS[this.topic()?.id as TopicId ?? 'binding']);
   protected readonly prerequisites = computed(() =>
     (this.topic()?.prerequisites ?? []).flatMap((id) => {
       const topic = TOPICS.find((t) => t.id === id);

@@ -30,7 +30,7 @@ import { DeferStatsService } from './defer-stats.service';
     <app-lesson-player [topicId]="'defer'" [section]="section()">
       <ng-template appLessonSection="basics">
         <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-          <app-page-header title="@defer Blocks">
+          <app-page-header title="@defer Blocks" illustration="defer">
             Some parts of a page are heavy and not needed straight away: a chart far down the page, an editor behind a button, a comments
             section. <code class="text-gold-300">&#64;defer</code> tells Angular to leave that part out of the first download and fetch it later.
             Your template stays one piece of HTML; Angular does the splitting.

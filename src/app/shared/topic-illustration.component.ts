@@ -15,7 +15,10 @@ export type IllustrationName =
   | 'guards'
   | 'di'
   | 'change-detection'
-  | 'facade';
+  | 'facade'
+  | 'projection'
+  | 'resource'
+  | 'defer';
 
 /**
  * Small animated diagram that sits beside a topic's intro. Drawn with the theme tokens, so it follows
@@ -285,6 +288,53 @@ export type IllustrationName =
           <circle class="pk fc-out" style="--y: 105px" r="4" />
           <circle class="pk fc-out" style="--y: 143px" r="4" />
         }
+        @case ('projection') {
+          <!-- the parent's content slides into the slot the child left open -->
+          <rect class="node" x="70" y="14" width="156" height="104" rx="12" />
+          <text class="mono dim" x="82" y="32">&lt;app-card&gt;</text>
+          <rect class="ghost2" x="84" y="46" width="128" height="52" rx="9" />
+          <text class="mono gold-text" x="148" y="76" text-anchor="middle">&lt;ng-content /&gt;</text>
+          <g class="slot-fill">
+            <rect class="node gold" x="84" y="46" width="128" height="52" rx="9" />
+            <text class="bright" x="148" y="77" text-anchor="middle">your content</text>
+          </g>
+          <rect class="node gold" x="8" y="48" width="48" height="48" rx="9" />
+          <text class="mono dim" x="32" y="76" text-anchor="middle">parent</text>
+          <rect class="chip" x="40" y="132" width="160" height="24" rx="12" />
+          <text class="mono gold-text" x="120" y="148" text-anchor="middle">reusable wrapper</text>
+        }
+        @case ('resource') {
+          <!-- a signal feeds the resource; its status moves from loading to resolved -->
+          <rect class="node" x="10" y="26" width="84" height="34" rx="9" />
+          <text class="mono dim" x="52" y="47" text-anchor="middle">params()</text>
+          <path class="edge" d="M96 43 H136" />
+          <path class="head" d="M130 38 L137 43 L130 48" />
+          <rect class="node gold" x="138" y="14" width="92" height="58" rx="10" />
+          <text class="mono dim" x="184" y="32" text-anchor="middle">resource()</text>
+          <text class="bright n1" x="184" y="56" text-anchor="middle">loading</text>
+          <text class="bright n2" x="184" y="56" text-anchor="middle">resolved</text>
+          <text class="bright n3" x="184" y="56" text-anchor="middle">reloading</text>
+          <path class="edge" d="M184 74 V102" />
+          <rect class="node" x="64" y="102" width="112" height="30" rx="9" />
+          <text class="mono" x="120" y="121" text-anchor="middle">value() / error()</text>
+          <rect class="chip" x="52" y="144" width="136" height="22" rx="11" />
+          <text class="mono gold-text" x="120" y="159" text-anchor="middle">async data as signals</text>
+        }
+        @case ('defer') {
+          <!-- a placeholder holds the spot, then the real block downloads and appears -->
+          <rect class="node" x="14" y="14" width="212" height="30" rx="9" />
+          <text class="mono gold-text" x="120" y="33" text-anchor="middle">&#64;defer (on viewport)</text>
+          <rect class="ghost2" x="14" y="58" width="212" height="62" rx="10" />
+          <g class="chunk-solid">
+            <rect class="node gold" x="14" y="58" width="212" height="62" rx="10" />
+          </g>
+          <text class="mono dim lz-not" x="120" y="93" text-anchor="middle">&#64;placeholder</text>
+          <text class="mono gold-text lz-dl" x="120" y="93" text-anchor="middle">&#64;loading…</text>
+          <text class="bright lz-done" x="120" y="93" text-anchor="middle">heavy content ✓</text>
+          <rect class="progress" x="22" y="112" width="196" height="3" rx="1.5" />
+          <rect class="chip" x="40" y="136" width="160" height="24" rx="12" />
+          <text class="mono gold-text" x="120" y="152" text-anchor="middle">loads only when needed</text>
+        }
       }
     </svg>
   `,
@@ -535,7 +585,11 @@ export type IllustrationName =
       @keyframes fc-out { 0%, 27% { transform: translate(140px, 82px); opacity: 0; } 30% { transform: translate(140px, 82px); opacity: 1; } 52% { transform: translate(170px, var(--y)); opacity: 1; } 56%, 100% { transform: translate(170px, var(--y)); opacity: 0; } }
       @keyframes fc-svc { 0%, 50% { stroke: var(--line); } 56%, 78% { stroke: var(--gold); } 86%, 100% { stroke: var(--line); } }
 
+      .slot-fill { animation: slot-in 6s ease-in-out infinite; }
+      @keyframes slot-in { 0%, 15% { transform: translateX(-120px); opacity: 0; } 22% { opacity: 1; } 50%, 90% { transform: translateX(0); opacity: 1; } 100% { transform: translateX(0); opacity: 0; } }
+
       @media (prefers-reduced-motion: reduce) {
+        .slot-fill { animation: none; opacity: 1; transform: none; }
         .toggle, .ghost, .typed, .caret, .packet, .u1, .u2, .u3, .p1, .p2, .p3, .react, .n1, .n2, .n3, .bad, .good, .field, .btn, .btn-text, .marble, .pk, .fc-in, .fc-out, .fc-svc, .ok-mark, .no-mark, .di-l, .di-r, .cd, .nav-home, .nav-admin, .cursor, .chunk-solid, .lz-not, .lz-dl, .lz-done, .progress, .page-box, .page-home, .page-admin, .icp-req, .icp-tok, .icp-key, .icp-drop, .icp-auth {
           animation: none;
         }

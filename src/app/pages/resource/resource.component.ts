@@ -29,7 +29,7 @@ import { ResourceDemoComponent } from './resource-demo.component';
     <app-lesson-player [topicId]="'resource'" [section]="section()">
       <ng-template appLessonSection="basics">
         <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
-          <app-page-header title="Resource API">
+          <app-page-header title="Resource API" illustration="resource">
             Almost every page loads something: a user, a list, a product. Each time you end up writing the same three signals by hand (the data, a loading flag, an error)
             and the same careful code to keep them in step. A <strong class="text-stone-200">resource</strong> does that bookkeeping for you and hands back the result as signals.
           </app-page-header>

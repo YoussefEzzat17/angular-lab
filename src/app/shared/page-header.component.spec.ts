@@ -29,7 +29,7 @@ describe('PageHeaderComponent illustration', () => {
   });
 
   it('can draw every illustration without errors', () => {
-    const names = ['directives', 'binding', 'routing', 'signals', 'pipes', 'forms', 'rxjs', 'lazy', 'interceptor', 'http', 'communication'] as const;
+    const names = ['directives', 'binding', 'routing', 'signals', 'pipes', 'forms', 'rxjs', 'lazy', 'interceptor', 'http', 'communication', 'guards', 'di', 'change-detection', 'facade', 'projection', 'resource', 'defer'] as const;
     for (const name of names) {
       const fixture = TestBed.createComponent(TopicIllustrationComponent);
       fixture.componentRef.setInput('name', name);
