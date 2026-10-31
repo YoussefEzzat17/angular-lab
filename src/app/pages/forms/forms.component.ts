@@ -1,5 +1,7 @@
+import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { FormArray, FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { NumbersOnlyDirective } from '../../directives/number-only.directive';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
@@ -13,11 +15,14 @@ import { LessonCardComponent } from '../../shared/lesson-card.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
 import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
 import { CodeBlockDirective } from '../../shared/code-block.directive';
+import { CodeOutputComponent } from '../../shared/code-output.component';
+import { CommonMistakeComponent } from '../../shared/common-mistake.component';
+import { RecapComponent } from '../../shared/recap.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [ControlStateDemoComponent, OrderStepsComponent, PredictOutputComponent, ReactiveFormsModule, FormsModule, NumbersOnlyDirective, FlowDiagramComponent, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective, CodeBlockDirective],
+  imports: [CodeOutputComponent, CommonMistakeComponent, RecapComponent, JsonPipe, RouterLink, ControlStateDemoComponent, OrderStepsComponent, PredictOutputComponent, ReactiveFormsModule, FormsModule, NumbersOnlyDirective, FlowDiagramComponent, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective, CodeBlockDirective],
   styles: `
     .field {
       width: 100%;
@@ -156,6 +161,7 @@ import { CodeBlockDirective } from '../../shared/code-block.directive';
           </form>
         </div>
       </div>
+      <app-recap class="mt-5" [items]="recapTemplate" />
       </section>
       </ng-template>
 
@@ -386,6 +392,30 @@ import { CodeBlockDirective } from '../../shared/code-block.directive';
           </form>
         </div>
       </div>
+      <div class="mt-8">
+        <app-lesson-card variant="highlight" label="DYNAMIC LISTS" heading="FormArray: a list the user can grow">
+          <p class="mt-2 text-sm text-stone-400">
+            When you do not know how many fields there will be, use a <code class="text-gold-300">FormArray</code>. It holds a list of controls that you add to and remove from in code.
+          </p>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <button type="button" (click)="addGenre()" class="min-h-11 rounded-xl bg-gold-solid px-4 text-sm font-semibold text-white hover:bg-gold-solid-hover">Add a genre</button>
+          </div>
+          <app-code-output class="mt-4 block" [code]="formArrayCode" caption="Each control is one row. The array's value is always a plain list.">
+            <div class="space-y-2">
+              @for (control of genres.controls; track control; let i = $index) {
+                <div class="flex items-center gap-2">
+                  <label class="sr-only" [for]="'genre-' + i">Genre {{ i + 1 }}</label>
+                  <input [id]="'genre-' + i" [formControl]="control" class="w-full rounded-xl border border-stone-600 bg-stone-800 px-3 py-2 text-sm text-stone-100 focus:border-gold-400 focus:outline-none" />
+                  <button type="button" (click)="removeGenre(i)" [attr.aria-label]="'Remove genre ' + (i + 1)" class="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-stone-600 text-stone-200 hover:bg-stone-800">✕</button>
+                </div>
+              }
+              <pre class="overflow-x-auto rounded-lg bg-stone-950 p-3 text-xs text-gold-200">{{ genres.value | json }}</pre>
+            </div>
+          </app-code-output>
+        </app-lesson-card>
+      </div>
+
+      <app-recap class="mt-5" [items]="recapReactive" />
       </section>
       </ng-template>
 
@@ -425,14 +455,18 @@ import { CodeBlockDirective } from '../../shared/code-block.directive';
         <app-predict-output [challenge]="touchedChallenge" />
       </app-lesson-card>
 
-      <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Validation mistakes to avoid">
+      <app-common-mistake class="mt-5" title="Showing errors before the user has typed" [wrong]="mistakeEarlyWrong" [right]="mistakeEarlyRight">
+        A fresh form is always empty, so every required field is "invalid" at the start. Wait for <code class="text-gold-300">touched</code> or <code class="text-gold-300">dirty</code> before showing a message.
+      </app-common-mistake>
+
+      <app-lesson-card class="mt-5" variant="danger" label="TWO MORE" heading="Other validation mistakes to avoid">
         <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
-          <li><strong class="text-stone-100">Showing errors before the user has typed anything.</strong> Check <code class="text-gold-300">control.touched || control.dirty</code> before you show a message.</li>
-          <li><strong class="text-stone-100">Forgetting the forms module.</strong> <code class="text-gold-300">FormsModule</code> is needed for <code class="text-gold-300">ngModel</code>, and <code class="text-gold-300">ReactiveFormsModule</code> for <code class="text-gold-300">formGroup</code> and <code class="text-gold-300">formControlName</code>.</li>
-          <li><strong class="text-stone-100">No name on an ngModel inside a form.</strong> Angular needs <code class="text-gold-300">name="email"</code> on every <code class="text-gold-300">ngModel</code> control inside a <code class="text-gold-300">&lt;form&gt;</code>.</li>
+          <li><strong class="text-stone-100">No name on an ngModel inside a form.</strong> Angular needs <code class="text-gold-300">name="email"</code> on every <code class="text-gold-300">ngModel</code> inside a form so it can register the control.</li>
           <li><strong class="text-stone-100">Trusting client-side validation alone.</strong> Anyone can bypass the browser, so the server must validate again.</li>
         </ul>
       </app-lesson-card>
+
+      <app-recap class="mt-5" [items]="recapValidation" />
       </section>
       </ng-template>
 
@@ -457,6 +491,14 @@ import { CodeBlockDirective } from '../../shared/code-block.directive';
           </table>
         </div>
       </app-lesson-card>
+      <app-lesson-card class="mt-5" variant="highlight" label="THE NEW OPTION" heading="Signal Forms are a third choice">
+        <p class="mt-2 text-sm text-stone-400">
+          Angular 22 added <strong class="text-stone-200">Signal Forms</strong>, which keep your data in a signal and add the rules in one place. Reactive and template-driven forms are not going away.
+          Learn this lesson first, then see the new approach in <a routerLink="/learn/signal-forms" class="font-semibold text-gold-300 underline-offset-4 hover:underline">Signal Forms</a>.
+        </p>
+      </app-lesson-card>
+
+      <app-recap class="mt-5" [items]="recapCompare" />
       </section>
       </ng-template>
 
@@ -477,6 +519,7 @@ import { CodeBlockDirective } from '../../shared/code-block.directive';
         />
       </app-lesson-card>
 
+      <app-recap class="mt-5" [items]="recapTry" />
       <app-knowledge-check [items]="checkItems" />
       </section>
       </ng-template>
@@ -499,6 +542,58 @@ export class FormsComponent {
       question: "What's the main reason to choose Reactive forms over Template-Driven for a complex form?",
       answer: 'The whole form is a plain object in the TypeScript class, which makes it much easier to unit test and to change validation rules dynamically.',
     },
+  ];
+
+  genres = new FormArray([new FormControl('Drama', { nonNullable: true })]);
+
+  addGenre(): void {
+    this.genres.push(new FormControl('', { nonNullable: true }));
+  }
+
+  removeGenre(index: number): void {
+    this.genres.removeAt(index);
+  }
+
+  readonly formArrayCode = `genres = new FormArray([new FormControl('Drama')]);
+
+addGenre() { this.genres.push(new FormControl('')); }
+removeGenre(i: number) { this.genres.removeAt(i); }
+
+@for (control of genres.controls; track control) {
+  <input [formControl]="control" />
+}`;
+
+  readonly mistakeEarlyWrong = `@if (email.invalid) {
+  <small>Enter a valid email.</small>      <!-- shows on a fresh form -->
+}`;
+  readonly mistakeEarlyRight = `@if (email.invalid && (email.touched || email.dirty)) {
+  <small>Enter a valid email.</small>
+}`;
+
+  readonly recapTemplate = [
+    'Template-driven forms keep the model in the template with ngModel.',
+    'Every ngModel inside a form needs a name attribute.',
+    'Good for small, simple forms.',
+  ];
+  readonly recapReactive = [
+    'Reactive forms build the model in the class with FormGroup and FormControl.',
+    'The template only reflects the model with formGroup and formControlName.',
+    'FormArray holds a list you add to and remove from in code.',
+  ];
+  readonly recapValidation = [
+    'A validator is a function; a control is valid when none of them return an error.',
+    'Show messages only after touched or dirty.',
+    'Always validate again on the server.',
+  ];
+  readonly recapCompare = [
+    'Template-driven: simple. Reactive: testable and flexible.',
+    'Signal Forms are the newest option, built on signals.',
+    'All three still work in Angular 22.',
+  ];
+  readonly recapTry = [
+    'markAllAsTouched() makes every hidden error appear on submit.',
+    'Only a valid form should send data.',
+    'Next stop: routing, moving between pages.',
   ];
 
   readonly validatorCode = `export const noSpaces: ValidatorFn = (control) =>

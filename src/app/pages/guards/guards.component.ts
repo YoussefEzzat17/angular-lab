@@ -1,10 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 
 import { DemoAuthService } from '../../core/services/demo-auth.service';
 import { CodeBlockDirective } from '../../shared/code-block.directive';
+import { CommonMistakeComponent } from '../../shared/common-mistake.component';
+import { RecapComponent } from '../../shared/recap.component';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
@@ -20,6 +22,8 @@ import { GuardGateDemoComponent } from './guard-gate-demo.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
+    CommonMistakeComponent,
+    RecapComponent,
     RouterLink,
     FlowDiagramComponent,
     CodeBlockDirective,
@@ -60,6 +64,7 @@ import { GuardGateDemoComponent } from './guard-gate-demo.component';
               <li><strong class="text-stone-100">"Not tonight"</strong> is <code class="text-gold-300">false</code>. You stay where you were, and nothing happens.</li>
             </ul>
           </app-lesson-card>
+          <app-recap class="mt-5" [items]="recapWhy" />
         </section>
       </ng-template>
 
@@ -102,6 +107,7 @@ import { GuardGateDemoComponent } from './guard-gate-demo.component';
             </p>
             <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ factoryCode }}</pre>
           </app-lesson-card>
+          <app-recap class="mt-5" [items]="recapCan" />
         </section>
       </ng-template>
 
@@ -116,6 +122,7 @@ import { GuardGateDemoComponent } from './guard-gate-demo.component';
             </ol>
             <app-guard-gate-demo />
           </app-lesson-card>
+          <app-recap class="mt-5" [items]="recapSim" />
         </section>
       </ng-template>
 
@@ -162,6 +169,7 @@ import { GuardGateDemoComponent } from './guard-gate-demo.component';
           <app-lesson-card class="mt-5" variant="highlight" label="PREDICT" heading="What does the visitor see?">
             <app-predict-output [challenge]="falseChallenge" />
           </app-lesson-card>
+          <app-recap class="mt-5" [items]="recapTry" />
         </section>
       </ng-template>
 
@@ -187,14 +195,43 @@ import { GuardGateDemoComponent } from './guard-gate-demo.component';
             />
           </app-lesson-card>
 
-          <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Guard mistakes to avoid">
+          <app-lesson-card class="mt-5" variant="highlight" label="THE EXIT GUARD" heading="canDeactivate asks before you leave">
+            <p class="mt-2 text-sm text-stone-400">
+              <code class="text-gold-300">canActivate</code> guards the door in. <code class="text-gold-300">canDeactivate</code> guards the door out, most often to protect unsaved work.
+              Type something, then try to leave.
+            </p>
+            <label class="mt-3 block text-xs text-stone-400" for="draft-note">Draft note</label>
+            <textarea id="draft-note" rows="2" [value]="draft()" (input)="draft.set($any($event.target).value); leaveAsked.set(false); left.set(false)"
+                      class="mt-1 w-full rounded-xl border border-stone-600 bg-stone-800 px-3 py-2 text-sm text-stone-100 focus:border-gold-400 focus:outline-none"></textarea>
+            <div class="mt-3 flex flex-wrap gap-2">
+              <button type="button" (click)="tryLeave()" class="min-h-11 rounded-xl bg-gold-solid px-4 text-sm font-semibold text-white hover:bg-gold-solid-hover">Leave this page</button>
+              @if (leaveAsked()) {
+                <button type="button" (click)="confirmLeave()" class="min-h-11 rounded-xl border border-rose-400/60 px-4 text-sm font-semibold text-rose-200 hover:bg-stone-800">Discard and leave</button>
+                <button type="button" (click)="leaveAsked.set(false)" class="min-h-11 rounded-xl border border-stone-600 px-4 text-sm font-semibold text-stone-200 hover:bg-stone-800">Stay</button>
+              }
+            </div>
+            <p class="mt-3 text-sm" aria-live="polite" [class]="left() ? 'text-emerald-300' : leaveAsked() ? 'text-amber-300' : 'text-stone-400'">
+              {{ left() ? 'You left the page.' : leaveAsked() ? 'The guard returned false and asks: leave and lose the note?' : 'You are on the page.' }}
+            </p>
+            <pre class="mt-3" [appCode]="deactivateCode"></pre>
+          </app-lesson-card>
+
+          <app-common-mistake class="mt-5" title="Treating a guard as security" [wrong]="mistakeSecurityWrong" [right]="mistakeSecurityRight">
+            A guard only controls the browser. Anyone can call your API directly, so the server must check permissions again.
+          </app-common-mistake>
+
+          <app-common-mistake class="mt-5" title="Calling router.navigate() inside the guard" [wrong]="mistakeNavigateWrong" [right]="mistakeNavigateRight">
+            Return a <code class="text-gold-300">UrlTree</code> so the redirect is part of the same navigation, with no half-finished route in between.
+          </app-common-mistake>
+
+          <app-lesson-card class="mt-5" variant="danger" label="TWO MORE" heading="Other guard mistakes to avoid">
             <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
-              <li><strong class="text-stone-100">Treating a guard as security.</strong> A guard only controls the browser. Anyone can call your API directly, so the server must check permissions too.</li>
-              <li><strong class="text-stone-100">Returning false and leaving the user stuck.</strong> <code class="text-gold-300">false</code> just cancels the navigation. Return a <code class="text-gold-300">UrlTree</code> to send the user somewhere useful, like the login page.</li>
+              <li><strong class="text-stone-100">Returning false and leaving the user stuck.</strong> <code class="text-gold-300">false</code> only cancels the navigation. Return a <code class="text-gold-300">UrlTree</code> to send the visitor somewhere useful, such as the login page.</li>
               <li><strong class="text-stone-100">Checking inside the component instead.</strong> By then the component has already been created, so protected content can flash on screen first.</li>
-              <li><strong class="text-stone-100">Calling router.navigate() inside the guard.</strong> Return a <code class="text-gold-300">UrlTree</code> instead, so the redirect is part of the same navigation.</li>
             </ul>
           </app-lesson-card>
+
+          <app-recap class="mt-5" [items]="recapFive" />
 
           <app-knowledge-check [items]="recapItems" />
         </section>
@@ -266,6 +303,66 @@ export const roleGuard = (role: string): CanActivateFn => () => {
     'The router runs the canActivate guards of that route',
     'The router runs the resolvers, if there are any',
     'The component is created and shown',
+  ];
+
+  protected readonly draft = signal('');
+  protected readonly leaveAsked = signal(false);
+  protected readonly left = signal(false);
+
+  protected tryLeave(): void {
+    if (this.draft().trim()) this.leaveAsked.set(true);
+    else this.left.set(true);
+  }
+
+  protected confirmLeave(): void {
+    this.leaveAsked.set(false);
+    this.left.set(true);
+    this.draft.set('');
+  }
+
+  protected readonly deactivateCode = `export interface HasUnsavedChanges { hasUnsavedChanges(): boolean; }
+
+export const unsavedGuard: CanDeactivateFn<HasUnsavedChanges> = (page) =>
+  !page.hasUnsavedChanges() || confirm('Leave and lose your changes?');
+
+{ path: 'notes/new', component: NewNoteComponent, canDeactivate: [unsavedGuard] }`;
+
+  protected readonly mistakeSecurityWrong = `// the guard hides the admin page, but the API is open
+this.http.delete('/api/users/7')     // anyone can call this`;
+  protected readonly mistakeSecurityRight = `// guard for the user experience, server check for the security
+{ path: 'admin', canActivate: [adminGuard], component: AdminComponent }
+// and the server rejects /api/users/7 unless the caller is an admin`;
+  protected readonly mistakeNavigateWrong = `export const authGuard: CanActivateFn = () => {
+  if (!inject(Auth).loggedIn()) inject(Router).navigate(['/login']);
+  return false;
+};`;
+  protected readonly mistakeNavigateRight = `export const authGuard: CanActivateFn = () =>
+  inject(Auth).loggedIn() || inject(Router).createUrlTree(['/login']);`;
+
+  protected readonly recapWhy = [
+    'Anyone can type a URL, so some routes need a check first.',
+    'A guard is a function the router runs before it opens a route.',
+    'It answers yes, no, or "go there instead".',
+  ];
+  protected readonly recapCan = [
+    'canActivate returns true, false or a UrlTree.',
+    'Write guards as plain functions that use inject().',
+    'Return a UrlTree to redirect, for example to the login page.',
+  ];
+  protected readonly recapSim = [
+    'The same guard gives different answers for different visitors.',
+    'false cancels; a UrlTree redirects.',
+    'The visitor never sees a page the guard turned away.',
+  ];
+  protected readonly recapTry = [
+    'A guard can read your login state before the page is created.',
+    'The members page opens only after you log in.',
+    'The server must still check permissions.',
+  ];
+  protected readonly recapFive = [
+    'canActivate, canActivateChild, canDeactivate, canMatch and canLoad ask different questions.',
+    'canDeactivate protects unsaved work when leaving a page.',
+    'A guard is for user experience; the server is for security.',
   ];
 
   readonly recapItems: KnowledgeCheckItem[] = [

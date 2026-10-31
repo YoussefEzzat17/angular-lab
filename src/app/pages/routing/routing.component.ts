@@ -1,7 +1,10 @@
-import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
+import { CodeOutputComponent } from '../../shared/code-output.component';
+import { CommonMistakeComponent } from '../../shared/common-mistake.component';
+import { RecapComponent } from '../../shared/recap.component';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
 import type { PredictChallenge } from '../../shared/predict-output.component';
 import { PredictOutputComponent } from '../../shared/predict-output.component';
@@ -20,7 +23,7 @@ interface MockRoute {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [RouteMatcherDemoComponent, PredictOutputComponent, FormsModule, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [CodeOutputComponent, CommonMistakeComponent, RecapComponent, RouteMatcherDemoComponent, PredictOutputComponent, FormsModule, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'routing'" [section]="section()">
       <ng-template appLessonSection="basics">
@@ -102,6 +105,7 @@ interface MockRoute {
         </div>
         <p class="mt-3 text-xs text-stone-500">Navigations so far: {{ navCount() }} — notice the nav bar itself never re-rendered.</p>
       </app-lesson-card>
+      <app-recap class="mt-5" [items]="recapBasics" />
       </section>
       </ng-template>
 
@@ -125,6 +129,7 @@ interface MockRoute {
         </ol>
         <app-route-matcher-demo />
       </app-lesson-card>
+      <app-recap class="mt-5" [items]="recapMatch" />
       </section>
       </ng-template>
 
@@ -163,6 +168,7 @@ goToLogin() &#123;
       <app-lesson-card class="mt-5" variant="highlight" label="PREDICT THE OUTPUT" heading="Which URL does this go to?">
         <app-predict-output [challenge]="navigateChallenge" />
       </app-lesson-card>
+      <app-recap class="mt-5" [items]="recapNav" />
       </section>
       </ng-template>
 
@@ -211,13 +217,87 @@ goToLogin() &#123;
         </p>
       </app-lesson-card>
 
-      <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Routing mistakes to avoid">
+      <app-common-mistake class="mt-5" title="Reading the route parameter only once" [wrong]="mistakeSnapshotWrong" [right]="mistakeSnapshotRight">
+        Going from <code class="text-gold-300">/product/1</code> to <code class="text-gold-300">/product/2</code> reuses the same component, so a snapshot taken at the start goes stale. Use an input or an observable that updates.
+      </app-common-mistake>
+
+      <app-common-mistake class="mt-5" title="Using a plain link for navigation" [wrong]="mistakeLinkWrong" [right]="mistakeLinkRight">
+        A plain <code class="text-gold-300">href</code> asks the browser to load a new page, so the whole app restarts and all state is lost. <code class="text-gold-300">routerLink</code> changes only the outlet.
+      </app-common-mistake>
+
+      <app-lesson-card class="mt-5" variant="danger" label="ONE MORE" heading="A routing mistake to avoid">
         <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
-          <li><strong class="text-stone-100">Reading the route parameter only once.</strong> Going from <code class="text-gold-300">/product/1</code> to <code class="text-gold-300">/product/2</code> reuses the same component, so a one-time <code class="text-gold-300">snapshot</code> read goes stale. Use a signal input or the <code class="text-gold-300">paramMap</code> observable.</li>
-          <li><strong class="text-stone-100">Using a plain link.</strong> <code class="text-gold-300">&lt;a href="/products"&gt;</code> reloads the whole app. Use <code class="text-gold-300">routerLink</code> so only the page changes.</li>
           <li><strong class="text-stone-100">Putting the wildcard route first.</strong> The <code class="text-gold-300">**</code> route matches everything, so it must be the last one in the list.</li>
         </ul>
       </app-lesson-card>
+      <app-recap class="mt-5" [items]="recapParams" />
+      </section>
+      </ng-template>
+
+      <ng-template appLessonSection="nested">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <app-lesson-card class="mt-10" label="NESTED ROUTES" heading="A layout that stays while its pages change">
+        <p class="mt-2 text-sm text-stone-400">
+          Routes can have <code class="text-gold-300">children</code>. The parent component holds the shared part, such as a menu, and its own
+          <code class="text-gold-300">&lt;router-outlet&gt;</code> shows the child. The URL gets longer as you go deeper.
+        </p>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="SEE IT" heading="Switch the child, keep the layout">
+        <div class="mt-3 flex gap-2" role="group" aria-label="Account page">
+          @for (page of accountPages; track page) {
+            <button type="button" [attr.aria-pressed]="accountPage() === page" (click)="accountPage.set(page)"
+                    class="min-h-11 rounded-xl border px-4 text-sm font-semibold transition"
+                    [class]="accountPage() === page ? 'border-gold-400 bg-gold-500/15 text-gold-200' : 'border-stone-700 text-stone-300 hover:bg-stone-800'">{{ page }}</button>
+          }
+        </div>
+        <app-code-output class="mt-4 block" [code]="nestedCode" [address]="'localhost:4200/account/' + accountPage()" caption="The Account layout never re-renders. Only the child inside its outlet changes.">
+          <div class="rounded-lg border border-stone-700">
+            <p class="border-b border-stone-700 bg-stone-900 px-3 py-2 text-xs font-bold tracking-wider text-gold-300">ACCOUNT LAYOUT (parent)</p>
+            <div class="p-3">
+              <p class="text-xs text-stone-500">&lt;router-outlet&gt; shows:</p>
+              <p class="mt-2 rounded-lg border border-dashed border-gold-400/30 bg-gold-500/5 p-3 text-sm text-gold-200">{{ accountPage() }}Component</p>
+            </div>
+          </div>
+        </app-code-output>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" label="RESOLVERS" heading="Get the data before the page opens">
+        <p class="mt-2 text-sm text-stone-400">
+          Normally the page opens first and then fetches its data, so the user sees an empty page for a moment. A <strong class="text-stone-200">resolver</strong> is a function
+          the router runs <em>before</em> it activates the route. The page opens with its data already there.
+        </p>
+        <pre class="mt-3" [appCode]="resolverCode"></pre>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" variant="highlight" label="TRY IT" heading="With and without a resolver">
+        <div class="mt-3 flex flex-wrap items-center gap-2">
+          <div class="flex gap-2" role="group" aria-label="Resolver">
+            <button type="button" [attr.aria-pressed]="useResolver()" (click)="useResolver.set(true)"
+                    class="min-h-11 rounded-xl border px-4 text-sm font-semibold transition"
+                    [class]="useResolver() ? 'border-gold-400 bg-gold-500/15 text-gold-200' : 'border-stone-700 text-stone-300 hover:bg-stone-800'">With a resolver</button>
+            <button type="button" [attr.aria-pressed]="!useResolver()" (click)="useResolver.set(false)"
+                    class="min-h-11 rounded-xl border px-4 text-sm font-semibold transition"
+                    [class]="!useResolver() ? 'border-gold-400 bg-gold-500/15 text-gold-200' : 'border-stone-700 text-stone-300 hover:bg-stone-800'">Without</button>
+          </div>
+          <button type="button" (click)="openUser()" class="min-h-11 rounded-xl bg-gold-solid px-4 text-sm font-semibold text-white hover:bg-gold-solid-hover">Open /users/7</button>
+          <button type="button" (click)="backHome()" class="min-h-11 rounded-xl border border-stone-600 px-4 text-sm font-semibold text-stone-200 hover:bg-stone-800">Back to /home</button>
+        </div>
+        <div class="mt-4 rounded-xl border border-stone-700 bg-stone-900 p-4" aria-live="polite">
+          <p class="text-xs text-stone-500">URL: <code class="text-gold-300">{{ url() }}</code>
+            @if (waiting()) { <span class="ml-2 text-amber-300">router is waiting for the resolver…</span> }
+          </p>
+          <p class="mt-3 text-lg font-bold text-gold-200">{{ pageTitle() }}</p>
+          <p class="mt-1 text-sm text-stone-400">{{ pageBody() }}</p>
+        </div>
+      </app-lesson-card>
+
+      <app-common-mistake class="mt-5" title="Fetching in the page when the layout needs the data first" [wrong]="mistakeResolveWrong" [right]="mistakeResolveRight">
+        If the page cannot show anything useful without its data, a resolver keeps the old page on screen until the data is ready, instead of flashing an empty one.
+        For data that can load while the page is already visible, fetching inside the page is fine.
+      </app-common-mistake>
+
+      <app-recap class="mt-5" [items]="recapNested" />
       </section>
       </ng-template>
 
@@ -231,6 +311,7 @@ goToLogin() &#123;
           <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">&#123; path: 'admin', canActivate: [adminGuard], component: AdminComponent &#125;</pre>
         </app-lesson-card>
 
+      <app-recap class="mt-5" [items]="recapGuards" />
       <app-knowledge-check [items]="checkItems" />
       </section>
       </ng-template>
@@ -268,6 +349,109 @@ id = toSignal(inject(ActivatedRoute).paramMap.pipe(map((p) => p.get('id'))));
 
 // 3. a snapshot: read once, goes stale if /product/1 becomes /product/2
 const id = inject(ActivatedRoute).snapshot.paramMap.get('id');`;
+
+  protected readonly accountPages = ['Profile', 'Security', 'Billing'] as const;
+  protected readonly accountPage = signal<'Profile' | 'Security' | 'Billing'>('Profile');
+
+  protected readonly nestedCode = `export const routes: Routes = [
+  {
+    path: 'account',
+    component: AccountLayoutComponent,        // has its own <router-outlet />
+    children: [
+      { path: 'profile', component: ProfileComponent },
+      { path: 'security', component: SecurityComponent },
+      { path: 'billing', component: BillingComponent },
+    ],
+  },
+];`;
+
+  protected readonly resolverCode = `export const userResolver: ResolveFn<User> = (route) =>
+  inject(UsersService).get(route.paramMap.get('id')!);
+
+{ path: 'users/:id', component: UserComponent, resolve: { user: userResolver } }
+
+// in UserComponent, with withComponentInputBinding():
+user = input.required<User>();`;
+
+  // Resolver simulation
+  private readonly destroyRef = inject(DestroyRef);
+  private timer: ReturnType<typeof setTimeout> | undefined;
+  protected readonly useResolver = signal(true);
+  protected readonly url = signal('/home');
+  protected readonly waiting = signal(false);
+  protected readonly pageTitle = signal('HomeComponent');
+  protected readonly pageBody = signal('The page you are on.');
+
+  protected openUser(): void {
+    clearTimeout(this.timer);
+    if (this.useResolver()) {
+      this.waiting.set(true);
+      this.timer = setTimeout(() => {
+        this.waiting.set(false);
+        this.url.set('/users/7');
+        this.pageTitle.set('UserComponent');
+        this.pageBody.set('Ada Lovelace, ready the moment the page opened.');
+      }, 900);
+    } else {
+      this.url.set('/users/7');
+      this.pageTitle.set('UserComponent');
+      this.pageBody.set('Loading…');
+      this.timer = setTimeout(() => this.pageBody.set('Ada Lovelace, after a flash of "Loading…".'), 900);
+    }
+  }
+
+  protected backHome(): void {
+    clearTimeout(this.timer);
+    this.waiting.set(false);
+    this.url.set('/home');
+    this.pageTitle.set('HomeComponent');
+    this.pageBody.set('The page you are on.');
+  }
+
+  constructor() {
+    this.destroyRef.onDestroy(() => clearTimeout(this.timer));
+  }
+
+  protected readonly mistakeResolveWrong = `ngOnInit() {
+  this.users.get(this.id()).subscribe(u => this.user = u);   // page opens empty first
+}`;
+  protected readonly mistakeResolveRight = `{ path: 'users/:id', component: UserComponent, resolve: { user: userResolver } }`;
+
+  protected readonly mistakeSnapshotWrong = `const id = inject(ActivatedRoute).snapshot.paramMap.get('id');   // read once`;
+  protected readonly mistakeSnapshotRight = `id = input.required<string>();      // updates whenever the URL changes`;
+  protected readonly mistakeLinkWrong = '<a href="/products">Products</a>   <!-- reloads the whole app -->';
+  protected readonly mistakeLinkRight = '<a routerLink="/products">Products</a>';
+
+  protected readonly recapBasics = [
+    'A route maps a URL to a component.',
+    'The router-outlet is the one spot where the matched component appears.',
+    'Only the outlet changes; the rest of the page stays.',
+  ];
+  protected readonly recapMatch = [
+    'The router goes top to bottom and stops at the first match.',
+    ':id captures a value; ** catches everything and goes last.',
+    'Query parameters are not part of the match.',
+  ];
+  protected readonly recapNav = [
+    'routerLink is for links the user clicks.',
+    'router.navigate() is for navigation after some logic.',
+    'routerLinkActive highlights the link of the current page.',
+  ];
+  protected readonly recapParams = [
+    'A colon makes a dynamic segment: products/:id.',
+    'Prefer an input() with withComponentInputBinding(); it stays up to date.',
+    'A snapshot is read once and can go stale.',
+  ];
+  protected readonly recapNested = [
+    'children put pages inside a parent layout with its own outlet.',
+    'A resolver loads data before the route opens.',
+    'Use a resolver when the page is useless without its data.',
+  ];
+  protected readonly recapGuards = [
+    'A guard runs before a route opens and can allow it or redirect.',
+    'Guards come next, with a live login demo.',
+    'canActivate is the most common one.',
+  ];
 
   readonly navigateChallenge: PredictChallenge = {
     question: 'Which URL does this navigate to?',

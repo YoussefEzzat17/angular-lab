@@ -156,5 +156,33 @@ export const FORMS_QUIZ: QuizBank = {
       explanation: 'Error messages usually wait for touched or dirty. Marking everything touched shows the user which fields still need attention instead of leaving them silently blocked.',
       sectionId: 'validation',
     },
+    {
+      id: 'forms-14',
+      type: 'single',
+      prompt: 'When would you use a FormArray?',
+      choices: [
+        { id: 'a', text: 'When the number of fields can change at run time' },
+        { id: 'b', text: 'To style inputs' },
+        { id: 'c', text: 'To send HTTP requests' },
+        { id: 'd', text: 'To replace validators' },
+      ],
+      correct: ['a'],
+      explanation: 'A FormArray holds a list of controls that you add to and remove from in code, such as extra phone numbers.',
+      sectionId: 'reactive',
+    },
+    {
+      id: 'forms-15',
+      type: 'single',
+      prompt: 'Which is the newest forms option in Angular 22?',
+      choices: [
+        { id: 'a', text: 'Signal Forms' },
+        { id: 'b', text: 'NgModel only' },
+        { id: 'c', text: 'FormBuilder only' },
+        { id: 'd', text: 'jQuery forms' },
+      ],
+      correct: ['a'],
+      explanation: 'Signal Forms keep data in a signal. Reactive and template-driven forms still work too.',
+      sectionId: 'comparison',
+    },
   ],
 };

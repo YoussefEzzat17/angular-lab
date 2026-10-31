@@ -232,6 +232,7 @@ export const TOPICS: Topic[] = [
     level: 'intermediate', prerequisites: ['binding'],
     icon: '🧭', title: 'Routing', description: 'Routes, router-outlet, routerLink and reading route parameters.',
     objectives: [
+      { text: 'Nest routes inside a layout, and load data before a page opens with a resolver', sectionId: 'nested' },
       { text: 'Define routes and render them with router-outlet', sectionId: 'basics' },
       { text: 'Predict which route a URL matches, and why order and ** matter', sectionId: 'matching' },
       { text: 'Navigate with routerLink and the Router service', sectionId: 'navigation' },
@@ -243,6 +244,7 @@ export const TOPICS: Topic[] = [
       { id: 'matching', title: 'How a URL is matched', kind: 'try-it', minutes: 6 },
       { id: 'navigation', title: 'Navigation', kind: 'concept', minutes: 5 },
       { id: 'params', title: 'Route Parameters', kind: 'concept', minutes: 5 },
+      { id: 'nested', title: 'Nested routes and resolvers', kind: 'try-it', minutes: 7 },
       { id: 'guards-preview', title: 'Guards Preview', kind: 'reference', minutes: 3 },
     ],
   },

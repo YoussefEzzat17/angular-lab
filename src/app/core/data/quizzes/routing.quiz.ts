@@ -156,5 +156,33 @@ export const ROUTING_QUIZ: QuizBank = {
       explanation: 'Router inputs bind route and query params to input() properties by name, and they update when the parameter changes. A snapshot, by contrast, is read once.',
       sectionId: 'params',
     },
+    {
+      id: 'routing-14',
+      type: 'single',
+      prompt: 'What does a resolver do?',
+      choices: [
+        { id: 'a', text: 'Redirects every visitor' },
+        { id: 'b', text: 'Loads data before the route opens' },
+        { id: 'c', text: 'Styles the page' },
+        { id: 'd', text: 'Replaces the router-outlet' },
+      ],
+      correct: ['b'],
+      explanation: 'A resolver is a function the router runs before activating a route, so the page opens with its data already there.',
+      sectionId: 'nested',
+    },
+    {
+      id: 'routing-15',
+      type: 'single',
+      prompt: 'Where does a child route appear?',
+      choices: [
+        { id: 'a', text: "In the child's own router-outlet inside the parent" },
+        { id: 'b', text: 'In the browser title' },
+        { id: 'c', text: 'Outside the app' },
+        { id: 'd', text: 'In index.html' },
+      ],
+      correct: ['a'],
+      explanation: 'The parent component has a router-outlet. The matched child renders there, while the parent layout stays.',
+      sectionId: 'nested',
+    },
   ],
 };
