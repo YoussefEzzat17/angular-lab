@@ -21,6 +21,11 @@ export const QUIZ_BANK_LOADERS: Record<TopicId, () => Promise<QuizBank>> = {
   'content-projection': () => import('../data/quizzes/content-projection.quiz').then((m) => m.CONTENT_PROJECTION_QUIZ),
   'resource':         () => import('../data/quizzes/resource.quiz').then((m) => m.RESOURCE_QUIZ),
   'defer':            () => import('../data/quizzes/defer.quiz').then((m) => m.DEFER_QUIZ),
+  'getting-started':  () => import('../data/quizzes/getting-started.quiz').then((m) => m.GETTING_STARTED_QUIZ),
+  'components':       () => import('../data/quizzes/components.quiz').then((m) => m.COMPONENTS_QUIZ),
+  'lifecycle':        () => import('../data/quizzes/lifecycle.quiz').then((m) => m.LIFECYCLE_QUIZ),
+  'template-tools':   () => import('../data/quizzes/template-tools.quiz').then((m) => m.TEMPLATE_TOOLS_QUIZ),
+  'signal-forms':     () => import('../data/quizzes/signal-forms.quiz').then((m) => m.SIGNAL_FORMS_QUIZ),
 };
 
 @Injectable({ providedIn: 'root' })

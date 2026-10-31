@@ -21,7 +21,7 @@ describe('DashboardComponent', () => {
   it('keeps the welcome card: greeting, topic progress ring and Continue', () => {
     const { root, text } = setup({
       version: 2,
-      topics: { binding: { sectionsDone: [], attempts: [], completedAt: new Date().toISOString(), completedVia: 'quiz' } },
+      topics: { [TOPICS[0].id]: { sectionsDone: [], attempts: [], completedAt: new Date().toISOString(), completedVia: 'quiz' } },
       activity: [],
     });
 

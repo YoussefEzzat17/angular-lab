@@ -21,7 +21,7 @@
 
 ## Overview
 
-Angular Lab teaches Angular through **18 lessons**. Each lesson is split into short sections and closed by a final quiz. Each one explains *why* a concept exists and what problem it solves, shows a small animated diagram of what is actually happening, and gives you a live example you can click, edit and watch update in the browser. A small movie-and-series **demo app** shows several of these concepts working together in one real feature.
+Angular Lab teaches Angular through **23 lessons**. Each lesson is split into short sections and closed by a final quiz. Each one explains *why* a concept exists and what problem it solves, shows a small animated diagram of what is actually happening, and gives you a live example you can click, edit and watch update in the browser. A small movie-and-series **demo app** shows several of these concepts working together in one real feature.
 
 It is built with modern Angular only: standalone components, signals, the `@if` / `@for` / `@switch` control flow and signal inputs — no NgModules. There is no backend; everything runs in the browser.
 
@@ -31,7 +31,7 @@ It is built with modern Angular only: standalone components, signals, the `@if` 
   <tr>
     <td width="33%" valign="top">
       <b>📚 Interactive lessons</b><br>
-      18 lessons in short sections (concept / try-it / reference), with an overview, objectives and animated diagrams.
+      23 lessons in short sections (concept / try-it / reference), with an overview, objectives and animated diagrams.
     </td>
     <td width="33%" valign="top">
       <b>✅ Final quiz per topic</b><br>
@@ -141,15 +141,20 @@ The lessons are grouped, and the order below is the recommended learning path (i
 
 | Group | Topic | Route | What you learn |
 | --- | --- | --- | --- |
-| **Fundamentals** | Data Binding | `/learn/binding` | Interpolation, property, event and two-way binding |
+| **Fundamentals** | Getting Started | `/learn/getting-started` | What Angular is, the CLI, a tour of a new project, and your first change |
+| | Component Essentials | `/learn/components` | Class, template and styles, selectors, view encapsulation and `:host` |
+| | Data Binding | `/learn/binding` | Interpolation, property, event and two-way binding |
 | | Pipes | `/learn/pipes` | Formatting dates, prices and text, chaining pipes, a custom pipe, and why a pure pipe beats a method call (live call counter) |
 | | Directives | `/learn/directives` | `@if` / `@else` / `@for`, why `track` matters (type in a row, then remove one), custom attribute directives |
+| | Template Tools | `/learn/template-tools` | `ng-container`, `ng-template`, `@let` and `ngTemplateOutlet`, with a cart table |
 | | Component Communication | `/learn/communication` | `@Input()` / `@Output()`, parent ↔ child with animated data-flow arrows |
 | | Content Projection & Queries | `/learn/content-projection` | `ng-content` slots, `viewChild`, `contentChild` and a tabs component that builds itself |
+| | Component Lifecycle | `/learn/lifecycle` | `ngOnInit`, `ngOnDestroy`, `DestroyRef`, `afterNextRender` and a live creation and destruction log |
 | **Forms & Navigation** | Angular Forms | `/learn/forms` | Template-driven vs. reactive forms, validation, custom validators, and `touched` / `dirty` / `errors` live on a real control |
 | | Routing | `/learn/routing` | Routes, `router-outlet`, `routerLink`, route parameters |
 | | Route Guards | `/learn/guards` | `canActivate`, redirecting with a `UrlTree`, and the other guard kinds (live login demo) |
 | **Reactivity** | Signals | `/learn/signals` | `signal()`, `computed()` (lazy and cached, with a run counter), `effect()`, `toSignal()` / `toObservable()` |
+| | Signal Forms | `/learn/signal-forms` | `form()`, `[formField]`, `required` / `email` / `minLength`, field state and `submit()` (stable in Angular 22) |
 | | RxJS | `/learn/rxjs` | Observables, marble diagrams for `map` / `filter` / `debounceTime` / `take` / `scan`, `switchMap` vs. `mergeMap` vs. `concatMap`, subjects, memory leaks and `takeUntilDestroyed` |
 | **Services & Data** | Dependency Injection | `/learn/di` | `inject()`, `providedIn: 'root'` vs. component `providers`, `InjectionToken` and `useClass` / `useValue` / `useFactory` on a real injector |
 | | Fetch API & HTTP | `/learn/movies` | `HttpClient`, services, a real public API |

@@ -27,8 +27,9 @@ describe('LearningFacade', () => {
 
     it('marks a topic in progress after one section, and completed after a manual completion counts in its group', () => {
       facade.completeSection('binding', 'interpolation');
-      expect(facade.groups()[0].topics[0].status).toBe('in-progress');
-      expect(facade.groups()[0].topics[0].allSectionsDone).toBeFalse();
+      const binding = facade.groups()[0].topics.find((t) => t.id === 'binding')!;
+      expect(binding.status).toBe('in-progress');
+      expect(binding.allSectionsDone).toBeFalse();
     });
   });
 
@@ -38,9 +39,10 @@ describe('LearningFacade', () => {
     });
 
     it('returns to the last section the learner visited', () => {
-      facade.visitSection('binding', 'event-binding');
+      const first = TOPICS[0];
+      facade.visitSection(first.id, first.sections[1].id);
 
-      expect(facade.continueTarget()).toBe('/learn/binding/event-binding');
+      expect(facade.continueTarget()).toBe(`${first.path}/${first.sections[1].id}`);
     });
   });
 

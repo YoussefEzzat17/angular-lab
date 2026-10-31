@@ -23,6 +23,11 @@ export const TOPIC_ILLUSTRATIONS: Record<TopicId, IllustrationName> = {
   'change-detection': 'change-detection',
   'lazy-loading': 'lazy',
   'defer': 'defer',
+  'getting-started': 'getting-started',
+  'components': 'components',
+  'lifecycle': 'lifecycle',
+  'template-tools': 'template-tools',
+  'signal-forms': 'signal-forms',
 };
 
 /** One drawn icon per curriculum group: the navigation's icon system instead of each topic's emoji. */

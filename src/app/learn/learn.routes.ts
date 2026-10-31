@@ -25,11 +25,16 @@ export const TOPIC_LOADERS: Record<TopicId, () => Promise<unknown>> = {
   'content-projection': () => import('../pages/content-projection/content-projection.component').then((m) => m.ContentProjectionComponent),
   'resource':         () => import('../pages/resource/resource.component').then((m) => m.ResourceComponent),
   'defer':            () => import('../pages/defer/defer.component').then((m) => m.DeferComponent),
+  'getting-started':  () => import('../pages/getting-started/getting-started.component').then((m) => m.GettingStartedComponent),
+  'components':       () => import('../pages/components/components.component').then((m) => m.ComponentsComponent),
+  'lifecycle':        () => import('../pages/lifecycle/lifecycle.component').then((m) => m.LifecycleComponent),
+  'template-tools':   () => import('../pages/template-tools/template-tools.component').then((m) => m.TemplateToolsComponent),
+  'signal-forms':     () => import('../pages/signal-forms/signal-forms.component').then((m) => m.SignalFormsComponent),
 };
 
 export const LEARN_ROUTES: Routes = [
   // /learn → redirect to first topic overview
-  { path: '', redirectTo: 'binding', pathMatch: 'full' },
+  { path: '', redirectTo: TOPICS[0].id, pathMatch: 'full' },
 
   // Each topic gets its own literal path (e.g. 'binding'), so the topic id travels in route data.
   ...TOPICS.map((t) => ({

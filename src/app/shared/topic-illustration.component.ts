@@ -18,7 +18,12 @@ export type IllustrationName =
   | 'facade'
   | 'projection'
   | 'resource'
-  | 'defer';
+  | 'defer'
+  | 'getting-started'
+  | 'components'
+  | 'lifecycle'
+  | 'template-tools'
+  | 'signal-forms';
 
 /**
  * Small animated diagram that sits beside a topic's intro. Drawn with the theme tokens, so it follows
@@ -334,6 +339,83 @@ export type IllustrationName =
           <rect class="progress" x="22" y="112" width="196" height="3" rx="1.5" />
           <rect class="chip" x="40" y="136" width="160" height="24" rx="12" />
           <text class="mono gold-text" x="120" y="152" text-anchor="middle">loads only when needed</text>
+        }
+        @case ('getting-started') {
+          <!-- a terminal: create the app, serve it, open it in the browser -->
+          <rect class="node" x="10" y="12" width="150" height="104" rx="10" />
+          <circle class="dot" cx="24" cy="26" r="3" />
+          <circle class="dot" cx="35" cy="26" r="3" />
+          <text class="mono gold-text" x="22" y="52">$ ng new my-app</text>
+          <text class="mono gold-text" x="22" y="72">$ ng serve</text>
+          <text class="mono dim" x="22" y="92">Local: :4200</text>
+          <rect class="caret" x="22" y="98" width="7" height="2" />
+          <path class="edge" d="M162 64 H182" />
+          <path class="head" d="M176 59 L183 64 L176 69" />
+          <rect class="node gold" x="184" y="34" width="48" height="60" rx="8" />
+          <text class="mono dim" x="208" y="60" text-anchor="middle">your</text>
+          <text class="mono gold-text" x="208" y="74" text-anchor="middle">app</text>
+          <rect class="chip" x="44" y="132" width="152" height="24" rx="12" />
+          <text class="mono gold-text" x="120" y="148" text-anchor="middle">CLI does the setup</text>
+        }
+        @case ('components') {
+          <!-- three parts make one component -->
+          <rect class="node react" x="14" y="14" width="64" height="30" rx="9" />
+          <text class="mono" x="46" y="33" text-anchor="middle">class</text>
+          <rect class="node react" x="88" y="14" width="64" height="30" rx="9" />
+          <text class="mono" x="120" y="33" text-anchor="middle">template</text>
+          <rect class="node react" x="162" y="14" width="64" height="30" rx="9" />
+          <text class="mono" x="194" y="33" text-anchor="middle">styles</text>
+          <path class="edge" d="M46 44 L100 78 M120 44 V78 M194 44 L140 78" />
+          <rect class="node gold" x="62" y="78" width="116" height="40" rx="10" />
+          <text class="mono gold-text" x="120" y="102" text-anchor="middle">&lt;app-card /&gt;</text>
+          <rect class="chip" x="48" y="134" width="144" height="24" rx="12" />
+          <text class="mono gold-text" x="120" y="150" text-anchor="middle">one reusable piece</text>
+        }
+        @case ('lifecycle') {
+          <!-- a component moves through created, rendered, updated and destroyed -->
+          <path class="edge" d="M20 64 H220" />
+          <circle class="node gold" cx="20" cy="64" r="7" />
+          <circle class="node" cx="87" cy="64" r="7" />
+          <circle class="node" cx="153" cy="64" r="7" />
+          <circle class="node gold" cx="220" cy="64" r="7" />
+          <circle class="marble" cx="20" cy="64" r="4" />
+          <text class="mono dim" x="20" y="44" text-anchor="middle">created</text>
+          <text class="mono dim" x="87" y="44" text-anchor="middle">shown</text>
+          <text class="mono dim" x="153" y="44" text-anchor="middle">updated</text>
+          <text class="mono dim" x="214" y="44" text-anchor="middle">destroyed</text>
+          <text class="mono gold-text" x="20" y="92" text-anchor="middle">ngOnInit</text>
+          <text class="mono gold-text" x="100" y="92" text-anchor="middle">afterNextRender</text>
+          <text class="mono gold-text" x="212" y="92" text-anchor="middle">ngOnDestroy</text>
+          <rect class="chip" x="44" y="124" width="152" height="24" rx="12" />
+          <text class="mono gold-text" x="120" y="140" text-anchor="middle">hooks run at each step</text>
+        }
+        @case ('template-tools') {
+          <!-- one ng-template is stamped into two places -->
+          <rect class="ghost2" x="70" y="12" width="100" height="36" rx="9" />
+          <text class="mono gold-text" x="120" y="34" text-anchor="middle">&lt;ng-template&gt;</text>
+          <path class="edge" d="M100 48 L56 92 M140 48 L184 92" />
+          <rect class="node react" x="12" y="92" width="88" height="34" rx="9" />
+          <text class="mono" x="56" y="113" text-anchor="middle">outlet A</text>
+          <rect class="node react" x="140" y="92" width="88" height="34" rx="9" />
+          <text class="mono" x="184" y="113" text-anchor="middle">outlet B</text>
+          <rect class="chip" x="40" y="140" width="160" height="22" rx="11" />
+          <text class="mono gold-text" x="120" y="155" text-anchor="middle">write once, use twice</text>
+        }
+        @case ('signal-forms') {
+          <!-- one signal model feeds typed fields that validate themselves -->
+          <rect class="node gold" x="64" y="10" width="112" height="32" rx="9" />
+          <text class="mono gold-text" x="120" y="30" text-anchor="middle">model = signal()</text>
+          <path class="edge" d="M96 42 L56 70 M144 42 L184 70" />
+          <rect class="node react" x="12" y="70" width="90" height="30" rx="9" />
+          <text class="mono" x="50" y="89" text-anchor="middle">email</text>
+          <text class="mono good" x="92" y="90">✓</text>
+          <rect class="node react" x="138" y="70" width="90" height="30" rx="9" />
+          <text class="mono" x="176" y="89" text-anchor="middle">password</text>
+          <text class="mono bad" x="218" y="90">✗</text>
+          <rect class="btn" x="70" y="112" width="100" height="26" rx="13" />
+          <text class="mono btn-text" x="120" y="129" text-anchor="middle">Submit</text>
+          <rect class="chip" x="52" y="146" width="136" height="20" rx="10" />
+          <text class="mono gold-text" x="120" y="160" text-anchor="middle">[formField]</text>
         }
       }
     </svg>

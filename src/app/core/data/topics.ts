@@ -46,6 +46,40 @@ export const TOPIC_GROUPS: TopicGroupInfo[] = [
 /** Single source of truth for every topic page — order here is the recommended learning path. */
 export const TOPICS: Topic[] = [
   {
+    id: 'getting-started', group: 'fundamentals', legacyPath: '/getting-started', path: '/learn/getting-started',
+    level: 'beginner', prerequisites: [],
+    icon: '🚀', title: 'Getting Started', description: 'Install the CLI, create a project, run it, and read what Angular generates for you.',
+    objectives: [
+      { text: 'Say what Angular is and what it gives you', sectionId: 'what-is' },
+      { text: 'Create, run and build a project with the Angular CLI', sectionId: 'cli' },
+      { text: "Find your way around a new project's files", sectionId: 'project-tour' },
+      { text: 'Change the app and see it update in the browser', sectionId: 'first-change' },
+    ],
+    sections: [
+      { id: 'what-is', title: 'What is Angular?', kind: 'concept', minutes: 4 },
+      { id: 'cli', title: 'The Angular CLI', kind: 'concept', minutes: 6 },
+      { id: 'project-tour', title: 'A tour of the project', kind: 'concept', minutes: 6 },
+      { id: 'first-change', title: 'Your first change', kind: 'try-it', minutes: 5 },
+    ],
+  },
+  {
+    id: 'components', group: 'fundamentals', legacyPath: '/components', path: '/learn/components',
+    level: 'beginner', prerequisites: ['getting-started'],
+    icon: '🧱', title: 'Component Essentials', description: 'The building block of every Angular app: a class, a template and styles, tied together by a selector.',
+    objectives: [
+      { text: 'Name the three parts of a component and what each does', sectionId: 'anatomy' },
+      { text: 'Choose a selector and use a component in another template', sectionId: 'selector' },
+      { text: 'Style a component without leaking into the rest of the page', sectionId: 'styling' },
+      { text: 'Build a small reusable component from scratch', sectionId: 'try-it' },
+    ],
+    sections: [
+      { id: 'anatomy', title: 'Anatomy of a component', kind: 'concept', minutes: 5 },
+      { id: 'selector', title: 'Selectors', kind: 'concept', minutes: 4 },
+      { id: 'styling', title: 'Styles and encapsulation', kind: 'concept', minutes: 6 },
+      { id: 'try-it', title: 'Build a card', kind: 'try-it', minutes: 6 },
+    ],
+  },
+  {
     id: 'binding', group: 'fundamentals', legacyPath: '/binding', path: '/learn/binding',
     level: 'beginner', prerequisites: [],
     icon: '🔗', title: 'Data Binding', description: 'Interpolation, property binding, event binding and two-way binding, side by side.',
@@ -103,6 +137,25 @@ export const TOPICS: Topic[] = [
     ],
   },
   {
+    id: 'template-tools', group: 'fundamentals', legacyPath: '/template-tools', path: '/learn/template-tools',
+    level: 'intermediate', prerequisites: ['binding', 'directives'],
+    icon: '🧰', title: 'Template Tools', description: 'ng-container, ng-template, @let and ngTemplateOutlet: the small tools for tidy, reusable templates.',
+    objectives: [
+      { text: 'Group elements without adding extra HTML using ng-container', sectionId: 'container' },
+      { text: 'Define a template fragment with ng-template and reuse it', sectionId: 'template' },
+      { text: 'Save a value in the template with @let', sectionId: 'let' },
+      { text: 'Render a template where you choose with ngTemplateOutlet', sectionId: 'outlet' },
+      { text: 'Combine them in a real list', sectionId: 'try-it' },
+    ],
+    sections: [
+      { id: 'container', title: 'ng-container', kind: 'concept', minutes: 4 },
+      { id: 'template', title: 'ng-template', kind: 'concept', minutes: 5 },
+      { id: 'let', title: '@let variables', kind: 'concept', minutes: 4 },
+      { id: 'outlet', title: 'ngTemplateOutlet', kind: 'concept', minutes: 6 },
+      { id: 'try-it', title: 'Try It', kind: 'try-it', minutes: 5 },
+    ],
+  },
+  {
     id: 'communication', group: 'fundamentals', legacyPath: '/communication', path: '/learn/communication',
     level: 'beginner', prerequisites: ['binding'],
     icon: '↔️', title: 'Component Communication', description: 'input(), output() and model() — how a parent and child component talk to each other.',
@@ -134,6 +187,25 @@ export const TOPICS: Topic[] = [
       { id: 'slots', title: 'Multiple slots', kind: 'concept', minutes: 5 },
       { id: 'queries', title: 'viewChild and contentChild', kind: 'concept', minutes: 7 },
       { id: 'try-it', title: 'Try It', kind: 'try-it', minutes: 5 },
+    ],
+  },
+  {
+    id: 'lifecycle', group: 'fundamentals', legacyPath: '/lifecycle', path: '/learn/lifecycle',
+    level: 'intermediate', prerequisites: ['components', 'communication'],
+    icon: '⏱️', title: 'Component Lifecycle', description: 'When a component is created, shown, updated and destroyed, and where to put code for each moment.',
+    objectives: [
+      { text: 'Put the lifecycle moments in order', sectionId: 'overview' },
+      { text: 'Start work in ngOnInit and clean up in ngOnDestroy or DestroyRef', sectionId: 'init-destroy' },
+      { text: 'Touch the DOM safely with afterNextRender', sectionId: 'render' },
+      { text: 'React to input changes with ngOnChanges, computed() or effect()', sectionId: 'changes' },
+      { text: 'Watch a real component being created and destroyed', sectionId: 'try-it' },
+    ],
+    sections: [
+      { id: 'overview', title: 'The life of a component', kind: 'concept', minutes: 5 },
+      { id: 'init-destroy', title: 'Start and clean up', kind: 'concept', minutes: 6 },
+      { id: 'render', title: 'After the page renders', kind: 'concept', minutes: 5 },
+      { id: 'changes', title: 'Reacting to changes', kind: 'concept', minutes: 6 },
+      { id: 'try-it', title: 'Watch it live', kind: 'try-it', minutes: 5 },
     ],
   },
   {
@@ -210,6 +282,25 @@ export const TOPICS: Topic[] = [
       { id: 'component-signals', title: 'input() and output()', kind: 'concept', minutes: 4 },
       { id: 'interop', title: 'toSignal() Interop', kind: 'concept', minutes: 6 },
       { id: 'try-it', title: 'Try It', kind: 'try-it', minutes: 6 },
+    ],
+  },
+  {
+    id: 'signal-forms', group: 'reactivity', legacyPath: '/signal-forms', path: '/learn/signal-forms',
+    level: 'intermediate', prerequisites: ['forms', 'signals'],
+    icon: '🧾', title: 'Signal Forms', description: 'Forms built on signals: one model, typed fields, rules in one place. Stable since Angular 22.',
+    objectives: [
+      { text: 'Explain how Signal Forms differ from reactive and template-driven forms', sectionId: 'why' },
+      { text: 'Create a form from a signal model and bind it with [formField]', sectionId: 'model' },
+      { text: 'Add rules such as required, email and minLength', sectionId: 'validation' },
+      { text: 'Show errors, and submit only when the form is valid', sectionId: 'submit' },
+      { text: 'Build a working sign-up form', sectionId: 'try-it' },
+    ],
+    sections: [
+      { id: 'why', title: 'Why Signal Forms?', kind: 'concept', minutes: 4 },
+      { id: 'model', title: 'Model and fields', kind: 'concept', minutes: 6 },
+      { id: 'validation', title: 'Validation rules', kind: 'concept', minutes: 7 },
+      { id: 'submit', title: 'Errors and submit', kind: 'concept', minutes: 6 },
+      { id: 'try-it', title: 'Sign-up form', kind: 'try-it', minutes: 6 },
     ],
   },
   {

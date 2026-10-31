@@ -12,7 +12,7 @@ Self-taught beginners: fresh graduates and junior developers who know HTML, CSS,
 
 ## Product Purpose
 
-Angular Lab teaches modern Angular through 18 interactive lessons. Each lesson explains why a concept exists, shows it working, and lets the learner change it. Success means a beginner finishes a topic able to explain what the concept does and why, passes its final quiz, and comes back for the next one.
+Angular Lab teaches modern Angular through 23 interactive lessons. Each lesson explains why a concept exists, shows it working, and lets the learner change it. Success means a beginner finishes a topic able to explain what the concept does and why, passes its final quiz, and comes back for the next one.
 
 ## Positioning
 

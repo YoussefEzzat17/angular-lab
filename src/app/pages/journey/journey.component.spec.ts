@@ -31,15 +31,15 @@ describe('JourneyComponent', () => {
     const { root, text } = setup();
 
     expect(text('level-title')).toBe('Newcomer');
-    expect(text('journey-node-binding')).toContain('You are here');
+    expect(text('journey-node-' + TOPICS[0].id)).toContain('You are here');
     expect(root.textContent?.match(/You are here/g)?.length).toBe(1);
   });
 
   it('moves "You are here" to the next topic once the first is complete', () => {
-    const { text } = setup((progress) => progress.toggleManualComplete('binding'));
+    const { text } = setup((progress) => progress.toggleManualComplete(TOPICS[0].id));
 
-    expect(text('journey-node-binding')).toContain('Completed');
-    expect(text('journey-node-pipes')).toContain('You are here');
+    expect(text('journey-node-' + TOPICS[0].id)).toContain('Completed');
+    expect(text('journey-node-' + TOPICS[1].id)).toContain('You are here');
   });
 
   it('shows XP earned in a topic and the progress toward the next level', () => {

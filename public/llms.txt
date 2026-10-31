@@ -1,23 +1,28 @@
 # Angular Lab
 
-> Angular Lab is a hands-on playground for learning Angular by building. It has 15+ interactive lessons with animated diagrams and a demo app, built by Youssef Ezzat.
+> Angular Lab is a hands-on playground for learning Angular by building. It has 23 interactive lessons with animated diagrams and a demo app, built by Youssef Ezzat.
 
 ## Lessons
 
+- [Getting started](https://angular-lab-omega.vercel.app/learn/getting-started): the CLI and a new project
+- [Components](https://angular-lab-omega.vercel.app/learn/components): the building block of every app
 - [Binding](https://angular-lab-omega.vercel.app/learn/binding): data binding basics
 - [Pipes](https://angular-lab-omega.vercel.app/learn/pipes): built-in and custom pipes
 - [Directives](https://angular-lab-omega.vercel.app/learn/directives): structural and attribute directives
 - [Component communication](https://angular-lab-omega.vercel.app/learn/communication): inputs, outputs and services
+- [Component lifecycle](https://angular-lab-omega.vercel.app/learn/lifecycle): when hooks run
 - [Forms](https://angular-lab-omega.vercel.app/learn/forms): template-driven and reactive forms
 - [Routing](https://angular-lab-omega.vercel.app/learn/routing): routes, params and navigation
 - [Guards](https://angular-lab-omega.vercel.app/learn/guards): route guards
 - [Signals](https://angular-lab-omega.vercel.app/learn/signals): signal-based reactivity
+- [Signal Forms](https://angular-lab-omega.vercel.app/learn/signal-forms): forms built on signals
 - [RxJS](https://angular-lab-omega.vercel.app/learn/rxjs): observables and operators
 - [Dependency injection](https://angular-lab-omega.vercel.app/learn/di): providers and injectors
 - [Interceptors](https://angular-lab-omega.vercel.app/learn/interceptor): HTTP interceptors
 - [Facade pattern](https://angular-lab-omega.vercel.app/learn/facade): state facades
 - [Change detection](https://angular-lab-omega.vercel.app/learn/change-detection): how Angular updates the view
 - [Lazy loading](https://angular-lab-omega.vercel.app/learn/lazy-loading): lazy routes
+- [Template tools](https://angular-lab-omega.vercel.app/learn/template-tools): ng-container, ng-template, @let and outlets
 - [Content projection](https://angular-lab-omega.vercel.app/learn/content-projection): ng-content
 - [Resource](https://angular-lab-omega.vercel.app/learn/resource): the resource API
 - [Defer](https://angular-lab-omega.vercel.app/learn/defer): @defer blocks

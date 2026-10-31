@@ -3,7 +3,8 @@ export type TopicId =
   | 'binding' | 'pipes' | 'directives' | 'communication' | 'forms'
   | 'routing' | 'guards' | 'signals' | 'rxjs' | 'di' | 'movies'
   | 'interceptor' | 'facade' | 'change-detection' | 'lazy-loading'
-  | 'content-projection' | 'resource' | 'defer';
+  | 'content-projection' | 'resource' | 'defer'
+  | 'getting-started' | 'components' | 'lifecycle' | 'template-tools' | 'signal-forms';
 
 // ─── Lesson Sections ──────────────────────────────────────────────────────────
 export type SectionKind = 'concept' | 'try-it' | 'reference';
