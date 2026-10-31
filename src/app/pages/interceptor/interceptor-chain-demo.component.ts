@@ -1,4 +1,4 @@
-import { HttpBackend, HttpClient, HttpErrorResponse, HttpEvent, HttpInterceptorFn, HttpRequest, HttpResponse, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpBackend, HttpClient, HttpErrorResponse, HttpEvent, HttpInterceptorFn, HttpRequest, HttpResponse, provideHttpClient, withInterceptors, withXhr } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, EnvironmentInjector, computed, createEnvironmentInjector, inject, signal } from '@angular/core';
 import { Observable, catchError, of, tap, throwError } from 'rxjs';
 
@@ -68,7 +68,7 @@ export function runChain(order: InterceptorId[], server: ServerMode, parent: Env
   };
 
   const injector = createEnvironmentInjector(
-    [provideHttpClient(withInterceptors(order.map((id) => makeInterceptor(id, trace)))), { provide: HttpBackend, useValue: backend }],
+    [provideHttpClient(withXhr(), withInterceptors(order.map((id) => makeInterceptor(id, trace)))), { provide: HttpBackend, useValue: backend }],
     parent,
   );
   injector.get(HttpClient).get<string[]>('/api/users').subscribe({

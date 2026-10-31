@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import { StarRatingComponent } from './star-rating-demo.component';
@@ -6,6 +6,7 @@ import { StarRatingComponent } from './star-rating-demo.component';
 @Component({
   standalone: true,
   imports: [StarRatingComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <app-star-rating [(rating)]="myRating" />
     <p data-testid="parent-value">{{ myRating() }}</p>

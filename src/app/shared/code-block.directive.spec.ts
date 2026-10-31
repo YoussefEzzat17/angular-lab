@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import { CodeBlockDirective, detectLanguage, highlight, isDiagram, normalizeCode } from './code-block.directive';
@@ -12,6 +12,7 @@ export class AppComponent {}`;
 @Component({
   standalone: true,
   imports: [CodeBlockDirective],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     @if (showStatic()) {
       <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200" data-testid="static">{{ tsSample }}</pre>

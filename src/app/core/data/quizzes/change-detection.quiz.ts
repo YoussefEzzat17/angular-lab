@@ -2,20 +2,20 @@ import type { QuizBank } from '../../../core/models/learning.models';
 
 export const CHANGE_DETECTION_QUIZ: QuizBank = {
   topicId: 'change-detection',
-  version: 2,
+  version: 3,
   questions: [
     {
       id: 'change-detection-01',
       type: 'single',
-      prompt: 'Which strategy is the default for components?',
+      prompt: 'In Angular 22, which strategy does a component use when you do not set one?',
       choices: [
-        { id: 'a', text: 'ChangeDetectionStrategy.Default' },
+        { id: 'a', text: 'ChangeDetectionStrategy.Eager' },
         { id: 'b', text: 'ChangeDetectionStrategy.OnPush' },
         { id: 'c', text: 'ChangeDetectionStrategy.Manual' },
-        { id: 'd', text: 'ChangeDetectionStrategy.Eager' },
+        { id: 'd', text: 'ChangeDetectionStrategy.Signal' },
       ],
-      correct: ['a'],
-      explanation: 'With Default, Angular checks every component on each change-detection pass. OnPush is opt-in.',
+      correct: ['b'],
+      explanation: 'OnPush is the default now. Eager (the old Default) checks every component on each pass, and you have to ask for it.',
       sectionId: 'default',
     },
     {

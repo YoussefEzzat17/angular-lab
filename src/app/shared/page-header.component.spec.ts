@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import { PageHeaderComponent } from './page-header.component';
@@ -7,6 +7,7 @@ import { TopicIllustrationComponent } from './topic-illustration.component';
 @Component({
   standalone: true,
   imports: [PageHeaderComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `<app-page-header title="Routing" [illustration]="art">intro</app-page-header>`,
 })
 class HostComponent {

@@ -59,11 +59,10 @@ import { ResourceDemoComponent } from './resource-demo.component';
             <app-resource-demo />
           </app-lesson-card>
 
-          <app-lesson-card class="mt-5" variant="danger" label="EXPERIMENTAL" heading="These APIs can still change">
+          <app-lesson-card class="mt-5" label="STABLE" heading="Ready for real apps">
             <p class="mt-2 text-sm text-stone-300">
-              In Angular 20, <code class="text-gold-300">resource</code>, <code class="text-gold-300">rxResource</code> and <code class="text-gold-300">httpResource</code> are marked experimental.
-              They work and are worth learning, but names and options may change in a later version. For example, the option that holds the signals to watch was called
-              <code class="text-gold-300">request</code> in Angular 19 and is <code class="text-gold-300">params</code> now.
+              Since Angular 22, <code class="text-gold-300">resource</code>, <code class="text-gold-300">rxResource</code> and <code class="text-gold-300">httpResource</code> are stable.
+              Older tutorials may call them experimental, and may use the option name <code class="text-gold-300">request</code>. It is <code class="text-gold-300">params</code> now.
             </p>
           </app-lesson-card>
         </section>

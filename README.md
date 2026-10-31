@@ -153,7 +153,7 @@ The lessons are grouped, and the order below is the recommended learning path (i
 | | RxJS | `/learn/rxjs` | Observables, marble diagrams for `map` / `filter` / `debounceTime` / `take` / `scan`, `switchMap` vs. `mergeMap` vs. `concatMap`, subjects, memory leaks and `takeUntilDestroyed` |
 | **Services & Data** | Dependency Injection | `/learn/di` | `inject()`, `providedIn: 'root'` vs. component `providers`, `InjectionToken` and `useClass` / `useValue` / `useFactory` on a real injector |
 | | Fetch API & HTTP | `/learn/movies` | `HttpClient`, services, a real public API |
-| | Resource API | `/learn/resource` | `resource()`, `rxResource()` and `httpResource()`: loading, error and cancelled requests as signals (experimental in Angular 20) |
+| | Resource API | `/learn/resource` | `resource()`, `rxResource()` and `httpResource()`: loading, error and cancelled requests as signals |
 | | HttpInterceptor | `/learn/interceptor` | One checkpoint for every request and response: reorder three real interceptors and read the trace |
 | | Facade Pattern | `/learn/facade` | One simple front door over several services: build one, use it, test it, and when *not* to (live checkout demo with rollback) |
 | **Performance** | Change Detection | `/learn/change-detection` | Default vs. `OnPush`, mutating vs. replacing, and why signals fit `OnPush` |
@@ -168,7 +168,7 @@ Each lesson has its own overview at `/learn/<id>`, and its sections at `/learn/<
 
 | | |
 | --- | --- |
-| Framework | Angular 20 — standalone components, signals, signal inputs, new control flow |
+| Framework | Angular 22 — standalone components, signals, signal inputs, new control flow |
 | Language | TypeScript 5.8 |
 | Styling | Tailwind CSS 3 with CSS-variable design tokens (light / dark) |
 | Reactive | RxJS 7.8 and Angular Signals |

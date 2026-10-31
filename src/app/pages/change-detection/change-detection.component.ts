@@ -14,10 +14,11 @@ export interface DemoUser {
   name: string;
 }
 
-// Deliberately left on the Default strategy: this card is the "before" in the OnPush comparison lesson.
+// Deliberately left on the Eager strategy (the old Default): this card is the "before" in the OnPush comparison lesson.
 @Component({
   selector: 'app-cd-default-card',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="rounded-xl bg-stone-800 p-4">
       <p class="text-xs text-stone-400">Default strategy</p>
@@ -79,7 +80,7 @@ const NAMES = ['Ada', 'Grace', 'Linus', 'Margaret', 'Alan'];
       <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <app-page-header title="Change Detection" illustration="change-detection">
         After something happens (a click, a response, a timer), Angular walks the component tree and re-checks what each
-        template shows. By default it checks <em>every</em> component, every time. With
+        template shows. The older <code class="text-gold-300">Eager</code> strategy (once called Default) checks <em>every</em> component, every time. With
         <app-term term="onpush"><code class="text-gold-300">OnPush</code></app-term> a component is only re-checked when something it depends on actually changed —
         so a big app does far less work.
       </app-page-header>
@@ -87,8 +88,8 @@ const NAMES = ['Ada', 'Grace', 'Linus', 'Margaret', 'Alan'];
       <div class="mt-10 grid gap-5 md:grid-cols-2">
         <app-lesson-card label="1 · TWO STRATEGIES" heading="Check everything vs. check what changed">
           <p class="mt-2 text-sm text-stone-400">
-            <strong class="text-stone-200">Default:</strong> re-check this component whenever anything in the app might have changed.<br />
-            <strong class="text-stone-200">OnPush:</strong> re-check only when an <code class="text-gold-300">input()</code> gets a
+            <strong class="text-stone-200">Eager (the old Default):</strong> re-check this component whenever anything in the app might have changed.<br />
+            <strong class="text-stone-200">OnPush (the default since Angular 22):</strong> re-check only when an <code class="text-gold-300">input()</code> gets a
             <em>new reference</em>, an event fires inside the component, or a signal it reads changes.
           </p>
           <app-flow-diagram class="mt-4 block" from="something happens" to="Angular re-checks the tree" direction="right" />

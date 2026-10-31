@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import { LessonCardComponent, LessonCardTone, LessonCardVariant } from './lesson-card.component';
@@ -6,6 +6,7 @@ import { LessonCardComponent, LessonCardTone, LessonCardVariant } from './lesson
 @Component({
   standalone: true,
   imports: [LessonCardComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <app-lesson-card [label]="label()" [heading]="heading()" [variant]="variant()" [tone]="tone()" [headingSize]="size()" [interactive]="interactive()">
       <span class="body">projected body</span>

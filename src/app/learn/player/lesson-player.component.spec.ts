@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 
@@ -13,6 +13,7 @@ import { LessonSectionDirective } from './lesson-section.directive';
 @Component({
   standalone: true,
   imports: [LessonPlayerComponent, LessonSectionDirective, PageHeaderComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <app-lesson-player [topicId]="'binding'" [section]="section()">
       <ng-template appLessonSection="overview"><app-page-header title="Data Binding">Intro</app-page-header><p data-testid="body-overview">Overview body</p></ng-template>

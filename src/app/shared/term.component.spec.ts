@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import { GLOSSARY } from '../core/data/glossary';
@@ -7,6 +7,7 @@ import { TermComponent } from './term.component';
 @Component({
   standalone: true,
   imports: [TermComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `<p>Use the <app-term [term]="key">injector</app-term> to get a service.</p>`,
 })
 class HostComponent {

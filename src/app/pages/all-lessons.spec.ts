@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
@@ -17,7 +17,7 @@ describe('every lesson section', () => {
     for (const section of topic.sections) {
       it(`${topic.id} / ${section.id} renders cleanly`, async () => {
         localStorage.clear();
-        TestBed.configureTestingModule({ providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()] });
+        TestBed.configureTestingModule({ providers: [provideRouter([]), provideHttpClient(withXhr()), provideHttpClientTesting()] });
         const component = (await TOPIC_LOADERS[topic.id]()) as Type<unknown>;
         const fixture = TestBed.createComponent(component);
         fixture.componentRef.setInput('section', section.id);

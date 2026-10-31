@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 
 import { FlowArrowComponent } from './flow-arrow.component';
@@ -6,6 +6,7 @@ import { FlowArrowComponent } from './flow-arrow.component';
 @Component({
   standalone: true,
   imports: [FlowArrowComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `<app-flow-arrow label="@Input() x" caption="parent → child" turn tone="burgundy" [active]="active" />`,
 })
 class HostComponent {

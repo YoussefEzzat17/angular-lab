@@ -28,12 +28,12 @@ Every concept is a live, poke-able example rather than a slide or a page of pros
 
 ## Capabilities and Constraints
 
-- Angular 20 only: standalone components, signals, signal inputs, `@if` / `@for` / `@switch`. No NgModules, no legacy patterns taught.
+- Angular 22 only: standalone components, signals, signal inputs, `@if` / `@for` / `@switch`. No NgModules, no legacy patterns taught.
 - No backend, ever. Everything runs client-side on Vercel; persistence is `localStorage` through `safe-storage.ts`. The feedback form uses EmailJS with only the public key.
 - `core/data/topics.ts` is the single source of truth for lessons, sections, objectives, levels, prerequisites and groups.
 - Quizzes: 6 random questions from a bank of 10–15, 75% to pass, best score kept.
 - Gamification: 10 XP per section, 50 for passing a quiz, 25 more for full marks; 7 levels and 8 badges.
-- The Resource API lesson covers APIs that are experimental in Angular 20.
+- The Resource API (`resource`, `rxResource`, `httpResource`) is stable since Angular 22. OnPush is the default change detection strategy; `Eager` is the old Default.
 
 ## Brand Commitments
 

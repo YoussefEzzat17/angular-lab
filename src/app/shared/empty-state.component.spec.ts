@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 
@@ -7,6 +7,7 @@ import { EmptyStateComponent } from './empty-state.component';
 @Component({
   standalone: true,
   imports: [EmptyStateComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `<app-empty-state heading="Nothing yet" message="Add something." [icon]="icon" [ctaLabel]="label" ctaLink="/learn" />`,
 })
 class HostComponent {

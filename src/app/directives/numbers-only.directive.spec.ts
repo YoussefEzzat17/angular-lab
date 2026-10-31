@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
@@ -7,6 +7,7 @@ import { NumbersOnlyDirective } from './numbers-only.directive';
 @Component({
   standalone: true,
   imports: [NumbersOnlyDirective],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `<input appNumbersOnly (blocked)="lastBlocked = $event" />`,
 })
 class HostComponent {

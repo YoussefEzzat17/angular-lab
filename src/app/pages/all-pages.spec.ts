@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
@@ -63,7 +63,7 @@ describe('every other page', () => {
       it(`${name} is accessible for ${stateName}`, () => {
         seed();
         TestBed.configureTestingModule({
-          providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting(), { provide: FIRE_CONFETTI, useValue: () => undefined }],
+          providers: [provideRouter([]), provideHttpClient(withXhr()), provideHttpClientTesting(), { provide: FIRE_CONFETTI, useValue: () => undefined }],
         });
         const fixture = TestBed.createComponent(component);
         fixture.detectChanges();
