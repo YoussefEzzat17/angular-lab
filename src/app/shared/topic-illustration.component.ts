@@ -23,7 +23,13 @@ export type IllustrationName =
   | 'components'
   | 'lifecycle'
   | 'template-tools'
-  | 'signal-forms';
+  | 'signal-forms'
+  | 'testing'
+  | 'accessibility'
+  | 'security'
+  | 'error-handling'
+  | 'animations'
+  | 'images';
 
 /**
  * Small animated diagram that sits beside a topic's intro. Drawn with the theme tokens, so it follows
@@ -416,6 +422,89 @@ export type IllustrationName =
           <text class="mono btn-text" x="120" y="129" text-anchor="middle">Submit</text>
           <rect class="chip" x="52" y="146" width="136" height="20" rx="10" />
           <text class="mono gold-text" x="120" y="160" text-anchor="middle">[formField]</text>
+        }
+        @case ('testing') {
+          <!-- a test checks the code and answers pass or fail -->
+          <rect class="node" x="12" y="14" width="96" height="56" rx="10" />
+          <text class="mono dim" x="60" y="34" text-anchor="middle">your code</text>
+          <text class="mono gold-text" x="60" y="54" text-anchor="middle">add(2, 3)</text>
+          <path class="edge" d="M110 42 H134" />
+          <path class="head" d="M128 37 L135 42 L128 47" />
+          <rect class="node gold" x="136" y="14" width="92" height="56" rx="10" />
+          <text class="mono dim" x="182" y="34" text-anchor="middle">expect</text>
+          <text class="mono gold-text" x="182" y="54" text-anchor="middle">toBe(5)</text>
+          <rect class="node" x="40" y="92" width="160" height="30" rx="15" />
+          <text class="mono good" x="86" y="112">✓</text>
+          <text class="mono bad" x="140" y="112">✗</text>
+          <text class="mono dim" x="112" y="112" text-anchor="middle">pass or fail</text>
+          <rect class="chip" x="48" y="134" width="144" height="24" rx="12" />
+          <text class="mono gold-text" x="120" y="150" text-anchor="middle">arrange, act, assert</text>
+        }
+        @case ('accessibility') {
+          <!-- one page, three ways to use it -->
+          <rect class="node" x="70" y="10" width="100" height="44" rx="10" />
+          <text class="mono gold-text" x="120" y="36" text-anchor="middle">&lt;button&gt;</text>
+          <path class="edge" d="M92 54 L48 92 M120 54 V92 M148 54 L192 92" />
+          <rect class="node react" x="8" y="92" width="80" height="34" rx="9" />
+          <text class="mono" x="48" y="113" text-anchor="middle">mouse</text>
+          <rect class="node react" x="80" y="92" width="80" height="34" rx="9" />
+          <text class="mono" x="120" y="113" text-anchor="middle">keyboard</text>
+          <rect class="node react" x="152" y="92" width="80" height="34" rx="9" />
+          <text class="mono" x="192" y="113" text-anchor="middle">screen reader</text>
+          <rect class="chip" x="52" y="140" width="136" height="22" rx="11" />
+          <text class="mono gold-text" x="120" y="155" text-anchor="middle">everyone gets in</text>
+        }
+        @case ('security') {
+          <!-- untrusted text is cleaned before it reaches the page -->
+          <rect class="node" x="10" y="26" width="84" height="40" rx="10" />
+          <text class="mono dim" x="52" y="42" text-anchor="middle">user text</text>
+          <text class="mono bad" x="52" y="58" text-anchor="middle">&lt;script&gt;</text>
+          <rect class="node gold" x="100" y="22" width="40" height="48" rx="8" />
+          <text class="mono gold-text" x="120" y="50" text-anchor="middle">🛡</text>
+          <path class="edge" d="M142 46 H166" />
+          <path class="head" d="M160 41 L167 46 L160 51" />
+          <rect class="node" x="168" y="26" width="64" height="40" rx="10" />
+          <text class="mono dim" x="200" y="42" text-anchor="middle">page</text>
+          <text class="mono good" x="200" y="58" text-anchor="middle">safe text</text>
+          <rect class="chip" x="40" y="96" width="160" height="24" rx="12" />
+          <text class="mono gold-text" x="120" y="112" text-anchor="middle">escape and sanitize</text>
+          <text class="mono dim" x="120" y="146" text-anchor="middle">never trust input</text>
+        }
+        @case ('error-handling') {
+          <!-- an error is caught near the source, the rest reach one handler -->
+          <rect class="node" x="10" y="14" width="84" height="34" rx="9" />
+          <text class="mono" x="52" y="35" text-anchor="middle">request</text>
+          <path class="edge" d="M96 31 H130" />
+          <path class="head" d="M124 26 L131 31 L124 36" />
+          <rect class="node react" x="132" y="14" width="100" height="34" rx="9" />
+          <text class="mono" x="182" y="35" text-anchor="middle">catchError</text>
+          <path class="edge" d="M182 50 V84" />
+          <rect class="node gold" x="62" y="84" width="116" height="34" rx="9" />
+          <text class="mono gold-text" x="120" y="105" text-anchor="middle">ErrorHandler</text>
+          <rect class="chip" x="40" y="132" width="160" height="24" rx="12" />
+          <text class="mono gold-text" x="120" y="148" text-anchor="middle">tell the user clearly</text>
+        }
+        @case ('animations') {
+          <!-- a box slides in and fades out -->
+          <rect class="node" x="10" y="24" width="220" height="86" rx="12" />
+          <g class="toggle">
+            <rect class="node gold" x="30" y="44" width="80" height="46" rx="9" />
+            <text class="mono gold-text" x="70" y="72" text-anchor="middle">enter</text>
+          </g>
+          <rect class="ghost" x="130" y="44" width="80" height="46" rx="9" />
+          <text class="mono dim" x="170" y="72" text-anchor="middle">leave</text>
+          <rect class="chip" x="44" y="128" width="152" height="24" rx="12" />
+          <text class="mono gold-text" x="120" y="144" text-anchor="middle">animate.enter / leave</text>
+        }
+        @case ('images') {
+          <!-- the image has a reserved size, so the page does not jump -->
+          <rect class="ghost2" x="20" y="14" width="200" height="86" rx="10" />
+          <rect class="node gold" x="20" y="14" width="200" height="86" rx="10" />
+          <path class="edge" d="M44 82 L82 48 L112 72 L140 56 L196 90" />
+          <circle class="dot" cx="172" cy="38" r="8" />
+          <text class="mono dim" x="120" y="116" text-anchor="middle">1200 × 800 reserved</text>
+          <rect class="chip" x="34" y="130" width="172" height="24" rx="12" />
+          <text class="mono gold-text" x="120" y="146" text-anchor="middle">ngSrc width height</text>
         }
       }
     </svg>

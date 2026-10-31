@@ -1,6 +1,6 @@
 # Angular Lab
 
-> Angular Lab is a hands-on playground for learning Angular by building. It has 23 interactive lessons with animated diagrams and a demo app, built by Youssef Ezzat.
+> Angular Lab is a hands-on playground for learning Angular by building. It has 29 interactive lessons with animated diagrams and a demo app, built by Youssef Ezzat.
 
 ## Lessons
 
@@ -26,6 +26,13 @@
 - [Content projection](https://angular-lab-omega.vercel.app/learn/content-projection): ng-content
 - [Resource](https://angular-lab-omega.vercel.app/learn/resource): the resource API
 - [Defer](https://angular-lab-omega.vercel.app/learn/defer): @defer blocks
+
+- [Testing](https://angular-lab-omega.vercel.app/learn/testing): testing components and services
+- [Accessibility](https://angular-lab-omega.vercel.app/learn/accessibility): accessible pages and Angular Aria
+- [Security](https://angular-lab-omega.vercel.app/learn/security): XSS and safe templates
+- [Error handling](https://angular-lab-omega.vercel.app/learn/error-handling): catching and showing errors
+- [Animations](https://angular-lab-omega.vercel.app/learn/animations): animate.enter and animate.leave
+- [Images](https://angular-lab-omega.vercel.app/learn/images): NgOptimizedImage
 
 ## Optional
 

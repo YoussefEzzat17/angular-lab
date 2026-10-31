@@ -21,7 +21,7 @@
 
 ## Overview
 
-Angular Lab teaches Angular through **23 lessons**. Each lesson is split into short sections and closed by a final quiz. Each one explains *why* a concept exists and what problem it solves, shows a small animated diagram of what is actually happening, and gives you a live example you can click, edit and watch update in the browser. A small movie-and-series **demo app** shows several of these concepts working together in one real feature.
+Angular Lab teaches Angular through **29 lessons**. Each lesson is split into short sections and closed by a final quiz. Each one explains *why* a concept exists and what problem it solves, shows a small animated diagram of what is actually happening, and gives you a live example you can click, edit and watch update in the browser. A small movie-and-series **demo app** shows several of these concepts working together in one real feature.
 
 It is built with modern Angular only: standalone components, signals, the `@if` / `@for` / `@switch` control flow and signal inputs — no NgModules. There is no backend; everything runs in the browser.
 
@@ -31,7 +31,7 @@ It is built with modern Angular only: standalone components, signals, the `@if` 
   <tr>
     <td width="33%" valign="top">
       <b>📚 Interactive lessons</b><br>
-      23 lessons in short sections (concept / try-it / reference), with an overview, objectives and animated diagrams.
+      29 lessons in short sections (concept / try-it / reference), with an overview, objectives and animated diagrams.
     </td>
     <td width="33%" valign="top">
       <b>✅ Final quiz per topic</b><br>
@@ -164,6 +164,12 @@ The lessons are grouped, and the order below is the recommended learning path (i
 | **Performance** | Change Detection | `/learn/change-detection` | Default vs. `OnPush`, mutating vs. replacing, and why signals fit `OnPush` |
 | | Lazy Loading | `/learn/lazy-loading` | `loadComponent`, smaller initial bundles, and preloading strategies compared by waiting time and background data |
 | | `@defer` Blocks | `/learn/defer` | Placeholders, triggers (`viewport`, `interaction`, `timer`) and prefetching for parts of a page |
+| | Optimized Images | `/learn/images` | `NgOptimizedImage`: `ngSrc`, `priority`, `fill`, and a live look at the attributes Angular adds |
+| **Quality & Safety** | Testing | `/learn/testing` | Arrange, act, assert, `TestBed`, and a live runner you can break on purpose |
+| | Accessibility | `/learn/accessibility` | Real elements, keyboard and focus, `LiveAnnouncer`, and an `@angular/aria` accordion |
+| | Security Basics | `/learn/security` | How Angular escapes and sanitizes, `javascript:` URLs, and the `bypassSecurityTrust` trap |
+| | Error Handling | `/learn/error-handling` | `try/catch`, `catchError` and `retry`, `ErrorHandler`, and friendly error states |
+| | Animations | `/learn/animations` | `animate.enter` and `animate.leave` with plain CSS, and reduced motion |
 
 Each lesson has its own overview at `/learn/<id>`, and its sections at `/learn/<id>/<section>`. The quiz is at `/learn/<id>/quiz` and opens only after all sections are done. `/learn` opens the first lesson, and the old paths (such as `/binding`) redirect to `/learn/<id>`.
 

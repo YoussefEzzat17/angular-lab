@@ -409,7 +409,7 @@ import { RecapComponent } from '../../shared/recap.component';
                   <button type="button" (click)="removeGenre(i)" [attr.aria-label]="'Remove genre ' + (i + 1)" class="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-stone-600 text-stone-200 hover:bg-stone-800">✕</button>
                 </div>
               }
-              <pre class="overflow-x-auto rounded-lg bg-stone-950 p-3 text-xs text-gold-200">{{ genres.value | json }}</pre>
+              <div class="overflow-x-auto whitespace-pre rounded-lg bg-stone-950 p-3 font-mono text-xs text-gold-200" data-testid="genres-json">{{ genres.value | json }}</div>
             </div>
           </app-code-output>
         </app-lesson-card>

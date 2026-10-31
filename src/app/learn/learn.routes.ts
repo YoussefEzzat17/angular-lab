@@ -30,6 +30,12 @@ export const TOPIC_LOADERS: Record<TopicId, () => Promise<unknown>> = {
   'lifecycle':        () => import('../pages/lifecycle/lifecycle.component').then((m) => m.LifecycleComponent),
   'template-tools':   () => import('../pages/template-tools/template-tools.component').then((m) => m.TemplateToolsComponent),
   'signal-forms':     () => import('../pages/signal-forms/signal-forms.component').then((m) => m.SignalFormsComponent),
+  'testing':          () => import('../pages/testing/testing.component').then((m) => m.TestingComponent),
+  'accessibility':    () => import('../pages/accessibility/accessibility.component').then((m) => m.AccessibilityComponent),
+  'security':         () => import('../pages/security/security.component').then((m) => m.SecurityComponent),
+  'error-handling':   () => import('../pages/error-handling/error-handling.component').then((m) => m.ErrorHandlingComponent),
+  'animations':       () => import('../pages/animations/animations.component').then((m) => m.AnimationsComponent),
+  'images':           () => import('../pages/images/images.component').then((m) => m.ImagesComponent),
 };
 
 export const LEARN_ROUTES: Routes = [

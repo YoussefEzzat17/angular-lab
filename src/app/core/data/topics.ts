@@ -1,6 +1,6 @@
 import type { TopicId, LessonSection, TopicObjective } from '../models/learning.models';
 
-export type TopicGroup = 'fundamentals' | 'forms-navigation' | 'reactivity' | 'services-data' | 'performance';
+export type TopicGroup = 'fundamentals' | 'forms-navigation' | 'reactivity' | 'services-data' | 'performance' | 'quality';
 
 export type TopicLevel = 'beginner' | 'intermediate' | 'advanced';
 
@@ -41,6 +41,7 @@ export const TOPIC_GROUPS: TopicGroupInfo[] = [
   { id: 'reactivity', title: 'Reactivity', blurb: 'State that updates itself' },
   { id: 'services-data', title: 'Services & Data', blurb: 'Share logic and talk to a server' },
   { id: 'performance', title: 'Performance', blurb: 'Faster, leaner apps' },
+  { id: 'quality', title: 'Quality & Safety', blurb: 'Test, protect and polish your app' },
 ];
 
 /** Single source of truth for every topic page — order here is the recommended learning path. */
@@ -468,6 +469,108 @@ export const TOPICS: Topic[] = [
       { id: 'triggers', title: 'Triggers', kind: 'concept', minutes: 6 },
       { id: 'prefetch', title: 'Prefetch and pitfalls', kind: 'concept', minutes: 5 },
       { id: 'try-it', title: 'Try It', kind: 'try-it', minutes: 5 },
+    ],
+  },
+  {
+    id: 'images', group: 'performance', legacyPath: '/images', path: '/learn/images',
+    level: 'beginner', prerequisites: ['binding'],
+    icon: '🖼️', title: 'Optimized Images', description: 'NgOptimizedImage: sharper pages, faster loads and no layout jumps.',
+    objectives: [
+      { text: 'Explain why plain images hurt speed and layout', sectionId: 'why' },
+      { text: 'Use ngSrc with a width and a height', sectionId: 'ngsrc' },
+      { text: 'Mark the main image with priority, and use fill and sizes', sectionId: 'priority' },
+      { text: 'Read what Angular adds to an image tag', sectionId: 'try-it' },
+    ],
+    sections: [
+      { id: 'why', title: 'Why images are heavy', kind: 'concept', minutes: 4 },
+      { id: 'ngsrc', title: 'ngSrc and size', kind: 'concept', minutes: 6 },
+      { id: 'priority', title: 'priority, fill and sizes', kind: 'concept', minutes: 5 },
+      { id: 'try-it', title: 'See what Angular adds', kind: 'try-it', minutes: 5 },
+    ],
+  },
+  {
+    id: 'testing', group: 'quality', legacyPath: '/testing', path: '/learn/testing',
+    level: 'intermediate', prerequisites: ['components', 'di'],
+    icon: '🧪', title: 'Testing', description: 'Write small tests that check a component or a service, and learn to read a failing test.',
+    objectives: [
+      { text: 'Say why tests save time, and name the three parts of a test', sectionId: 'why' },
+      { text: 'Read a test written as arrange, act, assert', sectionId: 'anatomy' },
+      { text: 'Test a component with TestBed and a fixture', sectionId: 'component' },
+      { text: 'Run tests, break the code on purpose, and read the failure', sectionId: 'runner' },
+    ],
+    sections: [
+      { id: 'why', title: 'Why test?', kind: 'concept', minutes: 4 },
+      { id: 'anatomy', title: 'Anatomy of a test', kind: 'concept', minutes: 6 },
+      { id: 'component', title: 'Testing a component', kind: 'concept', minutes: 6 },
+      { id: 'runner', title: 'Break it and read the failure', kind: 'try-it', minutes: 7 },
+    ],
+  },
+  {
+    id: 'accessibility', group: 'quality', legacyPath: '/accessibility', path: '/learn/accessibility',
+    level: 'beginner', prerequisites: ['components'],
+    icon: '♿', title: 'Accessibility', description: 'Build pages everyone can use: real elements, the keyboard, screen readers, and Angular Aria.',
+    objectives: [
+      { text: 'Explain who accessibility helps and why', sectionId: 'why' },
+      { text: 'Pick the right HTML element instead of a styled div', sectionId: 'semantic' },
+      { text: 'Make a page usable with the keyboard alone', sectionId: 'keyboard' },
+      { text: 'Announce changes and use an Angular Aria component', sectionId: 'aria' },
+    ],
+    sections: [
+      { id: 'why', title: 'Why accessibility?', kind: 'concept', minutes: 4 },
+      { id: 'semantic', title: 'Use the right element', kind: 'concept', minutes: 6 },
+      { id: 'keyboard', title: 'Keyboard and focus', kind: 'try-it', minutes: 6 },
+      { id: 'aria', title: 'Announcing and Angular Aria', kind: 'try-it', minutes: 7 },
+    ],
+  },
+  {
+    id: 'security', group: 'quality', legacyPath: '/security', path: '/learn/security',
+    level: 'intermediate', prerequisites: ['binding'],
+    icon: '🔐', title: 'Security Basics', description: 'How Angular keeps injected scripts out, what it cannot protect, and why bypassing it is risky.',
+    objectives: [
+      { text: 'Explain what cross-site scripting is', sectionId: 'why' },
+      { text: 'See how Angular escapes and cleans untrusted text', sectionId: 'escaping' },
+      { text: 'Know why bypassSecurityTrust is dangerous', sectionId: 'bypass' },
+      { text: 'List what Angular does not protect', sectionId: 'practices' },
+    ],
+    sections: [
+      { id: 'why', title: 'What are we defending?', kind: 'concept', minutes: 4 },
+      { id: 'escaping', title: 'Angular escapes for you', kind: 'try-it', minutes: 6 },
+      { id: 'bypass', title: 'The bypass trap', kind: 'concept', minutes: 5 },
+      { id: 'practices', title: 'What Angular cannot do', kind: 'concept', minutes: 5 },
+    ],
+  },
+  {
+    id: 'error-handling', group: 'quality', legacyPath: '/error-handling', path: '/learn/error-handling',
+    level: 'intermediate', prerequisites: ['di', 'rxjs'],
+    icon: '🚨', title: 'Error Handling', description: 'Catch errors where they happen, handle the rest in one place, and tell the user clearly.',
+    objectives: [
+      { text: 'Choose between try/catch and catchError', sectionId: 'local' },
+      { text: 'Describe what an ErrorHandler does', sectionId: 'global' },
+      { text: 'Show a clear error state with a way to retry', sectionId: 'ui' },
+      { text: 'Say why swallowing errors hides bugs', sectionId: 'why' },
+    ],
+    sections: [
+      { id: 'why', title: 'Errors will happen', kind: 'concept', minutes: 4 },
+      { id: 'local', title: 'Catch it close by', kind: 'concept', minutes: 6 },
+      { id: 'global', title: 'One place for the rest', kind: 'concept', minutes: 6 },
+      { id: 'ui', title: 'Tell the user', kind: 'try-it', minutes: 6 },
+    ],
+  },
+  {
+    id: 'animations', group: 'quality', legacyPath: '/animations', path: '/learn/animations',
+    level: 'beginner', prerequisites: ['directives'],
+    icon: '✨', title: 'Animations', description: 'animate.enter and animate.leave: smooth arrivals and exits with plain CSS, and respect for reduced motion.',
+    objectives: [
+      { text: 'Say when an animation helps and when it hurts', sectionId: 'why' },
+      { text: 'Animate an element in and out with animate.enter and animate.leave', sectionId: 'enter-leave' },
+      { text: 'Write the CSS for a transition and for keyframes', sectionId: 'css' },
+      { text: 'Turn motion off for people who ask for it', sectionId: 'motion' },
+    ],
+    sections: [
+      { id: 'why', title: 'Why animate?', kind: 'concept', minutes: 4 },
+      { id: 'enter-leave', title: 'Enter and leave', kind: 'try-it', minutes: 6 },
+      { id: 'css', title: 'The CSS behind it', kind: 'concept', minutes: 5 },
+      { id: 'motion', title: 'Reduced motion', kind: 'concept', minutes: 4 },
     ],
   },
 ];

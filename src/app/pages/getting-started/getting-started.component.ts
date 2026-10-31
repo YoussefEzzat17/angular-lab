@@ -147,8 +147,11 @@ interface ProjectFile {
             </div>
             <p class="mt-4 text-sm text-stone-300" aria-live="polite">{{ selectedCommand().what }}</p>
             <app-output-frame class="mt-3 block" address="terminal" label="Terminal output">
-              <pre class="!m-0 overflow-x-auto font-mono text-xs leading-6 text-stone-300">@for (line of selectedCommand().output; track $index) {{{ line }}
-}</pre>
+              <div class="overflow-x-auto font-mono text-xs leading-6 text-stone-300" data-testid="terminal">
+                @for (line of selectedCommand().output; track $index) {
+                  <div class="whitespace-pre">{{ line || ' ' }}</div>
+                }
+              </div>
             </app-output-frame>
           </app-lesson-card>
 

@@ -126,7 +126,7 @@ const INPUT =
                 <input type="checkbox" [formField]="profileForm.newsletter" class="h-4 w-4 accent-[rgb(var(--gold-400))]" />
                 Send me the newsletter
               </label>
-              <pre class="mt-3 overflow-x-auto rounded-lg bg-stone-950 p-3 text-xs text-gold-200" aria-label="The model">{{ profileJson() }}</pre>
+              <div class="mt-3 overflow-x-auto whitespace-pre rounded-lg bg-stone-950 p-3 font-mono text-xs text-gold-200" role="group" aria-label="The model" data-testid="model-json">{{ profileJson() }}</div>
             </app-code-output>
           </app-lesson-card>
 

@@ -28,6 +28,12 @@ export const TOPIC_ILLUSTRATIONS: Record<TopicId, IllustrationName> = {
   'lifecycle': 'lifecycle',
   'template-tools': 'template-tools',
   'signal-forms': 'signal-forms',
+  'testing': 'testing',
+  'accessibility': 'accessibility',
+  'security': 'security',
+  'error-handling': 'error-handling',
+  'animations': 'animations',
+  'images': 'images',
 };
 
 /** One drawn icon per curriculum group: the navigation's icon system instead of each topic's emoji. */
@@ -37,6 +43,7 @@ export const GROUP_ICONS: Record<TopicGroup, IconName> = {
   'reactivity': 'zap',
   'services-data': 'database',
   'performance': 'gauge',
+  'quality': 'check',
 };
 
 /** What kind of section this is, shown next to its title in the lesson tabs and the sidebar. */

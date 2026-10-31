@@ -4,7 +4,8 @@ export type TopicId =
   | 'routing' | 'guards' | 'signals' | 'rxjs' | 'di' | 'movies'
   | 'interceptor' | 'facade' | 'change-detection' | 'lazy-loading'
   | 'content-projection' | 'resource' | 'defer'
-  | 'getting-started' | 'components' | 'lifecycle' | 'template-tools' | 'signal-forms';
+  | 'getting-started' | 'components' | 'lifecycle' | 'template-tools' | 'signal-forms'
+  | 'testing' | 'accessibility' | 'security' | 'error-handling' | 'animations' | 'images';
 
 // ─── Lesson Sections ──────────────────────────────────────────────────────────
 export type SectionKind = 'concept' | 'try-it' | 'reference';
