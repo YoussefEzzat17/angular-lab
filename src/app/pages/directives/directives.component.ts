@@ -4,6 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { HighlightDirective } from '../../directives/highlight.directive';
 import { NumbersOnlyDirective } from '../../directives/numbers-only.directive';
 import { CodeBlockDirective } from '../../shared/code-block.directive';
+import { CodeOutputComponent } from '../../shared/code-output.component';
+import { CommonMistakeComponent } from '../../shared/common-mistake.component';
+import { RecapComponent } from '../../shared/recap.component';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
 import { OrderStepsComponent } from '../../shared/order-steps.component';
@@ -18,7 +21,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [FormsModule, OrderStepsComponent, PredictOutputComponent, TrackDemoComponent, HighlightDirective, NumbersOnlyDirective, FlowDiagramComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [CodeOutputComponent, CommonMistakeComponent, RecapComponent, FormsModule, OrderStepsComponent, PredictOutputComponent, TrackDemoComponent, HighlightDirective, NumbersOnlyDirective, FlowDiagramComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'directives'" [section]="section()">
       <ng-template appLessonSection="structural">
@@ -89,6 +92,29 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
           <p class="mt-4 text-xs text-stone-500"><code>&#64;for (tip of tips; track tip) &#123; ... &#125; &#64;empty &#123; ... &#125;</code></p>
         </app-lesson-card>
       </div>
+
+      <app-lesson-card class="mt-5" label="STRUCTURAL · &#64;switch" heading="One of several, chosen by a value">
+        <p class="mt-2 text-sm text-stone-400">
+          When one value picks between more than two options, <code class="text-gold-300">&#64;switch</code> is clearer than a pile of <code class="text-gold-300">&#64;if</code> blocks.
+          Only the matching <code class="text-gold-300">&#64;case</code> is added to the page. Pick a plan:
+        </p>
+        <div class="mt-3 flex flex-wrap gap-2" role="group" aria-label="Plan">
+          @for (p of plans; track p) {
+            <button type="button" (click)="plan.set(p)" [attr.aria-pressed]="plan() === p"
+                    class="min-h-11 rounded-xl border px-4 text-sm font-semibold transition"
+                    [class]="plan() === p ? 'border-gold-400 bg-gold-500/15 text-gold-200' : 'border-stone-700 text-stone-300 hover:bg-stone-800'">{{ p }}</button>
+          }
+        </div>
+        <app-code-output class="mt-4 block" [code]="switchCode" caption="Change the plan: exactly one case is in the DOM at a time.">
+          @switch (plan()) {
+            @case ('free') { <p>Free: 3 lessons a week.</p> }
+            @case ('pro') { <p>Pro: every lesson and every quiz.</p> }
+            @default { <p>Team: Pro, plus a shared dashboard.</p> }
+          }
+        </app-code-output>
+      </app-lesson-card>
+
+      <app-recap class="mt-5" [items]="recapStructural" />
         </section>
       </ng-template>
 
@@ -128,6 +154,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
           <app-lesson-card class="mt-5" variant="highlight" label="PREDICT" heading="Before you run it">
             <app-predict-output [challenge]="trackChallenge" />
           </app-lesson-card>
+        <app-recap class="mt-5" [items]="recapTrack" />
         </section>
       </ng-template>
 
@@ -146,10 +173,12 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
             and <code class="text-gold-300">@HostBinding</code> to update that same element's style — no new element is added or removed.
           </p>
           <app-flow-diagram class="mt-4 block" from="(mouseenter)/(mouseleave)" to="@HostBinding style" direction="right" />
-          <p class="mt-4 cursor-pointer rounded-xl border border-gold-400/30 p-4 text-stone-200" appHighlight>Hover me — <code>appHighlight</code> changes my background.</p>
-          <code class="mt-4 block rounded-lg bg-stone-950 p-3 text-xs text-gold-300">@Directive(&#123; selector: '[appHighlight]' &#125;)</code>
+          <app-code-output class="mt-4 block" [code]="highlightCode" caption="Move your mouse over the line. The directive listens to the element and changes its own style.">
+            <p class="cursor-pointer rounded-xl border border-gold-400/30 p-4 text-stone-200" appHighlight>Hover me. <code>appHighlight</code> changes my background.</p>
+          </app-code-output>
         </app-lesson-card>
       </div>
+        <app-recap class="mt-5" [items]="recapAttribute" />
         </section>
       </ng-template>
 
@@ -170,13 +199,16 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
         </app-lesson-card>
       </div>
 
-      <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Where control flow and directives go wrong">
-        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
-          <li><strong class="text-stone-100">Using a changing index as the track key.</strong> <code class="text-gold-300">track $index</code> is fine for a static list, but if items are reordered or removed, use a stable id such as <code class="text-gold-300">track item.id</code>.</li>
-          <li><strong class="text-stone-100">Writing two opposite checks.</strong> Instead of two separate <code class="text-gold-300">&#64;if</code> blocks that are the inverse of each other, use one <code class="text-gold-300">&#64;if</code> with an <code class="text-gold-300">&#64;else</code>.</li>
-          <li><strong class="text-stone-100">Not importing your attribute directive.</strong> A plain attribute like <code class="text-gold-300">appHighlight</code> is silently ignored when the directive is missing from <code class="text-gold-300">imports</code> — no error, just no effect.</li>
-        </ul>
-      </app-lesson-card>
+      <app-common-mistake class="mt-5" title="Two opposite checks instead of one &#64;else" [wrong]="mistakeElseWrong" [right]="mistakeElseRight">
+        Two separate blocks that mirror each other are easy to get out of sync. One <code class="text-gold-300">&#64;if</code> with an <code class="text-gold-300">&#64;else</code> always covers both cases.
+      </app-common-mistake>
+
+      <app-common-mistake class="mt-5" title="Forgetting to import your directive" [wrong]="mistakeImportWrong" [right]="mistakeImportRight">
+        A plain attribute like <code class="text-gold-300">appHighlight</code> is silently ignored when the directive is not in the component's <code class="text-gold-300">imports</code>.
+        Nothing breaks, nothing happens.
+      </app-common-mistake>
+
+      <app-recap class="mt-5" [items]="recapBuiltIn" />
         </section>
       </ng-template>
 
@@ -251,6 +283,7 @@ export class NumbersOnlyDirective &#123;
           explanation="The browser fires keydown first. The directive's host listener runs and, for a non-digit, calls preventDefault() and emits blocked. Because the default action was cancelled, the character never reaches the input, so the value does not change."
         />
       </app-lesson-card>
+      <app-recap class="mt-5" [items]="recapTry" />
       <app-knowledge-check [items]="checkItems" />
         </section>
       </ng-template>
@@ -265,6 +298,69 @@ export class DirectivesComponent {
   toggleTips(): void {
     this.showTips.update((v) => !v);
   }
+
+  protected readonly plans = ['free', 'pro', 'team'] as const;
+  protected readonly plan = signal<'free' | 'pro' | 'team'>('free');
+
+  protected readonly switchCode = `@switch (plan()) {
+  @case ('free') { <p>Free: 3 lessons a week.</p> }
+  @case ('pro') { <p>Pro: every lesson and every quiz.</p> }
+  @default { <p>Team: Pro, plus a shared dashboard.</p> }
+}`;
+
+  protected readonly highlightCode = `@Directive({ selector: '[appHighlight]' })
+export class HighlightDirective {
+  private el = inject(ElementRef);
+
+  @HostListener('mouseenter')
+  on() { this.el.nativeElement.style.backgroundColor = '#7c3aed'; }
+
+  @HostListener('mouseleave')
+  off() { this.el.nativeElement.style.backgroundColor = ''; }
+}
+
+<p appHighlight>Hover me</p>`;
+
+  protected readonly mistakeElseWrong = `@if (loggedIn()) { <p>Welcome</p> }
+@if (!loggedIn()) { <p>Please sign in</p> }`;
+  protected readonly mistakeElseRight = `@if (loggedIn()) {
+  <p>Welcome</p>
+} @else {
+  <p>Please sign in</p>
+}`;
+  protected readonly mistakeImportWrong = `@Component({
+  template: '<p appHighlight>Hi</p>',
+})`;
+  protected readonly mistakeImportRight = `@Component({
+  imports: [HighlightDirective],
+  template: '<p appHighlight>Hi</p>',
+})`;
+
+  protected readonly recapStructural = [
+    'Structural directives add or remove elements: @if, @for and @switch.',
+    'A false @if takes the element out of the DOM; display:none only hides it.',
+    '@for repeats a template once per item and needs a track expression.',
+  ];
+  protected readonly recapTrack = [
+    'track tells Angular which row is which when the list changes.',
+    'Prefer a stable id: track item.id.',
+    'Never track by a value the user can edit.',
+  ];
+  protected readonly recapAttribute = [
+    'An attribute directive changes an element that is already there.',
+    '@HostListener listens to events on the host element.',
+    'Use it to share one behavior across many elements.',
+  ];
+  protected readonly recapBuiltIn = [
+    'ngClass and ngStyle still exist, but [class.x] and [style.x] usually suffice.',
+    'Use one @if with @else instead of two opposite checks.',
+    'Always list a directive in imports before using it.',
+  ];
+  protected readonly recapTry = [
+    'A directive can stop a keystroke before it reaches the input.',
+    'preventDefault() cancels the browser default; output() tells the parent.',
+    'Next stop: component communication.',
+  ];
 
   readonly trackChallenge: PredictChallenge = {
     question: 'The list is tracked by $index and you typed a note on row 2 (Totoro). You remove the first film. Where is the note now?',

@@ -3,6 +3,9 @@ import { ChangeDetectionStrategy, Component, ElementRef, input, signal, viewChil
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
 import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
 import { CodeBlockDirective } from '../../shared/code-block.directive';
+import { CodeOutputComponent } from '../../shared/code-output.component';
+import { CommonMistakeComponent } from '../../shared/common-mistake.component';
+import { RecapComponent } from '../../shared/recap.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
@@ -14,6 +17,9 @@ import { CounterDemoComponent, FancyCardComponent, SlotCardComponent, TabPanelCo
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
+    CodeOutputComponent,
+    CommonMistakeComponent,
+    RecapComponent,
     CodeBlockDirective,
     CounterDemoComponent,
     FancyCardComponent,
@@ -41,7 +47,12 @@ import { CounterDemoComponent, FancyCardComponent, SlotCardComponent, TabPanelCo
               Inside the wrapper's template you write <code class="text-gold-300">&lt;ng-content /&gt;</code>. Anything the parent puts between the wrapper's tags is moved to that spot.
             </p>
             <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ wrapperCode }}</pre>
-            <pre class="mt-3 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ parentCode }}</pre>
+            <app-code-output class="mt-4 block" [code]="parentCode" caption="The h3 and the p were written in the parent. They show up inside the card's hole.">
+              <app-fancy-card>
+                <h3 class="font-bold text-stone-100">Hello</h3>
+                <p class="text-sm text-stone-300">Anything can go in here.</p>
+              </app-fancy-card>
+            </app-code-output>
           </app-lesson-card>
 
           <app-lesson-card class="mt-5" variant="highlight" label="2 · TRY IT" heading="Same card, different content">
@@ -88,6 +99,7 @@ import { CounterDemoComponent, FancyCardComponent, SlotCardComponent, TabPanelCo
               template instead.
             </p>
           </app-lesson-card>
+        <app-recap class="mt-5" [items]="recapIdea" />
         </section>
       </ng-template>
 
@@ -98,22 +110,18 @@ import { CounterDemoComponent, FancyCardComponent, SlotCardComponent, TabPanelCo
               Give <code class="text-gold-300">&lt;ng-content&gt;</code> a <code class="text-gold-300">select</code> and only matching content goes there. It takes a CSS selector: an
               attribute, a class or an element name. Everything that matches no slot goes to the plain <code class="text-gold-300">&lt;ng-content /&gt;</code>.
             </p>
-            <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ slotsCode }}</pre>
-          </app-lesson-card>
-
-          <app-lesson-card class="mt-5" variant="highlight" label="4 · SEE IT" heading="Title, body and footer slots">
-            <div class="mt-3">
+            <app-code-output class="mt-4 block" [code]="slotsCode" caption="The order of the tags in the parent does not matter: card-title always lands in the header and card-footer in the footer.">
               <app-slot-card>
                 <span card-title>Order #1042</span>
                 <p>Two items are on their way. You will get an email when they arrive.</p>
                 <span card-footer>Placed today</span>
               </app-slot-card>
-            </div>
-            <p class="mt-3 text-sm text-stone-400">
-              The order of the tags in the parent does not matter. <code class="text-gold-300">card-title</code> always lands in the header and
-              <code class="text-gold-300">card-footer</code> in the footer.
-            </p>
+            </app-code-output>
           </app-lesson-card>
+
+          <app-common-mistake class="mt-5" title="Forgetting the brackets in select" [wrong]="mistakeSelectWrong" [right]="mistakeSelectRight">
+            <code class="text-gold-300">select</code> takes a CSS selector. Without brackets it looks for an element called <code class="text-gold-300">card-title</code>, finds none, and the content falls into the default slot.
+          </app-common-mistake>
 
           <app-lesson-card class="mt-5" label="GOOD TO KNOW" heading="Two small rules">
             <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
@@ -121,6 +129,7 @@ import { CounterDemoComponent, FancyCardComponent, SlotCardComponent, TabPanelCo
               <li>You can move content to a slot it does not match by hand with <code class="text-gold-300">ngProjectAs</code>, for example on an <code class="text-gold-300">&lt;ng-container&gt;</code>.</li>
             </ul>
           </app-lesson-card>
+        <app-recap class="mt-5" [items]="recapSlots" />
         </section>
       </ng-template>
 
@@ -175,6 +184,11 @@ import { CounterDemoComponent, FancyCardComponent, SlotCardComponent, TabPanelCo
               </app-tabs>
             </div>
           </app-lesson-card>
+        <app-common-mistake class="mt-5" title="Using a query before it exists" [wrong]="mistakeQueryWrong" [right]="mistakeQueryRight">
+            A query holds <code class="text-gold-300">undefined</code> until the thing is created, for example in the constructor or before the first render. Use <code class="text-gold-300">?.</code>, or wait for <code class="text-gold-300">afterNextRender()</code>.
+          </app-common-mistake>
+
+          <app-recap class="mt-5" [items]="recapQueries" />
         </section>
       </ng-template>
 
@@ -184,6 +198,7 @@ import { CounterDemoComponent, FancyCardComponent, SlotCardComponent, TabPanelCo
             <app-predict-output [challenge]="projectionChallenge" />
           </app-lesson-card>
 
+          <app-recap class="mt-5" [items]="recapTry" />
           <app-knowledge-check [items]="checkItems" />
         </section>
       </ng-template>
@@ -213,6 +228,36 @@ export class ContentProjectionComponent {
   protected focusInput(): void {
     this.nameInput().nativeElement.focus();
   }
+
+  protected readonly mistakeSelectWrong = `<ng-content select="card-title" />`;
+  protected readonly mistakeSelectRight = `<ng-content select="[card-title]" />`;
+  protected readonly mistakeQueryWrong = `constructor() {
+  this.counter().reset();   // not created yet
+}`;
+  protected readonly mistakeQueryRight = `reset() {
+  this.counter()?.reset();  // safe at any time
+}`;
+
+  protected readonly recapIdea = [
+    '<ng-content /> is a hole; the parent fills it with anything.',
+    'Use it for wrappers such as cards, dialogs and panels.',
+    'Use input() for values, content projection for markup.',
+  ];
+  protected readonly recapSlots = [
+    'select sends matching content to a named slot.',
+    'The selector can be an attribute, a class or an element name.',
+    'Content that matches no slot is quietly left out.',
+  ];
+  protected readonly recapQueries = [
+    'viewChild looks in my own template; contentChild looks at what was projected in.',
+    'Every query is a signal that may be undefined at first.',
+    'contentChildren builds things like tabs from whatever the parent provides.',
+  ];
+  protected readonly recapTry = [
+    'No ng-content means the projected content has nowhere to go, and no error.',
+    'You now know the four building blocks of reusable components.',
+    'Next stop: forms and navigation.',
+  ];
 
   protected readonly wrapperCode = `@Component({
   selector: 'app-fancy-card',

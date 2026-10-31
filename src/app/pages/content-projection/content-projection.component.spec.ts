@@ -17,20 +17,22 @@ describe('ContentProjectionComponent', () => {
       fixture.detectChanges();
     };
     const text = (testId: string) => root.querySelector(`[data-testid="${testId}"]`)?.textContent?.replace(/\s+/g, ' ').trim();
+    // The first card on the page is the static example; the one the buttons change is the last.
+    const fancy = () => Array.from(root.querySelectorAll('[data-testid="fancy-card"]')).pop()!;
     const tabs = () => Array.from(root.querySelectorAll('[role="tab"]')).map((t) => t.textContent?.trim());
-    return { fixture, root, click, text, tabs };
+    return { fixture, root, click, text, tabs, fancy };
   }
 
   it('shows the parent\'s text inside the card, and swaps it for a list or a button', () => {
-    const { root, click, text } = setup('ng-content');
+    const { click, fancy } = setup('ng-content');
 
-    expect(text('fancy-card')).toBe('Just a sentence of text.');
+    expect(fancy().textContent?.replace(/\s+/g, ' ').trim()).toBe('Just a sentence of text.');
 
     click('card-option-list');
-    expect(root.querySelector('[data-testid="fancy-card"] ul')).not.toBeNull();
+    expect(fancy().querySelector('ul')).not.toBeNull();
 
     click('card-option-button');
-    expect(root.querySelector('[data-testid="fancy-card"] button')).not.toBeNull();
+    expect(fancy().querySelector('button')).not.toBeNull();
   });
 
   it('sends the title, body and footer to their own slots', () => {

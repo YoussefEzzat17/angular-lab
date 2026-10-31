@@ -3,6 +3,9 @@ import { ChangeDetectionStrategy, Component, input, signal, WritableSignal } fro
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
 import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
 import { CodeBlockDirective } from '../../shared/code-block.directive';
+import { CodeOutputComponent } from '../../shared/code-output.component';
+import { CommonMistakeComponent } from '../../shared/common-mistake.component';
+import { RecapComponent } from '../../shared/recap.component';
 import { FlowArrowComponent } from '../../shared/flow-arrow.component';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
@@ -18,6 +21,9 @@ import { StarRatingComponent } from './star-rating-demo.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   imports: [
+    CodeOutputComponent,
+    CommonMistakeComponent,
+    RecapComponent,
     CodeBlockDirective,
     TitlePreviewComponent,
     StarRatingComponent,
@@ -61,7 +67,12 @@ import { StarRatingComponent } from './star-rating-demo.component';
               The child declares <code class="text-gold-300">input()</code>. It is a signal, so you read it with parentheses. The parent binds to it like any other property, and the child updates whenever the
               parent's value changes.
             </p>
-            <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ inputCode }}</pre>
+            <app-code-output class="mt-4 block" [code]="inputCode" caption="Type in the box: the parent's value changes, and the child shows it.">
+              <label class="text-xs text-stone-400" for="input-demo">Parent: selectedTitle</label>
+              <input id="input-demo" [value]="demoTitle()" (input)="demoTitle.set($any($event.target).value)"
+                     class="mt-1 mb-3 w-full rounded-xl border border-stone-600 bg-stone-800 px-3 py-2 text-stone-100 focus:border-gold-400 focus:outline-none" />
+              <app-title-preview [title]="demoTitle()" />
+            </app-code-output>
           </app-lesson-card>
 
           <app-lesson-card class="mt-5" label="4 · THE FLAVOURS" heading="Required, default and transformed inputs">
@@ -70,6 +81,7 @@ import { StarRatingComponent } from './star-rating-demo.component';
               <code class="text-gold-300">input.required()</code> makes the build fail if a parent forgets to set it. That catches the mistake before anyone opens the page.
             </p>
           </app-lesson-card>
+        <app-recap class="mt-5" [items]="recapInput" />
         </section>
       </ng-template>
 
@@ -80,7 +92,10 @@ import { StarRatingComponent } from './star-rating-demo.component';
               The child raises an event with <code class="text-gold-300">output()</code> and <code class="text-gold-300">emit()</code>. The parent listens with
               <code class="text-gold-300">(eventName)</code> and handles it in one of its own methods. The child never needs to know who is listening.
             </p>
-            <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ outputCode }}</pre>
+            <app-code-output class="mt-4 block" [code]="outputCode" caption="Press the button inside the child. The parent runs its own method.">
+              <app-title-preview [title]="'My Neighbor Totoro'" (addToWatchlist)="heard.set($event)" />
+              <p class="mt-3 text-sm text-stone-400">The parent heard: <strong class="text-stone-100">{{ heard() || '—' }}</strong></p>
+            </app-code-output>
           </app-lesson-card>
 
           <app-lesson-card class="mt-5" label="6 · NAMING" heading="Name outputs after what happened">
@@ -98,6 +113,7 @@ import { StarRatingComponent } from './star-rating-demo.component';
             </p>
             <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ decoratorsCode }}</pre>
           </app-lesson-card>
+        <app-recap class="mt-5" [items]="recapOutput" />
         </section>
       </ng-template>
 
@@ -136,6 +152,7 @@ import { StarRatingComponent } from './star-rating-demo.component';
               </div>
             </div>
           </app-lesson-card>
+        <app-recap class="mt-5" [items]="recapModel" />
         </section>
       </ng-template>
 
@@ -181,14 +198,21 @@ import { StarRatingComponent } from './star-rating-demo.component';
             <app-predict-output [challenge]="badgeChallenge" />
           </app-lesson-card>
 
-          <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Where parent and child communication goes wrong">
+          <app-common-mistake class="mt-5" title="Changing an object the parent passed in" [wrong]="mistakeMutateWrong" [right]="mistakeMutateRight">
+            Mutating an input breaks one-way data flow, so the parent's data changes behind its back and bugs become hard to trace. Emit an event and let the owner change its own data.
+          </app-common-mistake>
+
+          <app-common-mistake class="mt-5" title="Forgetting the parentheses on a signal input" [wrong]="mistakeCallWrong" [right]="mistakeCallRight">
+            An <code class="text-gold-300">input()</code> is a signal, and a signal is read by calling it. Without the parentheses you print the signal itself, not its value.
+          </app-common-mistake>
+
+          <app-lesson-card class="mt-5" variant="danger" label="TWO MORE" heading="Where parent and child communication goes wrong">
             <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
-              <li><strong class="text-stone-100">A child changing an object it received.</strong> Mutating an input breaks one-way data flow and makes bugs hard to trace. Send an event up with <code class="text-gold-300">output()</code> and let the parent change its own data.</li>
               <li><strong class="text-stone-100">Passing data through four or five levels.</strong> If middle components only forward a value, that is the signal to use a shared service instead.</li>
               <li><strong class="text-stone-100">Injecting the parent to call its methods.</strong> It works, but the child can now only live inside that one parent. An output keeps it reusable.</li>
-              <li><strong class="text-stone-100">Forgetting the parentheses.</strong> A signal input is read as <code class="text-gold-300">title()</code>. <code class="text-gold-300">title</code> alone is the signal itself, not its value.</li>
             </ul>
           </app-lesson-card>
+        <app-recap class="mt-5" [items]="recapTools" />
         </section>
       </ng-template>
 
@@ -257,6 +281,7 @@ import { StarRatingComponent } from './star-rating-demo.component';
             />
           </app-lesson-card>
 
+          <app-recap class="mt-5" [items]="recapTry" />
           <app-knowledge-check [items]="checkItems" />
         </section>
       </ng-template>
@@ -297,6 +322,43 @@ export class ComponentCommunicationComponent {
     flag.set(true);
     this.flashTimers.set(flag, setTimeout(() => flag.set(false), 1400));
   }
+
+  protected readonly demoTitle = signal('My Neighbor Totoro');
+  protected readonly heard = signal('');
+
+  protected readonly mistakeMutateWrong = `// child
+addTag() { this.movie().tags.push('new'); }   // changes the parent's object`;
+  protected readonly mistakeMutateRight = `// child
+tagAdded = output<string>();
+addTag() { this.tagAdded.emit('new'); }       // the parent decides`;
+  protected readonly mistakeCallWrong = '<h3>{{ title }}</h3>  <!-- prints the signal -->';
+  protected readonly mistakeCallRight = '<h3>{{ title() }}</h3>';
+
+  protected readonly recapInput = [
+    'input() brings data down from the parent; the child only reads it.',
+    'It is a signal, so you read it with parentheses: title().',
+    'input.required() makes the build fail if the parent forgets it.',
+  ];
+  protected readonly recapOutput = [
+    'output() sends an event up; the child never knows who listens.',
+    'The parent listens with (eventName) and handles it in its own method.',
+    'Name outputs after what happened, without an on prefix.',
+  ];
+  protected readonly recapModel = [
+    'model() is an input and an output in one.',
+    'The parent uses [(value)] to keep both sides in sync.',
+    'Use it for things a child edits: ratings, toggles, search boxes.',
+  ];
+  protected readonly recapTools = [
+    'Direct parent and child: input() and output().',
+    'Many unrelated components: a shared service.',
+    'If a value is only passed through several layers, switch to a service.',
+  ];
+  protected readonly recapTry = [
+    'Data goes down through inputs, events go up through outputs.',
+    'The child only emits; the parent decides what to do.',
+    'Next stop: content projection.',
+  ];
 
   protected readonly inputCode = `// child
 export class TitlePreviewComponent {

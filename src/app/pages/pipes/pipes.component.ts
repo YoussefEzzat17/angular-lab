@@ -1,4 +1,4 @@
-import { CurrencyPipe, DatePipe, LowerCasePipe, PercentPipe, UpperCasePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, LowerCasePipe, PercentPipe, SlicePipe, UpperCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, Pipe, PipeTransform, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
@@ -6,6 +6,9 @@ import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { LessonCardComponent } from '../../shared/lesson-card.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';
 import { PredictOutputComponent } from '../../shared/predict-output.component';
+import { CodeOutputComponent } from '../../shared/code-output.component';
+import { CommonMistakeComponent } from '../../shared/common-mistake.component';
+import { RecapComponent } from '../../shared/recap.component';
 import type { PredictChallenge } from '../../shared/predict-output.component';
 import { CallCounterDemoComponent } from './call-counter-demo.component';
 import { PipeChainDemoComponent } from './pipe-chain-demo.component';
@@ -31,7 +34,7 @@ interface PipeOption {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CallCounterDemoComponent, PipeChainDemoComponent, PredictOutputComponent, FormsModule, CurrencyPipe, DatePipe, UpperCasePipe, LowerCasePipe, PercentPipe, TruncatePipe, CodeBlockDirective, KnowledgeCheckComponent, LessonPlayerComponent, LessonSectionDirective, PageHeaderComponent, LessonCardComponent],
+  imports: [CodeOutputComponent, CommonMistakeComponent, RecapComponent, CallCounterDemoComponent, PipeChainDemoComponent, PredictOutputComponent, FormsModule, CurrencyPipe, DatePipe, UpperCasePipe, LowerCasePipe, PercentPipe, SlicePipe, TruncatePipe, CodeBlockDirective, KnowledgeCheckComponent, LessonPlayerComponent, LessonSectionDirective, PageHeaderComponent, LessonCardComponent],
   template: `
     <app-lesson-player [topicId]="'pipes'" [section]="section()">
       <ng-template appLessonSection="builtin">
@@ -74,6 +77,15 @@ interface PipeOption {
         <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ argsCode }}</pre>
       </app-lesson-card>
 
+      <app-lesson-card class="mt-5" label="SEE IT" heading="The same values, formatted by pipes">
+        <app-code-output class="mt-4 block" [code]="builtinCode" caption="The values in the class never change. Only what the page shows does.">
+          <p>{{ price | currency }}</p>
+          <p>{{ today | date: 'longDate' }}</p>
+          <p>{{ ratio | percent: '1.0-1' }}</p>
+          <p>{{ title | slice: 0 : 6 }}</p>
+        </app-code-output>
+      </app-lesson-card>
+
       <!-- 4 · CHEAT SHEET -->
       <app-lesson-card class="mt-5" label="4 · Quick cheat sheet" heading="Built-in pipes you'll use every day">
         <div class="mt-4 overflow-x-auto rounded-xl border border-stone-800">
@@ -97,6 +109,7 @@ interface PipeOption {
           </table>
         </div>
       </app-lesson-card>
+      <app-recap class="mt-5" [items]="recapBuiltin" />
       </section>
       </ng-template>
 
@@ -107,6 +120,14 @@ interface PipeOption {
           Put one pipe after another: each takes the result of the one before it. <code class="text-gold-300">title | uppercase | slice:0:8</code> first makes the text capitals, then keeps the first eight characters.
           Swap two pipes and you can get a different result.
         </p>
+      </app-lesson-card>
+
+      <app-lesson-card class="mt-5" label="SEE IT" heading="Read it from left to right">
+        <app-code-output class="mt-4 block" [code]="chainCode" caption="uppercase runs first, then slice keeps the first eight characters of that result.">
+          <p>{{ title }}</p>
+          <p>{{ title | uppercase }}</p>
+          <p>{{ title | uppercase | slice: 0 : 8 }}</p>
+        </app-code-output>
       </app-lesson-card>
 
       <app-lesson-card class="mt-5" variant="highlight" label="TRY IT" heading="Build a chain and read it station by station">
@@ -120,6 +141,7 @@ interface PipeOption {
       <app-lesson-card class="mt-5" variant="highlight" label="PREDICT" heading="What does this chain show?">
         <app-predict-output [challenge]="chainChallenge" />
       </app-lesson-card>
+      <app-recap class="mt-5" [items]="recapChain" />
       </section>
       </ng-template>
 
@@ -128,15 +150,15 @@ interface PipeOption {
       <!-- 3 · CUSTOM PIPE -->
       <app-lesson-card class="mt-5" label="3 · Custom pipes" heading="When built-in pipes aren't enough">
         <p class="mt-2 text-sm text-stone-400">A custom pipe is a class with a <code class="text-gold-300">transform()</code> method — reusable anywhere in the app. The truncate pipe above is a real one, defined right in this page:</p>
-        <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">&#64;Pipe(&#123; name: 'truncate' &#125;)
-export class TruncatePipe implements PipeTransform &#123;
-  transform(value: string, limit = 20) &#123;
-    return value.length &gt; limit
-      ? value.slice(0, limit) + '...'
-      : value;
-  &#125;
-&#125;</pre>
+        <app-code-output class="mt-4 block" [code]="customCode" caption="The first argument after the colon is the limit. The default is 20.">
+          <p>{{ longTitle | truncate: 14 }}</p>
+          <p>{{ longTitle | truncate }}</p>
+        </app-code-output>
       </app-lesson-card>
+      <app-common-mistake class="mt-5" title="Forgetting to import the pipe" [wrong]="mistakeImportWrong" [right]="mistakeImportRight">
+        In a standalone component a pipe is not available until you list it in <code class="text-gold-300">imports</code>. The error says the pipe could not be found.
+      </app-common-mistake>
+      <app-recap class="mt-5" [items]="recapCustom" />
       </section>
       </ng-template>
 
@@ -168,13 +190,10 @@ export class TruncatePipe implements PipeTransform &#123;
         <app-call-counter-demo />
       </app-lesson-card>
 
-      <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Why a pipe may not update">
-        <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
-          <li><strong class="text-stone-100">Mutating an array and expecting a pure pipe to re-run.</strong> A pure pipe runs only when its input <em>reference</em> changes. Pass a new array instead of pushing into the old one.</li>
-          <li><strong class="text-stone-100">Making a pipe impure to fix that.</strong> An impure pipe runs on every change-detection pass, so filtering a big list this way gets slow. Filter in a <code class="text-gold-300">computed()</code> instead.</li>
-          <li><strong class="text-stone-100">Forgetting to list the pipe in imports.</strong> In a standalone component, a pipe you do not import is an error in the template.</li>
-        </ul>
-      </app-lesson-card>
+      <app-common-mistake class="mt-5" title="Mutating an array and expecting the pipe to update" [wrong]="mistakeMutateWrong" [right]="mistakeMutateRight">
+        A pure pipe re-runs only when its input <em>reference</em> changes. Pass a new array. Making the pipe impure also works, but it then runs on every check, which gets slow on big lists.
+      </app-common-mistake>
+      <app-recap class="mt-5" [items]="recapPure" />
       </section>
       </ng-template>
 
@@ -270,6 +289,7 @@ export class TruncatePipe implements PipeTransform &#123;
           </div>
         </div>
       </app-lesson-card>
+      <app-recap class="mt-5" [items]="recapTry" />
       <app-knowledge-check [items]="checkItems" />
       </section>
       </ng-template>
@@ -278,6 +298,68 @@ export class TruncatePipe implements PipeTransform &#123;
 })
 export class PipesComponent {
   readonly section = input<string>();
+
+  protected readonly price = 49.9;
+  protected readonly today = new Date();
+  protected readonly ratio = 0.855;
+  protected readonly title = 'Castle in the Sky';
+  protected readonly longTitle = 'Castle in the Sky: the full story';
+
+  protected readonly builtinCode = `<p>{{ price | currency }}</p>
+<p>{{ today | date: 'longDate' }}</p>
+<p>{{ ratio | percent: '1.0-1' }}</p>
+<p>{{ title | slice: 0 : 6 }}</p>`;
+
+  protected readonly chainCode = `<p>{{ title }}</p>
+<p>{{ title | uppercase }}</p>
+<p>{{ title | uppercase | slice: 0 : 8 }}</p>`;
+
+  protected readonly customCode = `@Pipe({ name: 'truncate' })
+export class TruncatePipe implements PipeTransform {
+  transform(value: string, limit = 20) {
+    return value.length > limit ? value.slice(0, limit) + '...' : value;
+  }
+}
+
+<p>{{ longTitle | truncate: 14 }}</p>
+<p>{{ longTitle | truncate }}</p>`;
+
+  protected readonly mistakeImportWrong = `@Component({
+  template: '{{ name | truncate }}',
+})`;
+  protected readonly mistakeImportRight = `@Component({
+  imports: [TruncatePipe],
+  template: '{{ name | truncate }}',
+})`;
+  protected readonly mistakeMutateWrong = `this.items.push(newItem);
+<li>{{ items | filterDone }}</li>`;
+  protected readonly mistakeMutateRight = `this.items = [...this.items, newItem];
+<li>{{ items | filterDone }}</li>`;
+
+  protected readonly recapBuiltin = [
+    'A pipe changes how a value looks on the page, not the value in the class.',
+    'Settings go after a colon: currency:\'EUR\'.',
+    'Angular ships many pipes: currency, date, percent, slice, json, async and more.',
+  ];
+  protected readonly recapChain = [
+    'Pipes run from left to right, each one on the result of the one before.',
+    'Swap two pipes and the result can change.',
+  ];
+  protected readonly recapCustom = [
+    'A custom pipe is a class with a transform() method.',
+    'Give it a name in @Pipe and list the class in imports to use it.',
+    'Reach for a pipe when the same transform is needed in several templates.',
+  ];
+  protected readonly recapPure = [
+    'Pure pipes (the default) re-run only when their input changes.',
+    'Pass a new array or object instead of mutating the old one.',
+    'Impure pipes run on every check, so use them rarely.',
+  ];
+  protected readonly recapTry = [
+    'The built-in pipes you try here are the real ones.',
+    'Pipes make templates shorter and keep formatting in one place.',
+    'Next stop: directives, which change how elements behave.',
+  ];
 
   readonly argsCode = `{{ price | currency:'EUR' }}                  <!-- €49.90 -->
 {{ today | date:'longDate' }}                    <!-- October 20, 2026 -->
