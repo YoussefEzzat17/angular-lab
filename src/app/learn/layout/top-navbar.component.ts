@@ -11,8 +11,10 @@ import { IconComponent } from '../../shared/icon.component';
   selector: 'app-top-navbar',
   standalone: true,
   imports: [RouterLink, RouterLinkActive, IconComponent],
+  // The host must not be a box of its own: a sticky header can only stick inside its parent, and the host is exactly as tall as the header.
+  host: { class: 'contents' },
   template: `
-    <header class="flex h-14 shrink-0 items-center gap-3 border-b border-stone-800 bg-stone-950/95 px-4 backdrop-blur sm:px-6">
+    <header class="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-3 border-b border-stone-800 bg-stone-950/95 px-4 backdrop-blur sm:px-6">
 
       <!-- Left: logo -->
       <div class="flex shrink-0 items-center gap-2">
