@@ -8,7 +8,6 @@ import { Movie, MoviesResponse } from '../models/movie.model';
 export class MovieService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = 'https://ghibliapi.vercel.app/films';
- 
 
   getMovies(): Observable<MoviesResponse> {
     return this.http.get<MoviesResponse>(this.apiUrl);
@@ -16,9 +15,6 @@ export class MovieService {
 
   /** Requests one film by its API id. */
   getMovieById(id: string): Observable<Movie> {
-    return this.http.get<Movie>(`${this.apiUrl}/${id}`);
+    return this.http.get<Movie>(`${this.apiUrl}/${encodeURIComponent(id)}`);
   }
-
-  
-
 }

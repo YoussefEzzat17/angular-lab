@@ -1,5 +1,5 @@
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
-import { afterNextRender, ChangeDetectionStrategy, Component, contentChildren, effect, ElementRef, inject, Injector, input, signal, untracked, viewChild } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, computed, contentChildren, effect, ElementRef, inject, Injector, input, signal, untracked, viewChild } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
 import { TOPIC_GROUPS, TOPICS } from '../../core/data/topics';
@@ -173,13 +173,13 @@ export class LessonPlayerComponent {
   /** True while a move comes from the bottom bar: focus stays on its button and the move is announced instead. */
   private keepFocus = false;
 
-  protected readonly topicMeta = () => TOPICS.find((t) => t.id === this.topicId()) ?? null;
+  protected readonly topicMeta = computed(() => TOPICS.find((t) => t.id === this.topicId()) ?? null);
 
-  protected readonly groupTitle = () => TOPIC_GROUPS.find((g) => g.id === this.topicMeta()?.group)?.title ?? '';
+  protected readonly groupTitle = computed(() => TOPIC_GROUPS.find((g) => g.id === this.topicMeta()?.group)?.title ?? '');
 
-  protected readonly quizUnlocked = () => this.progress.allSectionsDone(this.topicId());
+  protected readonly quizUnlocked = computed(() => this.progress.allSectionsDone(this.topicId()));
 
-  protected readonly activeSectionId = () => {
+  protected readonly activeSectionId = computed(() => {
     const s = this.section();
     const meta = this.topicMeta();
     if (!meta) return '';
@@ -189,21 +189,21 @@ export class LessonPlayerComponent {
     const last = untracked(() => this.progress.getLastSection(this.topicId()));
     if (last && meta.sections.some((sec) => sec.id === last)) return last;
     return meta.sections[0]?.id ?? '';
-  };
+  });
 
-  protected readonly currentIndex = () => {
+  protected readonly currentIndex = computed(() => {
     const meta = this.topicMeta();
     if (!meta) return 0;
     return meta.sections.findIndex((s) => s.id === this.activeSectionId());
-  };
+  });
 
-  protected readonly currentSection = () => {
+  protected readonly currentSection = computed(() => {
     const meta = this.topicMeta();
     if (!meta) return null;
     return meta.sections.find((s) => s.id === this.activeSectionId()) ?? null;
-  };
+  });
 
-  protected readonly navItems = (): SectionNavItem[] => {
+  protected readonly navItems = computed((): SectionNavItem[] => {
     const meta = this.topicMeta();
     if (!meta) return [];
     return meta.sections.map((s) => ({
@@ -211,7 +211,9 @@ export class LessonPlayerComponent {
       title: s.title,
       done: this.progress.isSectionDone(this.topicId(), s.id),
     }));
-  };
+  });
+
+  protected readonly isBookmarked = computed(() => this.bookmarks.isBookmarked(this.topicId(), this.activeSectionId()));
 
   constructor() {
     // Runs again when the :section param changes, because Angular reuses this component across sections.
@@ -225,10 +227,16 @@ export class LessonPlayerComponent {
         afterNextRender(() => (changed ? this.onSectionChanged() : this.revealCurrentTab()), { injector: this.injector });
       });
     });
-  }
 
-  isBookmarked(): boolean {
-    return this.bookmarks.isBookmarked(this.topicId(), this.activeSectionId());
+    // Correct the URL when the :section param names a section that does not exist.
+    effect(() => {
+      const s = this.section();
+      const meta = this.topicMeta();
+      const active = this.activeSectionId();
+      if (meta && s && s !== active) {
+        untracked(() => void this.router.navigate(['/learn', this.topicId(), active], { replaceUrl: true }));
+      }
+    });
   }
 
   toggleBookmark(): void {
@@ -245,18 +253,18 @@ export class LessonPlayerComponent {
 
   navigateTo(sectionId: string): void {
     this.keepFocus = true;
-    this.router.navigate(['/learn', this.topicId(), sectionId]);
+    void this.router.navigate(['/learn', this.topicId(), sectionId]);
   }
 
   completeAndNavigate(nextSectionId: string): void {
     this.facade.completeSection(this.topicId(), this.activeSectionId());
     this.keepFocus = true;
-    this.router.navigate(['/learn', this.topicId(), nextSectionId]);
+    void this.router.navigate(['/learn', this.topicId(), nextSectionId]);
   }
 
   goToQuiz(): void {
     this.facade.completeSection(this.topicId(), this.activeSectionId());
-    this.router.navigate(['/learn', this.topicId(), 'quiz']);
+    void this.router.navigate(['/learn', this.topicId(), 'quiz']);
   }
 
   /**
@@ -267,7 +275,7 @@ export class LessonPlayerComponent {
    * reduced-motion rule, so check it here.
    */
   private onSectionChanged(): void {
-    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+    const reduceMotion = this.document.defaultView?.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
     this.sectionTop()?.nativeElement.scrollIntoView({ block: 'start', behavior: reduceMotion ? 'auto' : 'smooth' });
     this.revealCurrentTab();
 
@@ -283,7 +291,7 @@ export class LessonPlayerComponent {
 
   /** On a phone the tab row scrolls sideways; keep the current tab in view. */
   private revealCurrentTab(): void {
-    const tab = this.sectionTop()?.nativeElement.querySelector<HTMLElement>(`[data-section-tab="${this.activeSectionId()}"]`);
+    const tab = this.sectionTop()?.nativeElement.querySelector<HTMLElement>(`[data-section-tab="${CSS.escape(this.activeSectionId())}"]`);
     const row = tab?.closest('nav');
     if (!tab || !row) return;
     const tabBox = tab.getBoundingClientRect();

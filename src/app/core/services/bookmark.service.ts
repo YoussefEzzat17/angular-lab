@@ -6,7 +6,12 @@ const BOOKMARK_KEY = 'angular-lab:bookmarks';
 
 @Injectable({ providedIn: 'root' })
 export class BookmarkService {
-  private readonly items = signal<Bookmark[]>(readStored<Bookmark[]>(BOOKMARK_KEY, []));
+  private readonly items = signal<Bookmark[]>(
+    (() => {
+      const stored = readStored<unknown>(BOOKMARK_KEY, []);
+      return Array.isArray(stored) ? (stored as Bookmark[]) : [];
+    })(),
+  );
 
   readonly all = computed(() => this.items());
   readonly count = computed(() => this.items().length);
@@ -16,21 +21,17 @@ export class BookmarkService {
   }
 
   toggle(topicId: TopicId, sectionId: string): void {
-    this.items.update((list) => {
-      const idx = list.findIndex((b) => b.topicId === topicId && b.sectionId === sectionId);
-      const next = idx >= 0
-        ? list.filter((_, i) => i !== idx)
-        : [...list, { topicId, sectionId, at: new Date().toISOString() }];
-      writeStored(BOOKMARK_KEY, next);
-      return next;
-    });
+    const idx = this.items().findIndex((b) => b.topicId === topicId && b.sectionId === sectionId);
+    const next = idx >= 0
+      ? this.items().filter((_, i) => i !== idx)
+      : [...this.items(), { topicId, sectionId, at: new Date().toISOString() }];
+    this.items.set(next);
+    writeStored(BOOKMARK_KEY, next);
   }
 
   remove(topicId: TopicId, sectionId: string): void {
-    this.items.update((list) => {
-      const next = list.filter((b) => !(b.topicId === topicId && b.sectionId === sectionId));
-      writeStored(BOOKMARK_KEY, next);
-      return next;
-    });
+    const next = this.items().filter((b) => !(b.topicId === topicId && b.sectionId === sectionId));
+    this.items.set(next);
+    writeStored(BOOKMARK_KEY, next);
   }
 }

@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormArray, FormControl, FormGroup, FormsModule, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { NumbersOnlyDirective } from '../../directives/number-only.directive';
+import { NumbersOnlyDirective } from '../../directives/numbers-only.directive';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
 import { OrderStepsComponent } from '../../shared/order-steps.component';
 import { PageHeaderComponent } from '../../shared/page-header.component';

@@ -88,12 +88,16 @@ export class ProgressService {
   }
 
   completeSection(topicId: TopicId, sectionId: string): void {
+    let wasNew = false;
     this.patch(topicId, (t) => {
       if (t.sectionsDone.includes(sectionId)) return t;
+      wasNew = true;
       const sectionsDone = [...t.sectionsDone, sectionId];
       return { ...t, sectionsDone, lastVisitedAt: new Date().toISOString() };
     });
-    this.addActivity({ kind: 'section-done', topicId, sectionId, at: new Date().toISOString() });
+    if (wasNew) {
+      this.addActivity({ kind: 'section-done', topicId, sectionId, at: new Date().toISOString() });
+    }
   }
 
   /**
@@ -110,17 +114,23 @@ export class ProgressService {
   }
 
   recordQuizAttempt(attempt: QuizAttempt): void {
-    this.patch(attempt.topicId, (t) => {
+    const activityEntry: ActivityEntry = {
+      kind: attempt.passed ? 'quiz-passed' : 'quiz-failed',
+      topicId: attempt.topicId, score: attempt.score, at: attempt.submittedAt,
+    };
+    let next: ProgressStateV2 | undefined;
+    this.state.update((s) => {
+      const t = s.topics[attempt.topicId] ?? { sectionsDone: [], attempts: [] };
       const attempts = [...t.attempts, attempt].slice(-5);
       const bestScore = Math.max(t.bestScore ?? 0, attempt.score);
       const completedAt = attempt.passed ? (t.completedAt ?? new Date().toISOString()) : t.completedAt;
       const completedVia = attempt.passed ? (t.completedVia ?? 'quiz') : t.completedVia;
-      return { ...t, attempts, bestScore, completedAt, completedVia };
+      const updatedTopic: TopicProgress = { ...t, attempts, bestScore, completedAt, completedVia };
+      const activity = [...s.activity, activityEntry].slice(-ACTIVITY_LIMIT);
+      next = { ...s, topics: { ...s.topics, [attempt.topicId]: updatedTopic }, activity };
+      return next;
     });
-    this.addActivity({
-      kind: attempt.passed ? 'quiz-passed' : 'quiz-failed',
-      topicId: attempt.topicId, score: attempt.score, at: attempt.submittedAt,
-    });
+    if (next) writeStored(PROGRESS_KEY, next);
   }
 
   reset(): void {
@@ -130,26 +140,35 @@ export class ProgressService {
   }
 
   private patch(topicId: TopicId, fn: (t: TopicProgress) => TopicProgress): void {
+    let next: ProgressStateV2 | undefined;
     this.state.update((s) => {
       const existing: TopicProgress = s.topics[topicId] ?? { sectionsDone: [], attempts: [] };
-      const next = { ...s, topics: { ...s.topics, [topicId]: fn(existing) } };
-      writeStored(PROGRESS_KEY, next);
+      next = { ...s, topics: { ...s.topics, [topicId]: fn(existing) } };
       return next;
     });
+    if (next) writeStored(PROGRESS_KEY, next);
   }
 
   private addActivity(entry: Omit<ActivityEntry, 'at'> & { at: string }): void {
+    let next: ProgressStateV2 | undefined;
     this.state.update((s) => {
       const activity = [...s.activity, entry as ActivityEntry].slice(-ACTIVITY_LIMIT);
-      const next = { ...s, activity };
-      writeStored(PROGRESS_KEY, next);
+      next = { ...s, activity };
       return next;
     });
+    if (next) writeStored(PROGRESS_KEY, next);
   }
 
   private load(): ProgressStateV2 {
     const stored = readStored<unknown>(PROGRESS_KEY, null);
-    if (stored && typeof stored === 'object' && (stored as { version?: unknown }).version === 2) {
+    if (
+      stored &&
+      typeof stored === 'object' &&
+      (stored as { version?: unknown }).version === 2 &&
+      typeof (stored as { topics?: unknown }).topics === 'object' &&
+      (stored as { topics: unknown }).topics !== null &&
+      Array.isArray((stored as { activity?: unknown }).activity)
+    ) {
       return stored as ProgressStateV2;
     }
     // Attempt migration from old keys

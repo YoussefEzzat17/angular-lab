@@ -19,18 +19,18 @@ export function dayKey(date: Date): string {
 export function computeStreak(activeDays: string[], today: string): number {
   if (activeDays.length === 0) return 0;
   const sorted = [...new Set(activeDays)].sort().reverse();
-  // Streak counts if today or yesterday is the most recent active day
   const anchor = sorted[0];
-  if (anchor !== today) {
-    // Check if yesterday
-    const yesterday = dayKey(new Date(Date.now() - 86400000));
-    if (anchor !== yesterday) return 0;
-  }
+  // Derive yesterday from the today string using calendar arithmetic (DST-safe)
+  const [y, m, d] = today.split('-').map(Number);
+  const yesterday = dayKey(new Date(y, m - 1, d - 1));
+  if (anchor !== today && anchor !== yesterday) return 0;
   let streak = 1;
   for (let i = 1; i < sorted.length; i++) {
-    const prev = new Date(sorted[i - 1]);
-    const curr = new Date(sorted[i]);
-    const diffDays = Math.round((prev.getTime() - curr.getTime()) / 86400000);
+    const [py, pm, pd] = sorted[i - 1].split('-').map(Number);
+    const [cy, cm, cd] = sorted[i].split('-').map(Number);
+    const prevDate = new Date(py, pm - 1, pd);
+    const currDate = new Date(cy, cm - 1, cd);
+    const diffDays = Math.round((prevDate.getTime() - currDate.getTime()) / 86400000);
     if (diffDays === 1) { streak++; } else { break; }
   }
   return streak;

@@ -180,13 +180,15 @@ export class CodeBlockDirective implements AfterViewInit {
     this.pre.innerHTML = highlight(code, lang);
 
     this.ensurePanel();
-    this.panel!.hidden = false;
-    this.label!.textContent = this.languageLabel;
+    if (this.panel) this.panel.hidden = false;
+    if (this.label) this.label.textContent = this.languageLabel;
     this.setCopyState('idle');
 
     const lines = code.split('\n').length;
-    this.gutter!.hidden = lines < 3;
-    this.gutter!.textContent = Array.from({ length: lines }, (_, i) => i + 1).join('\n');
+    if (this.gutter) {
+      this.gutter.hidden = lines < 3;
+      this.gutter.textContent = Array.from({ length: lines }, (_, i) => i + 1).join('\n');
+    }
     this.updateScrollable();
   }
 
@@ -294,21 +296,23 @@ export class CodeBlockDirective implements AfterViewInit {
   }
 
   private setCopyState(state: 'idle' | 'copied' | 'failed'): void {
-    const button = this.copyButton!;
+    const button = this.copyButton;
+    const status = this.status;
+    if (!button || !status) return;
     const shortcut = /Mac|iPhone|iPad/.test(navigator.platform) ? '⌘C' : 'Ctrl+C';
     button.dataset['state'] = state;
     if (state === 'copied') {
       button.innerHTML = `${CHECK_ICON}<span>Copied</span>`;
       button.setAttribute('aria-label', 'Copied');
-      this.status!.textContent = 'Code copied to clipboard';
+      status.textContent = 'Code copied to clipboard';
     } else if (state === 'failed') {
       button.innerHTML = `${COPY_ICON}<span>Press ${shortcut}</span>`;
       button.setAttribute('aria-label', `Copy failed. The code is selected: press ${shortcut}`);
-      this.status!.textContent = `Could not copy automatically. The code is selected: press ${shortcut} to copy it.`;
+      status.textContent = `Could not copy automatically. The code is selected: press ${shortcut} to copy it.`;
     } else {
       button.innerHTML = `${COPY_ICON}<span>Copy</span>`;
       button.setAttribute('aria-label', `Copy ${this.languageLabel} code`);
-      this.status!.textContent = '';
+      status.textContent = '';
     }
   }
 }

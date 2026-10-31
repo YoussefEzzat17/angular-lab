@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, effect, HostListener, inject, OnDestroy, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, HostListener, inject, OnDestroy, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { filter, Subscription } from 'rxjs';
+import { filter } from 'rxjs';
 
 import { GROUPED_TOPICS, TOPICS } from '../data/topics';
 import { CartService } from '../services/cart.service';
@@ -255,11 +256,14 @@ export class NavbarComponent implements OnDestroy {
   private readonly demoPaths = new Set(['/products', '/favorites']);
 
   private readonly router = inject(Router);
-  private readonly navSub: Subscription;
 
   constructor() {
-    this.navSub = this.router.events
-      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+    const destroyRef = inject(DestroyRef);
+    this.router.events
+      .pipe(
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+        takeUntilDestroyed(destroyRef),
+      )
       .subscribe(() => this.closeAll());
 
     effect(() => {
@@ -321,7 +325,6 @@ export class NavbarComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.navSub.unsubscribe();
     document.body.style.overflow = '';
   }
 }

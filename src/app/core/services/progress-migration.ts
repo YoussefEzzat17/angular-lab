@@ -7,7 +7,9 @@ const OLD_COMPLETED_KEY = 'angular-lab:completed-topics';
 function readOldPaths(key: string): string[] {
   try {
     const raw = localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : [];
+    if (!raw) return [];
+    const parsed: unknown = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.filter((v): v is string => typeof v === 'string') : [];
   } catch { return []; }
 }
 
@@ -31,6 +33,10 @@ export function migrateProgress(): ProgressStateV2 {
     };
     topics[topic.id] = progress;
   }
+
+  // Remove legacy keys so migration doesn't re-run on next load
+  try { localStorage.removeItem(OLD_VISITED_KEY); } catch { /* ignore */ }
+  try { localStorage.removeItem(OLD_COMPLETED_KEY); } catch { /* ignore */ }
 
   return { version: 2, topics, activity: [] };
 }

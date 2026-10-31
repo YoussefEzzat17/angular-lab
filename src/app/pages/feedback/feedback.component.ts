@@ -193,8 +193,7 @@ export class FeedbackComponent implements OnDestroy {
       this.toast.success('Feedback sent', 'Thank you! It landed straight in my inbox.');
       this.feedbackForm.reset({ topic: 'General', feedbackType: 'Suggestion' });
       this.startCooldown();
-    } catch (err) {
-      console.error('Failed to send feedback:', err);
+    } catch {
       this.toast.error("Couldn't send your feedback", 'Please check your connection and try again in a moment.');
     } finally {
       this.isSubmitting.set(false);

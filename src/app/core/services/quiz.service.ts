@@ -47,15 +47,12 @@ export class QuizService {
 
   /** Draw QUIZ_RULES.draw questions randomly (Fisher-Yates). Shuffles choice order too (except true-false). */
   draw(bank: QuizBank, random = Math.random): QuizQuestion[] {
-    const pool = [...bank.questions];
-    for (let i = pool.length - 1; i > 0; i--) {
-      const j = Math.floor(random() * (i + 1));
-      [pool[i], pool[j]] = [pool[j], pool[i]];
-    }
-    return pool.slice(0, QUIZ_RULES.draw).map((q) => ({
-      ...q,
-      choices: q.type === 'true-false' ? q.choices : this.shuffleChoices(q.choices, random),
-    }));
+    return this.shuffle(bank.questions, random)
+      .slice(0, QUIZ_RULES.draw)
+      .map((q) => ({
+        ...q,
+        choices: q.type === 'true-false' ? q.choices : this.shuffle(q.choices, random),
+      }));
   }
 
   /** Grade a set of drawn questions against user answers. */
@@ -72,8 +69,11 @@ export class QuizService {
     const score = correctIds.length;
     const total = drawn.length;
     const passed = score / total >= QUIZ_RULES.passRatio;
+    const id = typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+      ? crypto.randomUUID()
+      : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
     return {
-      id: crypto.randomUUID(), topicId, bankVersion,
+      id, topicId, bankVersion,
       submittedAt: new Date().toISOString(),
       questionIds: drawn.map((q) => q.id), choiceOrder, answers,
       correctIds, score, total, passed,
@@ -86,7 +86,7 @@ export class QuizService {
     return [...new Set(wrong.map((q) => q.sectionId))];
   }
 
-  private shuffleChoices<T>(arr: T[], random: () => number): T[] {
+  private shuffle<T>(arr: T[], random: () => number): T[] {
     const a = [...arr];
     for (let i = a.length - 1; i > 0; i--) {
       const j = Math.floor(random() * (i + 1));

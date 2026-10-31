@@ -1,12 +1,13 @@
+import { Type } from '@angular/core';
 import { Routes } from '@angular/router';
 import { TOPICS } from '../core/data/topics';
 import type { TopicId } from '../core/models/learning.models';
-import { quizUnlockedGuard } from './learn.guards';
+import { completedGuard, quizUnlockedGuard } from './learn.guards';
 
 // Map of topicId → lazy component loader.
 // Pilot topics (binding, guards) are multi-section LessonPlayers. The other topics render their existing page
 // under /learn/:topic/:section until Phase 3 splits them into sections.
-export const TOPIC_LOADERS: Record<TopicId, () => Promise<unknown>> = {
+export const TOPIC_LOADERS: Record<TopicId, () => Promise<Type<unknown>>> = {
   'binding':          () => import('../pages/binding/binding.component').then((m) => m.BindingComponent),
   'pipes':            () => import('../pages/pipes/pipes.component').then((m) => m.PipesComponent),
   'directives':       () => import('../pages/directives/directives.component').then((m) => m.DirectivesComponent),
@@ -60,11 +61,11 @@ export const LEARN_ROUTES: Routes = [
       },
       // Static child routes must stay BEFORE ':section', otherwise 'quiz' and 'complete' match as section ids.
       { path: 'quiz', canActivate: [quizUnlockedGuard], loadComponent: () => import('./quiz/quiz.component').then((m) => m.QuizComponent), title: 'Quiz' },
-      { path: 'complete', loadComponent: () => import('./quiz/topic-complete.component').then((m) => m.TopicCompleteComponent), title: 'Complete' },
+      { path: 'complete', canActivate: [completedGuard], loadComponent: () => import('./quiz/topic-complete.component').then((m) => m.TopicCompleteComponent), title: 'Complete' },
       // /learn/:topic/:section → the topic page (pilots receive 'section' via withComponentInputBinding)
       {
         path: ':section',
-        loadComponent: TOPIC_LOADERS[t.id as TopicId] as () => Promise<any>,
+        loadComponent: TOPIC_LOADERS[t.id as TopicId],
         title: t.title,
       },
     ],

@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { Movie } from '../../core/models/movie.model';
 import { MovieService } from '../../core/services/movie.service';
@@ -316,14 +317,17 @@ export class MoviesComponent {
     this.loadMovies();
   }
 
+  private readonly destroyRef = inject(DestroyRef);
+
   loadMovies(): void {
     this.isLoading.set(true);
     this.error.set('');
 
     // HttpClient returns an Observable. subscribe() starts the request and handles its events.
-    this.movieService.getMovies().subscribe({
+    this.movieService.getMovies().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (movies) => this.movies.set(movies),
       error: () => {
+        this.isLoading.set(false);
         this.error.set('We could not reach the public movie API. Check your connection and try again.');
       },
       complete: () => this.isLoading.set(false),

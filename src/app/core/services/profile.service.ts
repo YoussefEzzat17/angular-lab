@@ -5,17 +5,20 @@ import type { ProfileData } from '../models/learning.models';
 
 const PROFILE_KEY = 'angular-lab:profile';
 
-const DEFAULT_PROFILE: ProfileData = {
-  version: 1, name: '', createdAt: new Date().toISOString(),
-  onboardingDone: false, tourDone: false, activeDays: [],
-};
+function makeDefaultProfile(): ProfileData {
+  return {
+    version: 1, name: '', createdAt: new Date().toISOString(),
+    onboardingDone: false, tourDone: false, activeDays: [],
+  };
+}
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
   private readonly clock = inject(CLOCK);
-  private readonly profile = signal<ProfileData>(
-    readStored<ProfileData>(PROFILE_KEY, DEFAULT_PROFILE)
-  );
+  private readonly profile = signal<ProfileData>({
+    ...makeDefaultProfile(),
+    ...readStored<Partial<ProfileData>>(PROFILE_KEY, {}),
+  });
 
   readonly name = computed(() => this.profile().name);
   readonly initials = computed(() => {
@@ -39,6 +42,8 @@ export class ProfileService {
   }
 
   private update(fn: (p: ProfileData) => ProfileData): void {
-    this.profile.update((p) => { const next = fn(p); writeStored(PROFILE_KEY, next); return next; });
+    const next = fn(this.profile());
+    this.profile.set(next);
+    writeStored(PROFILE_KEY, next);
   }
 }

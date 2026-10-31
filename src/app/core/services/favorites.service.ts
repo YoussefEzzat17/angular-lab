@@ -20,14 +20,13 @@ export class FavoritesService {
   }
 
   toggle(id: number): void {
-    this.ids.update((ids) => {
-      if (ids.includes(id)) {
-        this.addedDates.delete(id);
-        return ids.filter((item) => item !== id);
-      }
+    if (this.ids().includes(id)) {
+      this.addedDates.delete(id);
+      this.ids.update((ids) => ids.filter((item) => item !== id));
+    } else {
       this.addedDates.set(id, new Date().toISOString());
-      return [...ids, id];
-    });
+      this.ids.update((ids) => [...ids, id]);
+    }
   }
 
   has(id: number): boolean {

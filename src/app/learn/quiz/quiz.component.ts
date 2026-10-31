@@ -8,7 +8,7 @@ import { QuizQuestionComponent } from './quiz-question.component';
 import { QuizResultComponent } from './quiz-result.component';
 import type { TopicId, QuizQuestion, QuizAttempt } from '../../core/models/learning.models';
 
-type QuizPhase = 'loading' | 'answering' | 'result';
+type QuizPhase = 'loading' | 'error' | 'answering' | 'result';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,6 +19,12 @@ type QuizPhase = 'loading' | 'answering' | 'result';
       @switch (phase()) {
         @case ('loading') {
           <div class="flex items-center justify-center py-20 text-stone-400">Loading quiz…</div>
+        }
+        @case ('error') {
+          <div class="flex flex-col items-center justify-center gap-4 py-20 text-stone-400">
+            <p>Could not load the quiz. Check your connection and try again.</p>
+            <button type="button" (click)="startQuiz()" class="btn-primary">Retry</button>
+          </div>
         }
         @case ('answering') {
           <div>
@@ -113,11 +119,15 @@ export class QuizComponent implements OnInit {
     this.currentQuestionIndex.set(0);
     this.answers.set({});
     this.attempt.set(null);
-    const bank = await this.quizService.load(this.topicId);
-    this.bankVersion = bank.version;
-    const drawn = this.quizService.draw(bank);
-    this.drawnQuestions.set(drawn);
-    this.phase.set('answering');
+    try {
+      const bank = await this.quizService.load(this.topicId);
+      this.bankVersion = bank.version;
+      const drawn = this.quizService.draw(bank);
+      this.drawnQuestions.set(drawn);
+      this.phase.set('answering');
+    } catch {
+      this.phase.set('error');
+    }
   }
 
   setAnswer(questionId: string, choices: string[]): void {
@@ -135,6 +145,6 @@ export class QuizComponent implements OnInit {
   }
 
   goToComplete(): void {
-    this.router.navigate(['/learn', this.topicId, 'complete']);
+    void this.router.navigate(['/learn', this.topicId, 'complete']);
   }
 }

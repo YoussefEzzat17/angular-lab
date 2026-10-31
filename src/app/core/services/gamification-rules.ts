@@ -104,7 +104,7 @@ export function buildBadgeContext(topics: TopicsState, streak: number): BadgeCon
   return {
     sectionsDone: entries.reduce((n, [, p]) => n + p.sectionsDone.length, 0),
     quizzesPassed: entries.filter(([, p]) => p.completedVia === 'quiz').length,
-    perfectQuizzes: entries.filter(([, p]) => (p.bestScore ?? 0) >= QUIZ_RULES.draw).length,
+    perfectQuizzes: entries.filter(([, p]) => p.completedVia === 'quiz' && (p.bestScore ?? 0) >= QUIZ_RULES.draw).length,
     completedTopics: entries.filter(([, p]) => !!p.completedAt).length,
     completedIds: new Set(entries.filter(([, p]) => !!p.completedAt).map(([id]) => id)),
     streak,

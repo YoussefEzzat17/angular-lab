@@ -49,6 +49,8 @@ export class ToastService {
     this.push('info', title, description, duration);
   }
 
+  private readonly leavingTimers = new Map<number, ReturnType<typeof setTimeout>>();
+
   dismiss(id: number): void {
     const countdown = this.countdowns.get(id);
     if (countdown) {
@@ -58,7 +60,11 @@ export class ToastService {
     if (!this.toasts().some((t) => t.id === id && !t.leaving)) return;
 
     this.patch(id, { leaving: true });
-    setTimeout(() => this.toasts.update((list) => list.filter((t) => t.id !== id)), TOAST_LEAVE_MS);
+    const timer = setTimeout(() => {
+      this.leavingTimers.delete(id);
+      this.toasts.update((list) => list.filter((t) => t.id !== id));
+    }, TOAST_LEAVE_MS);
+    this.leavingTimers.set(id, timer);
   }
 
   pause(id: number): void {

@@ -19,3 +19,12 @@ export const quizUnlockedGuard: CanActivateFn = (route: ActivatedRouteSnapshot) 
   const targetSection = firstIncomplete ?? topic.sections[0]?.id;
   return router.createUrlTree(['/learn', topicId, targetSection]);
 };
+
+export const completedGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
+  const topicId = route.data['topicId'] as TopicId;
+  const progress = inject(ProgressService);
+  const router = inject(Router);
+
+  if (progress.status(topicId) === 'completed') return true;
+  return router.createUrlTree(['/learn', topicId]);
+};

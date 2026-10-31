@@ -63,24 +63,35 @@ export class GamificationService {
     return topicXp(this.progress.topics()[topicId]);
   }
 
+  private celebrated: Celebrated | null = null;
+
   private celebrate(earned: BadgeState[], levelNumber: number): void {
     const stored = readStored<Celebrated | null>(KEY, null);
+    const record = stored ?? this.celebrated;
 
     // First run: record where the learner already is without throwing a party for old progress.
-    if (!stored) {
-      writeStored(KEY, { version: 1, badges: earned.map((b) => b.id), level: levelNumber } satisfies Celebrated);
+    if (!record) {
+      const initial: Celebrated = { version: 1, badges: earned.map((b) => b.id), level: levelNumber };
+      this.celebrated = initial;
+      writeStored(KEY, initial);
       return;
     }
 
+    const safeBadges = Array.isArray(record.badges) ? record.badges : [];
     const earnedIds = earned.map((b) => b.id);
-    const fresh = earned.filter((b) => !stored.badges.includes(b.id));
-    const leveledUp = levelNumber > stored.level;
+    const fresh = earned.filter((b) => !safeBadges.includes(b.id));
+    const leveledUp = levelNumber > record.level;
 
     // Keep only what is still true, so progress that was reset can be celebrated again later.
-    const next: Celebrated = { version: 1, badges: [...stored.badges.filter((id) => earnedIds.includes(id)), ...fresh.map((b) => b.id)], level: Math.min(stored.level, levelNumber) };
+    const next: Celebrated = {
+      version: 1,
+      badges: [...safeBadges.filter((id) => earnedIds.includes(id)), ...fresh.map((b) => b.id)],
+      level: Math.min(record.level, levelNumber),
+    };
     if (leveledUp) {
       next.level = levelNumber;
     }
+    this.celebrated = next;
     writeStored(KEY, next);
 
     for (const badge of fresh) {
