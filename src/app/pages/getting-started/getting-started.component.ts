@@ -336,7 +336,11 @@ export class App {
     {
       id: 'html',
       path: 'src/app/app.html',
-      role: 'The template of App. This is the HTML you edit to change what the user sees.',
+      role: 'The template of App. This is the HTML you edit to change what the user sees. It can read the class: here, title() comes from app.ts.',
+      code: `<h1>Hello, {{ title() }}</h1>
+<p>Your app is running.</p>
+
+<router-outlet />`,
     },
     {
       id: 'config',
@@ -358,12 +362,44 @@ export class App {
     {
       id: 'angularjson',
       path: 'angular.json',
-      role: 'The CLI settings for your project: build options, test options and the output folder.',
+      role: 'The CLI settings for your project: build options, test options and the output folder. A real file is longer; this shows the parts you will meet most.',
+      code: `{
+  "projects": {
+    "my-app": {
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "outputPath": "dist/my-app",
+            "browser": "src/main.ts",
+            "styles": ["src/styles.css"]
+          }
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server"
+        }
+      }
+    }
+  }
+}`,
     },
     {
       id: 'packagejson',
       path: 'package.json',
-      role: 'The list of packages the project needs, and shortcuts such as npm start, which runs ng serve.',
+      role: 'The list of packages the project needs, and shortcuts such as npm start, which runs ng serve. Trimmed here to the important lines.',
+      code: `{
+  "name": "my-app",
+  "scripts": {
+    "start": "ng serve",
+    "build": "ng build",
+    "test": "ng test"
+  },
+  "dependencies": {
+    "@angular/core": "^22.0.0",
+    "@angular/router": "^22.0.0",
+    "rxjs": "~7.8.0"
+  }
+}`,
     },
   ];
   protected readonly selectedFile = signal<ProjectFile>(this.files[0]);
