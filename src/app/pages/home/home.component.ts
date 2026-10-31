@@ -105,7 +105,11 @@ import { TopicIllustrationComponent } from '../../shared/topic-illustration.comp
                   <a [routerLink]="topic.path"
                      class="group flex flex-col gap-3 rounded-xl border border-stone-800 bg-stone-900 p-4 shadow-card transition hover:border-gold-400/40 hover:bg-stone-800 hover:shadow-card-lift motion-safe:hover:-translate-y-0.5">
                     <div class="theme-dark-scope grid h-[10.5rem] place-items-center overflow-hidden rounded-lg border border-stone-800 bg-gradient-to-br from-gold-950 via-stone-900 to-stone-950" aria-hidden="true">
-                      <app-topic-illustration [name]="illustrations[topic.id]" class="block w-full max-w-[13rem] py-1" />
+                      @defer (on viewport) {
+                        <app-topic-illustration [name]="illustrations[topic.id]" class="block w-full max-w-[13rem] py-1" />
+                      } @placeholder {
+                        <span class="block h-full w-full"></span>
+                      }
                     </div>
                     <div class="flex items-start gap-3">
                     <span class="text-2xl">{{ topic.icon }}</span>

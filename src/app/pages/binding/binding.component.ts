@@ -12,12 +12,14 @@ import { AttributePropertyDemoComponent } from './attribute-property-demo.compon
 import { BindingDecoderDemoComponent } from './binding-decoder-demo.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
 import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
-import { CodeBlockDirective } from '../../shared/code-block.directive';
+import { CodeOutputComponent } from '../../shared/code-output.component';
+import { CommonMistakeComponent } from '../../shared/common-mistake.component';
+import { RecapComponent } from '../../shared/recap.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [AttributePropertyDemoComponent, BindingDecoderDemoComponent, OrderStepsComponent, PredictOutputComponent, CodeBlockDirective,
+  imports: [CodeOutputComponent, CommonMistakeComponent, RecapComponent, AttributePropertyDemoComponent, BindingDecoderDemoComponent, OrderStepsComponent, PredictOutputComponent,
     FormsModule,
     FlowDiagramComponent,
     PageHeaderComponent,
@@ -58,6 +60,7 @@ import { CodeBlockDirective } from '../../shared/code-block.directive';
             <p class="mt-2 text-sm text-stone-400">Press each syntax and watch which way the arrow points.</p>
             <app-binding-decoder-demo />
           </app-lesson-card>
+          <app-recap class="mt-5" [items]="recap0" />
         </section>
       </ng-template>
 
@@ -84,9 +87,23 @@ import { CodeBlockDirective } from '../../shared/code-block.directive';
             </app-lesson-card>
           </div>
 
+      <app-lesson-card class="mt-5" label="WHAT GOES INSIDE" heading="Any expression, never a statement">
+        <p class="mt-2 text-sm text-stone-400">
+          Between the braces you can write anything that <em>produces a value</em>: a property, a calculation, a method call, a condition.
+          You cannot write statements such as <code class="text-gold-300">let x = 1</code> or an <code class="text-gold-300">if</code> block.
+        </p>
+        <app-code-output class="mt-4 block" [code]="expressionCode" caption="Each line is an expression. Angular works out its value and prints it.">
+          <p>{{ movie.title }}</p>
+          <p>{{ movie.title.toUpperCase() }}</p>
+          <p>{{ movie.rating * 10 }}%</p>
+          <p>{{ movie.year >= 1990 ? 'Modern' : 'Classic' }}</p>
+        </app-code-output>
+      </app-lesson-card>
+
       <app-lesson-card class="mt-5" variant="highlight" label="PREDICT THE OUTPUT" heading="Read the template, then guess what it shows">
         <app-predict-output [challenge]="interpolationChallenge" />
       </app-lesson-card>
+          <app-recap class="mt-5" [items]="recap1" />
         </section>
       </ng-template>
 
@@ -123,6 +140,20 @@ import { CodeBlockDirective } from '../../shared/code-block.directive';
             </app-lesson-card>
           </div>
 
+          <app-lesson-card class="mt-5" label="MORE THAN PROPERTIES" heading="Bind a class, a style or an attribute">
+            <p class="mt-2 text-sm text-stone-400">
+              The same square brackets can switch one CSS class on or off, set one style, or set an HTML attribute that has no property
+              (such as <code class="text-gold-300">aria-label</code>, which uses the <code class="text-gold-300">attr.</code> prefix).
+            </p>
+            <app-code-output class="mt-4 block" [code]="styleCode" caption="Move the slider: the bar width and the message follow it.">
+              <div class="h-3 overflow-hidden rounded-full bg-stone-800"><div class="h-full rounded-full bg-gold-400" [style.width.%]="progress"></div></div>
+              <p class="mt-3 text-sm" [class.text-gold-300]="progress >= 70" [class.text-stone-400]="progress < 70">
+                {{ progress >= 70 ? 'Almost done' : 'Keep going' }} ({{ progress }}%)
+              </p>
+              <input type="range" min="0" max="100" [value]="progress" (input)="setProgress($event)" aria-label="Progress" class="mt-3 w-full accent-[rgb(var(--gold-400))]" />
+            </app-code-output>
+          </app-lesson-card>
+
           <app-lesson-card class="mt-5" label="WHY PROPERTY, NOT ATTRIBUTE" heading="The attribute is the start, the property is the live value">
             <p class="mt-2 text-sm text-stone-400">
               In HTML, <code class="text-gold-300">value="Castle in the Sky"</code> is an <strong class="text-stone-200">attribute</strong>: the starting value written in the markup.
@@ -130,6 +161,7 @@ import { CodeBlockDirective } from '../../shared/code-block.directive';
             </p>
             <app-attribute-property-demo />
           </app-lesson-card>
+          <app-recap class="mt-5" [items]="recap2" />
         </section>
       </ng-template>
 
@@ -164,8 +196,14 @@ import { CodeBlockDirective } from '../../shared/code-block.directive';
               Inside an event binding, <code class="text-gold-300">$event</code> is what the browser sent: for a click, the mouse details; for typing, the input element.
               You can also bind to one specific key.
             </p>
-            <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ eventCode }}</pre>
+            <app-code-output class="mt-4 block" [code]="eventCode" caption="Type something, then press Enter. Two different events feed two different methods.">
+              <input aria-label="Type, then press Enter" (input)="onType($event)" (keyup.enter)="submit()" placeholder="Type here…"
+                     class="w-full rounded-xl border border-stone-600 bg-stone-800 px-3 py-2 text-stone-100 focus:border-gold-400 focus:outline-none" />
+              <p class="mt-3 text-sm text-stone-400">Typing: <strong class="text-stone-100">{{ typed || '—' }}</strong></p>
+              <p class="mt-1 text-sm text-stone-400">Submitted: <strong class="text-stone-100">{{ submitted || '—' }}</strong></p>
+            </app-code-output>
           </app-lesson-card>
+          <app-recap class="mt-5" [items]="recap3" />
         </section>
       </ng-template>
 
@@ -196,6 +234,18 @@ import { CodeBlockDirective } from '../../shared/code-block.directive';
             </app-lesson-card>
           </div>
 
+          <app-lesson-card class="mt-5" label="UNDER THE HOOD" heading="Two-way binding is two bindings in one">
+            <p class="mt-2 text-sm text-stone-400">
+              <code class="text-gold-300">[(ngModel)]</code> is a shortcut. Written out, it is a property binding that shows the value, plus an event binding that writes changes back.
+              Both fields below behave the same.
+            </p>
+            <app-code-output class="mt-4 block" [code]="twoWayCode" caption="The long form does exactly what the banana-in-a-box does.">
+              <input aria-label="Long form" [ngModel]="longForm" (ngModelChange)="longForm = $event"
+                     class="w-full rounded-xl border border-stone-600 bg-stone-800 px-3 py-2 text-stone-100 focus:border-gold-400 focus:outline-none" />
+              <p class="mt-3 text-sm text-stone-400">The class holds: <strong class="text-stone-100">{{ longForm || '—' }}</strong></p>
+            </app-code-output>
+          </app-lesson-card>
+
           <div class="mt-8 rounded-2xl border border-gold-400/20 bg-gold-950/30 p-6">
             <h2 class="font-bold text-gold-200">Final challenge</h2>
             <p class="mt-2 text-sm text-stone-300">
@@ -203,9 +253,8 @@ import { CodeBlockDirective } from '../../shared/code-block.directive';
               Use event binding and confirm all live UI values reset.
             </p>
           </div>
-
-
-</section>
+          <app-recap class="mt-5" [items]="recap4" />
+        </section>
       </ng-template>
 
           <!-- ── Section 5 · Practice ── -->
@@ -226,12 +275,20 @@ import { CodeBlockDirective } from '../../shared/code-block.directive';
             />
           </app-lesson-card>
 
-      <app-lesson-card class="mt-5" variant="danger" label="COMMON MISTAKES" heading="Four things that trip up every beginner">
+      <app-common-mistake class="mt-5" title="Using interpolation for a boolean" [wrong]="mistakeBoolWrong" [right]="mistakeBoolRight">
+        Interpolation always makes text. The text "false" is still a non-empty value, so the attribute is present and the button stays disabled.
+        Square brackets pass the real boolean.
+      </app-common-mistake>
+
+      <app-common-mistake class="mt-5" title="Running heavy work inside the braces" [wrong]="mistakeCostWrong" [right]="mistakeCostRight">
+        A method in a template runs on every change-detection pass, even when nothing it uses has changed. Compute the value once with
+        <code class="text-gold-300">computed()</code>, and the template just reads it.
+      </app-common-mistake>
+
+      <app-lesson-card class="mt-5" label="TWO MORE TO WATCH FOR" heading="Syntax slips that stop the page compiling">
         <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
-          <li><strong class="text-stone-100">Using interpolation for a boolean property.</strong> <code ngNonBindable class="text-gold-300">disabled="{{ isLoading }}"</code> sets the text "false", which still disables the button. Write <code class="text-gold-300">[disabled]="isLoading"</code>.</li>
-          <li><strong class="text-stone-100">Getting the banana-in-a-box backwards.</strong> It is <code class="text-gold-300">[(ngModel)]</code> — square brackets on the outside, round on the inside.</li>
+          <li><strong class="text-stone-100">Banana-in-a-box backwards.</strong> It is <code class="text-gold-300">[(ngModel)]</code>: square brackets outside, round inside.</li>
           <li><strong class="text-stone-100">Forgetting FormsModule.</strong> Without it in the component's <code class="text-gold-300">imports</code>, Angular says it can't bind to <code class="text-gold-300">ngModel</code>.</li>
-          <li><strong class="text-stone-100">Calling a heavy method inside interpolation.</strong> It runs on every change-detection pass. Compute it once with <code class="text-gold-300">computed()</code> or a pipe.</li>
         </ul>
       </app-lesson-card>
 
@@ -258,13 +315,60 @@ export class BindingComponent {
     explanation: "Template expressions follow JavaScript rules. '2' + 3 joins text, so it shows 23. 2 + 3 adds numbers, so it shows 5.",
   };
 
-  protected readonly eventCode = `<button (click)="save()">Save</button>
-<input (input)="onType($event)" />             <!-- $event is the input event -->
-<input (keyup.enter)="search()" />             <!-- only when Enter is pressed -->
+  protected readonly eventCode = `<input (input)="onType($event)" />
+<input (keyup.enter)="submit()" />
 
 onType(event: Event) {
-  this.text = (event.target as HTMLInputElement).value;
-}`;
+  this.typed = (event.target as HTMLInputElement).value;
+}
+submit() { this.submitted = this.typed; }`;
+
+  protected readonly recap0 = ['Binding keeps the class and the page in sync for you.', 'Data flows down (class to page) and events flow up (page to class).', 'Two-way binding is both at once.'];
+  protected readonly recap1 = ['{{ }} turns any expression into text.', 'Expressions produce a value; statements like let or if are not allowed.', 'Angular updates the text whenever the property changes.'];
+  protected readonly recap2 = ['[ ] sets a real DOM property, so booleans and objects pass through as they are.', '[class.x], [style.x] and [attr.x] cover classes, styles and attributes.', 'The attribute is the starting value, the property is the live one.'];
+  protected readonly recap3 = ['( ) listens for an event and runs a method.', '$event holds what the browser sent.', 'keyup.enter and similar filters react to one key only.'];
+  protected readonly recap4 = ['[(ngModel)] is [ngModel] plus (ngModelChange).', "It needs FormsModule in the component's imports.", 'Use it for form fields; use input() and output() between components.'];
+
+  protected readonly movie = { title: 'Castle in the Sky', year: 1986, rating: 8 };
+  protected readonly expressionCode = `<p>{{ movie.title }}</p>
+<p>{{ movie.title.toUpperCase() }}</p>
+<p>{{ movie.rating * 10 }}%</p>
+<p>{{ movie.year >= 1990 ? 'Modern' : 'Classic' }}</p>`;
+
+  protected progress = 40;
+  protected readonly styleCode = `<div [style.width.%]="progress"></div>
+<p [class.text-gold]="progress >= 70">...</p>
+<button [attr.aria-label]="label">Play</button>`;
+
+  protected typed = '';
+  protected submitted = '';
+  protected longForm = '';
+  protected readonly twoWayCode = `<!-- the shortcut -->
+<input [(ngModel)]="review" />
+
+<!-- the same thing, written out -->
+<input [ngModel]="review" (ngModelChange)="review = $event" />`;
+
+  protected readonly mistakeBoolWrong = '<button disabled="{{ isLoading }}">Save</button>';
+  protected readonly mistakeBoolRight = '<button [disabled]="isLoading">Save</button>';
+  protected readonly mistakeCostWrong = `<p>{{ expensiveTotal() }}</p>
+<!-- runs on every check -->`;
+  protected readonly mistakeCostRight = `total = computed(() => this.price() * this.qty());
+
+<p>{{ total() }}</p>`;
+
+  protected setProgress(event: Event): void {
+    this.progress = Number((event.target as HTMLInputElement).value);
+  }
+
+  protected onType(event: Event): void {
+    this.typed = (event.target as HTMLInputElement).value;
+  }
+
+  protected submit(): void {
+    this.submitted = this.typed;
+  }
+
 
   protected readonly showChallenge: PredictChallenge = {
     question: "A page must show the user's name inside a heading. Which binding fits?",
