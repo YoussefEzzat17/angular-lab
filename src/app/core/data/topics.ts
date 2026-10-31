@@ -333,6 +333,7 @@ export const TOPICS: Topic[] = [
     level: 'intermediate', prerequisites: ['communication'],
     icon: '💉', title: 'Dependency Injection', description: 'inject(), providers and scope — who creates a service, and who shares it.',
     objectives: [
+      { text: 'Write a service with @Service(), and load a heavy one only when needed with injectAsync()', sectionId: 'service' },
       { text: 'Inject a service into a component with inject()', sectionId: 'basics' },
       { text: 'Understand root vs component scope', sectionId: 'scope' },
       { text: 'Provide an alternative implementation for testing', sectionId: 'providers' },
@@ -340,8 +341,10 @@ export const TOPICS: Topic[] = [
     ],
     sections: [
       { id: 'basics', title: 'inject() Basics', kind: 'concept', minutes: 6 },
+      { id: 'service', title: 'Writing a service', kind: 'concept', minutes: 5 },
       { id: 'scope', title: 'Provider Scope', kind: 'concept', minutes: 6 },
       { id: 'providers', title: 'Custom Providers', kind: 'try-it', minutes: 8 },
+      { id: 'lazy', title: 'Load a service later', kind: 'try-it', minutes: 6 },
     ],
   },
   {

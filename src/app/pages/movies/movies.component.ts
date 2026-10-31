@@ -14,11 +14,12 @@ import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowle
 import { LessonCardComponent } from '../../shared/lesson-card.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
 import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
+import { RecapComponent } from '../../shared/recap.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [CodeBlockDirective, ColdObservableDemoComponent, HttpLabDemoComponent, OrderStepsComponent, PredictOutputComponent, FlowDiagramComponent, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [RecapComponent, CodeBlockDirective, ColdObservableDemoComponent, HttpLabDemoComponent, OrderStepsComponent, PredictOutputComponent, FlowDiagramComponent, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'movies'" [section]="section()">
       <ng-template appLessonSection="httpclient">
@@ -66,6 +67,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
           <code class="text-gold-300">inject()</code>. This is also where interceptors are added.
         </p>
       </app-lesson-card>
+        <app-recap class="mt-5" [items]="recapHttpclient" />
       </section>
       </ng-template>
 
@@ -109,6 +111,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
           </table>
         </div>
       </app-lesson-card>
+        <app-recap class="mt-5" [items]="recapRequestAnatomy" />
       </section>
       </ng-template>
 
@@ -131,6 +134,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
         </p>
         <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ typedCode }}</pre>
       </app-lesson-card>
+        <app-recap class="mt-5" [items]="recapServicePattern" />
       </section>
       </ng-template>
 
@@ -158,6 +162,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
           does the loading, the error state and the cancelling for you.
         </p>
       </app-lesson-card>
+        <app-recap class="mt-5" [items]="recapCold" />
       </section>
       </ng-template>
 
@@ -221,6 +226,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
           <li><strong class="text-stone-100">Hard-coding URLs in components.</strong> Keep them in the service so there is one place to change.</li>
         </ul>
       </app-lesson-card>
+        <app-recap class="mt-5" [items]="recapStates" />
       </section>
       </ng-template>
 
@@ -245,6 +251,7 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
         />
       </app-lesson-card>
 
+        <app-recap class="mt-5" [items]="recapTryIt" />
       <app-knowledge-check [items]="checkItems" />
       </section>
       </ng-template>
@@ -252,6 +259,42 @@ import { LessonSectionDirective } from '../../learn/player/lesson-section.direct
   `,
 })
 export class MoviesComponent {
+  protected readonly recapHttpclient = [
+    "HttpClient is Angular's tool for talking to a server.",
+    'Each call returns an Observable; nothing is sent until you subscribe.',
+    'Provide it once with provideHttpClient() in the app config.',
+  ];
+
+  protected readonly recapRequestAnatomy = [
+    'A request has a method, a URL, headers and sometimes a body.',
+    "The status code tells you how it went: 2xx worked, 4xx is the caller's fault, 5xx is the server's.",
+    'The lab shows real requests and their responses.',
+  ];
+
+  protected readonly recapServicePattern = [
+    'Put HTTP calls in a service, not in components.',
+    'Components ask the service for data and never know about URLs.',
+    'That makes the calls easy to test and to change.',
+  ];
+
+  protected readonly recapCold = [
+    'An HTTP Observable is cold: each subscribe sends a new request.',
+    'Share the result when several places need it.',
+    'Unsubscribing cancels a request that is still in flight.',
+  ];
+
+  protected readonly recapStates = [
+    'Every request has three states: loading, error and data.',
+    'Always show something for each of them.',
+    'Handle errors so the page never stays empty and silent.',
+  ];
+
+  protected readonly recapTryIt = [
+    'You now fetch real data through a service and handle each state.',
+    'Next stop: the Resource API, which wraps these states in signals.',
+    'Remember: the server must still validate everything.',
+  ];
+
   readonly section = input<string>();
   private readonly movieService = inject(MovieService);
 

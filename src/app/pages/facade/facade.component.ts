@@ -8,6 +8,7 @@ import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowle
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
 import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
 import { CartApi, CheckoutFacade, CheckoutStatus, DemoSettings, LogLine, PaymentApi, ReceiptApi, StockApi } from './checkout-demo';
+import { RecapComponent } from '../../shared/recap.component';
 
 type Mode = 'without' | 'with';
 
@@ -46,7 +47,7 @@ placeOrder() {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [TermComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [RecapComponent, TermComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'facade'" [section]="section()">
       <ng-template appLessonSection="problem">
@@ -72,6 +73,7 @@ placeOrder() {
           </ul>
         </app-lesson-card>
       </div>
+        <app-recap class="mt-5" [items]="recapProblem" />
       </section>
       </ng-template>
 
@@ -123,6 +125,7 @@ placeOrder() {
           </div>
         </app-lesson-card>
       </div>
+        <app-recap class="mt-5" [items]="recapServicesOverview" />
       </section>
       </ng-template>
 
@@ -142,6 +145,7 @@ placeOrder() {
           <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ facadeCode }}</pre>
         </app-lesson-card>
       </div>
+        <app-recap class="mt-5" [items]="recapBuilding" />
       </section>
       </ng-template>
 
@@ -165,6 +169,7 @@ placeOrder() {
           </ul>
         </app-lesson-card>
       </div>
+        <app-recap class="mt-5" [items]="recapWiring" />
       </section>
       </ng-template>
 
@@ -231,6 +236,7 @@ placeOrder() {
           </div>
         </app-lesson-card>
       </div>
+        <app-recap class="mt-5" [items]="recapTryIt" />
       </section>
       </ng-template>
 
@@ -306,6 +312,7 @@ placeOrder() {
           <pre class="mt-3 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ testCode }}</pre>
         </app-lesson-card>
       </div>
+        <app-recap class="mt-5" [items]="recapPatterns" />
       </section>
       </ng-template>
 
@@ -350,6 +357,42 @@ placeOrder() {
   `,
 })
 export class FacadeComponent {
+  protected readonly recapProblem = [
+    'A component that talks to many services knows too much.',
+    'Changes in one service ripple into every component.',
+    'A facade gives the component one simple front door.',
+  ];
+
+  protected readonly recapServicesOverview = [
+    'The underlying services each do one job.',
+    'The component should not need to know which job belongs to which service.',
+    'The facade hides that detail.',
+  ];
+
+  protected readonly recapBuilding = [
+    'A facade is a service that injects the others.',
+    'It exposes a small, task-shaped API: what the component needs, not how it is done.',
+    'Keep it thin; it coordinates, it does not hold business rules.',
+  ];
+
+  protected readonly recapWiring = [
+    'The component injects only the facade.',
+    'Tests can replace the whole facade with a small fake.',
+    'The template reads signals from the facade.',
+  ];
+
+  protected readonly recapTryIt = [
+    'One call on the facade can run several services in order.',
+    'The component stays small and easy to read.',
+    'Next stop: patterns and pitfalls.',
+  ];
+
+  protected readonly recapPatterns = [
+    'Use a facade when a feature touches several services.',
+    'Skip it for a single service; it would only be a wrapper.',
+    'Do not let it grow into a place for everything.',
+  ];
+
   readonly section = input<string>();
 
   readonly settings = inject(DemoSettings);

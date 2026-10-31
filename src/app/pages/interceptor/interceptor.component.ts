@@ -10,13 +10,14 @@ import { InterceptorChainDemoComponent } from './interceptor-chain-demo.componen
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
 import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
+import { RecapComponent } from '../../shared/recap.component';
 
 type Stage = 'idle' | 'built' | 'cloned' | 'sent' | 'response' | 'handled';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [InterceptorChainDemoComponent, PredictOutputComponent, OrderStepsComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [RecapComponent, InterceptorChainDemoComponent, PredictOutputComponent, OrderStepsComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'interceptor'" [section]="section()">
       <ng-template appLessonSection="basics">
@@ -84,6 +85,7 @@ type Stage = 'idle' | 'built' | 'cloned' | 'sent' | 'response' | 'handled';
           The interceptor is exactly that guard — it inspects every HTTP request before it's allowed to reach the backend.
         </p>
       </app-lesson-card>
+        <app-recap class="mt-5" [items]="recapBasics" />
       </section>
       </ng-template>
 
@@ -141,6 +143,7 @@ type Stage = 'idle' | 'built' | 'cloned' | 'sent' | 'response' | 'handled';
           </div>
         </div>
       </app-lesson-card>
+        <app-recap class="mt-5" [items]="recapAuthHeader" />
       </section>
       </ng-template>
 
@@ -166,6 +169,7 @@ type Stage = 'idle' | 'built' | 'cloned' | 'sent' | 'response' | 'handled';
           <code class="text-gold-300">/login</code>, or a shared error toast — decided in <strong class="text-stone-200">one place</strong>, instead of every component that calls the API.
         </p>
       </app-lesson-card>
+        <app-recap class="mt-5" [items]="recapErrorHandling" />
       </section>
       </ng-template>
 
@@ -218,6 +222,7 @@ type Stage = 'idle' | 'built' | 'cloned' | 'sent' | 'response' | 'handled';
         <p class="mt-2 text-sm text-stone-400">The app registers the auth interceptor first and the logging interceptor second. Put these seven things in the order they happen.</p>
         <app-order-steps [steps]="chainSteps" explanation="Interceptors form a chain. A request passes through them in the order they are registered, and the response comes back through them in reverse order." />
       </app-lesson-card>
+        <app-recap class="mt-5" [items]="recapChaining" />
       </section>
       </ng-template>
 
@@ -299,6 +304,7 @@ Authorization: Bearer {{ tokenPreview() }}</pre>
         }
       </app-lesson-card>
 
+        <app-recap class="mt-5" [items]="recapTryIt" />
       <app-knowledge-check [items]="checkItems" />
       </section>
       </ng-template>
@@ -306,6 +312,36 @@ Authorization: Bearer {{ tokenPreview() }}</pre>
   `,
 })
 export class InterceptorComponent implements OnDestroy {
+  protected readonly recapBasics = [
+    'An interceptor is one checkpoint every request and response passes through.',
+    'Use it for things you would otherwise repeat on every call.',
+    'Register interceptors with withInterceptors() in provideHttpClient().',
+  ];
+
+  protected readonly recapAuthHeader = [
+    'Requests are immutable, so use req.clone() to change one.',
+    'Add the token in one place instead of every call.',
+    'Only send the token to your own API.',
+  ];
+
+  protected readonly recapErrorHandling = [
+    'An interceptor can catch errors for every request at once.',
+    'Use catchError and rethrow, so callers still know it failed.',
+    'Handle 401 in one place, for example by redirecting to login.',
+  ];
+
+  protected readonly recapChaining = [
+    'Interceptors run in the order you list them, and responses come back in reverse.',
+    'Order matters: put logging first and the retry or error step later.',
+    'Each one must call next(req) to pass the request on.',
+  ];
+
+  protected readonly recapTryIt = [
+    'You reordered real interceptors and read the trace.',
+    'Small, single-purpose interceptors are easiest to reason about.',
+    'Next stop: the facade pattern.',
+  ];
+
   readonly section = input<string>();
 
   readonly nextChallenge: PredictChallenge = {

@@ -10,11 +10,12 @@ import { PageHeaderComponent } from '../../shared/page-header.component';
 import { PredictOutputComponent } from '../../shared/predict-output.component';
 import type { PredictChallenge } from '../../shared/predict-output.component';
 import { ResourceDemoComponent } from './resource-demo.component';
+import { RecapComponent } from '../../shared/recap.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [
+  imports: [RecapComponent, 
     CodeBlockDirective,
     KnowledgeCheckComponent,
     LessonCardComponent,
@@ -65,6 +66,7 @@ import { ResourceDemoComponent } from './resource-demo.component';
               Older tutorials may call them experimental, and may use the option name <code class="text-gold-300">request</code>. It is <code class="text-gold-300">params</code> now.
             </p>
           </app-lesson-card>
+        <app-recap class="mt-5" [items]="recapBasics" />
         </section>
       </ng-template>
 
@@ -104,6 +106,7 @@ import { ResourceDemoComponent } from './resource-demo.component';
               <li><strong class="text-stone-100">Wondering why nothing loads.</strong> If <code class="text-gold-300">params</code> returns <code class="text-gold-300">undefined</code>, the resource stays <code class="text-gold-300">idle</code> on purpose. Use that for "wait until an id is chosen".</li>
             </ul>
           </app-lesson-card>
+        <app-recap class="mt-5" [items]="recapStates" />
         </section>
       </ng-template>
 
@@ -144,6 +147,7 @@ import { ResourceDemoComponent } from './resource-demo.component';
             <p class="mt-2 text-sm text-stone-400">It takes <code class="text-gold-300">stream</code> instead of <code class="text-gold-300">loader</code>, and the stream is an Observable.</p>
             <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ rxCode }}</pre>
           </app-lesson-card>
+        <app-recap class="mt-5" [items]="recapHttpRx" />
         </section>
       </ng-template>
 
@@ -161,6 +165,7 @@ import { ResourceDemoComponent } from './resource-demo.component';
             <app-predict-output [challenge]="reloadChallenge" />
           </app-lesson-card>
 
+        <app-recap class="mt-5" [items]="recapTryIt" />
           <app-knowledge-check [items]="checkItems" />
         </section>
       </ng-template>
@@ -168,6 +173,30 @@ import { ResourceDemoComponent } from './resource-demo.component';
   `,
 })
 export class ResourceComponent {
+  protected readonly recapBasics = [
+    'resource() loads async data and exposes it as signals.',
+    'It reloads by itself when the signals read in params() change.',
+    'A new request cancels the old one.',
+  ];
+
+  protected readonly recapStates = [
+    'status() is always exactly one of idle, loading, reloading, resolved, error or local.',
+    'Read value(), error() and isLoading() instead of juggling flags.',
+    'Check hasValue() before using value().',
+  ];
+
+  protected readonly recapHttpRx = [
+    'httpResource() is resource() for HTTP, with HttpClient built in.',
+    'rxResource() is resource() for an Observable.',
+    'All three are stable in Angular 22.',
+  ];
+
+  protected readonly recapTryIt = [
+    'Pick the loader that fits: resource, rxResource or httpResource.',
+    'Let the signals drive the reloads.',
+    'Next stop: interceptors.',
+  ];
+
   readonly section = input<string>();
 
   protected readonly statuses = [

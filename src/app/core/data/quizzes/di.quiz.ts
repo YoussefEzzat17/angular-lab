@@ -171,5 +171,33 @@ export const DI_QUIZ: QuizBank = {
       explanation: 'providedIn root creates one instance for the whole app, so both components hold the same object and see each other changes.',
       sectionId: 'scope',
     },
+    {
+      id: 'di-14',
+      type: 'single',
+      prompt: 'What does injectAsync() do?',
+      choices: [
+        { id: 'a', text: 'Loads a service the first time you need it, from a separate file' },
+        { id: 'b', text: 'Deletes a service' },
+        { id: 'c', text: 'Creates a component' },
+        { id: 'd', text: 'Speeds up change detection' },
+      ],
+      correct: ['a'],
+      explanation: 'injectAsync() returns a function. Calling it downloads the service lazily and gives you the shared instance.',
+      sectionId: 'lazy',
+    },
+    {
+      id: 'di-15',
+      type: 'single',
+      prompt: 'What happens if a class has no decorator and you inject it?',
+      choices: [
+        { id: 'a', text: 'It works anyway' },
+        { id: 'b', text: 'Angular reports that there is no provider for it' },
+        { id: 'c', text: 'It becomes a component' },
+        { id: 'd', text: 'It is created twice' },
+      ],
+      correct: ['b'],
+      explanation: 'Without @Service() or @Injectable, Angular does not know how to provide the class.',
+      sectionId: 'service',
+    },
   ],
 };

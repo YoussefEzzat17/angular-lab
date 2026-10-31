@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, Injectable, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Injectable, injectAsync, input, signal } from '@angular/core';
 
 import { CodeBlockDirective } from '../../shared/code-block.directive';
 import { FlowDiagramComponent } from '../../shared/flow-diagram.component';
@@ -13,12 +13,18 @@ import { PageHeaderComponent } from '../../shared/page-header.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
 import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
+import { RecapComponent } from '../../shared/recap.component';
+import { CommonMistakeComponent } from '../../shared/common-mistake.component';
+import { CodeOutputComponent } from '../../shared/code-output.component';
 
 let nextInstanceId = 1;
 
 /** One instance for the whole app (providedIn: 'root'). */
 @Injectable({ providedIn: 'root' })
 export class SharedCounter {
+
+
+
   readonly instanceId = nextInstanceId++;
   readonly count = signal(0);
   increment(): void {
@@ -76,7 +82,7 @@ export class DiPrivateCounterComponent {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [DiTreeDemoComponent, ProviderRecipeDemoComponent, OrderStepsComponent, PredictOutputComponent, TermComponent, DiSharedCounterComponent, DiPrivateCounterComponent, FlowDiagramComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [CodeOutputComponent, CommonMistakeComponent, RecapComponent, DiTreeDemoComponent, ProviderRecipeDemoComponent, OrderStepsComponent, PredictOutputComponent, TermComponent, DiSharedCounterComponent, DiPrivateCounterComponent, FlowDiagramComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'di'" [section]="section()">
       <ng-template appLessonSection="basics">
@@ -114,6 +120,33 @@ export class DiPrivateCounterComponent {
           <pre class="mt-4 overflow-x-auto rounded-xl bg-stone-950 p-4 text-xs text-gold-200">{{ rootCode }}</pre>
         </app-lesson-card>
       </div>
+        <app-recap class="mt-5" [items]="recapBasics" />
+      </section>
+      </ng-template>
+
+      <ng-template appLessonSection="service">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+        <app-lesson-card class="mt-10" label="THE SERVICE" heading="A plain class that Angular can hand out">
+          <p class="mt-2 text-sm text-stone-400">
+            A service is an ordinary class that holds logic or data you want to share. Mark it with <code class="text-gold-300">&#64;Service()</code> and Angular makes it
+            available everywhere, creating one shared instance the first time someone asks for it.
+          </p>
+          <pre class="mt-4" [appCode]="serviceCode"></pre>
+        </app-lesson-card>
+
+        <app-lesson-card class="mt-5" label="OLD AND NEW" heading="&#64;Service() and &#64;Injectable">
+          <p class="mt-2 text-sm text-stone-400">
+            For app-wide services, <code class="text-gold-300">&#64;Service()</code> is the short form in Angular 22. Most existing code, and most tutorials, use
+            <code class="text-gold-300">&#64;Injectable(&#123; providedIn: 'root' &#125;)</code>. Both work, and you will see both. If you want a service you provide yourself, use
+            <code class="text-gold-300">&#64;Service(&#123; autoProvided: false &#125;)</code> and list it in a <code class="text-gold-300">providers</code> array.
+          </p>
+        </app-lesson-card>
+
+        <app-common-mistake class="mt-5" title="A service with no decorator" [wrong]="mistakeDecoratorWrong" [right]="mistakeDecoratorRight">
+          Without a decorator Angular does not know the class is a service, so <code class="text-gold-300">inject(CartService)</code> fails with a "no provider" error.
+        </app-common-mistake>
+
+        <app-recap class="mt-5" [items]="recapService" />
       </section>
       </ng-template>
 
@@ -154,6 +187,7 @@ export class DiPrivateCounterComponent {
         </ol>
         <app-di-tree-demo />
       </app-lesson-card>
+        <app-recap class="mt-5" [items]="recapScope" />
       </section>
       </ng-template>
 
@@ -206,14 +240,115 @@ export class DiPrivateCounterComponent {
         />
       </app-lesson-card>
 
+        <app-recap class="mt-5" [items]="recapProviders" />
       <app-knowledge-check [items]="checkItems" />
 </section>
+      </ng-template>
+      <ng-template appLessonSection="lazy">
+      <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+        <app-lesson-card class="mt-10" label="THE PROBLEM" heading="A big service you rarely use still costs every visitor">
+          <p class="mt-2 text-sm text-stone-400">
+            If a component imports a heavy service at the top of the file, its code is part of the first download, even if the user never presses the button that needs it.
+            <code class="text-gold-300">injectAsync()</code> loads the service only when you ask for it.
+          </p>
+        </app-lesson-card>
+
+        <app-lesson-card class="mt-5" variant="highlight" label="TRY IT" heading="Load the service on demand">
+          <div class="mt-3 flex flex-wrap items-center gap-3">
+            <button type="button" (click)="buildReport()" [disabled]="reportBusy()"
+                    class="min-h-11 rounded-xl bg-gold-solid px-4 text-sm font-semibold text-white hover:bg-gold-solid-hover disabled:cursor-not-allowed disabled:opacity-50">
+              {{ reportBusy() ? 'Loading…' : 'Build a report' }}
+            </button>
+            <p class="text-sm text-stone-400" aria-live="polite">Service state: <strong class="text-stone-100">{{ reportState() }}</strong></p>
+          </div>
+          <app-code-output class="mt-4 block" [code]="lazyCode" caption="The first press downloads the service. Later presses reuse the same instance.">
+            <p class="text-sm text-stone-200" aria-live="polite">{{ reportText() || 'No report yet.' }}</p>
+          </app-code-output>
+        </app-lesson-card>
+
+        <app-lesson-card class="mt-5" label="GOOD TO KNOW" heading="What it needs">
+          <ul class="mt-3 list-disc space-y-2 pl-5 text-sm text-stone-300">
+            <li>The service must provide itself (<code class="text-gold-300">&#64;Service()</code> or <code class="text-gold-300">providedIn: 'root'</code>).</li>
+            <li>It returns a function. Call it and <code class="text-gold-300">await</code> the result, and you get the one shared instance.</li>
+            <li>You can prefetch on idle time with <code class="text-gold-300">&#123; prefetch: onIdle &#125;</code>, so the click feels instant.</li>
+          </ul>
+        </app-lesson-card>
+
+        <app-recap class="mt-5" [items]="recapLazy" />
+      </section>
       </ng-template>
     </app-lesson-player>
   `,
 })
 export class DiComponent {
+  protected readonly recapBasics = [
+    'inject() asks Angular for a ready-made instance instead of building one.',
+    'The injector hands out the same instance to everyone who asks.',
+    'Think of it as a hotel front desk: you ask, it provides.',
+  ];
+  protected readonly recapScope = [
+    "providedIn: 'root' gives one shared instance for the whole app.",
+    'providers on a component gives that component its own copy.',
+    'The injector looks for a provider starting at the component and walking up.',
+  ];
+  protected readonly recapProviders = [
+    'A token is the name you ask for; a provider is the recipe for what you get.',
+    'useClass, useValue and useFactory change the recipe, not the caller.',
+    'This is how tests swap a real service for a fake.',
+  ];
+
   readonly section = input<string>();
+  protected readonly serviceCode = `@Service()
+export class CartService {
+  readonly items = signal<string[]>([]);
+  add(item: string) { this.items.update(list => [...list, item]); }
+}
+
+// anywhere
+private cart = inject(CartService);`;
+
+  protected readonly mistakeDecoratorWrong = `export class CartService {        // no decorator
+  items = signal<string[]>([]);
+}`;
+  protected readonly mistakeDecoratorRight = `@Service()
+export class CartService {
+  items = signal<string[]>([]);
+}`;
+
+  private readonly loadReport = injectAsync(() => import('./heavy-report.service').then((m) => m.HeavyReportService));
+  protected readonly reportState = signal<'not loaded' | 'loading' | 'loaded'>('not loaded');
+  protected readonly reportBusy = signal(false);
+  protected readonly reportText = signal('');
+  private reportCount = 0;
+
+  protected async buildReport(): Promise<void> {
+    this.reportBusy.set(true);
+    if (this.reportState() === 'not loaded') this.reportState.set('loading');
+    const service = await this.loadReport();
+    this.reportState.set('loaded');
+    this.reportText.set(service.build(`Report ${++this.reportCount}`));
+    this.reportBusy.set(false);
+  }
+
+  protected readonly lazyCode = `private loadReport = injectAsync(() => import('./heavy-report.service')
+  .then(m => m.HeavyReportService));
+
+async buildReport() {
+  const service = await this.loadReport();   // downloads the first time only
+  this.text = service.build('Q3');
+}`;
+
+  protected readonly recapService = [
+    'A service is a class that holds shared logic or data.',
+    "@Service() is the short form in Angular 22; @Injectable({ providedIn: 'root' }) works too.",
+    'Without a decorator, Angular cannot inject the class.',
+  ];
+  protected readonly recapLazy = [
+    'injectAsync() loads a service the first time you need it.',
+    'Its code goes into a separate file that is downloaded later.',
+    'Prefetching on idle time makes the first use feel instant.',
+  ];
+
   readonly rootCode = `@Injectable({ providedIn: 'root' })
 export class CartService {
   readonly count = signal(0);
