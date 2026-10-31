@@ -423,16 +423,18 @@ export const TOPICS: Topic[] = [
   {
     id: 'change-detection', group: 'performance', legacyPath: '/change-detection', path: '/learn/change-detection',
     level: 'advanced', prerequisites: ['signals', 'communication'],
-    icon: '🔄', title: 'Change Detection', description: 'Default vs OnPush — when Angular re-checks a component, and how to make it do less.',
+    icon: '🔄', title: 'Change Detection', description: 'Eager vs OnPush — when Angular re-checks a component, and how to make it do less.',
     objectives: [
-      { text: "Explain how Angular's Default change detection works", sectionId: 'default' },
+      { text: 'Explain how Angular decides which components to re-check', sectionId: 'default' },
       { text: 'Switch a component to OnPush and know when it re-renders', sectionId: 'onpush' },
       { text: 'Use Signals as an alternative to manual change detection', sectionId: 'signals-cd' },
+      { text: 'Name what schedules a check, with or without zone.js', sectionId: 'zoneless' },
     ],
     sections: [
-      { id: 'default', title: 'Default Change Detection', kind: 'concept', minutes: 6 },
-      { id: 'onpush', title: 'OnPush Strategy', kind: 'concept', minutes: 9 },
+      { id: 'default', title: 'How Angular decides', kind: 'concept', minutes: 6 },
+      { id: 'onpush', title: 'OnPush Strategy', kind: 'try-it', minutes: 9 },
       { id: 'signals-cd', title: 'Signals & Change Detection', kind: 'concept', minutes: 4 },
+      { id: 'zoneless', title: 'What wakes Angular up', kind: 'try-it', minutes: 6 },
     ],
   },
   {
@@ -447,7 +449,7 @@ export const TOPICS: Topic[] = [
     ],
     sections: [
       { id: 'basics', title: 'loadComponent', kind: 'concept', minutes: 5 },
-      { id: 'bundles', title: 'Bundle Analysis', kind: 'concept', minutes: 4 },
+      { id: 'bundles', title: 'Bundle Analysis', kind: 'try-it', minutes: 4 },
       { id: 'preloading', title: 'Preloading Strategies', kind: 'concept', minutes: 6 },
       { id: 'devtools', title: 'Measuring with DevTools', kind: 'reference', minutes: 4 },
     ],

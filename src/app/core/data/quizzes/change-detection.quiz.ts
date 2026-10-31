@@ -157,5 +157,33 @@ export const CHANGE_DETECTION_QUIZ: QuizBank = {
       explanation: 'The event marks the component and every ancestor above it as dirty, so the tree is walked down to the component that needs to update.',
       sectionId: 'onpush',
     },
+    {
+      id: 'change-detection-13',
+      type: 'single',
+      prompt: 'An OnPush component sets a plain field inside a setTimeout. What happens to the screen?',
+      choices: [
+        { id: 'a', text: 'It updates at once' },
+        { id: 'b', text: 'It may keep showing the old value, because Angular was not told' },
+        { id: 'c', text: 'The app crashes' },
+        { id: 'd', text: 'The component is destroyed' },
+      ],
+      correct: ['b'],
+      explanation: 'A plain field changes silently. Use a signal, so Angular is told and re-checks the component.',
+      sectionId: 'zoneless',
+    },
+    {
+      id: 'change-detection-14',
+      type: 'single',
+      prompt: 'Which of these wakes up an OnPush component?',
+      choices: [
+        { id: 'a', text: 'A signal read in its template changes' },
+        { id: 'b', text: 'A global variable changes' },
+        { id: 'c', text: 'The browser window resizes' },
+        { id: 'd', text: 'The CSS changes' },
+      ],
+      correct: ['a'],
+      explanation: 'Events in the template, signals read in the template, new inputs and the async pipe all wake it.',
+      sectionId: 'zoneless',
+    },
   ],
 };

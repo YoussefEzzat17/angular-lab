@@ -11,6 +11,8 @@ import { PageHeaderComponent } from '../../shared/page-header.component';
 import { KnowledgeCheckComponent, KnowledgeCheckItem } from '../../shared/knowledge-check.component';
 import { LessonPlayerComponent } from '../../learn/player/lesson-player.component';
 import { LessonSectionDirective } from '../../learn/player/lesson-section.directive';
+import { RecapComponent } from '../../shared/recap.component';
+import { CommonMistakeComponent } from '../../shared/common-mistake.component';
 
 interface RouteChunk {
   path: string;
@@ -21,7 +23,7 @@ interface RouteChunk {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [PreloadingDemoComponent, PredictOutputComponent, OrderStepsComponent, TermComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
+  imports: [CommonMistakeComponent, RecapComponent, PreloadingDemoComponent, PredictOutputComponent, OrderStepsComponent, TermComponent, CodeBlockDirective, KnowledgeCheckComponent, PageHeaderComponent, LessonCardComponent, LessonPlayerComponent, LessonSectionDirective],
   template: `
     <app-lesson-player [topicId]="'lazy-loading'" [section]="section()">
       <ng-template appLessonSection="basics">
@@ -78,6 +80,10 @@ export const routes: Routes = [
         <p class="mt-2 text-sm text-stone-400">Put these four steps in the order they happen the first time a visitor goes to /admin.</p>
         <app-order-steps [steps]="lazySteps" explanation="Nothing for /admin is downloaded until the visitor asks for it. The router finds the lazy route, the browser fetches that one chunk, and only then is the component created." />
       </app-lesson-card>
+      <app-common-mistake class="mt-5" title="Importing the component at the top of the routes file" [wrong]="mistakeEagerWrong" [right]="mistakeEagerRight">
+        A <code class="text-gold-300">import</code> line at the top of the file is part of the first download. To split the code, load the component with <code class="text-gold-300">loadComponent</code> and a dynamic <code class="text-gold-300">import()</code> inside the route.
+      </app-common-mistake>
+        <app-recap class="mt-5" [items]="recapBasics" />
       </section>
       </ng-template>
 
@@ -173,6 +179,7 @@ export const routes: Routes = [
           </div>
         </div>
       </app-lesson-card>
+        <app-recap class="mt-5" [items]="recapBundles" />
       </section>
       </ng-template>
 
@@ -198,6 +205,7 @@ provideRouter(routes, withPreloading(PreloadAllModules));</pre>
         <app-lesson-card class="mt-5" variant="highlight" label="PREDICT" heading="When does the admin chunk download?">
           <app-predict-output [challenge]="preloadChallenge" />
         </app-lesson-card>
+        <app-recap class="mt-5" [items]="recapPreloading" />
       </section>
       </ng-template>
 
@@ -223,6 +231,7 @@ provideRouter(routes, withPreloading(PreloadAllModules));</pre>
         </ul>
       </app-lesson-card>
 
+        <app-recap class="mt-5" [items]="recapDevtools" />
       <app-knowledge-check [items]="checkItems" />
 </section>
       </ng-template>
@@ -230,6 +239,34 @@ provideRouter(routes, withPreloading(PreloadAllModules));</pre>
   `,
 })
 export class LazyLoadingComponent {
+  protected readonly mistakeEagerWrong = `import { AdminComponent } from './admin';     // part of the first download
+
+{ path: 'admin', component: AdminComponent }`;
+  protected readonly mistakeEagerRight = `{ path: 'admin', loadComponent: () => import('./admin').then(m => m.AdminComponent) }`;
+  protected readonly recapBasics = [
+    'loadComponent downloads a page only when its route is opened.',
+    'The first download gets smaller, so the app starts faster.',
+    'It is one line of change per route.',
+  ];
+
+  protected readonly recapBundles = [
+    'Eager routes are bundled together; lazy routes become separate chunks.',
+    'Compare the initial size and you see what lazy loading saves.',
+    'Measure real sizes after every build.',
+  ];
+
+  protected readonly recapPreloading = [
+    'A preloading strategy downloads lazy chunks in the background.',
+    'PreloadAllModules fetches everything after the first load; no preloading waits for the click.',
+    'Pick the strategy that matches how users move through the app.',
+  ];
+
+  protected readonly recapDevtools = [
+    'The Network tab shows each chunk as it loads.',
+    'Look for new .js files when you open a lazy route.',
+    'Check the size and timing before and after your change.',
+  ];
+
   readonly section = input<string>();
 
   readonly preloadChallenge: PredictChallenge = {

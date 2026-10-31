@@ -51,13 +51,9 @@ describe('topics data', () => {
     expect(TOPICS[0].prerequisites).toEqual([]);
   });
 
-  // Lessons that still need their hands-on section (tracked in the content plan); remove each id once it has one.
-  const NEEDS_TRY_IT = ['change-detection', 'lazy-loading'];
-
   it('gives every lesson at least three sections and a hands-on section', () => {
     for (const topic of TOPICS) {
       expect(topic.sections.length).withContext(`${topic.id} sections`).toBeGreaterThanOrEqual(3);
-      if (NEEDS_TRY_IT.includes(topic.id)) continue;
       expect(topic.sections.some((s) => s.kind === 'try-it')).withContext(`${topic.id} has a try-it section`).toBeTrue();
     }
   });

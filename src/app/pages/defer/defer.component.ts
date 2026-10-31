@@ -11,11 +11,12 @@ import { PredictOutputComponent } from '../../shared/predict-output.component';
 import type { PredictChallenge } from '../../shared/predict-output.component';
 import { DeferHeavyWidgetComponent } from './defer-heavy-widget.component';
 import { DeferStatsService } from './defer-stats.service';
+import { RecapComponent } from '../../shared/recap.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
-  imports: [
+  imports: [RecapComponent, 
     DeferHeavyWidgetComponent,
     CodeBlockDirective,
     KnowledgeCheckComponent,
@@ -93,6 +94,7 @@ import { DeferStatsService } from './defer-stats.service';
             </div>
             <p class="mt-3 text-xs text-stone-500">A deferred block loads once. Leave this section and come back to try it again.</p>
           </app-lesson-card>
+        <app-recap class="mt-5" [items]="recapBasics" />
         </section>
       </ng-template>
 
@@ -155,6 +157,7 @@ import { DeferStatsService } from './defer-stats.service';
               <div class="rounded-xl border border-gold-500/40 p-4 text-sm text-gold-300">Loading…</div>
             }
           </app-lesson-card>
+        <app-recap class="mt-5" [items]="recapTriggers" />
         </section>
       </ng-template>
 
@@ -183,6 +186,7 @@ import { DeferStatsService } from './defer-stats.service';
               <strong class="text-stone-200">piece of a page</strong>: a section arrives when a trigger fires. Use both: routes for pages, <code class="text-gold-300">&#64;defer</code> for heavy parts inside them.
             </p>
           </app-lesson-card>
+        <app-recap class="mt-5" [items]="recapPrefetch" />
         </section>
       </ng-template>
 
@@ -200,6 +204,7 @@ import { DeferStatsService } from './defer-stats.service';
             />
           </app-lesson-card>
 
+        <app-recap class="mt-5" [items]="recapTryIt" />
           <app-knowledge-check [items]="checkItems" />
         </section>
       </ng-template>
@@ -207,6 +212,30 @@ import { DeferStatsService } from './defer-stats.service';
   `,
 })
 export class DeferComponent {
+  protected readonly recapBasics = [
+    '@defer wraps a part of the template to load later.',
+    '@placeholder shows first, @loading while it downloads, @error if it fails.',
+    'The deferred code is split into its own file.',
+  ];
+
+  protected readonly recapTriggers = [
+    'A trigger decides when the download starts: viewport, interaction, hover, idle, timer or a condition.',
+    'on viewport suits content below the fold; on interaction suits things the user must ask for.',
+    'You can combine triggers.',
+  ];
+
+  protected readonly recapPrefetch = [
+    'prefetch downloads early but still shows the block later.',
+    'Do not defer content that is visible in the first screen.',
+    'A deferred component must not be used outside @defer, or it returns to the main bundle.',
+  ];
+
+  protected readonly recapTryIt = [
+    'Pick the trigger that matches the moment the user needs the content.',
+    'Placeholders should be the same size as the real content, to avoid layout jumps.',
+    'You now know three performance tools: OnPush, lazy routes and deferred views.',
+  ];
+
   readonly section = input<string>();
   protected readonly stats = inject(DeferStatsService);
   protected readonly loadIt = signal(false);
