@@ -63,9 +63,10 @@
   /* Elevation (see shadow-card / shadow-card-lift / shadow-float in tailwind.config.js). A black shadow
      barely shows on a near-black page, so dark mode adds a faint top highlight to carry the lift. */
   --shadow-color: 0 0 0;
-  --shadow-near: 0.35;
-  --shadow-far: 0.45;
-  --shadow-highlight: rgb(255 255 255 / 0.04);
+  --shadow-near: 0.55;
+  --shadow-far: 0.7;
+  --shadow-highlight: rgb(255 255 255 / 0.06);
+  --glow-strength: 0.22;
 
   /* Code panels: a darker well than the card in dark mode, a deeper parchment than the card in light mode,
      so code always reads as its own surface. */
@@ -126,6 +127,7 @@
   --shadow-near: 0.06;
   --shadow-far: 0.1;
   --shadow-highlight: transparent;
+  --glow-strength: 0.28;
 
   --code-bg: 243 237 226;
   --code-head: 235 227 213;
@@ -159,6 +161,9 @@
       has-[:focus-visible]:border-gold-500/60 has-[:focus-visible]:shadow-card-lift
       motion-safe:hover:-translate-y-0.5 motion-safe:focus-visible:-translate-y-0.5;
   }
+
+  /* The few cards that matter most: a gold edge and glow instead of the plain resting shadow. Use sparingly. */
+  .card-featured { @apply border-gold-400/50 shadow-featured transition hover:border-gold-400 hover:shadow-featured-lift motion-safe:hover:-translate-y-0.5; }
 
   /* Surfaces set inside a card stay flat: a tile for a demo value or nested group, a well for code and logs. */
   .tile { @apply rounded-xl bg-stone-800 p-4; }

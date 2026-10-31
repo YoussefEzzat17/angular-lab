@@ -52,7 +52,7 @@ import type { TopicId } from '../../core/models/learning.models';
         }
 
         <!-- Progress + start -->
-        <div class="card mt-8 flex flex-wrap items-center gap-4 p-5">
+        <div class="card card-featured mt-8 flex flex-wrap items-center gap-4 p-5">
           <app-progress-ring [percent]="sectionPercent()" [ariaText]="doneSections() + ' of ' + t.sections.length + ' sections done'" [size]="56" [strokeWidth]="5" />
           <div class="min-w-0 flex-1">
             <p class="font-semibold text-stone-100">{{ doneSections() }} of {{ t.sections.length }} sections done</p>
@@ -108,7 +108,7 @@ import type { TopicId } from '../../core/models/learning.models';
         </div>
 
         <!-- Quiz status -->
-        <div class="card mt-6 p-5">
+        <div class="card mt-6 p-5" [class.card-featured]="allSectionsDone() && !isCompleted()">
           <div class="flex flex-wrap items-center justify-between gap-4">
             <div>
               <p class="font-semibold">Final Quiz</p>

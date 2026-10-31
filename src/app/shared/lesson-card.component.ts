@@ -6,7 +6,7 @@ export type LessonCardTone = 'gold' | 'amber' | 'emerald' | 'rose';
 // Full class strings (not built up from fragments) so Tailwind's scanner can see every one.
 const SURFACES: Record<LessonCardVariant, { card: string; tone: LessonCardTone }> = {
   default: { card: 'border-stone-800 bg-stone-900', tone: 'gold' },
-  highlight: { card: 'border-gold-400/30 bg-gold-950/20', tone: 'gold' },
+  highlight: { card: 'border-gold-400/50 bg-gold-950/20 shadow-featured', tone: 'gold' },
   danger: { card: 'border-[rgb(var(--panel-danger-heading))]/30 bg-[rgb(var(--panel-danger-bg))]', tone: 'rose' },
   success: { card: 'border-emerald-500/30 bg-[rgb(var(--panel-success-bg))]', tone: 'emerald' },
 };

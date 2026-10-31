@@ -27,6 +27,9 @@ module.exports = {
       boxShadow: {
         card: 'inset 0 1px 0 0 var(--shadow-highlight), 0 1px 2px rgb(var(--shadow-color) / var(--shadow-near)), 0 8px 24px -10px rgb(var(--shadow-color) / var(--shadow-far))',
         'card-lift': 'inset 0 1px 0 0 var(--shadow-highlight), 0 2px 4px rgb(var(--shadow-color) / var(--shadow-near)), 0 18px 36px -12px rgb(var(--shadow-color) / calc(var(--shadow-far) * 1.4))',
+        // Gold edge + glow for the few cards that matter most (the next step, a ready quiz, "Try it" sections).
+        featured: 'inset 0 1px 0 0 rgb(var(--gold-400) / 0.18), 0 0 0 1px rgb(var(--gold-400) / 0.22), 0 10px 30px -8px rgb(var(--gold-400) / var(--glow-strength))',
+        'featured-lift': 'inset 0 1px 0 0 rgb(var(--gold-400) / 0.28), 0 0 0 1px rgb(var(--gold-400) / 0.5), 0 16px 38px -8px rgb(var(--gold-400) / calc(var(--glow-strength) * 1.5))',
         float: 'inset 0 1px 0 0 var(--shadow-highlight), 0 4px 8px rgb(var(--shadow-color) / var(--shadow-near)), 0 28px 56px -16px rgb(var(--shadow-color) / calc(var(--shadow-far) * 1.6))',
       },
     },

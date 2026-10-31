@@ -29,7 +29,9 @@ import { LearnFooterComponent } from './learn-footer.component';
 
     <app-tour />
 
-    <div class="flex h-dvh flex-col overflow-hidden">
+    <!-- relative: the sr-only labels deep in the scrolling column are absolutely positioned. Without a positioned ancestor
+         their box belongs to the page, escapes this overflow clip and makes the whole document scrollable past the app. -->
+    <div class="relative flex h-dvh flex-col overflow-hidden">
       <!-- First Tab stop: jump past the header and sidebar. A plain #fragment would resolve against <base href>, so focus moves in code. -->
       <a href="#learn-main" (click)="skipToContent($event)" data-testid="skip-link"
          class="sr-only rounded-xl bg-gold-solid px-4 py-3 text-sm font-semibold text-white shadow-float focus:not-sr-only focus:fixed focus:left-4 focus:top-2 focus:z-[60]">

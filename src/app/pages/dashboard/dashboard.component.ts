@@ -26,7 +26,7 @@ const ACTIVITY_ICONS: Record<ActivityKind, { icon: IconName; tone: string }> = {
     <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
 
       <!-- ── Hero: welcome + topic map ──────────────────────────────────── -->
-      <div class="overflow-hidden rounded-3xl bg-gradient-to-br from-gold-950 via-stone-900 to-stone-950 ring-1 ring-gold-500/30">
+      <div class="overflow-hidden rounded-3xl bg-gradient-to-br from-gold-950 via-stone-900 to-stone-950 border border-gold-400/50 shadow-featured">
         <div class="grid lg:grid-cols-2">
 
           <!-- Left: copy + stats -->
@@ -50,8 +50,8 @@ const ACTIVITY_ICONS: Record<ActivityKind, { icon: IconName; tone: string }> = {
                 <span>Overall progress</span>
                 <span class="font-semibold text-gold-300">{{ facade.completedCount() }}/{{ facade.totalCount }}</span>
               </div>
-              <div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-stone-800">
-                <div class="h-full rounded-full bg-gold-500 transition-all duration-700"
+              <div class="mt-2 h-2 w-full overflow-hidden rounded-full bg-stone-700">
+                <div class="h-full min-w-2 rounded-full bg-gold-500 transition-all duration-700"
                      [style.width.%]="facade.percent()"></div>
               </div>
               <p class="mt-1 text-xs text-stone-500">{{ facade.percent() }}% complete</p>
@@ -133,8 +133,8 @@ const ACTIVITY_ICONS: Record<ActivityKind, { icon: IconName; tone: string }> = {
           </p>
           <p class="text-sm text-stone-400">{{ game.xp() }} XP · {{ game.earnedCount() }} of {{ game.badges().length }} badges</p>
         </div>
-        <div class="mt-3 h-2 overflow-hidden rounded-full bg-stone-800" aria-hidden="true">
-          <div class="h-full rounded-full bg-gold-400" [style.width.%]="game.level().percent"></div>
+        <div class="mt-3 h-2 overflow-hidden rounded-full bg-stone-700" aria-hidden="true">
+          <div class="h-full min-w-2 rounded-full bg-gold-400" [style.width.%]="game.level().percent"></div>
         </div>
         <p class="mt-3 flex items-center gap-1 text-sm font-semibold text-gold-300">
           Open your journey <app-icon name="chevron-right" class="h-4 w-4" />

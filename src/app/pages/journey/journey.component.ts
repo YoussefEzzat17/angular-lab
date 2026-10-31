@@ -19,7 +19,7 @@ import type { TopicStatus } from '../../core/models/learning.models';
       </p>
 
       <!-- Level -->
-      <div class="mt-6 rounded-2xl border border-gold-500/30 bg-gold-950/20 p-5">
+      <div class="card card-featured mt-6 bg-gold-950/20 p-5">
         <div class="flex flex-wrap items-baseline justify-between gap-2">
           <p class="text-lg font-bold text-stone-100">
             Level {{ game.level().level.number }} · <span data-testid="level-title" class="text-gold-300">{{ game.level().level.title }}</span>
@@ -27,14 +27,14 @@ import type { TopicStatus } from '../../core/models/learning.models';
           <p class="text-sm text-stone-400" data-testid="xp-text">{{ xpText() }}</p>
         </div>
         <div
-          class="mt-3 h-3 overflow-hidden rounded-full bg-stone-800"
+          class="mt-3 h-3 overflow-hidden rounded-full bg-stone-700"
           role="progressbar"
           aria-label="Progress to the next level"
           aria-valuemin="0"
           aria-valuemax="100"
           [attr.aria-valuenow]="game.level().percent"
         >
-          <div class="h-full rounded-full bg-gold-400 transition-[width] duration-500 motion-reduce:transition-none" [style.width.%]="game.level().percent"></div>
+          <div class="h-full min-w-3 rounded-full bg-gold-400 transition-[width] duration-500 motion-reduce:transition-none" [style.width.%]="game.level().percent"></div>
         </div>
       </div>
 
@@ -65,7 +65,7 @@ import type { TopicStatus } from '../../core/models/learning.models';
                   [routerLink]="topic.path"
                   [attr.data-testid]="'journey-node-' + topic.id"
                   class="flex items-center gap-3 rounded-2xl border bg-stone-900 p-4 transition hover:bg-stone-800/70"
-                  [class]="topic.id === nextTopicId() ? 'border-gold-400/60' : 'border-stone-800'"
+                  [class]="topic.id === nextTopicId() ? 'card-featured' : 'border-stone-800 shadow-card'"
                 >
                   <span class="text-2xl" aria-hidden="true">{{ topic.icon }}</span>
                   <span class="min-w-0 flex-1">
@@ -96,7 +96,7 @@ import type { TopicStatus } from '../../core/models/learning.models';
               class="flex items-center gap-3 rounded-2xl border p-4"
               [attr.data-testid]="'badge-' + badge.id"
               [attr.data-earned]="badge.isEarned"
-              [class]="badge.isEarned ? 'border-gold-500/40 bg-gold-950/20' : 'border-stone-800 bg-stone-900'"
+              [class]="badge.isEarned ? 'border-gold-400/50 bg-gold-950/20 shadow-featured' : 'border-stone-800 bg-stone-900/60'"
             >
               <span class="text-3xl" [class]="badge.isEarned ? '' : 'opacity-50 grayscale'" aria-hidden="true">{{ badge.icon }}</span>
               <span class="min-w-0">
