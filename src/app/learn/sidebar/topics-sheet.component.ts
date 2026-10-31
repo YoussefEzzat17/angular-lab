@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, effect, HostListener, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, HostListener, inject, signal, untracked } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
@@ -16,6 +16,9 @@ const FLICK_SPEED = 0.5; // px per ms
 /** Applied to <html> and <body> while the sheet is open, below the lg breakpoint where the sheet exists. */
 const SCROLL_LOCK = 'max-lg:overflow-hidden';
 
+/** How long the sheet slides away after closing, before it leaves the DOM. Keep in sync with the CSS below. */
+const CLOSE_MS = 320;
+
 /**
  * The phone's "Course Topics" bottom sheet. One component, used by every layout, so the topics list looks and
  * behaves the same wherever it is opened from. It closes on Escape, on a tap outside, and on every navigation.
@@ -26,17 +29,20 @@ const SCROLL_LOCK = 'max-lg:overflow-hidden';
   standalone: true,
   imports: [A11yModule, CourseSidebarComponent, IconComponent],
   template: `
-    @if (sidebarState.drawerOpen()) {
-      <div class="fixed inset-0 z-40 touch-none bg-black/65 lg:hidden" [style.opacity]="scrimOpacity()" (click)="sidebarState.closeDrawer()" aria-hidden="true"></div>
+    @if (sidebarState.drawerOpen() || closing()) {
+      <div class="sheet-scrim fixed inset-0 z-40 touch-none bg-black/65 lg:hidden" [class.sheet-scrim-fade]="!dragging()" [class.sheet-in]="!closing()"
+           [style.opacity]="scrimOpacity()" (click)="sidebarState.closeDrawer()" aria-hidden="true"></div>
       <div
         role="dialog"
         aria-modal="true"
         aria-label="Course navigation"
         cdkTrapFocus
         [cdkTrapFocusAutoCapture]="true"
-        class="fixed inset-x-0 bottom-0 z-50 flex max-h-[80vh] flex-col rounded-t-3xl border-t-2 border-gold-400 bg-stone-900 shadow-[0_-10px_32px_rgb(var(--gold-400)/0.22)] lg:hidden"
-        [class]="dragging() ? '' : 'transition-transform duration-200 motion-reduce:transition-none'"
-        [style.transform]="dragY() ? 'translateY(' + dragY() + 'px)' : null"
+        class="sheet-panel fixed inset-x-0 bottom-0 z-50 flex max-h-[80dvh] flex-col rounded-t-3xl border-t-2 border-gold-400 bg-stone-900 shadow-[0_-10px_32px_rgb(var(--gold-400)/0.22)] lg:hidden"
+        [class.sheet-in]="!closing()"
+        [class.sheet-settle]="!dragging()"
+        [class.pointer-events-none]="closing()"
+        [style.transform]="closing() ? 'translateY(100%)' : dragY() ? 'translateY(' + dragY() + 'px)' : null"
         style="padding-bottom: env(safe-area-inset-bottom)"
       >
         <!-- Drag zone: the grip and the title bar. Pulling it down dismisses the sheet; the list below keeps its own scroll.
@@ -66,11 +72,27 @@ const SCROLL_LOCK = 'max-lg:overflow-hidden';
       </div>
     }
   `,
+  styles: `
+    @keyframes sheet-slide-in { from { transform: translateY(100%); } }
+    @keyframes sheet-fade-in { from { opacity: 0; } }
+    .sheet-panel { will-change: transform; }
+    .sheet-panel.sheet-in { animation: sheet-slide-in 360ms cubic-bezier(0.32, 0.72, 0, 1); }
+    .sheet-scrim.sheet-in { animation: sheet-fade-in 260ms ease-out; }
+    .sheet-panel.sheet-settle { transition: transform 320ms cubic-bezier(0.32, 0.72, 0, 1); }
+    .sheet-scrim-fade { transition: opacity 320ms ease-out; }
+    @media (prefers-reduced-motion: reduce) {
+      .sheet-panel, .sheet-scrim { animation: none !important; transition: none !important; }
+    }
+  `,
 })
 export class TopicsSheetComponent {
   protected readonly sidebarState = inject(SidebarStateService);
   protected readonly dragY = signal(0);
   protected readonly dragging = signal(false);
+  /** True while the sheet slides away after closing; it stays mounted until the slide is done. */
+  protected readonly closing = signal(false);
+  private closeTimer: ReturnType<typeof setTimeout> | undefined;
+  private wasOpen = false;
   private startY = 0;
   private startTime = 0;
 
@@ -86,13 +108,27 @@ export class TopicsSheetComponent {
       onCleanup(() => targets.forEach((el) => el.classList.remove(SCROLL_LOCK)));
     });
 
+    effect(() => {
+      const open = this.sidebarState.drawerOpen();
+      untracked(() => {
+        clearTimeout(this.closeTimer);
+        if (open) this.closing.set(false);
+        else if (this.wasOpen) {
+          this.closing.set(true);
+          this.closeTimer = setTimeout(() => this.closing.set(false), CLOSE_MS);
+        }
+        this.wasOpen = open;
+      });
+    });
+    inject(DestroyRef).onDestroy(() => clearTimeout(this.closeTimer));
+
     inject(Router).events
       .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd), takeUntilDestroyed(inject(DestroyRef)))
       .subscribe(() => this.sidebarState.closeDrawer());
   }
 
   protected scrimOpacity(): number {
-    return 1 - Math.min(this.dragY() / 300, 0.6);
+    return this.closing() ? 0 : 1 - Math.min(this.dragY() / 300, 0.6);
   }
 
   protected onDragStart(event: PointerEvent): void {

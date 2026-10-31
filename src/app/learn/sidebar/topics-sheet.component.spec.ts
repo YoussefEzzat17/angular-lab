@@ -48,6 +48,26 @@ describe('TopicsSheetComponent', () => {
     expect(state.drawerOpen()).toBeFalse();
   });
 
+  it('slides away after closing and leaves the DOM once the slide is done', async () => {
+    jasmine.clock().install();
+    try {
+      const { fixture, state, root } = await setup();
+      state.openDrawer();
+      fixture.detectChanges();
+      state.closeDrawer();
+      fixture.detectChanges();
+      TestBed.tick();
+      fixture.detectChanges();
+      expect(root.querySelector<HTMLElement>('[role="dialog"]')!.style.transform).toBe('translateY(100%)');
+
+      jasmine.clock().tick(400);
+      fixture.detectChanges();
+      expect(root.querySelector('[role="dialog"]')).toBeNull();
+    } finally {
+      jasmine.clock().uninstall();
+    }
+  });
+
   it('locks the page scroll while open and releases it on close', async () => {
     const { fixture, state } = await setup();
     const locked = () => document.documentElement.classList.contains('max-lg:overflow-hidden') && document.body.classList.contains('max-lg:overflow-hidden');

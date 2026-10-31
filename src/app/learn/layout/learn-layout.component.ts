@@ -29,7 +29,7 @@ import { LearnFooterComponent } from './learn-footer.component';
 
     <app-tour />
 
-    <div class="flex h-screen flex-col overflow-hidden">
+    <div class="flex h-dvh flex-col overflow-hidden">
       <!-- First Tab stop: jump past the header and sidebar. A plain #fragment would resolve against <base href>, so focus moves in code. -->
       <a href="#learn-main" (click)="skipToContent($event)" data-testid="skip-link"
          class="sr-only rounded-xl bg-gold-solid px-4 py-3 text-sm font-semibold text-white shadow-float focus:not-sr-only focus:fixed focus:left-4 focus:top-2 focus:z-[60]">

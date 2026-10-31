@@ -69,7 +69,7 @@ describe('LearnLayoutComponent', () => {
 
     const skip = root.querySelector<HTMLAnchorElement>('[data-testid="skip-link"]')!;
     // First in the page shell (the first-visit dialog, when shown, sits outside it and traps focus on its own).
-    expect(root.querySelector('.h-screen')!.querySelector('a, button')).toBe(skip);
+    expect(root.querySelector('.h-dvh')!.querySelector('a, button')).toBe(skip);
     skip.click();
     expect(document.activeElement).toBe(root.querySelector('#learn-main'));
   });

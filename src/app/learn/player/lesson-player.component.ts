@@ -21,7 +21,7 @@ import type { TopicId } from '../../core/models/learning.models';
   standalone: true,
   imports: [NgTemplateOutlet, RouterLink, IconComponent, SectionNavBarComponent],
   template: `
-    <div class="flex min-h-[calc(100vh-4rem)] flex-col">
+    <div class="flex min-h-[calc(100dvh-4rem)] flex-col">
       <!-- Lesson header: where you are, what this section is, and every step of the topic -->
       <header #sectionTop class="mx-auto w-full max-w-5xl px-4 pt-6 sm:px-6 sm:pt-8">
         @if (topicMeta(); as t) {
