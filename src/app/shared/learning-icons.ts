@@ -34,6 +34,11 @@ export const TOPIC_ILLUSTRATIONS: Record<TopicId, IllustrationName> = {
   'error-handling': 'error-handling',
   'animations': 'animations',
   'images': 'images',
+  'dynamic-components': 'dynamic-components',
+  'drag-drop': 'drag-drop',
+  'i18n': 'i18n',
+  'ssr': 'ssr',
+  'devtools': 'devtools',
 };
 
 /** One drawn icon per curriculum group: the navigation's icon system instead of each topic's emoji. */
@@ -44,6 +49,7 @@ export const GROUP_ICONS: Record<TopicGroup, IconName> = {
   'services-data': 'database',
   'performance': 'gauge',
   'quality': 'check',
+  'advanced': 'map',
 };
 
 /** What kind of section this is, shown next to its title in the lesson tabs and the sidebar. */

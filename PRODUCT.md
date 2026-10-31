@@ -12,7 +12,7 @@ Self-taught beginners: fresh graduates and junior developers who know HTML, CSS,
 
 ## Product Purpose
 
-Angular Lab teaches modern Angular through 29 interactive lessons. Each lesson explains why a concept exists, shows it working, and lets the learner change it. Success means a beginner finishes a topic able to explain what the concept does and why, passes its final quiz, and comes back for the next one.
+Angular Lab teaches modern Angular through 34 interactive lessons. Each lesson explains why a concept exists, shows it working, and lets the learner change it. Success means a beginner finishes a topic able to explain what the concept does and why, passes its final quiz, and comes back for the next one.
 
 ## Positioning
 
@@ -21,7 +21,7 @@ Every concept is a live, poke-able example rather than a slide or a page of pros
 ## Operating Context
 
 - Self-paced: home page → lesson overview → short sections (concept / try-it / reference) → final quiz, which unlocks once every section is done.
-- Lessons follow a recommended path in six groups: Fundamentals, Forms & Navigation, Reactivity, Services & Data, Performance, Quality & Safety. Next / Previous follow that path.
+- Lessons follow a recommended path in seven groups: Fundamentals, Forms & Navigation, Reactivity, Services & Data, Performance, Quality & Safety, Going Further. Next / Previous follow that path.
 - Supporting surfaces: dashboard (streak, level, XP, progress), journey map, history, saved sections, command palette (⌘/Ctrl+K), glossary tooltips, first-visit onboarding and tour.
 - A small movie-and-series demo app shows several concepts working together in one real feature.
 - Used on desktop and phone (bottom navigation and a topic sheet on mobile).

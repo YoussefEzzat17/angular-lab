@@ -29,7 +29,12 @@ export type IllustrationName =
   | 'security'
   | 'error-handling'
   | 'animations'
-  | 'images';
+  | 'images'
+  | 'dynamic-components'
+  | 'drag-drop'
+  | 'i18n'
+  | 'ssr'
+  | 'devtools';
 
 /**
  * Small animated diagram that sits beside a topic's intro. Drawn with the theme tokens, so it follows
@@ -505,6 +510,75 @@ export type IllustrationName =
           <text class="mono dim" x="120" y="116" text-anchor="middle">1200 × 800 reserved</text>
           <rect class="chip" x="34" y="130" width="172" height="24" rx="12" />
           <text class="mono gold-text" x="120" y="146" text-anchor="middle">ngSrc width height</text>
+        }
+        @case ('dynamic-components') {
+          <!-- one outlet, a different component each time -->
+          <rect class="node gold" x="70" y="12" width="100" height="40" rx="10" />
+          <text class="mono gold-text" x="120" y="36" text-anchor="middle">outlet</text>
+          <path class="edge" d="M96 52 L52 92 M120 52 V92 M144 52 L188 92" />
+          <rect class="node react" x="10" y="92" width="84" height="34" rx="9" />
+          <text class="mono" x="52" y="113" text-anchor="middle">Chart</text>
+          <rect class="node react" x="78" y="92" width="84" height="34" rx="9" />
+          <text class="mono" x="120" y="113" text-anchor="middle">Table</text>
+          <rect class="node react" x="146" y="92" width="84" height="34" rx="9" />
+          <text class="mono" x="188" y="113" text-anchor="middle">Form</text>
+          <rect class="chip" x="40" y="138" width="160" height="22" rx="11" />
+          <text class="mono gold-text" x="120" y="153" text-anchor="middle">chosen at run time</text>
+        }
+        @case ('drag-drop') {
+          <!-- an item moves from one list to another -->
+          <rect class="node" x="10" y="14" width="96" height="110" rx="10" />
+          <rect class="node" x="134" y="14" width="96" height="110" rx="10" />
+          <rect class="node" x="22" y="30" width="72" height="22" rx="7" />
+          <rect class="node" x="22" y="60" width="72" height="22" rx="7" />
+          <rect class="ghost2" x="146" y="30" width="72" height="22" rx="7" />
+          <g class="toggle">
+            <rect class="node gold" x="22" y="90" width="72" height="22" rx="7" />
+          </g>
+          <path class="edge" d="M96 100 H146" />
+          <path class="head" d="M140 95 L147 100 L140 105" />
+          <rect class="chip" x="44" y="136" width="152" height="22" rx="11" />
+          <text class="mono gold-text" x="120" y="151" text-anchor="middle">cdkDropList</text>
+        }
+        @case ('i18n') {
+          <!-- the same value in several locales -->
+          <rect class="node" x="10" y="12" width="220" height="30" rx="9" />
+          <text class="mono gold-text" x="22" y="32">en  $1,234.50</text>
+          <rect class="node react" x="10" y="48" width="220" height="30" rx="9" />
+          <text class="mono" x="22" y="68">de  1.234,50 €</text>
+          <rect class="node react" x="10" y="84" width="220" height="30" rx="9" />
+          <text class="mono" x="22" y="104">fr  1 234,50 €</text>
+          <rect class="chip" x="40" y="126" width="160" height="24" rx="12" />
+          <text class="mono gold-text" x="120" y="142" text-anchor="middle">same value, local style</text>
+        }
+        @case ('ssr') {
+          <!-- the server sends HTML, the browser makes it alive -->
+          <rect class="node" x="10" y="20" width="76" height="52" rx="10" />
+          <text class="mono dim" x="48" y="42" text-anchor="middle">server</text>
+          <text class="mono gold-text" x="48" y="58" text-anchor="middle">&lt;html&gt;</text>
+          <path class="edge" d="M88 46 H122" />
+          <path class="head" d="M116 41 L123 46 L116 51" />
+          <circle class="packet right" cx="88" cy="46" r="3" />
+          <rect class="node gold" x="124" y="20" width="106" height="52" rx="10" />
+          <text class="mono dim" x="177" y="42" text-anchor="middle">browser</text>
+          <text class="mono gold-text" x="177" y="58" text-anchor="middle">hydrate</text>
+          <rect class="chip" x="30" y="92" width="180" height="24" rx="12" />
+          <text class="mono gold-text" x="120" y="108" text-anchor="middle">visible fast, then alive</text>
+          <text class="mono dim" x="120" y="146" text-anchor="middle">not a blank page</text>
+        }
+        @case ('devtools') {
+          <!-- a component tree with one node selected -->
+          <rect class="node" x="10" y="12" width="110" height="130" rx="10" />
+          <text class="mono dim" x="20" y="30">&lt;app-root&gt;</text>
+          <text class="mono dim" x="30" y="50">&lt;app-list&gt;</text>
+          <rect class="chip" x="22" y="58" width="92" height="22" rx="6" />
+          <text class="mono gold-text" x="32" y="73">&lt;app-card&gt;</text>
+          <text class="mono dim" x="30" y="100">&lt;app-footer&gt;</text>
+          <rect class="node gold" x="130" y="12" width="100" height="130" rx="10" />
+          <text class="mono gold-text" x="140" y="30">app-card</text>
+          <text class="mono dim" x="140" y="52">title: "Ada"</text>
+          <text class="mono dim" x="140" y="72">count: 3</text>
+          <text class="mono dim" x="140" y="92">OnPush</text>
         }
       }
     </svg>

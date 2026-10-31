@@ -36,6 +36,11 @@ export const TOPIC_LOADERS: Record<TopicId, () => Promise<unknown>> = {
   'error-handling':   () => import('../pages/error-handling/error-handling.component').then((m) => m.ErrorHandlingComponent),
   'animations':       () => import('../pages/animations/animations.component').then((m) => m.AnimationsComponent),
   'images':           () => import('../pages/images/images.component').then((m) => m.ImagesComponent),
+  'dynamic-components': () => import('../pages/dynamic-components/dynamic-components.component').then((m) => m.DynamicComponentsComponent),
+  'drag-drop':        () => import('../pages/drag-drop/drag-drop.component').then((m) => m.DragDropComponent),
+  'i18n':             () => import('../pages/i18n/i18n.component').then((m) => m.I18nComponent),
+  'ssr':              () => import('../pages/ssr/ssr.component').then((m) => m.SsrComponent),
+  'devtools':         () => import('../pages/devtools/devtools.component').then((m) => m.DevtoolsComponent),
 };
 
 export const LEARN_ROUTES: Routes = [

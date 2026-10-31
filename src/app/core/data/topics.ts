@@ -1,6 +1,6 @@
 import type { TopicId, LessonSection, TopicObjective } from '../models/learning.models';
 
-export type TopicGroup = 'fundamentals' | 'forms-navigation' | 'reactivity' | 'services-data' | 'performance' | 'quality';
+export type TopicGroup = 'fundamentals' | 'forms-navigation' | 'reactivity' | 'services-data' | 'performance' | 'quality' | 'advanced';
 
 export type TopicLevel = 'beginner' | 'intermediate' | 'advanced';
 
@@ -42,6 +42,7 @@ export const TOPIC_GROUPS: TopicGroupInfo[] = [
   { id: 'services-data', title: 'Services & Data', blurb: 'Share logic and talk to a server' },
   { id: 'performance', title: 'Performance', blurb: 'Faster, leaner apps' },
   { id: 'quality', title: 'Quality & Safety', blurb: 'Test, protect and polish your app' },
+  { id: 'advanced', title: 'Going Further', blurb: 'Tools for bigger, real-world apps' },
 ];
 
 /** Single source of truth for every topic page — order here is the recommended learning path. */
@@ -571,6 +572,93 @@ export const TOPICS: Topic[] = [
       { id: 'enter-leave', title: 'Enter and leave', kind: 'try-it', minutes: 6 },
       { id: 'css', title: 'The CSS behind it', kind: 'concept', minutes: 5 },
       { id: 'motion', title: 'Reduced motion', kind: 'concept', minutes: 4 },
+    ],
+  },
+  {
+    id: 'dynamic-components', group: 'advanced', legacyPath: '/dynamic-components', path: '/learn/dynamic-components',
+    level: 'advanced', prerequisites: ['components', 'template-tools'],
+    icon: '🧩', title: 'Dynamic Components', description: 'Choose which component to show at run time, with ngComponentOutlet or in code.',
+    objectives: [
+      { text: 'Explain when the component to show is not known in advance', sectionId: 'why' },
+      { text: 'Render a component chosen at run time with ngComponentOutlet', sectionId: 'outlet' },
+      { text: 'Create a component in code with ViewContainerRef', sectionId: 'create' },
+      { text: 'Choose between an outlet, a switch and a router', sectionId: 'when' },
+    ],
+    sections: [
+      { id: 'why', title: 'Why dynamic?', kind: 'concept', minutes: 4 },
+      { id: 'outlet', title: 'ngComponentOutlet', kind: 'try-it', minutes: 6 },
+      { id: 'create', title: 'Create it in code', kind: 'try-it', minutes: 7 },
+      { id: 'when', title: 'Which tool?', kind: 'concept', minutes: 4 },
+    ],
+  },
+  {
+    id: 'drag-drop', group: 'advanced', legacyPath: '/drag-drop', path: '/learn/drag-drop',
+    level: 'intermediate', prerequisites: ['components', 'directives'],
+    icon: '🧲', title: 'Drag and Drop', description: 'Reorder lists and move items between lists with the CDK, and keep it usable without a mouse.',
+    objectives: [
+      { text: 'Say what the CDK drag and drop gives you', sectionId: 'why' },
+      { text: 'Reorder a list with cdkDropList and moveItemInArray', sectionId: 'list' },
+      { text: 'Move items between lists with transferArrayItem', sectionId: 'lists' },
+      { text: 'Offer a keyboard alternative', sectionId: 'a11y' },
+    ],
+    sections: [
+      { id: 'why', title: 'Why the CDK?', kind: 'concept', minutes: 4 },
+      { id: 'list', title: 'Reorder a list', kind: 'try-it', minutes: 6 },
+      { id: 'lists', title: 'Between lists', kind: 'try-it', minutes: 7 },
+      { id: 'a11y', title: 'Without a mouse', kind: 'concept', minutes: 5 },
+    ],
+  },
+  {
+    id: 'i18n', group: 'advanced', legacyPath: '/i18n', path: '/learn/i18n',
+    level: 'intermediate', prerequisites: ['binding', 'pipes'],
+    icon: '🌍', title: 'Internationalization', description: 'Show dates, numbers and text the way each reader expects, and support right-to-left languages.',
+    objectives: [
+      { text: 'Explain what a locale changes', sectionId: 'why' },
+      { text: 'Format dates, money and numbers for a locale with pipes', sectionId: 'formats' },
+      { text: 'Pick the right plural form with ngPlural', sectionId: 'plurals' },
+      { text: 'Describe how text is translated at build time', sectionId: 'translate' },
+      { text: 'Support right-to-left languages', sectionId: 'direction' },
+    ],
+    sections: [
+      { id: 'why', title: 'What is a locale?', kind: 'concept', minutes: 4 },
+      { id: 'formats', title: 'Dates, money and numbers', kind: 'try-it', minutes: 6 },
+      { id: 'plurals', title: 'Plurals', kind: 'try-it', minutes: 5 },
+      { id: 'translate', title: 'Translating text', kind: 'concept', minutes: 6 },
+      { id: 'direction', title: 'Right to left', kind: 'try-it', minutes: 5 },
+    ],
+  },
+  {
+    id: 'ssr', group: 'advanced', legacyPath: '/ssr', path: '/learn/ssr',
+    level: 'advanced', prerequisites: ['components', 'lifecycle', 'lazy-loading'],
+    icon: '🖥️', title: 'SSR and Hydration', description: 'Send ready-made HTML first, then make it interactive: server rendering, prerendering and hydration.',
+    objectives: [
+      { text: 'Compare client rendering, server rendering and prerendering', sectionId: 'why' },
+      { text: 'Explain what hydration does', sectionId: 'modes' },
+      { text: 'Write code that is safe on the server', sectionId: 'browser-only' },
+      { text: 'Choose a rendering mode for each route', sectionId: 'routes' },
+    ],
+    sections: [
+      { id: 'why', title: 'Why render on a server?', kind: 'concept', minutes: 5 },
+      { id: 'modes', title: 'Three ways to render', kind: 'try-it', minutes: 6 },
+      { id: 'browser-only', title: 'Browser-only code', kind: 'try-it', minutes: 6 },
+      { id: 'routes', title: 'Modes per route', kind: 'concept', minutes: 5 },
+    ],
+  },
+  {
+    id: 'devtools', group: 'advanced', legacyPath: '/devtools', path: '/learn/devtools',
+    level: 'intermediate', prerequisites: ['components', 'change-detection'],
+    icon: '🛠️', title: 'DevTools and Style Guide', description: 'Inspect a running app, and write code the way the Angular style guide recommends.',
+    objectives: [
+      { text: 'Name what Angular DevTools shows you', sectionId: 'why' },
+      { text: 'Use DevTools to inspect components and find slow checks', sectionId: 'devtools' },
+      { text: 'Spot style guide problems in a component', sectionId: 'style' },
+      { text: 'Name files, classes and selectors the recommended way', sectionId: 'naming' },
+    ],
+    sections: [
+      { id: 'why', title: 'Tools of the trade', kind: 'concept', minutes: 4 },
+      { id: 'devtools', title: 'Angular DevTools', kind: 'concept', minutes: 6 },
+      { id: 'style', title: 'Review a component', kind: 'try-it', minutes: 7 },
+      { id: 'naming', title: 'Naming and structure', kind: 'concept', minutes: 5 },
     ],
   },
 ];

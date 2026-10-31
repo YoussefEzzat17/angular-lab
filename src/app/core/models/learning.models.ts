@@ -5,7 +5,8 @@ export type TopicId =
   | 'interceptor' | 'facade' | 'change-detection' | 'lazy-loading'
   | 'content-projection' | 'resource' | 'defer'
   | 'getting-started' | 'components' | 'lifecycle' | 'template-tools' | 'signal-forms'
-  | 'testing' | 'accessibility' | 'security' | 'error-handling' | 'animations' | 'images';
+  | 'testing' | 'accessibility' | 'security' | 'error-handling' | 'animations' | 'images'
+  | 'dynamic-components' | 'drag-drop' | 'i18n' | 'ssr' | 'devtools';
 
 // ─── Lesson Sections ──────────────────────────────────────────────────────────
 export type SectionKind = 'concept' | 'try-it' | 'reference';
